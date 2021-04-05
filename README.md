@@ -1,6 +1,6 @@
 # Serverless Workflow Specification - Typescript SDK
 
-Provides the Java API/SPI for the [Serverless Workflow Specification](https://github.com/serverlessworkflow/specification)
+Provides the Typescript API/SPI for the [Serverless Workflow Specification](https://github.com/serverlessworkflow/specification)
 
 
 With the SDK you can:
@@ -15,16 +15,35 @@ With the SDK you can:
 
 To build the project and run tests locally:
 
-```
+```sh
 git clone https://github.com/serverlessworkflow/sdk-typescript.git
+cd sdk-typescript
 npm install && npm run test
 ```
 
 
 ### Add as dependency to your project
+You can use [npm link](https://docs.npmjs.com/cli/v7/commands/npm-link) to add the `sdk-typescript` 
+as dependency in your project.
+
+- Clone the `sdk-typescript` project and build it:
 ```sh
-npm install sdk-typescript
+git clone https://github.com/serverlessworkflow/sdk-typescript.git
+cd sdk-typescript
+npm install && npm run build
 ```
+
+- Make the package visible globally to npm. Inside the `sdk-typescript` project folder run: 
+```sh
+npm link
+```
+
+- Navigate to the folder/project in which you want to use the sdk, and run the following command: 
+```sh
+npm link sdk-typescript
+```
+
+It will create a symbolic link from globally-installed `sdk-typescript` to `node_modules/` of the current folder.
 
 
 ### How to use
@@ -53,7 +72,7 @@ npm install sdk-typescript
 ```typescript
     const workflow = BaseWorkflow.fromSource(source)
 ```
-Where source is the file location.
+Where `source` is the file location.
 
 
 
@@ -85,7 +104,7 @@ by using the static methods `toJSON` or `toYAML` respectively:
 ```
 
 ```typescript
-    const workFlowAsYAML = BaseWorkflow.toYAML(workflow);
+    const workflowAsYAML = BaseWorkflow.toYAML(workflow);
 ```
 
 
