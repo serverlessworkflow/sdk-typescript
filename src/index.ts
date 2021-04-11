@@ -9,6 +9,7 @@ export {OperationStateBuilder} from "./model/operation-state.builder";
 export {SubFlowStateBuilder} from "./model/sub-flow-state.builder";
 export {TransitiondataconditionBuilder} from "./model/transitiondatacondition.builder";
 export {WorkflowBuilder} from "./model/workflow.builder";
+export * from "./model/workflow.validator";
 export * from "./model/workflow";
 export * from "./model/types";
 
