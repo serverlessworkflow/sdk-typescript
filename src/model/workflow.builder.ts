@@ -14,59 +14,66 @@
  * limitations under the License.
  *
  */
-import {Workflow} from "./workflow";
+import {Startdef, Workflow} from "./workflow";
 import {FunctionsType, StatesType} from "./types";
+import {ValidatorFactory} from "./workflow.validator";
 
 
 export class WorkflowBuilder {
-    private model: Workflow = {};
-
-    constructor() {
-    }
-
-    withId(value: string): WorkflowBuilder {
-        this.model.id = value;
-        return this;
-    }
-
-
-    withVersion(value: string): WorkflowBuilder {
-        this.model.version = value;
-        return this;
-    }
-
-
-    withName(value: string): WorkflowBuilder {
-        this.model.name = value;
-        return this;
-
-    }
-
-    withDescription(value: string): WorkflowBuilder {
-        this.model.description = value;
-        return this;
-
-    }
-
-    withStart(value: string): WorkflowBuilder {
-        this.model.start = value;
-        return this;
-    }
-
-    withFunctions(value: FunctionsType): WorkflowBuilder {
-        this.model.functions = value;
-        return this;
-    }
-
-
-    withStates(value: StatesType): WorkflowBuilder {
-        this.model.states = value;
-        return this;
-    }
-
-
-    build(): Workflow {
-        //TODO validate
-        return this.model;
-    }
+	private model: Workflow = {};
+	
+	constructor(private readonly validatorFactory: ValidatorFactory
+		            = new ValidatorFactory()) {
+	}
+	
+	withId(value: string): WorkflowBuilder {
+		this.model.id = value;
+		return this;
+	}
+	
+	
+	withVersion(value: string): WorkflowBuilder {
+		this.model.version = value;
+		return this;
+	}
+	
+	
+	withName(value: string): WorkflowBuilder {
+		this.model.name = value;
+		return this;
+		
+	}
+	
+	withDescription(value: string): WorkflowBuilder {
+		this.model.description = value;
+		return this;
+		
+	}
+	
+	withStart(value: Startdef): WorkflowBuilder {
+		this.model.start = value;
+		return this;
+	}
+	
+	withFunctions(value: FunctionsType): WorkflowBuilder {
+		this.model.functions = value;
+		return this;
+	}
+	
+	
+	withStates(value: StatesType): WorkflowBuilder {
+		this.model.states = value;
+		return this;
+	}
+	
+	
+	build(): Workflow {
+		const workflowValidator = this.validatorFactory.workflowValidator(this.model);
+		if (!workflowValidator.isValid()) {
+			throw new Error(workflowValidator.validate()
+				.errors().map(e => e.message()).join("; "));
+		}
+		return this.model;
+	}
+	
 }
