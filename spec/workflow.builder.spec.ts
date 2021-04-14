@@ -51,6 +51,62 @@ describe("workflow builder", () => {
 	});
 	
 	
+	it("should create a workflow with all fields", () => {
+		const workflow: Workflow =
+			new WorkflowBuilder()
+				.withId("helloworld")
+				.withName("hello world")
+				.withVersion("0.6")
+				.withStart("hello builder")
+				.withStates([new InjectStateBuilder()
+					.withName("Hello State")
+					.withData({
+						"result": "Hello World!",
+					})
+					.withEnd(true).build()])
+				.withDescription("hello builder description")
+				.withSchemaVersion("0.6")
+				.withSchemaVersion("1.0")
+				.withExpressionLang("jq")
+				.withExecTimeout({duration: 'PT2M'})
+				.withKeepActive(true)
+				.withMetadata({
+					"key1": "value1",
+					"key2": "value2",
+				})
+				.withEvents("http://myhost:8080/eventsdefs.json")
+				.withFunctions("http://myhost:8080/functionsdefs.json")
+				.withRetries("http://myhost:8080/retriesdefs.json")
+				.build();
+		
+		expect(workflow).toEqual({
+				"id": "helloworld",
+				"name": "hello world",
+				"version": "0.6",
+				"start": "hello builder",
+				"states": [{
+					"type": "inject", "name": "Hello State",
+					"data": {"result": "Hello World!"},
+					"end": true,
+				}],
+				"description": "hello builder description",
+				"schemaVersion": "1.0",
+				"expressionLang": "jq",
+				"execTimeout": {duration: 'PT2M'},
+				"keepActive": true,
+				"metadata": {
+					"key1": "value1",
+					"key2": "value2",
+				},
+				"events": "http://myhost:8080/eventsdefs.json",
+				"functions": "http://myhost:8080/functionsdefs.json",
+				"retries": "http://myhost:8080/retriesdefs.json",
+			},
+		);
+		
+	});
+	
+	
 	it("should invoke validator class", () => {
 		
 		const workflowValidator = new WorkflowValidator({});

@@ -14,8 +14,8 @@
  * limitations under the License.
  *
  */
-import {Startdef, Workflow} from "./workflow";
-import {FunctionsType, StatesType} from "./types";
+import {Exectimeout, Startdef, Workflow} from "./workflow";
+import {EventsDef, FunctionsDef, MetadataType, RetriesDef, StatesType} from "./types";
 import {ValidatorFactory} from "./workflow.validator";
 
 
@@ -55,7 +55,7 @@ export class WorkflowBuilder {
 		return this;
 	}
 	
-	withFunctions(value: FunctionsType): WorkflowBuilder {
+	withFunctions(value: FunctionsDef): WorkflowBuilder {
 		this.model.functions = value;
 		return this;
 	}
@@ -66,6 +66,41 @@ export class WorkflowBuilder {
 		return this;
 	}
 	
+	
+	withSchemaVersion(value: string): WorkflowBuilder {
+		this.model.schemaVersion = value;
+		return this;
+	}
+	
+	withExpressionLang(value: string): WorkflowBuilder {
+		this.model.expressionLang = value;
+		return this;
+	}
+	
+	withExecTimeout(value: Exectimeout): WorkflowBuilder {
+		this.model.execTimeout = value;
+		return this;
+	}
+	
+	withKeepActive(value: boolean): WorkflowBuilder {
+		this.model.keepActive = value;
+		return this;
+	}
+	
+	withMetadata(value: MetadataType): WorkflowBuilder {
+		this.model.metadata = value;
+		return this;
+	}
+	
+	withEvents(value: EventsDef): WorkflowBuilder {
+		this.model.events = value;
+		return this;
+	}
+	
+	withRetries(value: RetriesDef): WorkflowBuilder {
+		this.model.retries = value;
+		return this;
+	}
 	
 	build(): Workflow {
 		const workflowValidator = this.validatorFactory.workflowValidator(this.model);

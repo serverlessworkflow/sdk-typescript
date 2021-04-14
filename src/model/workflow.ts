@@ -19,11 +19,13 @@ import {
     ActionsType,
     DataConditionsType,
     DefaultTransitionType,
-    EndType,
-    FunctionsType,
+    EndType, EventsDef,
+    FunctionsDef, MetadataType, RetriesDef, StartScheduledType,
     StateDataFilterType,
-    StatesType
+    StatesType,
 } from "./types";
+import {Crondef} from '../../../sdk-ts-generator/src/workflow';
+
 
 /**
  * Serverless Workflow specification - workflow schema
@@ -33,10 +35,6 @@ export type Workflow = {
      * Workflow unique identifier
      */
     id?: string;
-    /**
-     * Domain-specific workflow identifier
-     */
-    key?: string;
     /**
      * Workflow name
      */
@@ -49,10 +47,6 @@ export type Workflow = {
      * Workflow version
      */
     version?: string;
-    /**
-     * List of helpful terms describing the workflows intended purpose, subject areas, or other important qualities
-     */
-    annotations?: [string, ...string[]];
     start?: Startdef;
     /**
      * Serverless Workflow schema version
@@ -70,177 +64,10 @@ export type Workflow = {
     /**
      * Metadata information
      */
-    metadata?: {
-        [k: string]: string;
-    };
-    events?:
-        | string
-        | [
-        {
-            /**
-             * Unique event name
-             */
-            name?: string;
-            /**
-             * CloudEvent source
-             */
-            source?: string;
-            /**
-             * CloudEvent type
-             */
-            type?: string;
-            /**
-             * Defines the CloudEvent as either 'consumed' or 'produced' by the workflow. Default is 'consumed'
-             */
-            kind?: "consumed" | "produced";
-            /**
-             * CloudEvent correlation definitions
-             */
-            correlation?: [
-                {
-                    /**
-                     * CloudEvent Extension Context Attribute name
-                     */
-                    contextAttributeName: string;
-                    /**
-                     * CloudEvent Extension Context Attribute value
-                     */
-                    contextAttributeValue?: string;
-                },
-                ...{
-                    /**
-                     * CloudEvent Extension Context Attribute name
-                     */
-                    contextAttributeName: string;
-                    /**
-                     * CloudEvent Extension Context Attribute value
-                     */
-                    contextAttributeValue?: string;
-                }[]
-            ];
-            /**
-             * Metadata information
-             */
-            metadata?: {
-                [k: string]: string;
-            };
-        },
-        ...{
-            /**
-             * Unique event name
-             */
-            name?: string;
-            /**
-             * CloudEvent source
-             */
-            source?: string;
-            /**
-             * CloudEvent type
-             */
-            type?: string;
-            /**
-             * Defines the CloudEvent as either 'consumed' or 'produced' by the workflow. Default is 'consumed'
-             */
-            kind?: "consumed" | "produced";
-            /**
-             * CloudEvent correlation definitions
-             */
-            correlation?: [
-                {
-                    /**
-                     * CloudEvent Extension Context Attribute name
-                     */
-                    contextAttributeName: string;
-                    /**
-                     * CloudEvent Extension Context Attribute value
-                     */
-                    contextAttributeValue?: string;
-                },
-                ...{
-                    /**
-                     * CloudEvent Extension Context Attribute name
-                     */
-                    contextAttributeName: string;
-                    /**
-                     * CloudEvent Extension Context Attribute value
-                     */
-                    contextAttributeValue?: string;
-                }[]
-            ];
-            /**
-             * Metadata information
-             */
-            metadata?: {
-                [k: string]: string;
-            };
-        }[]
-    ];
-    functions?:
-        FunctionsType;
-    retries?:
-        | string
-        | [
-        {
-            /**
-             * Unique retry strategy name
-             */
-            name: string;
-            /**
-             * Time delay between retry attempts (ISO 8601 duration format)
-             */
-            delay?: string;
-            /**
-             * Maximum time delay between retry attempts (ISO 8601 duration format)
-             */
-            maxDelay?: string;
-            /**
-             * Static value by which the delay increases during each attempt (ISO 8601 time format)
-             */
-            increment?: string;
-            /**
-             * Numeric value, if specified the delay between retries is multiplied by this value.
-             */
-            multiplier?: number | string;
-            /**
-             * Maximum number of retry attempts.
-             */
-            maxAttempts: number | string;
-            /**
-             * If float type, maximum amount of random time added or subtracted from the delay between each retry relative to total delay (between 0 and 1). If string type, absolute maximum amount of random time added or subtracted from the delay between each retry (ISO 8601 duration format)
-             */
-            jitter?: number | string;
-        },
-        ...{
-            /**
-             * Unique retry strategy name
-             */
-            name: string;
-            /**
-             * Time delay between retry attempts (ISO 8601 duration format)
-             */
-            delay?: string;
-            /**
-             * Maximum time delay between retry attempts (ISO 8601 duration format)
-             */
-            maxDelay?: string;
-            /**
-             * Static value by which the delay increases during each attempt (ISO 8601 time format)
-             */
-            increment?: string;
-            /**
-             * Numeric value, if specified the delay between retries is multiplied by this value.
-             */
-            multiplier?: number | string;
-            /**
-             * Maximum number of retry attempts.
-             */
-            maxAttempts: number | string;
-            /**
-             * If float type, maximum amount of random time added or subtracted from the delay between each retry relative to total delay (between 0 and 1). If string type, absolute maximum amount of random time added or subtracted from the delay between each retry (ISO 8601 duration format)
-             */
-            jitter?: number | string;
-        }[]
-    ];
+    metadata?: MetadataType;
+    events?: EventsDef;
+    functions?:FunctionsDef;
+    retries?:RetriesDef;
     /**
      * State definitions
      */
@@ -249,22 +76,27 @@ export type Workflow = {
 } & {
     [k: string]: unknown;
 };
+
+
 export type Startdef =
+    | string
+    | StartScheduledType;
+
+export type Schedule =
     | string
     | {
     /**
-     * Name of the starting workflow state
+     * Time interval (must be repeating interval) described with ISO 8601 format. Declares when workflow instances will be automatically created.
      */
-    stateName: string;
+    interval?: string;
+    cron?: Crondef;
     /**
-     * Define the time/repeating intervals or cron at which workflow instances should be automatically started.
+     * Timezone name used to evaluate the interval & cron-expression. (default: UTC)
      */
-    schedule:
-        | string
-        | {
-        [k: string]: unknown;
-    };
+    timezone?: string;
 };
+
+
 /**
  * This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel
  */
@@ -453,9 +285,7 @@ export interface DelayState {
     /**
      * Metadata information
      */
-    metadata?: {
-        [k: string]: string;
-    };
+    metadata?: MetadataType;
 }
 
 
@@ -552,9 +382,7 @@ export interface OperationState {
     /**
      * Metadata information
      */
-    metadata?: {
-        [k: string]: string;
-    };
+    metadata?: MetadataType;
 }
 
 /**
@@ -661,9 +489,7 @@ export interface ParallelState {
     /**
      * Metadata information
      */
-    metadata?: {
-        [k: string]: string;
-    };
+    metadata?: MetadataType;
 }
 
 
@@ -717,9 +543,7 @@ export interface Databasedswitch {
     /**
      * Metadata information
      */
-    metadata?: {
-        [k: string]: string;
-    };
+    metadata?: MetadataType;
 }
 
 /**
@@ -775,9 +599,7 @@ export interface Transitiondatacondition {
     /**
      * Metadata information
      */
-    metadata?: {
-        [k: string]: string;
-    };
+    metadata?: MetadataType;
 }
 
 /**
@@ -799,9 +621,7 @@ export interface Enddatacondition {
     /**
      * Metadata information
      */
-    metadata?: {
-        [k: string]: string;
-    };
+    metadata?: MetadataType;
 }
 
 /**
@@ -858,9 +678,7 @@ export interface Eventbasedswitch {
     /**
      * Metadata information
      */
-    metadata?: {
-        [k: string]: string;
-    };
+    metadata?: MetadataType;
 }
 
 /**
@@ -929,9 +747,7 @@ export interface Transitioneventcondition {
     /**
      * Metadata information
      */
-    metadata?: {
-        [k: string]: string;
-    };
+    metadata?: MetadataType;
 }
 
 /**
@@ -967,9 +783,7 @@ export interface Enddeventcondition {
     /**
      * Metadata information
      */
-    metadata?: {
-        [k: string]: string;
-    };
+    metadata?: MetadataType;
 }
 
 /**
@@ -1090,9 +904,7 @@ export interface SubFlowState {
     /**
      * Metadata information
      */
-    metadata?: {
-        [k: string]: string;
-    };
+    metadata?: MetadataType;
 }
 
 /**
@@ -1175,9 +987,7 @@ export interface InjectState {
     /**
      * Metadata information
      */
-    metadata?: {
-        [k: string]: string;
-    };
+    metadata?: MetadataType;
 }
 
 /**
@@ -1296,9 +1106,7 @@ export interface ForEachState {
     /**
      * Metadata information
      */
-    metadata?: {
-        [k: string]: string;
-    };
+    metadata?: MetadataType;
 }
 
 /**
@@ -1417,7 +1225,8 @@ export interface CallbackState {
     /**
      * Metadata information
      */
-    metadata?: {
-        [k: string]: string;
-    };
+    metadata?: MetadataType;
 }
+
+
+
