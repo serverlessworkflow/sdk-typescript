@@ -73,6 +73,20 @@ export  type EventRefType = {
 	};
 };
 
+export type ActionDataFilterType = {
+	/**
+	 * Workflow expression that selects state data that the state action can use
+	 */
+	fromStateData?: string;
+	/**
+	 * Workflow expression that filters the actions data results
+	 */
+	results?: string;
+	/**
+	 * Workflow expression that selects a state data element to which the action results should be added/merged into. If not specified, denote, the top-level state data element
+	 */
+	toStateData?: string;
+};
 export type ActionType = {
 	/**
 	 * Unique action definition name
@@ -90,20 +104,7 @@ export type ActionType = {
 	/**
 	 * Action data filter
 	 */
-	actionDataFilter?: {
-		/**
-		 * Workflow expression that selects state data that the state action can use
-		 */
-		fromStateData?: string;
-		/**
-		 * Workflow expression that filters the actions data results
-		 */
-		results?: string;
-		/**
-		 * Workflow expression that selects a state data element to which the action results should be added/merged into. If not specified, denote, the top-level state data element
-		 */
-		toStateData?: string;
-	};
+	actionDataFilter?: ActionDataFilterType;
 };
 export type ActionsType = ActionType[];
 
