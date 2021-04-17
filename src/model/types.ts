@@ -62,15 +62,11 @@ export  type EventRefType = {
 	 */
 	data?:
 		| string
-		| {
-		[k: string]: unknown;
-	};
+		| object;
 	/**
 	 * Add additional extension context attributes to the produced event
 	 */
-	contextAttributes?: {
-		[k: string]: string;
-	};
+	contextAttributes?: object;
 };
 
 export type ActionType = {
