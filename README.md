@@ -6,7 +6,7 @@ Provides the Typescript API/SPI for the [Serverless Workflow Specification](http
 With the SDK you can:
 * Parse workflow JSON and YAML definitions
 * (_WIP_) Programmatically build workflow definitions
-
+* (_WIP_) Validate workflow definitions
 
 ## Getting Started
 
@@ -107,5 +107,26 @@ by using the static methods `toJSON` or `toYAML` respectively:
     const workflowAsYAML = BaseWorkflow.toYAML(workflow);
 ```
 
+#### Validate workflow definitions
+
+The sdk provides a way to validate if a workflow object is compliant with the serverlessworkflow specification.
+
+`WorkflowValidator` class provides two methods: 
+
+- `isValid(): boolean`
+
+```typescript
+
+const isValid = new WorkflowValidator(workflow).isValid();
+
+```
+
+- `validate(): ValidationErrors`
+
+```typescript
+
+const validationErrors = new WorkflowValidator(workflow).validate();
+validationErrors.errors().forEach(error => console.error(error.message()))
 
 
+```
