@@ -14,22 +14,52 @@
  * limitations under the License.
  *
  */
-import {ActionType, FunctionRefType} from "./types";
+import {ActionDataFilterType, ActionType, EventRefType, FunctionRefType} from "./types";
 
 export class ActionBuilder {
-    // @ts-ignore
-    private model: ActionType = {};
-
-
-    withFunctionRef(value: FunctionRefType): ActionBuilder {
-        this.model.functionRef = value;
-        return this;
-    }
-
-    build(): ActionType {
-        //TODO validate either functionRef or eventRef
-        return this.model;
-    }
-
-
+	
+	private model: ActionType = {};
+	
+	
+	withFunctionRef(value: FunctionRefType): ActionBuilder {
+		this.model.functionRef = value;
+		return this;
+	}
+	
+	withEventRef(value: EventRefType): ActionBuilder {
+		this.model.eventRef = value;
+		return this;
+	}
+	
+	withName(value: string): ActionBuilder {
+		this.model.name = value;
+		return this;
+	}
+	
+	withTimeOut(value: string): ActionBuilder {
+		this.model.timeout = value;
+		return this;
+		
+	}
+	
+	withActionDataFilter(value: ActionDataFilterType): ActionBuilder {
+		this.model.actionDataFilter = value;
+		return this;
+		
+	}
+	
+	build(): ActionType {
+		
+		if (!this.model.eventRef && !this.model.functionRef) {
+			throw new Error("Either eventRef or functionRef have to be defined");
+		}
+		
+		if (this.model.eventRef && this.model.functionRef) {
+			throw new Error("Only one eventRef or functionRef can be set");
+		}
+		
+		
+		return this.model;
+	}
+	
 }

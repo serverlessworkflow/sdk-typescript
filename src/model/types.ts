@@ -52,11 +52,11 @@ export  type EventRefType = {
 	/**
 	 * Reference to the unique name of a 'produced' event definition
 	 */
-	triggerEventRef: string;
+	triggerEventRef?: string;
 	/**
 	 * Reference to the unique name of a 'consumed' event definition
 	 */
-	resultEventRef: string;
+	resultEventRef?: string;
 	/**
 	 * If string type, an expression which selects parts of the states data output to become the data (payload) of the event referenced by 'triggerEventRef'. If object type, a custom object to become the data (payload) of the event referenced by 'triggerEventRef'.
 	 */
@@ -88,11 +88,15 @@ export type ActionType = {
 	 * Unique action definition name
 	 */
 	name?: string;
-	functionRef: FunctionRefType;
+	
+	/**
+	 * Referenced function
+	 */
+	functionRef?: FunctionRefType;
 	/**
 	 * References a 'trigger' and 'result' reusable event definitions
 	 */
-	eventRef: EventRefType;
+	eventRef?: EventRefType;
 	/**
 	 * Time period to wait for function execution to complete
 	 */

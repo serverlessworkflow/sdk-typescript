@@ -18,7 +18,6 @@ import {EventRefType} from '../index';
 
 export class EventRefBuilder {
 	
-	// @ts-ignore
 	private readonly model: EventRefType = {};
 	
 	
