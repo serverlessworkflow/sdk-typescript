@@ -340,3 +340,21 @@ export type RepeatType = {
 	 */
 	stopOnEvents?: EventsName;
 };
+
+export type CronExpression = string;
+export type CronDef =
+	|
+	/**
+	 * Cron expression defining when workflow instances should be created (automatically)
+	 */
+	CronExpression
+	| {
+	/**
+	 * Repeating interval (cron expression) describing when the workflow instance should be created
+	 */
+	expression: CronExpression;
+	/**
+	 * Specific date and time (ISO 8601 format) when the cron expression invocation is no longer valid
+	 */
+	validUntil?: string;
+};

@@ -16,7 +16,7 @@
  */
 import {
     ActionModeType,
-    ActionsType,
+    ActionsType, CronDef,
     DataConditionsType,
     DefaultTransitionType,
     EndType, EventsDef,
@@ -24,7 +24,6 @@ import {
     StateDataFilterType,
     StatesType,
 } from "./types";
-import {Crondef} from '../../../sdk-ts-generator/src/workflow';
 
 
 /**
@@ -89,7 +88,7 @@ export type Schedule =
      * Time interval (must be repeating interval) described with ISO 8601 format. Declares when workflow instances will be automatically created.
      */
     interval?: string;
-    cron?: Crondef;
+    cron?: CronDef;
     /**
      * Timezone name used to evaluate the interval & cron-expression. (default: UTC)
      */
