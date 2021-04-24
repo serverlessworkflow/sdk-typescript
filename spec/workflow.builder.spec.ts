@@ -111,10 +111,9 @@ describe("workflow builder", () => {
 		
 		const workflowValidator = new WorkflowValidator({});
 		spyOn(workflowValidator, 'isValid')
-			.and.returnValue(false).and.callThrough();
+			.and.returnValue(false);
 		spyOn(workflowValidator, 'validate')
-			.and.returnValue(new ValidationErrors([new ValidationError("any error")]))
-			.and.callThrough();
+			.and.returnValue(new ValidationErrors([new ValidationError("any error")]));
 		
 		const validatorFactory = new ValidatorFactory();
 		spyOn(validatorFactory, 'workflowValidator')
