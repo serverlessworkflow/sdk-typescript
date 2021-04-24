@@ -109,7 +109,8 @@ export type ActionType = {
 export type ActionsType = ActionType[];
 
 
-export type FunctionType = {
+export type FunctionType = "rest" | "rpc" | "expression";
+export type Function = {
 	/**
 	 * Unique function name
 	 */
@@ -121,13 +122,13 @@ export type FunctionType = {
 	/**
 	 * Defines the function type. Is either `rest`, `rpc` or `expression`. Default is `rest`
 	 */
-	type?: "rest" | "rpc" | "expression";
+	type?: FunctionType;
 };
 
 export type FunctionsDef = | string
 	| [
-	FunctionType,
-	...FunctionType[]
+	Function,
+	...Function[]
 ];
 export type StatesType = [
 	(

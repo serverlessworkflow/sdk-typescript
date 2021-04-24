@@ -7,7 +7,8 @@
   "functions": [
     {
       "name": "sendRejectionEmailFunction",
-      "operation": "http://myapis.org/applicationapi.json#emailRejection"
+      "operation": "http://myapis.org/applicationapi.json#emailRejection",
+      "type": "rest"
     }
   ],
   "states":[

@@ -14,24 +14,48 @@
  * limitations under the License.
  *
  */
-import {FunctionType} from "./types";
+import {Function, FunctionType} from "./types";
 
 export class FunctionBuilder {
-    // @ts-ignore
-    private model: FunctionType = {};
-
-    withName(value: string): FunctionBuilder {
-        this.model.name = value;
-        return this;
-    }
-
-    withOperation(value: string): FunctionBuilder {
-        this.model.operation = value;
-        return this;
-    }
-
-    build() {
-        //TODO validate
-        return this.model;
-    }
+	
+	// @ts-ignore
+	private model: Function = {
+		type: "rest",
+	};
+	
+	withName(value: string): FunctionBuilder {
+		this.model.name = value;
+		return this;
+	}
+	
+	withOperation(value: string): FunctionBuilder {
+		this.model.operation = value;
+		return this;
+	}
+	
+	withType(value: FunctionType): any {
+		this.model.type = value;
+		return this;
+	}
+	
+	build(): Function {
+		
+		
+		const errors: string[] = [];
+		
+		if (!this.model.name) {
+			errors.push("Field name can not be undefined or empty");
+		}
+		
+		if (!this.model.operation) {
+			errors.push("Field operation can not be undefined or empty");
+		}
+		
+		if (errors.length > 0) {
+			throw new Error(errors.map(e => e).join("; "));
+		}
+		
+		return this.model;
+	}
+	
 }
