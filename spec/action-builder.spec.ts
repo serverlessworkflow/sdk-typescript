@@ -36,7 +36,7 @@ describe("ActionBuilder", () => {
 		expect(() => new ActionBuilder().build()).toThrowError();
 		
 		expect(() => new ActionBuilder()
-			.withFunctionRef("funcitionRef")
+			.withFunctionRef("functionRef")
 			.withEventRef(validEventRef()).build())
 			.toThrowError();
 	});

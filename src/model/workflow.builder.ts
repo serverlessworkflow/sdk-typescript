@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-import {Exectimeout, Startdef, Workflow} from "./workflow";
+import {Exectimeout, StartDef, Workflow} from "./workflow";
 import {EventsDef, FunctionsDef, MetadataType, RetriesDef, StatesType} from "./types";
 import {ValidatorFactory} from "./workflow.validator";
 
@@ -50,7 +50,7 @@ export class WorkflowBuilder {
 		
 	}
 	
-	withStart(value: Startdef): WorkflowBuilder {
+	withStart(value: StartDef): WorkflowBuilder {
 		this.model.start = value;
 		return this;
 	}
