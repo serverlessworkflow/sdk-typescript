@@ -20,7 +20,7 @@ import {
     DataConditionsType,
     DefaultTransitionType,
     EndType, EventsDef,
-    FunctionsDef, MetadataType, RetriesDef, StartScheduledType,
+    FunctionsDef, MetadataType, RepeatType, RetriesDef, StartScheduledType,
     StateDataFilterType,
     StatesType,
 } from "./types";
@@ -786,6 +786,7 @@ export interface Enddeventcondition {
     metadata?: MetadataType;
 }
 
+
 /**
  * Defines a sub-workflow to be executed
  */
@@ -818,28 +819,7 @@ export interface SubFlowState {
     /**
      * SubFlow state repeat exec definition
      */
-    repeat?: {
-        /**
-         * Expression evaluated against SubFlow state data. SubFlow will repeat execution as long as this expression is true or until the max property count is reached
-         */
-        expression?: string;
-        /**
-         * If true, the expression is evaluated before each repeat execution, if false the expression is evaluated after each repeat execution
-         */
-        checkBefore?: boolean;
-        /**
-         * Sets the maximum amount of repeat executions
-         */
-        max?: number;
-        /**
-         * If true, repeats executions in a case unhandled errors propagate from the sub-workflow to this state
-         */
-        continueOnError?: boolean;
-        /**
-         * List referencing defined consumed workflow events. SubFlow will repeat execution until one of the defined events is consumed, or until the max property count is reached
-         */
-        stopOnEvents?: [string, ...string[]];
-    };
+    repeat?: RepeatType;
     /**
      * State data filter
      */

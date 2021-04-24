@@ -276,7 +276,7 @@ export type EventsDef = | string
 	...EventType[]
 ];
 
-type RetrieType = {
+type RetryType = {
 	/**
 	 * Unique retry strategy name
 	 */
@@ -308,7 +308,34 @@ type RetrieType = {
 };
 export type RetriesDef = | string
 	| [
-	RetrieType,
-	...RetrieType[]
+	RetryType,
+	...RetryType[]
 ];
 
+
+export type EventName = string;
+
+export type EventsName = [EventName, ...EventName[]];
+
+export type RepeatType = {
+	/**
+	 * Expression evaluated against SubFlow state data. SubFlow will repeat execution as long as this expression is true or until the max property count is reached
+	 */
+	expression?: string;
+	/**
+	 * If true, the expression is evaluated before each repeat execution, if false the expression is evaluated after each repeat execution
+	 */
+	checkBefore?: boolean;
+	/**
+	 * Sets the maximum amount of repeat executions
+	 */
+	max?: number;
+	/**
+	 * If true, repeats executions in a case unhandled errors propagate from the sub-workflow to this state
+	 */
+	continueOnError?: boolean;
+	/**
+	 * List referencing defined consumed workflow events. SubFlow will repeat execution until one of the defined events is consumed, or until the max property count is reached
+	 */
+	stopOnEvents?: EventsName;
+};
