@@ -358,3 +358,4 @@ export type CronDef =
 	 */
 	validUntil?: string;
 };
+export type Interval = string;
