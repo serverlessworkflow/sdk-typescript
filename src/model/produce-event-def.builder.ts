@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-import {EventName, ProduceEventDef} from '../index';
+import {EventData, EventName, ProduceEventDef} from '../index';
 
 export class ProduceEventDefBuilder {
 	// @ts-ignore
@@ -26,7 +26,7 @@ export class ProduceEventDefBuilder {
 		return this;
 	}
 	
-	withData(value: object): ProduceEventDefBuilder {
+	withData(value: EventData): ProduceEventDefBuilder {
 		this.model.data = value;
 		return this;
 		
