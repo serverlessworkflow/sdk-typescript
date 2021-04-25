@@ -60,13 +60,11 @@ export  type EventRefType = {
 	/**
 	 * If string type, an expression which selects parts of the states data output to become the data (payload) of the event referenced by 'triggerEventRef'. If object type, a custom object to become the data (payload) of the event referenced by 'triggerEventRef'.
 	 */
-	data?:
-		| string
-		| object;
+	data?: EventData;
 	/**
 	 * Add additional extension context attributes to the produced event
 	 */
-	contextAttributes?: object;
+	contextAttributes?: ContextAttributes;
 };
 
 export type ActionDataFilterType = {
@@ -340,6 +338,17 @@ export type CronDef =
 	validUntil?: string;
 };
 export type Interval = string;
+
+export type ExpressionExtractData = string;
+
+export type DataObject = object;
+
+export type EventData =
+	| ExpressionExtractData
+	| DataObject;
+
+export type ContextAttributes = object;
+
 export type ProduceEventDef = {
 	/**
 	 * References a name of a defined event
@@ -348,12 +357,10 @@ export type ProduceEventDef = {
 	/**
 	 * If String, expression which selects parts of the states data output to become the data of the produced event. If object a custom object to become the data of produced event.
 	 */
-	data?:
-		| string
-		| object;
+	data?: EventData;
 	/**
 	 * Add additional event extension context attributes
 	 */
-	contextAttributes?: object;
+	contextAttributes?: ContextAttributes;
 };
 export type ProduceEventsDef = ProduceEventDef[];

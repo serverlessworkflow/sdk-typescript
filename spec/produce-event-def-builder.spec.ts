@@ -32,15 +32,15 @@ describe("ProduceEventDefBuilder", () => {
 	it("should build a valid ProduceEventDef object ", () => {
 		
 		expect(new ProduceEventDefBuilder()
-			.withEventRef("eventName")
-			.withData({kData: "kdValue"})
+			.withEventRef("ConfirmationCompletedEvent")
+			.withData("${ .payment }")
 			.withContextAttributes({
 				kContext: "kcValue",
 			})
 			.build())
 			.toEqual({
-				eventRef: "eventName",
-				data: {kData: "kdValue"},
+				eventRef: "ConfirmationCompletedEvent",
+				data: "${ .payment }",
 				contextAttributes: {
 					kContext: "kcValue",
 				},
