@@ -27,6 +27,7 @@ export {FunctionBuilder} from "./model/function.builder";
 export {FunctionRefImplBuilder} from "./model/function-ref-impl.builder";
 export {InjectStateBuilder} from "./model/inject-state.builder";
 export {OperationStateBuilder} from "./model/operation-state.builder";
+export {ProduceEventDefBuilder} from "./model/produce-event-def.builder";
 export {RepeatBuilder} from "./model/repeat.builder";
 export {ScheduleBuilder} from "./model/schedule.builder";
 export {SubFlowStateBuilder} from "./model/sub-flow-state.builder";
