@@ -175,24 +175,7 @@ export type EndType = | boolean
 	/**
 	 * Defines events that should be produced
 	 */
-	produceEvents?: {
-		/**
-		 * References a name of a defined event
-		 */
-		eventRef: string;
-		/**
-		 * If String, expression which selects parts of the states data output to become the data of the produced event. If object a custom object to become the data of produced event.
-		 */
-		data?:
-			| string
-			| object;
-		/**
-		 * Add additional event extension context attributes
-		 */
-		contextAttributes?: {
-			[k: string]: string;
-		};
-	}[];
+	produceEvents?: ProduceEventsDef;
 	/**
 	 * If set to true, triggers workflow compensation. Default is false
 	 */

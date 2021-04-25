@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-import {EventName, ProduceEventDef} from '../src';
+import {EventName, ProduceEventDef} from '../index';
 
 export class ProduceEventDefBuilder {
 	// @ts-ignore
