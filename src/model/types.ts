@@ -199,7 +199,7 @@ export type StartScheduledType = {
 	schedule: Schedule;
 };
 
-export type MetadataType = {
+export type Metadata = {
 	[k: string]: string;
 };
 
@@ -248,7 +248,7 @@ type EventType = {
 	/**
 	 * Metadata information
 	 */
-	metadata?: MetadataType;
+	metadata?: Metadata;
 };
 export type EventsDef = | string
 	| [

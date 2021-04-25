@@ -20,7 +20,7 @@ import {
     DataConditionsType,
     DefaultTransitionType,
     EndType, EventsDef,
-    FunctionsDef, Interval, MetadataType, ProduceEventsDef, RepeatType, RetriesDef, StartScheduledType,
+    FunctionsDef, Interval, Metadata, ProduceEventsDef, RepeatType, RetriesDef, StartScheduledType,
     StateDataFilterType,
     StatesType,
 } from "./types";
@@ -63,7 +63,7 @@ export type Workflow = {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
     events?: EventsDef;
     functions?:FunctionsDef;
     retries?:RetriesDef;
@@ -235,7 +235,7 @@ export interface DelayState {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 
@@ -313,7 +313,7 @@ export interface OperationState {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 /**
@@ -401,7 +401,7 @@ export interface ParallelState {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 
@@ -455,7 +455,7 @@ export interface Databasedswitch {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 /**
@@ -492,7 +492,7 @@ export interface Transitiondatacondition {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 /**
@@ -514,7 +514,7 @@ export interface Enddatacondition {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 /**
@@ -571,7 +571,7 @@ export interface Eventbasedswitch {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 /**
@@ -621,7 +621,7 @@ export interface Transitioneventcondition {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 /**
@@ -657,7 +657,7 @@ export interface Enddeventcondition {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 
@@ -739,7 +739,7 @@ export interface SubFlowState {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 /**
@@ -803,7 +803,7 @@ export interface InjectState {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 /**
@@ -903,7 +903,7 @@ export interface ForEachState {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 /**
@@ -1003,7 +1003,7 @@ export interface CallbackState {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 
