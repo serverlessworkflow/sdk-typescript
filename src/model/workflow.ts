@@ -20,7 +20,7 @@ import {
     DataConditionsType,
     DefaultTransitionType,
     EndType, EventsDef,
-    FunctionsDef, MetadataType, RepeatType, RetriesDef, StartScheduledType,
+    FunctionsDef, Interval, MetadataType, RepeatType, RetriesDef, StartScheduledType,
     StateDataFilterType,
     StatesType,
 } from "./types";
@@ -82,12 +82,20 @@ export type Startdef =
     | StartScheduledType;
 
 export type Schedule =
-    | string
-    | {
+    |
+    /**
+     * Time interval (must be repeating interval) described with ISO 8601 format. Declares when workflow instances will be automatically created.  (UTC timezone is assumed)
+     */
+    Interval
+    |
+    /**
+     * Start state schedule definition
+     */
+    {
     /**
      * Time interval (must be repeating interval) described with ISO 8601 format. Declares when workflow instances will be automatically created.
      */
-    interval?: string;
+    interval?: Interval;
     cron?: CronDef;
     /**
      * Timezone name used to evaluate the interval & cron-expression. (default: UTC)

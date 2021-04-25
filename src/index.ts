@@ -14,18 +14,27 @@
  * limitations under the License.
  *
  */
+
 export {BaseWorkflow} from "./base-workflow";
+
 export {ActionBuilder} from "./model/action.builder";
+export {ActionDataFilterBuilder} from "./model/action-data-filter.builder";
+export {CronDefBuilder} from "./model/cron-def.builder";
 export {DatabasedSwitchBuilder} from "./model/databased-switch.builder";
 export {DefaultTransitionTypeBuilder} from "./model/default-transition-type.builder";
-export {FunctionRefImplBuilder} from "./model/function-ref-impl.builder";
+export {EventRefBuilder} from "./model/event-ref.builder";
 export {FunctionBuilder} from "./model/function.builder";
+export {FunctionRefImplBuilder} from "./model/function-ref-impl.builder";
 export {InjectStateBuilder} from "./model/inject-state.builder";
 export {OperationStateBuilder} from "./model/operation-state.builder";
+export {RepeatBuilder} from "./model/repeat.builder";
+export {ScheduleBuilder} from "./model/schedule.builder";
 export {SubFlowStateBuilder} from "./model/sub-flow-state.builder";
 export {TransitiondataconditionBuilder} from "./model/transitiondatacondition.builder";
 export {WorkflowBuilder} from "./model/workflow.builder";
+
 export * from "./model/workflow.validator";
+
 export * from "./model/workflow";
 export * from "./model/types";
 
