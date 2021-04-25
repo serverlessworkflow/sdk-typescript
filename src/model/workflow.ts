@@ -384,7 +384,7 @@ export interface ParallelState {
         /**
          * Array of events to be produced before the transition happens
          */
-        produceEvents?:ProduceEventsDef;
+        produceEvents?: ProduceEventsDef;
         /**
          * If set to true, triggers workflow compensation when before this transition is taken. Default is false
          */
@@ -483,26 +483,7 @@ export interface Transitiondatacondition {
         /**
          * Array of events to be produced before the transition happens
          */
-        produceEvents?: {
-            /**
-             * References a name of a defined event
-             */
-            eventRef: string;
-            /**
-             * If String, expression which selects parts of the states data output to become the data of the produced event. If object a custom object to become the data of produced event.
-             */
-            data?:
-                | string
-                | {
-                [k: string]: unknown;
-            };
-            /**
-             * Add additional event extension context attributes
-             */
-            contextAttributes?: {
-                [k: string]: string;
-            };
-        }[];
+        produceEvents?: ProduceEventsDef;
         /**
          * If set to true, triggers workflow compensation when before this transition is taken. Default is false
          */
@@ -741,26 +722,7 @@ export interface SubFlowState {
         /**
          * Array of events to be produced before the transition happens
          */
-        produceEvents?: {
-            /**
-             * References a name of a defined event
-             */
-            eventRef: string;
-            /**
-             * If String, expression which selects parts of the states data output to become the data of the produced event. If object a custom object to become the data of produced event.
-             */
-            data?:
-                | string
-                | {
-                [k: string]: unknown;
-            };
-            /**
-             * Add additional event extension context attributes
-             */
-            contextAttributes?: {
-                [k: string]: string;
-            };
-        }[];
+        produceEvents?: ProduceEventsDef;
         /**
          * If set to true, triggers workflow compensation when before this transition is taken. Default is false
          */
@@ -824,26 +786,7 @@ export interface InjectState {
         /**
          * Array of events to be produced before the transition happens
          */
-        produceEvents?: {
-            /**
-             * References a name of a defined event
-             */
-            eventRef: string;
-            /**
-             * If String, expression which selects parts of the states data output to become the data of the produced event. If object a custom object to become the data of produced event.
-             */
-            data?:
-                | string
-                | {
-                [k: string]: unknown;
-            };
-            /**
-             * Add additional event extension context attributes
-             */
-            contextAttributes?: {
-                [k: string]: string;
-            };
-        }[];
+        produceEvents?: ProduceEventsDef;
         /**
          * If set to true, triggers workflow compensation when before this transition is taken. Default is false
          */
@@ -943,26 +886,7 @@ export interface ForEachState {
         /**
          * Array of events to be produced before the transition happens
          */
-        produceEvents?: {
-            /**
-             * References a name of a defined event
-             */
-            eventRef: string;
-            /**
-             * If String, expression which selects parts of the states data output to become the data of the produced event. If object a custom object to become the data of produced event.
-             */
-            data?:
-                | string
-                | {
-                [k: string]: unknown;
-            };
-            /**
-             * Add additional event extension context attributes
-             */
-            contextAttributes?: {
-                [k: string]: string;
-            };
-        }[];
+        produceEvents?: ProduceEventsDef;
         /**
          * If set to true, triggers workflow compensation when before this transition is taken. Default is false
          */
@@ -1057,26 +981,7 @@ export interface CallbackState {
         /**
          * Array of events to be produced before the transition happens
          */
-        produceEvents?: {
-            /**
-             * References a name of a defined event
-             */
-            eventRef: string;
-            /**
-             * If String, expression which selects parts of the states data output to become the data of the produced event. If object a custom object to become the data of produced event.
-             */
-            data?:
-                | string
-                | {
-                [k: string]: unknown;
-            };
-            /**
-             * Add additional event extension context attributes
-             */
-            contextAttributes?: {
-                [k: string]: string;
-            };
-        }[];
+        produceEvents?: ProduceEventsDef;
         /**
          * If set to true, triggers workflow compensation when before this transition is taken. Default is false
          */

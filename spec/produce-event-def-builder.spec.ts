@@ -14,39 +14,8 @@
  * limitations under the License.
  *
  */
+import {ProduceEventDefBuilder} from '../src/model/produce-event-def.builder';
 
-import {EventName, ProduceEventDef} from '../src';
-
-
-export class ProduceEventDefBuilder {
-	// @ts-ignore
-	private readonly model: ProduceEventDef = {};
-	
-	
-	withEventRef(value: EventName): ProduceEventDefBuilder {
-		this.model.eventRef = value;
-		return this;
-	}
-	
-	withData(value: object): ProduceEventDefBuilder {
-		this.model.data = value;
-		return this;
-		
-	}
-	
-	withContextAttributes(value: object): any {
-		this.model.contextAttributes = value;
-		return this;
-	}
-	
-	build(): ProduceEventDef {
-		if (!this.model.eventRef) {
-			throw new Error("Field eventRef can not be undefined");
-		}
-		return this.model;
-	}
-	
-}
 
 describe("ProduceEventDefBuilder", () => {
 	
