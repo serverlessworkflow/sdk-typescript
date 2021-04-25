@@ -1,3 +1,5 @@
+![Node CI](https://github.com/serverlessworkflow/sdk-typescript/workflows/Node%20CI/badge.svg)
+
 # Serverless Workflow Specification - Typescript SDK
 
 Provides the Typescript API/SPI for the [Serverless Workflow Specification](https://github.com/serverlessworkflow/specification)
