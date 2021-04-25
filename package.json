@@ -17,12 +17,15 @@
     "type": "git",
     "url": "https://github.com/serverlessworkflow/sdk-typescript.git"
   },
-  "author": "CNCF",
+  "author": {
+    "name": "Serverless Workflow Specification Authors",
+    "url": "https://serverlessworkflow.io"
+  },
   "license": "http://www.apache.org/licenses/LICENSE-2.0.txt",
   "bugs": {
     "url": "https://github.com/serverlessworkflow/sdk-typescript/issues"
   },
-  "homepage": "",
+  "homepage": "https://serverlessworkflow.io",
   "devDependencies": {
     "@types/jasmine": "3.6.9",
     "@types/js-yaml": "^4.0.0",
