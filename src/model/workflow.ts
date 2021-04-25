@@ -46,7 +46,7 @@ export type Workflow = {
      * Workflow version
      */
     version?: string;
-    start?: Startdef;
+    start?: StartDef;
     /**
      * Serverless Workflow schema version
      */
@@ -77,7 +77,7 @@ export type Workflow = {
 };
 
 
-export type Startdef =
+export type StartDef =
     | string
     | StartScheduledType;
 

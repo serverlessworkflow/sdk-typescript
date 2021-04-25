@@ -23,12 +23,10 @@ describe("CronDefBuilder", () => {
 	
 	it("Should create a valid object containing cron expresion", () => {
 		
-		
 		expect(new CronDefBuilder()
 			.withCronExpresion(cronExpression)
 			.build(),
 		).toEqual(cronExpression);
-		
 		
 	});
 	
@@ -49,12 +47,11 @@ describe("CronDefBuilder", () => {
 	});
 	
 	
-	it("should throws an error if corn expression is not set", () => {
+	it("should throws an error if cron expression is not set", () => {
 		
 		expect(() => new CronDefBuilder().build()).toThrowError();
 		
 	});
-	
 	
 });
 
