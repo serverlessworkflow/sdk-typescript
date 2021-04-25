@@ -185,9 +185,7 @@ export type EndType = | boolean
 		 */
 		data?:
 			| string
-			| {
-			[k: string]: unknown;
-		};
+			| object;
 		/**
 		 * Add additional event extension context attributes
 		 */
@@ -359,3 +357,20 @@ export type CronDef =
 	validUntil?: string;
 };
 export type Interval = string;
+export type ProduceEventDef = {
+	/**
+	 * References a name of a defined event
+	 */
+	eventRef: EventName;
+	/**
+	 * If String, expression which selects parts of the states data output to become the data of the produced event. If object a custom object to become the data of produced event.
+	 */
+	data?:
+		| string
+		| object;
+	/**
+	 * Add additional event extension context attributes
+	 */
+	contextAttributes?: object;
+};
+export type ProduceEventsDef = ProduceEventDef[];

@@ -20,7 +20,7 @@ import {
     DataConditionsType,
     DefaultTransitionType,
     EndType, EventsDef,
-    FunctionsDef, Interval, MetadataType, RepeatType, RetriesDef, StartScheduledType,
+    FunctionsDef, Interval, MetadataType, ProduceEventsDef, RepeatType, RetriesDef, StartScheduledType,
     StateDataFilterType,
     StatesType,
 } from "./types";
@@ -128,26 +128,7 @@ export type Transition =
     /**
      * Array of events to be produced before the transition happens
      */
-    produceEvents?: {
-        /**
-         * References a name of a defined event
-         */
-        eventRef: string;
-        /**
-         * If String, expression which selects parts of the states data output to become the data of the produced event. If object a custom object to become the data of produced event.
-         */
-        data?:
-            | string
-            | {
-            [k: string]: unknown;
-        };
-        /**
-         * Add additional event extension context attributes
-         */
-        contextAttributes?: {
-            [k: string]: string;
-        };
-    }[];
+    produceEvents?: ProduceEventsDef;
     /**
      * If set to true, triggers workflow compensation when before this transition is taken. Default is false
      */
@@ -163,26 +144,7 @@ export type End =
     /**
      * Defines events that should be produced
      */
-    produceEvents?: {
-        /**
-         * References a name of a defined event
-         */
-        eventRef: string;
-        /**
-         * If String, expression which selects parts of the states data output to become the data of the produced event. If object a custom object to become the data of produced event.
-         */
-        data?:
-            | string
-            | {
-            [k: string]: unknown;
-        };
-        /**
-         * Add additional event extension context attributes
-         */
-        contextAttributes?: {
-            [k: string]: string;
-        };
-    }[];
+    produceEvents?: ProduceEventsDef;
     /**
      * If set to true, triggers workflow compensation. Default is false
      */
@@ -256,26 +218,7 @@ export interface DelayState {
         /**
          * Array of events to be produced before the transition happens
          */
-        produceEvents?: {
-            /**
-             * References a name of a defined event
-             */
-            eventRef: string;
-            /**
-             * If String, expression which selects parts of the states data output to become the data of the produced event. If object a custom object to become the data of produced event.
-             */
-            data?:
-                | string
-                | {
-                [k: string]: unknown;
-            };
-            /**
-             * Add additional event extension context attributes
-             */
-            contextAttributes?: {
-                [k: string]: string;
-            };
-        }[];
+        produceEvents?: ProduceEventsDef;
         /**
          * If set to true, triggers workflow compensation when before this transition is taken. Default is false
          */
@@ -353,26 +296,7 @@ export interface OperationState {
         /**
          * Array of events to be produced before the transition happens
          */
-        produceEvents?: {
-            /**
-             * References a name of a defined event
-             */
-            eventRef: string;
-            /**
-             * If String, expression which selects parts of the states data output to become the data of the produced event. If object a custom object to become the data of produced event.
-             */
-            data?:
-                | string
-                | {
-                [k: string]: unknown;
-            };
-            /**
-             * Add additional event extension context attributes
-             */
-            contextAttributes?: {
-                [k: string]: string;
-            };
-        }[];
+        produceEvents?: ProduceEventsDef;
         /**
          * If set to true, triggers workflow compensation when before this transition is taken. Default is false
          */
@@ -460,26 +384,7 @@ export interface ParallelState {
         /**
          * Array of events to be produced before the transition happens
          */
-        produceEvents?: {
-            /**
-             * References a name of a defined event
-             */
-            eventRef: string;
-            /**
-             * If String, expression which selects parts of the states data output to become the data of the produced event. If object a custom object to become the data of produced event.
-             */
-            data?:
-                | string
-                | {
-                [k: string]: unknown;
-            };
-            /**
-             * Add additional event extension context attributes
-             */
-            contextAttributes?: {
-                [k: string]: string;
-            };
-        }[];
+        produceEvents?:ProduceEventsDef;
         /**
          * If set to true, triggers workflow compensation when before this transition is taken. Default is false
          */
@@ -713,26 +618,7 @@ export interface Transitioneventcondition {
         /**
          * Array of events to be produced before the transition happens
          */
-        produceEvents?: {
-            /**
-             * References a name of a defined event
-             */
-            eventRef: string;
-            /**
-             * If String, expression which selects parts of the states data output to become the data of the produced event. If object a custom object to become the data of produced event.
-             */
-            data?:
-                | string
-                | {
-                [k: string]: unknown;
-            };
-            /**
-             * Add additional event extension context attributes
-             */
-            contextAttributes?: {
-                [k: string]: string;
-            };
-        }[];
+        produceEvents?: ProduceEventsDef;
         /**
          * If set to true, triggers workflow compensation when before this transition is taken. Default is false
          */
