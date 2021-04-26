@@ -6,7 +6,7 @@
   "typings": "dist/src/index.d.ts",
   "scripts": {
     "build": "npm run clean && tsc",
-    "clean": "node node_modules/shx/lib/shx rm -rf dist",
+    "clean": "shx rm -rf dist",
     "tsc": "tsc",
     "test": "npm run tsc && jasmine --config=./spec/support/jasmine.json"
   },
