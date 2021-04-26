@@ -16,13 +16,13 @@
  */
 import {
     ActionModeType,
-    ActionsType, CronDef,
+    Actions, CronDef,
     DataConditionsType,
     DefaultTransitionType,
-    EndType, EventsDef,
-    FunctionsDef, MetadataType, RepeatType, RetriesDef, StartScheduledType,
-    StateDataFilterType,
-    StatesType,
+    EndType, Events,
+    FunctionsDef, Metadata, RepeatType, RetriesDef, StartScheduled,
+    StateDataFilter, StateName,
+    States,
 } from "./types";
 
 
@@ -46,7 +46,7 @@ export type Workflow = {
      * Workflow version
      */
     version?: string;
-    start?: Startdef;
+    start?: StartDef;
     /**
      * Serverless Workflow schema version
      */
@@ -63,23 +63,27 @@ export type Workflow = {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
-    events?: EventsDef;
+    metadata?: Metadata;
+    events?: Events;
     functions?:FunctionsDef;
     retries?:RetriesDef;
     /**
      * State definitions
      */
-    states?: StatesType;
+    states?: States;
     [k: string]: unknown;
 } & {
     [k: string]: unknown;
 };
 
 
-export type Startdef =
-    | string
-    | StartScheduledType;
+export type StartDef =
+    |
+    /**
+     * Name of the starting workflow state
+     */
+    StateName
+    | StartScheduled;
 
 export type Schedule =
     | string
@@ -96,19 +100,7 @@ export type Schedule =
 };
 
 
-/**
- * This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel
- */
-export type EventState =
-    | {
-    [k: string]: unknown;
-}
-    | {
-    [k: string]: unknown;
-}
-    | {
-    [k: string]: unknown;
-};
+
 export type SwitchState = Databasedswitch | Eventbasedswitch;
 export type Transition =
     | string
@@ -219,7 +211,7 @@ export interface DelayState {
     /**
      * State data filter
      */
-    stateDataFilter?: StateDataFilterType;
+    stateDataFilter?: StateDataFilter;
     /**
      * Amount of time (ISO 8601 format) to delay
      */
@@ -284,7 +276,7 @@ export interface DelayState {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 
@@ -312,7 +304,7 @@ export interface OperationState {
     /**
      * State data filter
      */
-    stateDataFilter?: StateDataFilterType;
+    stateDataFilter?: StateDataFilter;
     /**
      * Specifies whether actions are performed in sequence or in parallel
      */
@@ -320,7 +312,7 @@ export interface OperationState {
     /**
      * Actions to be performed
      */
-    actions?: ActionsType;
+    actions?: Actions;
     /**
      * States error handling and retries definitions
      */
@@ -381,7 +373,7 @@ export interface OperationState {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 /**
@@ -408,7 +400,7 @@ export interface ParallelState {
     /**
      * State data filter
      */
-    stateDataFilter?: StateDataFilterType;
+    stateDataFilter?: StateDataFilter;
     /**
      * Branch Definitions
      */
@@ -488,7 +480,7 @@ export interface ParallelState {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 
@@ -511,7 +503,7 @@ export interface Databasedswitch {
     /**
      * State data filter
      */
-    stateDataFilter?: StateDataFilterType;
+    stateDataFilter?: StateDataFilter;
     /**
      * Defines conditions evaluated against state data
      */
@@ -542,7 +534,7 @@ export interface Databasedswitch {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 /**
@@ -598,7 +590,7 @@ export interface Transitiondatacondition {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 /**
@@ -620,7 +612,7 @@ export interface Enddatacondition {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 /**
@@ -642,7 +634,7 @@ export interface Eventbasedswitch {
     /**
      * State data filter
      */
-    stateDataFilter?: StateDataFilterType;
+    stateDataFilter?: StateDataFilter;
     /**
      * Defines conditions evaluated against events
      */
@@ -677,7 +669,7 @@ export interface Eventbasedswitch {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 /**
@@ -746,7 +738,7 @@ export interface Transitioneventcondition {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 /**
@@ -782,7 +774,7 @@ export interface Enddeventcondition {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 
@@ -822,7 +814,7 @@ export interface SubFlowState {
     /**
      * State data filter
      */
-    stateDataFilter?: StateDataFilterType;
+    stateDataFilter?: StateDataFilter;
     /**
      * States error handling and retries definitions
      */
@@ -883,7 +875,7 @@ export interface SubFlowState {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 /**
@@ -916,7 +908,7 @@ export interface InjectState {
     /**
      * State data filter
      */
-    stateDataFilter?: StateDataFilterType;
+    stateDataFilter?: StateDataFilter;
     /**
      * Next transition of the workflow after subflow has completed
      */
@@ -966,7 +958,7 @@ export interface InjectState {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 /**
@@ -1024,7 +1016,7 @@ export interface ForEachState {
     /**
      * State data filter
      */
-    stateDataFilter?: StateDataFilterType;
+    stateDataFilter?: StateDataFilter;
     /**
      * States error handling and retries definitions
      */
@@ -1085,7 +1077,7 @@ export interface ForEachState {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 /**
@@ -1138,7 +1130,7 @@ export interface CallbackState {
     /**
      * State data filter
      */
-    stateDataFilter?: StateDataFilterType;
+    stateDataFilter?: StateDataFilter;
     /**
      * States error handling and retries definitions
      */
@@ -1204,7 +1196,7 @@ export interface CallbackState {
     /**
      * Metadata information
      */
-    metadata?: MetadataType;
+    metadata?: Metadata;
 }
 
 

@@ -14,26 +14,30 @@
  * limitations under the License.
  *
  */
-import {FunctionRefImplArgumentsType, FunctionRefImplType} from "./types";
+import {Event, EventName} from '../index';
 
-export class FunctionRefImplBuilder {
-    // @ts-ignore
-    private model: FunctionRefImplType = {};
-
-
-    withRefName(value: string): FunctionRefImplBuilder {
-        this.model.refName = value;
-        return this;
-
-    }
-
-    withArguments(value: FunctionRefImplArgumentsType): FunctionRefImplBuilder {
-        this.model.arguments = value;
-        return this;
-    }
-
-    build(): FunctionRefImplType {
-        return this.model;
-    }
-
+export class EventBuilder {
+	private model: Event = {};
+	
+	withName(value: EventName): EventBuilder {
+		this.model.name = value;
+		return this;
+	}
+	
+	withType(value: string): EventBuilder {
+		this.model.type = value;
+		return this;
+	}
+	
+	withSource(value: string): EventBuilder {
+		this.model.source = value;
+		return this;
+	}
+	
+	
+	build(): Event {
+		//TODO validate
+		return this.model;
+	}
+	
 }

@@ -14,39 +14,25 @@
  * limitations under the License.
  *
  */
-import {OperationState} from "./workflow";
-import {ActionModeType, Actions} from "./types";
+import {Arguments, FunctionRefImplType} from "./types";
 
-export class OperationStateBuilder {
+export class ArgumentsBuilder {
+    // @ts-ignore
+    private model: FunctionRefImplType = {};
 
-    private model: OperationState = {
-        type: "operation"
-    }
 
-    withName(value: string): OperationStateBuilder {
-        this.model.name = value;
+    withRefName(value: string): ArgumentsBuilder {
+        this.model.refName = value;
         return this;
 
     }
 
-
-    withActionMode(value: ActionModeType): OperationStateBuilder {
-        this.model.actionMode = value;
-        return this;
-
-    }
-
-    withEnd(value: boolean): OperationStateBuilder {
-        this.model.end = value;
+    withArguments(value: Arguments): ArgumentsBuilder {
+        this.model.arguments = value;
         return this;
     }
 
-    withActions(value: Actions): OperationStateBuilder {
-        this.model.actions = value;
-        return this;
-    }
-
-    build(): OperationState {
+    build(): FunctionRefImplType {
         return this.model;
     }
 

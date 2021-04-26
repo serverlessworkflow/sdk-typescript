@@ -14,11 +14,11 @@
  * limitations under the License.
  *
  */
-import {ActionDataFilterType, ActionType, EventRefType, FunctionRefType} from "./types";
+import {ActionDataFilterType, Action, EventRefType, FunctionRefType} from "./types";
 
 export class ActionBuilder {
 	
-	private model: ActionType = {};
+	private model: Action = {};
 	
 	
 	withFunctionRef(value: FunctionRefType): ActionBuilder {
@@ -48,7 +48,7 @@ export class ActionBuilder {
 		
 	}
 	
-	build(): ActionType {
+	build(): Action {
 		
 		if (!this.model.eventRef && !this.model.functionRef) {
 			throw new Error("Either eventRef or functionRef have to be defined");

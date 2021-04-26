@@ -36,8 +36,6 @@
     "ts-node": "^9.1.1"
   },
   "files": [
-    "dist/src/*",
-    "dist/base-workflow.*",
-    "dist/index.*"
+    "dist/src/*"
   ]
 }
