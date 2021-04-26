@@ -14,9 +14,13 @@
  * limitations under the License.
  *
  */
+
 export {BaseWorkflow} from "./base-workflow";
+
 export {ActionBuilder} from "./model/action.builder";
+export {ActionDataFilterBuilder} from "./model/action-data-filter.builder";
 export {ArgumentsBuilder} from "./model/arguments.builder";
+export {CronDefBuilder} from "./model/cron-def.builder";
 export {DatabasedSwitchBuilder} from "./model/databased-switch.builder";
 export {DefaultTransitionTypeBuilder} from "./model/default-transition-type.builder";
 export {EventBuilder} from "./model/event.builder";
@@ -25,13 +29,17 @@ export {EventStateBuilder} from "./model/event-state.builder";
 export {EventsBuilder} from "./model/events.builder";
 export {FunctionBuilder} from "./model/function.builder";
 export {InjectStateBuilder} from "./model/inject-state.builder";
+export {MetadataBuilder} from "./model/metadata.builder";
 export {OnEventBuilder} from "./model/on-event.builder";
-export {RepeatBuilder} from "./model/repeat.builder";
-export {StartBuilder} from "./model/start.builder";
 export {OperationStateBuilder} from "./model/operation-state.builder";
+export {ProduceEventDefBuilder} from "./model/produce-event-def.builder";
+export {RepeatBuilder} from "./model/repeat.builder";
+export {ScheduleBuilder} from "./model/schedule.builder";
+export {StartBuilder} from "./model/start.builder";
 export {SubFlowStateBuilder} from "./model/sub-flow-state.builder";
 export {TransitiondataconditionBuilder} from "./model/transitiondatacondition.builder";
 export {WorkflowBuilder} from "./model/workflow.builder";
+
 export * from "./model/workflow.validator";
 export * from "./model/workflow";
 export * from "./model/types";
