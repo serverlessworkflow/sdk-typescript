@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-import {ProduceEventDefBuilder} from '../src/model/produce-event-def.builder';
+import {ProduceEventDefBuilder} from '../../src/model/produce-event-def.builder';
 
 
 describe("ProduceEventDefBuilder", () => {

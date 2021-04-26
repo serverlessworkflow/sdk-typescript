@@ -14,8 +14,8 @@
  * limitations under the License.
  *
  */
-import {InjectStateBuilder, Workflow, WorkflowBuilder} from "../src";
-import {ValidationError, ValidationErrors, ValidatorFactory, WorkflowValidator} from "../src/model/workflow.validator";
+import {InjectStateBuilder, Workflow, WorkflowBuilder} from "../../src";
+import {ValidationError, ValidationErrors, ValidatorFactory, WorkflowValidator} from "../../src/model/workflow.validator";
 
 
 describe("workflow builder", () => {
