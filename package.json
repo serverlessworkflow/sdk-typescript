@@ -5,10 +5,10 @@
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
   "scripts": {
-    "build": "npm run clean && tsc",
-    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc --build",
+    "clean": "tsc --build --clean",
     "tsc": "tsc",
-    "test": "npm run tsc && jasmine --config=./spec/support/jasmine.json"
+    "test": "tsc --build && jasmine --config=./spec/support/jasmine.json"
   },
   "dependencies": {
     "js-yaml": "^4.0.0"
