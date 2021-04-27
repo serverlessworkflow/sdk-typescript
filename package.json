@@ -6,7 +6,7 @@
   "typings": "dist/src/index.d.ts",
   "scripts": {
     "build": "npm run clean && tsc",
-    "clean": "rm -rf dist",
+    "clean": "shx rm -rf dist",
     "tsc": "tsc",
     "test": "npm run tsc && jasmine --config=./spec/support/jasmine.json"
   },
@@ -35,6 +35,7 @@
     "jasmine": "3.7.0",
     "jasmine-ts": "^0.3.2",
     "nodemon": "^2.0.7",
+    "shx": "^0.3.3",
     "ts-node": "^9.1.1",
     "typescript": "4.2.3"
   },
