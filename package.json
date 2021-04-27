@@ -40,8 +40,6 @@
     "typescript": "4.2.3"
   },
   "files": [
-    "dist/src/*",
-    "dist/base-workflow.*",
-    "dist/index.*"
+    "dist/src/*"
   ]
 }

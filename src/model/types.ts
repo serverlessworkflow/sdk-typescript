@@ -19,7 +19,6 @@ import {
 	DelayState,
 	End,
 	Enddatacondition,
-	EventState,
 	ForEachState,
 	InjectState,
 	OperationState,
@@ -31,9 +30,7 @@ import {
 	Transitiondatacondition,
 } from "./workflow";
 
-export type FunctionRefImplArgumentsType = {
-	[k: string]: unknown;
-};
+export type Arguments = object;
 
 export type FunctionRefImplType = {
 	/**
@@ -43,7 +40,7 @@ export type FunctionRefImplType = {
 	/**
 	 * Function arguments
 	 */
-	arguments?: FunctionRefImplArgumentsType;
+	arguments?: Arguments;
 };
 export type FunctionRefType = | string
 	| FunctionRefImplType;
@@ -81,7 +78,7 @@ export type ActionDataFilterType = {
 	 */
 	toStateData?: string;
 };
-export type ActionType = {
+export type Action = {
 	/**
 	 * Unique action definition name
 	 */
@@ -104,7 +101,7 @@ export type ActionType = {
 	 */
 	actionDataFilter?: ActionDataFilterType;
 };
-export type ActionsType = ActionType[];
+export type Actions = Action[];
 
 
 export type FunctionType = "rest" | "rpc" | "expression";
@@ -128,7 +125,7 @@ export type FunctionsDef = | string
 	Function,
 	...Function[]
 ];
-export type StatesType = [
+export type States = [
 	(
 		| DelayState
 		| EventState
@@ -153,7 +150,7 @@ export type StatesType = [
 		)[]
 ];
 
-export type StateDataFilterType = {
+export type StateDataFilter = {
 	/**
 	 * Workflow expression to filter the state data input
 	 */
@@ -188,11 +185,12 @@ export type DefaultTransitionType = {
 	end: End;
 };
 
-export type StartScheduledType = {
+export type StateName = string;
+export type StartScheduled = {
 	/**
 	 * Name of the starting workflow state
 	 */
-	stateName: string;
+	stateName: StateName;
 	/**
 	 * Define the time/repeating intervals or cron at which workflow instances should be automatically started.
 	 */
@@ -203,11 +201,11 @@ export type Metadata = {
 	[k: string]: string;
 };
 
-type EventType = {
+export type Event = {
 	/**
 	 * Unique event name
 	 */
-	name?: string;
+	name?: EventName;
 	/**
 	 * CloudEvent source
 	 */
@@ -250,11 +248,12 @@ type EventType = {
 	 */
 	metadata?: Metadata;
 };
-export type EventsDef = | string
-	| [
-	EventType,
-	...EventType[]
+export type EventList = [
+	Event,
+	...Event[]
 ];
+export type Events = | EventName
+	| EventList;
 
 type RetryType = {
 	/**
@@ -337,6 +336,92 @@ export type CronDef =
 	 */
 	validUntil?: string;
 };
+
+export type OnEvent = {
+	/**
+	 * References one or more unique event names in the defined workflow events
+	 */
+	eventRefs: EventsName;
+	/**
+	 * Specifies how actions are to be performed (in sequence of parallel)
+	 */
+	actionMode?: "sequential" | "parallel";
+	/**
+	 * Actions to be performed if expression matches
+	 */
+	actions?: Actions;
+	/**
+	 * Event data filter
+	 */
+	eventDataFilter?: {
+		/**
+		 * Workflow expression that filters of the event data (payload)
+		 */
+		data?: string;
+		/**
+		 *  Workflow expression that selects a state data element to which the event payload should be added/merged into. If not specified, denotes, the top-level state data element.
+		 */
+		toStateData?: string;
+	};
+};
+
+export type OnEvents = OnEvent[];
+
+export interface EventState {
+	/**
+	 * Unique State id
+	 */
+	id?: string;
+	/**
+	 * State name
+	 */
+	name: string;
+	/**
+	 * State type
+	 */
+	type: "event";
+	/**
+	 * If true consuming one of the defined events causes its associated actions to be performed. If false all of the defined events must be consumed in order for actions to be performed
+	 */
+	exclusive?: boolean;
+	onEvents: OnEvents;
+	/**
+	 * Time period to wait for incoming events (ISO 8601 format)
+	 */
+	timeout?: string;
+	/**
+	 * State data filter
+	 */
+	stateDataFilter?: StateDataFilter;
+	/**
+	 * States error handling and retries definitions
+	 */
+	onErrors?: (
+		| {
+		[k: string]: unknown;
+	}
+		| {
+		[k: string]: unknown;
+	}
+		)[];
+	/**
+	 * Next transition of the workflow after all the actions have been performed
+	 */
+	transition:Transition;
+	/**
+	 * State end definition
+	 */
+	end:End;
+	/**
+	 * Unique Name of a workflow state which is responsible for compensation of this state
+	 */
+	compensatedBy?: string;
+	/**
+	 * Metadata information
+	 */
+	metadata?: Metadata;
+}
+
 export type Interval = string;
 
 export type ExpressionExtractData = string;
