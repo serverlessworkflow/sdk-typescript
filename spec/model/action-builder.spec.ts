@@ -15,8 +15,8 @@
  *
  */
 
-import {ActionBuilder, ActionDataFilterType, EventRefType} from '../src';
-import {ActionDataFilterBuilder} from '../src/model/action-data-filter.builder';
+import {ActionBuilder, ActionDataFilterType, EventRefType} from '../../src';
+import {ActionDataFilterBuilder} from '../../src/model/action-data-filter.builder';
 
 
 describe("ActionBuilder", () => {

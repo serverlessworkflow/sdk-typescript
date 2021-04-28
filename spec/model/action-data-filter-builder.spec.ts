@@ -14,33 +14,31 @@
  * limitations under the License.
  *
  */
-import {RepeatBuilder} from '../src/model/repeat.builder';
 
-describe('repeat builder', () => {
+import {ActionDataFilterBuilder} from '../../src/model/action-data-filter.builder';
+
+describe("ActionDataFilter", () => {
 	
-	it("Should create empty object", () => {
+	it("should generate an empty object", () => {
+		expect(new ActionDataFilterBuilder().build()).toEqual({});
+	});
+	
+	it("should generate a populated object", () => {
+		expect(new ActionDataFilterBuilder()
+			.withFromStateData("fromState")
+			.withToStateData("toState")
+			.withResults("result")
+			.build()).toEqual(
+			{
+				fromStateData: "fromState",
+				toStateData: "toState",
+				results: "result",
+			},
+		);
 		
-		expect(new RepeatBuilder().build()).toEqual({});
 		
 	});
 	
-	it("should create an object with all possible fields", () => {
-		
-		expect(new RepeatBuilder()
-			.withExpression("anyExpression")
-			.withCheckBefore(true)
-			.withMax(3)
-			.withContinueOnError(true)
-			.withStopOnEvents(["onStopEvent"])
-			.build())
-			.toEqual({
-				expression: "anyExpression",
-				checkBefore: true,
-				max: 3,
-				continueOnError: true,
-				stopOnEvents: ["onStopEvent"],
-			});
-		
-	});
 	
 });
+

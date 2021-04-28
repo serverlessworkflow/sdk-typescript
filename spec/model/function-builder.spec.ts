@@ -15,7 +15,7 @@
  *
  */
 
-import {FunctionBuilder} from '../src';
+import {FunctionBuilder} from '../../src';
 
 
 describe("FunctionBuilder", () => {

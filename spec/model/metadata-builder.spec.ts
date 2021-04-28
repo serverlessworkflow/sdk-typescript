@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-import {MetadataBuilder} from '../src/model/metadata.builder';
+import {MetadataBuilder} from '../../src/model/metadata.builder';
 
 
 describe("MetadataBuilder", () => {

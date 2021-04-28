@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-import {CronDefBuilder} from '../src/model/cron-def.builder';
+import {CronDefBuilder} from '../../src/model/cron-def.builder';
 
 const cronExpression = "0 * * ? * *";
 

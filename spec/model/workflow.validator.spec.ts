@@ -14,8 +14,8 @@
  * limitations under the License.
  *
  */
-import {Workflow} from "../src";
-import {ValidationError, WorkflowValidator} from "../src/model/workflow.validator";
+import {Workflow} from "../../src";
+import {ValidationError, WorkflowValidator} from "../../src/model/workflow.validator";
 
 
 const validWorkflow: Workflow = {

@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-import {EventRefBuilder} from '../src/model/event-ref.builder';
+import {EventRefBuilder} from '../../src/model/event-ref.builder';
 
 
 describe("event ref builder", () => {

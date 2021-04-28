@@ -14,8 +14,8 @@
  * limitations under the License.
  *
  */
-import {ScheduleBuilder} from '../src/model/schedule.builder';
-import {CronDef} from '../src';
+import {ScheduleBuilder} from '../../src/model/schedule.builder';
+import {CronDef} from '../../src';
 
 
 describe("ScheduleBuilder", () => {
