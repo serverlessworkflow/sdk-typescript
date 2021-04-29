@@ -14,43 +14,34 @@
  * limitations under the License.
  *
  */
-import {End, EventState, OnEvents, Transition} from '../index';
+import {FunctionList, Functions, URIDefinition} from "./types";
 
-export class EventStateBuilder {
-	// @ts-ignore
-	private model: EventState = {
-		type: "event",
-	};
+export class FunctionsBuilder {
 	
+	private URIDefinition: URIDefinition;
+	private functions: FunctionList;
 	
-	withName(value: string): EventStateBuilder {
-		this.model.name = value;
+	withURIDefinition(value: URIDefinition): FunctionsBuilder {
+		this.URIDefinition = value;
 		return this;
 	}
 	
-	withOnEvents(value: OnEvents): EventStateBuilder {
-		this.model.onEvents = value;
+	
+	withFunctions(value: FunctionList): FunctionsBuilder {
+		this.functions = value;
 		return this;
+	}
+	
+	
+	build(): Functions {
 		
-	}
-	
-	withExclusive(value: boolean): EventStateBuilder {
-		this.model.exclusive = value;
-		return this;
-	}
-	withEnd(value: End): EventStateBuilder {
-		this.model.end = value;
-		return this;
+		//TODO validate
+		if (this.URIDefinition) {
+			return this.URIDefinition;
+		}
 		
-	}
-	
-	withTransition(value: Transition): any {
-		this.model.transition = value;
-		return this;
-	}
-	
-	build(): EventState {
-		return this.model;
+		return this.functions;
+		
 	}
 	
 }

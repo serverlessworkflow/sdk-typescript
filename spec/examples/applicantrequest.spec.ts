@@ -16,14 +16,14 @@
  */
 import {WorkflowBuilder} from "../../src/model/workflow.builder";
 import * as fs from "fs";
-import {FunctionBuilder} from "../../src/model/function.builder";
+import {FunctionDefBuilder} from "../../src/model/function-def.builder";
 import {DatabasedSwitchBuilder} from "../../src/model/databased-switch.builder";
 import {TransitiondataconditionBuilder} from "../../src/model/transitiondatacondition.builder";
 import {OperationStateBuilder} from "../../src/model/operation-state.builder";
 import {SubFlowStateBuilder} from "../../src/model/sub-flow-state.builder";
 import {ActionBuilder} from "../../src/model/action.builder";
-import {ArgumentsBuilder} from "../../src/model/arguments.builder";
 import {DefaultTransitionTypeBuilder} from "../../src/model/default-transition-type.builder";
+import {FunctionRefBuilder} from '../../src/model/function-ref.builder';
 
 
 describe("applicationrequest workflow example", () => {
@@ -37,7 +37,7 @@ describe("applicationrequest workflow example", () => {
 			.withName("Applicant Request Decision Workflow")
 			.withDescription("Determine if applicant request is valid")
 			.withStart("CheckApplication")
-			.withFunctions([new FunctionBuilder()
+			.withFunctions([new FunctionDefBuilder()
 				.withName("sendRejectionEmailFunction")
 				.withOperation("http://myapis.org/applicationapi.json#emailRejection")
 				.build()])
@@ -68,7 +68,7 @@ describe("applicationrequest workflow example", () => {
 					.withEnd(true)
 					.withActions([
 						new ActionBuilder().withFunctionRef(
-							new ArgumentsBuilder()
+							new FunctionRefBuilder()
 								.withRefName("sendRejectionEmailFunction")
 								.withArguments({applicant: '${ .applicant }'})
 								.build(),

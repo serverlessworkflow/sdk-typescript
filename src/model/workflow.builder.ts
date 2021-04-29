@@ -15,7 +15,7 @@
  *
  */
 import {Exectimeout, StartDef, Workflow} from "./workflow";
-import {Events, FunctionsDef, Metadata, RetriesDef, States} from "./types";
+import {Events, Functions, Metadata, RetriesDef, States} from "./types";
 import {ValidatorFactory} from "./workflow.validator";
 
 
@@ -55,7 +55,7 @@ export class WorkflowBuilder {
 		return this;
 	}
 	
-	withFunctions(value: FunctionsDef): WorkflowBuilder {
+	withFunctions(value: Functions): WorkflowBuilder {
 		this.model.functions = value;
 		return this;
 	}

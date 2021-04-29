@@ -14,13 +14,14 @@
  * limitations under the License.
  *
  */
-import {ActionBuilder, FunctionBuilder, ArgumentsBuilder, WorkflowBuilder} from '../../src';
+import {ActionBuilder, FunctionDefBuilder, WorkflowBuilder} from '../../src';
 import * as fs from 'fs';
 import {StartBuilder} from '../../src/model/start.builder';
 import {EventsBuilder} from '../../src/model/events.builder';
 import {EventBuilder} from '../../src/model/event.builder';
 import {EventStateBuilder} from '../../src/model/event-state.builder';
 import {OnEventBuilder} from '../../src/model/on-event.builder';
+import {FunctionRefBuilder} from '../../src/model/function-ref.builder';
 
 describe("carauctionbids workflow example", () => {
 	
@@ -35,7 +36,7 @@ describe("carauctionbids workflow example", () => {
 			.withStart(new StartBuilder()
 				.withName("StoreCarAuctionBid")
 				.withSchedule("2020-03-20T09:00:00Z/2020-03-20T15:00:00Z").build())
-			.withFunctions([new FunctionBuilder()
+			.withFunctions([new FunctionDefBuilder()
 				.withName("StoreBidFunction")
 				.withOperation("http://myapis.org/carauctionapi.json#storeBid")
 				.build()])
@@ -55,7 +56,7 @@ describe("carauctionbids workflow example", () => {
 							.withEventsRef(["CarBidEvent"])
 							.withActions([
 								new ActionBuilder().withFunctionRef(
-									new ArgumentsBuilder()
+									new FunctionRefBuilder()
 										.withRefName("StoreBidFunction")
 										.withArguments({
 											"bid": "${ .bid }",

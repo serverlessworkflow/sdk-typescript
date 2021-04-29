@@ -22,7 +22,7 @@ import {
 	DefaultTransitionType,
 	EndType,
 	Events,
-	FunctionsDef,
+	Functions,
 	Interval,
 	Metadata,
 	ProduceEventsDef,
@@ -74,7 +74,7 @@ export type Workflow = {
 	 */
 	metadata?: Metadata;
 	events?: Events;
-	functions?: FunctionsDef;
+	functions?: Functions;
 	retries?: RetriesDef;
 	/**
 	 * State definitions
@@ -119,12 +119,12 @@ export type Schedule =
 
 export type SwitchState = Databasedswitch | Eventbasedswitch;
 export type Transition =
-	| string
+	| StateName
 	| {
 	/**
 	 * Name of state to transition to
 	 */
-	nextState: string;
+	nextState: StateName;
 	/**
 	 * Array of events to be produced before the transition happens
 	 */

@@ -14,11 +14,11 @@
  * limitations under the License.
  *
  */
-import {EventRefType} from '../index';
+import {EventRef} from '../index';
 
 export class EventRefBuilder {
 	
-	private readonly model: EventRefType = {};
+	private readonly model: EventRef = {};
 	
 	
 	withResultEventRef(value: string): EventRefBuilder {
@@ -42,7 +42,7 @@ export class EventRefBuilder {
 		return this;
 	}
 	
-	build(): EventRefType {
+	build(): EventRef {
 		
 		if (!this.model.resultEventRef) {
 			throw new Error("Field resultEventRef can not be undefined");

@@ -14,34 +14,17 @@
  * limitations under the License.
  *
  */
-import {EventList, Events, URIDefinition} from '../index';
+import {StateName, Transition} from '../index';
 
-export class EventsBuilder {
+export class TransitionBuilder {
+	private stateName: StateName;
 	
-	private events: EventList;
-	private URIDefinition: URIDefinition;
-	
-	
-	withURIDefinition(value: URIDefinition): EventsBuilder {
-		this.URIDefinition = value;
+	withStateName(value: StateName): TransitionBuilder {
+		this.stateName = value;
 		return this;
 	}
 	
-	withEvents(value: EventList): EventsBuilder {
-		this.events = value;
-		return this;
+	build(): Transition {
+		return this.stateName;
 	}
-	
-	build(): Events {
-		
-		
-		//TODO validate
-		if (this.URIDefinition) {
-			return this.URIDefinition;
-		}
-		
-		return this.events;
-	}
-	
-	
 }
