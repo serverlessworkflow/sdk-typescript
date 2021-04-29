@@ -18,7 +18,7 @@ import {WorkflowBuilder} from "../../src/model/workflow.builder";
 import * as fs from "fs";
 import {FunctionDefBuilder} from "../../src/model/function-def.builder";
 import {DatabasedSwitchBuilder} from "../../src/model/databased-switch.builder";
-import {TransitiondataconditionBuilder} from "../../src/model/transitiondatacondition.builder";
+import {TransitionDataConditionBuilder} from "../../src/model/transition-data-condition.builder";
 import {OperationStateBuilder} from "../../src/model/operation-state.builder";
 import {SubFlowStateBuilder} from "../../src/model/sub-flow-state.builder";
 import {ActionBuilder} from "../../src/model/action.builder";
@@ -45,11 +45,11 @@ describe("applicationrequest workflow example", () => {
 				new DatabasedSwitchBuilder()
 					.withName("CheckApplication")
 					.withDataConditions(
-						[new TransitiondataconditionBuilder()
+						[new TransitionDataConditionBuilder()
 							.withCondition("${ .applicants | .age >= 18 }")
 							.withTransition("StartApplication")
 							.build(),
-							new TransitiondataconditionBuilder()
+							new TransitionDataConditionBuilder()
 								.withCondition("${ .applicants | .age < 18 }")
 								.withTransition("RejectApplication")
 								.build()])

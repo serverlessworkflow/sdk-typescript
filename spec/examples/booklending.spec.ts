@@ -14,13 +14,23 @@
  * limitations under the License.
  *
  */
-import {ActionBuilder, EventsBuilder, OperationStateBuilder, WorkflowBuilder} from '../../src';
+import {
+	ActionBuilder,
+	DatabasedSwitchBuilder,
+	EventsBuilder,
+	OperationStateBuilder,
+	TransitionDataConditionBuilder,
+	WorkflowBuilder,
+} from '../../src';
 import * as fs from 'fs';
 import {StartBuilder} from '../../src/model/start.builder';
 import {EventStateBuilder} from '../../src/model/event-state.builder';
 import {OnEventBuilder} from '../../src/model/on-event.builder';
 import {FunctionRefBuilder} from '../../src/model/function-ref.builder';
 import {FunctionsBuilder} from '../../src/model/functions.builder';
+import {EventBasedSwitchBuilder} from '../../src/model/event-based-switch.builder';
+import {TransitionEventConditionBuilder} from '../../src/model/transition-event-condition.builder';
+import {DelayStateBuilder} from '../../src/model/delay-state.builder';
 
 
 describe("booklending workflow example", () => {
@@ -59,6 +69,96 @@ describe("booklending workflow example", () => {
 					])
 					.withTransition("Book Status Decision")
 					.build(),
+				new DatabasedSwitchBuilder()
+					.withName("Book Status Decision")
+					.withDataConditions([
+						new TransitionDataConditionBuilder()
+							.withName("Book is on loan")
+							.withCondition("${ .book.status == \"onloan\" }")
+							.withTransition("Report Status To Lender")
+							.build(),
+						new TransitionDataConditionBuilder()
+							.withName("Check is available")
+							.withCondition("${ .book.status == \"available\" }")
+							.withTransition("Check Out Book")
+							.build(),
+					])
+					.build(),
+				new OperationStateBuilder()
+					.withName("Report Status To Lender")
+					.withActions([
+						new ActionBuilder()
+							.withFunctionRef(new FunctionRefBuilder()
+								.withRefName("Send status to lender")
+								.withArguments({
+									"bookid": "${ .book.id }",
+									"message": "Book ${ .book.title } is already on loan",
+								})
+								.build())
+							.build(),
+					])
+					.withTransition("Wait for Lender response")
+					.build(),
+				new EventBasedSwitchBuilder()
+					.withName("Wait for Lender response")
+					.withEventConditions([
+						new TransitionEventConditionBuilder()
+							.withName("Hold Book")
+							.withEventRef("Hold Book Event")
+							.withTransition("Request Hold")
+							.build(),
+						new TransitionEventConditionBuilder()
+							.withName("Decline Book Hold")
+							.withEventRef("Decline Hold Event")
+							.withTransition("Cancel Request")
+							.build(),
+					])
+					.build(),
+				new OperationStateBuilder()
+					.withName("Request Hold")
+					.withActions([
+						new ActionBuilder().withFunctionRef(
+							new FunctionRefBuilder()
+								.withRefName("Request hold for lender")
+								.withArguments({
+									"bookid": "${ .book.id }",
+									"lender": "${ .lender }",
+								}).build()).build(),
+					])
+					.withTransition("Wait two weeks")
+					.build(),
+			new DelayStateBuilder()
+				.withName("Wait two weeks")
+				.withTimeDelay("PT2W")
+				.withTransition("Get Book Status")
+				.build(),
+				new OperationStateBuilder()
+					.withName("Check Out Book")
+					.withActions([
+						new ActionBuilder()
+							.withFunctionRef(
+								new FunctionRefBuilder()
+									.withRefName("Check out book with id")
+									.withArguments({
+										"bookid": "${ .book.id }"
+									})
+									.build())
+							.build(),
+						new ActionBuilder()
+							.withFunctionRef(
+								new FunctionRefBuilder()
+									.withRefName("Notify Lender for checkout")
+									.withArguments({
+										"bookid": "${ .book.id }",
+										"lender": "${ .lender }"
+									})
+									.build())
+							.build()
+					
+					])
+					.withEnd(true)
+					.build()
+			
 			])
 			.withFunctions(new FunctionsBuilder()
 				.withURIDefinition("file://books/lending/functions.json")
@@ -67,6 +167,7 @@ describe("booklending workflow example", () => {
 				.withURIDefinition("file://books/lending/events.json")
 				.build())
 			.build();
+		
 		
 		const expected = JSON.parse(fs.readFileSync("./spec/examples/booklending.json")
 			.toLocaleString()) as any;

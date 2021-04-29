@@ -18,16 +18,15 @@ import {
 	CallbackState,
 	DelayState,
 	End,
-	Enddatacondition,
+	EndDataCondition,
 	ForEachState,
-	InjectState,
+	InjectState, OnErrors,
 	OperationState,
 	ParallelState,
 	Schedule,
 	SubFlowState,
 	SwitchState,
 	Transition,
-	Transitiondatacondition,
 } from "./workflow";
 
 export type Arguments = object;
@@ -179,7 +178,7 @@ export type EndType = | boolean
 	compensate?: boolean;
 };
 
-export type DataConditionsType = (Transitiondatacondition | Enddatacondition)[];
+export type DataConditions = (TransitionDataCondition | EndDataCondition)[];
 
 export type ActionModeType = "sequential" | "parallel";
 export type DefaultTransitionType = {
@@ -398,14 +397,7 @@ export interface EventState {
 	/**
 	 * States error handling and retries definitions
 	 */
-	onErrors?: (
-		| {
-		[k: string]: unknown;
-	}
-		| {
-		[k: string]: unknown;
-	}
-		)[];
+	onErrors?: OnErrors;
 	/**
 	 * Next transition of the workflow after all the actions have been performed
 	 */
@@ -451,3 +443,25 @@ export type ProduceEventDef = {
 	contextAttributes?: ContextAttributes;
 };
 export type ProduceEventsDef = ProduceEventDef[];
+
+/**
+ * Switch state data based condition
+ */
+export interface TransitionDataCondition {
+	/**
+	 * Data condition name
+	 */
+	name?: string;
+	/**
+	 * Workflow expression evaluated against state data. Must evaluate to true or false
+	 */
+	condition: string;
+	/**
+	 * Workflow transition if condition is evaluated to true
+	 */
+	transition: Transition;
+	/**
+	 * Metadata information
+	 */
+	metadata?: Metadata;
+}
