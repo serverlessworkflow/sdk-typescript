@@ -33,7 +33,8 @@ import {
 export type Arguments = object;
 
 export type FunctionName = string;
-export type FunctionRefImplType = {
+export type FunctionRef = | FunctionName
+	| {
 	/**
 	 * Name of the referenced function
 	 */
@@ -43,10 +44,8 @@ export type FunctionRefImplType = {
 	 */
 	arguments?: Arguments;
 };
-export type FunctionRef = | FunctionName
-	| FunctionRefImplType;
 
-export  type EventRefType = {
+export  type EventRef = {
 	/**
 	 * Reference to the unique name of a 'produced' event definition
 	 */
@@ -92,7 +91,7 @@ export type Action = {
 	/**
 	 * References a 'trigger' and 'result' reusable event definitions
 	 */
-	eventRef?: EventRefType;
+	eventRef?: EventRef;
 	/**
 	 * Time period to wait for function execution to complete
 	 */

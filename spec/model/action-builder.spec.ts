@@ -15,7 +15,7 @@
  *
  */
 
-import {ActionBuilder, ActionDataFilterType, EventRefType} from '../../src';
+import {ActionBuilder, ActionDataFilterType, EventRef} from '../../src';
 import {ActionDataFilterBuilder} from '../../src/model/action-data-filter.builder';
 
 
@@ -67,6 +67,6 @@ function validActionDataFilter(): ActionDataFilterType {
 	return {};
 }
 
-function validEventRef(): EventRefType {
+function validEventRef(): EventRef {
 	return {resultEventRef: "result"};
 }
