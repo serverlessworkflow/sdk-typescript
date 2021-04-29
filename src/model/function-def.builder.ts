@@ -14,21 +14,21 @@
  * limitations under the License.
  *
  */
-import {Function, FunctionType} from "./types";
+import {FunctionDef, FunctionType} from "./types";
 
-export class FunctionBuilder {
+export class FunctionDefBuilder {
 	
 	// @ts-ignore
-	private model: Function = {
+	private model: FunctionDef = {
 		type: "rest",
 	};
 	
-	withName(value: string): FunctionBuilder {
+	withName(value: string): FunctionDefBuilder {
 		this.model.name = value;
 		return this;
 	}
 	
-	withOperation(value: string): FunctionBuilder {
+	withOperation(value: string): FunctionDefBuilder {
 		this.model.operation = value;
 		return this;
 	}
@@ -38,7 +38,7 @@ export class FunctionBuilder {
 		return this;
 	}
 	
-	build(): Function {
+	build(): FunctionDef {
 		
 		
 		const errors: string[] = [];

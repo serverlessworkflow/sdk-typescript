@@ -14,14 +14,14 @@
  * limitations under the License.
  *
  */
-import {ActionDataFilterType, Action, EventRefType, FunctionRefType} from "./types";
+import {ActionDataFilterType, Action, EventRefType, FunctionRef} from "./types";
 
 export class ActionBuilder {
 	
 	private model: Action = {};
 	
 	
-	withFunctionRef(value: FunctionRefType): ActionBuilder {
+	withFunctionRef(value: FunctionRef): ActionBuilder {
 		this.model.functionRef = value;
 		return this;
 	}

@@ -32,17 +32,18 @@ import {
 
 export type Arguments = object;
 
+export type FunctionName = string;
 export type FunctionRefImplType = {
 	/**
 	 * Name of the referenced function
 	 */
-	refName: string;
+	refName: FunctionName;
 	/**
 	 * Function arguments
 	 */
 	arguments?: Arguments;
 };
-export type FunctionRefType = | string
+export type FunctionRef = | FunctionName
 	| FunctionRefImplType;
 
 export  type EventRefType = {
@@ -87,7 +88,7 @@ export type Action = {
 	/**
 	 * Referenced function
 	 */
-	functionRef?: FunctionRefType;
+	functionRef?: FunctionRef;
 	/**
 	 * References a 'trigger' and 'result' reusable event definitions
 	 */
@@ -105,7 +106,7 @@ export type Actions = Action[];
 
 
 export type FunctionType = "rest" | "rpc" | "expression";
-export type Function = {
+export type FunctionDef = {
 	/**
 	 * Unique function name
 	 */
@@ -120,11 +121,13 @@ export type Function = {
 	type?: FunctionType;
 };
 
-export type FunctionsDef = | string
-	| [
-	Function,
-	...Function[]
+export type URIDefinition = string;
+export type FunctionList = [
+	FunctionDef,
+	...FunctionDef[]
 ];
+export type Functions = | URIDefinition
+	| FunctionList;
 export type States = [
 	(
 		| DelayState
@@ -201,7 +204,7 @@ export type Metadata = {
 	[k: string]: string;
 };
 
-export type Event = {
+export type EventDef = {
 	/**
 	 * Unique event name
 	 */
@@ -249,10 +252,10 @@ export type Event = {
 	metadata?: Metadata;
 };
 export type EventList = [
-	Event,
-	...Event[]
+	EventDef,
+	...EventDef[]
 ];
-export type Events = | EventName
+export type Events = | URIDefinition
 	| EventList;
 
 type RetryType = {

@@ -14,26 +14,34 @@
  * limitations under the License.
  *
  */
-import {Arguments, FunctionRefImplType} from "./types";
+import {Arguments, FunctionName, FunctionRef} from "./types";
 
-export class ArgumentsBuilder {
-    // @ts-ignore
-    private model: FunctionRefImplType = {};
-
-
-    withRefName(value: string): ArgumentsBuilder {
-        this.model.refName = value;
-        return this;
-
-    }
-
-    withArguments(value: Arguments): ArgumentsBuilder {
-        this.model.arguments = value;
-        return this;
-    }
-
-    build(): FunctionRefImplType {
-        return this.model;
-    }
-
+export class FunctionRefBuilder {
+	private refName: FunctionName;
+	private arguments: Arguments;
+	
+	
+	withRefName(value: FunctionName): FunctionRefBuilder {
+		this.refName = value;
+		return this;
+		
+	}
+	
+	withArguments(value: Arguments): FunctionRefBuilder {
+		this.arguments = value;
+		return this;
+	}
+	
+	build(): FunctionRef {
+		if (!this.arguments) {
+			return this.refName;
+		}
+		
+		
+		return {
+			refName: this.refName,
+			arguments: this.arguments,
+		};
+	}
+	
 }

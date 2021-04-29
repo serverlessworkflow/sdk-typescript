@@ -1,0 +1,37 @@
+{
+  "id": "booklending",
+  "name": "Book Lending Workflow",
+  "version": "1.0",
+  "start": "Book Lending Request",
+  "states": [
+    {
+      "name": "Book Lending Request",
+      "type": "event",
+      "onEvents": [
+        {
+          "eventRefs": [
+            "Book Lending Request Event"
+          ]
+        }
+      ],
+      "transition": "Get Book Status"
+    },
+    {
+      "name": "Get Book Status",
+      "type": "operation",
+      "actions": [
+        {
+          "functionRef": {
+            "refName": "Get status for book",
+            "arguments": {
+              "bookid": "${ .book.id }"
+            }
+          }
+        }
+      ],
+      "transition": "Book Status Decision"
+    }
+  ],
+  "functions": "file://books/lending/functions.json",
+  "events": "file://books/lending/events.json"
+}

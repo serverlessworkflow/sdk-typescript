@@ -14,10 +14,10 @@
  * limitations under the License.
  *
  */
-import {Event, EventName} from '../index';
+import {EventDef, EventName} from './types';
 
 export class EventBuilder {
-	private model: Event = {};
+	private model: EventDef = {};
 	
 	withName(value: EventName): EventBuilder {
 		this.model.name = value;
@@ -35,7 +35,7 @@ export class EventBuilder {
 	}
 	
 	
-	build(): Event {
+	build(): EventDef {
 		//TODO validate
 		return this.model;
 	}

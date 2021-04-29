@@ -19,7 +19,6 @@ export {BaseWorkflow} from "./base-workflow";
 
 export {ActionBuilder} from "./model/action.builder";
 export {ActionDataFilterBuilder} from "./model/action-data-filter.builder";
-export {ArgumentsBuilder} from "./model/arguments.builder";
 export {CronDefBuilder} from "./model/cron-def.builder";
 export {DatabasedSwitchBuilder} from "./model/databased-switch.builder";
 export {DefaultTransitionTypeBuilder} from "./model/default-transition-type.builder";
@@ -27,7 +26,9 @@ export {EventBuilder} from "./model/event.builder";
 export {EventRefBuilder} from "./model/event-ref.builder";
 export {EventStateBuilder} from "./model/event-state.builder";
 export {EventsBuilder} from "./model/events.builder";
-export {FunctionBuilder} from "./model/function.builder";
+export {FunctionDefBuilder} from "./model/function-def.builder";
+export {FunctionRefBuilder} from "./model/function-ref.builder";
+export {FunctionsBuilder} from "./model/functions.builder";
 export {InjectStateBuilder} from "./model/inject-state.builder";
 export {MetadataBuilder} from "./model/metadata.builder";
 export {OnEventBuilder} from "./model/on-event.builder";

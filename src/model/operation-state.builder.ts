@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-import {OperationState} from "./workflow";
+import {OperationState, Transition} from "./workflow";
 import {ActionModeType, Actions} from "./types";
 
 export class OperationStateBuilder {
@@ -46,8 +46,13 @@ export class OperationStateBuilder {
         return this;
     }
 
+    withTransition(value: Transition): OperationStateBuilder {
+        this.model.transition = value;
+        return this;
+        
+    }
     build(): OperationState {
         return this.model;
     }
-
+    
 }
