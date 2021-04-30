@@ -14,15 +14,15 @@
  * limitations under the License.
  *
  */
-import {Databasedswitch} from "./workflow";
-import {DataConditionsType, DefaultTransitionType} from "./types";
+import {DataDasedSwitch} from "./workflow";
+import {DataConditions, DefaultTransitionType} from "./types";
 
 
 export class DatabasedSwitchBuilder {
 
 
     // @ts-ignore
-    private model: Databasedswitch = {
+    private model: DataDasedSwitch = {
         type: "switch"
     }
 
@@ -32,7 +32,7 @@ export class DatabasedSwitchBuilder {
         return this;
     }
 
-    withDataConditions(value: DataConditionsType): DatabasedSwitchBuilder {
+    withDataConditions(value: DataConditions): DatabasedSwitchBuilder {
         this.model.dataConditions = value;
         return this;
     }

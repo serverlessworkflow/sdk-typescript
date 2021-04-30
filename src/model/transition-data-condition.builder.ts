@@ -14,27 +14,35 @@
  * limitations under the License.
  *
  */
-import {Transitiondatacondition} from "./workflow";
 
-export class TransitiondataconditionBuilder {
+
+import {TransitionDataCondition} from './types';
+
+export class TransitionDataConditionBuilder {
 
     // @ts-ignore
-    private model: Transitiondatacondition = {};
+    private model: TransitionDataCondition = {};
 
-    withCondition(condition: string): TransitiondataconditionBuilder {
+    withCondition(condition: string): TransitionDataConditionBuilder {
         this.model.condition = condition;
         return this;
 
     }
 
 
-    withTransition(value: string): TransitiondataconditionBuilder {
+    withTransition(value: string): TransitionDataConditionBuilder {
         this.model.transition = value;
         return this;
     }
 
-    build(): Transitiondatacondition {
+    withName(value: string): TransitionDataConditionBuilder {
+        this.model.name = value;
+        return this;
+        
+    }
+    build(): TransitionDataCondition {
         //TODO validate
         return this.model;
     }
+    
 }

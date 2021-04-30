@@ -18,9 +18,9 @@ import {
 	ActionModeType,
 	Actions,
 	CronDef,
-	DataConditionsType,
+	DataConditions,
 	DefaultTransitionType,
-	EndType,
+	EndType, EventName,
 	Events,
 	Functions,
 	Interval,
@@ -117,7 +117,7 @@ export type Schedule =
 	};
 
 
-export type SwitchState = Databasedswitch | Eventbasedswitch;
+export type SwitchState = DataDasedSwitch | EventBasedSwitch;
 export type Transition =
 	| StateName
 	| {
@@ -197,33 +197,11 @@ export interface DelayState {
 	/**
 	 * States error handling and retries definitions
 	 */
-	onErrors?: (
-		| {
-		[k: string]: unknown;
-	}
-		| {
-		[k: string]: unknown;
-	}
-		)[];
+	onErrors?: OnErrors;
 	/**
 	 * Next transition of the workflow after the time delay
 	 */
-	transition?:
-		| string
-		| {
-		/**
-		 * Name of state to transition to
-		 */
-		nextState: string;
-		/**
-		 * Array of events to be produced before the transition happens
-		 */
-		produceEvents?: ProduceEventsDef;
-		/**
-		 * If set to true, triggers workflow compensation when before this transition is taken. Default is false
-		 */
-		compensate?: boolean;
-	};
+	transition?: Transition;
 	/**
 	 * Unique Name of a workflow state which is responsible for compensation of this state
 	 */
@@ -275,33 +253,11 @@ export interface OperationState {
 	/**
 	 * States error handling and retries definitions
 	 */
-	onErrors?: (
-		| {
-		[k: string]: unknown;
-	}
-		| {
-		[k: string]: unknown;
-	}
-		)[];
+	onErrors?: OnErrors;
 	/**
 	 * Next transition of the workflow after all the actions have been performed
 	 */
-	transition?:
-		| string
-		| {
-		/**
-		 * Name of state to transition to
-		 */
-		nextState: string;
-		/**
-		 * Array of events to be produced before the transition happens
-		 */
-		produceEvents?: ProduceEventsDef;
-		/**
-		 * If set to true, triggers workflow compensation when before this transition is taken. Default is false
-		 */
-		compensate?: boolean;
-	};
+	transition?: Transition;
 	/**
 	 * Unique Name of a workflow state which is responsible for compensation of this state
 	 */
@@ -363,33 +319,11 @@ export interface ParallelState {
 	/**
 	 * States error handling and retries definitions
 	 */
-	onErrors?: (
-		| {
-		[k: string]: unknown;
-	}
-		| {
-		[k: string]: unknown;
-	}
-		)[];
+	onErrors?: OnErrors;
 	/**
 	 * Next transition of the workflow after all branches have completed execution
 	 */
-	transition?:
-		| string
-		| {
-		/**
-		 * Name of state to transition to
-		 */
-		nextState: string;
-		/**
-		 * Array of events to be produced before the transition happens
-		 */
-		produceEvents?: ProduceEventsDef;
-		/**
-		 * If set to true, triggers workflow compensation when before this transition is taken. Default is false
-		 */
-		compensate?: boolean;
-	};
+	transition?: Transition;
 	/**
 	 * Unique Name of a workflow state which is responsible for compensation of this state
 	 */
@@ -408,7 +342,7 @@ export interface ParallelState {
 /**
  * Permits transitions to other states based on data conditions
  */
-export interface Databasedswitch {
+export interface DataDasedSwitch {
 	/**
 	 * Unique State id
 	 */
@@ -428,18 +362,11 @@ export interface Databasedswitch {
 	/**
 	 * Defines conditions evaluated against state data
 	 */
-	dataConditions: DataConditionsType;
+	dataConditions: DataConditions;
 	/**
 	 * States error handling and retries definitions
 	 */
-	onErrors?: (
-		| {
-		[k: string]: unknown;
-	}
-		| {
-		[k: string]: unknown;
-	}
-		)[];
+	onErrors?: OnErrors;
 	/**
 	 * Default transition of the workflow if there is no matching data conditions. Can include a transition or end definition
 	 */
@@ -458,47 +385,12 @@ export interface Databasedswitch {
 	metadata?: Metadata;
 }
 
-/**
- * Switch state data based condition
- */
-export interface Transitiondatacondition {
-	/**
-	 * Data condition name
-	 */
-	name?: string;
-	/**
-	 * Workflow expression evaluated against state data. Must evaluate to true or false
-	 */
-	condition: string;
-	/**
-	 * Workflow transition if condition is evaluated to true
-	 */
-	transition:
-		| string
-		| {
-		/**
-		 * Name of state to transition to
-		 */
-		nextState: string;
-		/**
-		 * Array of events to be produced before the transition happens
-		 */
-		produceEvents?: ProduceEventsDef;
-		/**
-		 * If set to true, triggers workflow compensation when before this transition is taken. Default is false
-		 */
-		compensate?: boolean;
-	};
-	/**
-	 * Metadata information
-	 */
-	metadata?: Metadata;
-}
+
 
 /**
  * Switch state data based condition
  */
-export interface Enddatacondition {
+export interface EndDataCondition {
 	/**
 	 * Data condition name
 	 */
@@ -517,10 +409,36 @@ export interface Enddatacondition {
 	metadata?: Metadata;
 }
 
+export type OnError = {
+	/**
+	 * Domain-specific error name, or '*' to indicate all possible errors
+	 */
+	error: string;
+	/**
+	 * Error code. Can be used in addition to the name to help runtimes resolve to technical errors/exceptions. Should not be defined if error is set to '*'
+	 */
+	code?: string;
+	/**
+	 * References a unique name of a retry definition.
+	 */
+	retryRef?: string;
+	/**
+	 * Transition to next state to handle the error. If retryRef is defined, this transition is taken only if retries were unsuccessful.
+	 */
+	transition: Transition;
+	/**
+	 * End workflow execution in case of this error. If retryRef is defined, this ends workflow only if retries were unsuccessful.
+	 */
+	end: End;
+};
+export type OnErrors = OnError[];
+
+export type EventConditions = (TransitionEventCondition | EnddEventCondition)[];
+
 /**
  * Permits transitions to other states based on events
  */
-export interface Eventbasedswitch {
+export interface EventBasedSwitch {
 	/**
 	 * Unique State id
 	 */
@@ -540,18 +458,11 @@ export interface Eventbasedswitch {
 	/**
 	 * Defines conditions evaluated against events
 	 */
-	eventConditions: (Transitioneventcondition | Enddeventcondition)[];
+	eventConditions: EventConditions;
 	/**
 	 * States error handling and retries definitions
 	 */
-	onErrors?: (
-		| {
-		[k: string]: unknown;
-	}
-		| {
-		[k: string]: unknown;
-	}
-		)[];
+	onErrors?: OnErrors;
 	/**
 	 * If eventConditions is used, defines the time period to wait for events (ISO 8601 format)
 	 */
@@ -577,7 +488,7 @@ export interface Eventbasedswitch {
 /**
  * Switch state data event condition
  */
-export interface Transitioneventcondition {
+export interface TransitionEventCondition {
 	/**
 	 * Event condition name
 	 */
@@ -585,26 +496,11 @@ export interface Transitioneventcondition {
 	/**
 	 * References an unique event name in the defined workflow events
 	 */
-	eventRef: string;
+	eventRef: EventName;
 	/**
 	 * Next transition of the workflow if there is valid matches
 	 */
-	transition:
-		| string
-		| {
-		/**
-		 * Name of state to transition to
-		 */
-		nextState: string;
-		/**
-		 * Array of events to be produced before the transition happens
-		 */
-		produceEvents?: ProduceEventsDef;
-		/**
-		 * If set to true, triggers workflow compensation when before this transition is taken. Default is false
-		 */
-		compensate?: boolean;
-	};
+	transition: Transition;
 	/**
 	 * Event data filter definition
 	 */
@@ -627,7 +523,7 @@ export interface Transitioneventcondition {
 /**
  * Switch state data event condition
  */
-export interface Enddeventcondition {
+export interface EnddEventCondition {
 	/**
 	 * Event condition name
 	 */
@@ -701,33 +597,11 @@ export interface SubFlowState {
 	/**
 	 * States error handling and retries definitions
 	 */
-	onErrors?: (
-		| {
-		[k: string]: unknown;
-	}
-		| {
-		[k: string]: unknown;
-	}
-		)[];
+	onErrors?: OnErrors;
 	/**
 	 * Next transition of the workflow after SubFlow has completed execution
 	 */
-	transition?:
-		| string
-		| {
-		/**
-		 * Name of state to transition to
-		 */
-		nextState: string;
-		/**
-		 * Array of events to be produced before the transition happens
-		 */
-		produceEvents?: ProduceEventsDef;
-		/**
-		 * If set to true, triggers workflow compensation when before this transition is taken. Default is false
-		 */
-		compensate?: boolean;
-	};
+	transition?: Transition;
 	/**
 	 * Unique Name of a workflow state which is responsible for compensation of this state
 	 */
@@ -776,22 +650,7 @@ export interface InjectState {
 	/**
 	 * Next transition of the workflow after subflow has completed
 	 */
-	transition?:
-		| string
-		| {
-		/**
-		 * Name of state to transition to
-		 */
-		nextState: string;
-		/**
-		 * Array of events to be produced before the transition happens
-		 */
-		produceEvents?: ProduceEventsDef;
-		/**
-		 * If set to true, triggers workflow compensation when before this transition is taken. Default is false
-		 */
-		compensate?: boolean;
-	};
+	transition?: Transition;
 	/**
 	 * Unique Name of a workflow state which is responsible for compensation of this state
 	 */
@@ -865,33 +724,11 @@ export interface ForEachState {
 	/**
 	 * States error handling and retries definitions
 	 */
-	onErrors?: (
-		| {
-		[k: string]: unknown;
-	}
-		| {
-		[k: string]: unknown;
-	}
-		)[];
+	onErrors?: OnErrors;
 	/**
 	 * Next transition of the workflow after state has completed
 	 */
-	transition?:
-		| string
-		| {
-		/**
-		 * Name of state to transition to
-		 */
-		nextState: string;
-		/**
-		 * Array of events to be produced before the transition happens
-		 */
-		produceEvents?: ProduceEventsDef;
-		/**
-		 * If set to true, triggers workflow compensation when before this transition is taken. Default is false
-		 */
-		compensate?: boolean;
-	};
+	transition?: Transition;
 	/**
 	 * Unique Name of a workflow state which is responsible for compensation of this state
 	 */
@@ -960,33 +797,11 @@ export interface CallbackState {
 	/**
 	 * States error handling and retries definitions
 	 */
-	onErrors?: (
-		| {
-		[k: string]: unknown;
-	}
-		| {
-		[k: string]: unknown;
-	}
-		)[];
+	onErrors?: OnErrors;
 	/**
 	 * Next transition of the workflow after all the actions have been performed
 	 */
-	transition?:
-		| string
-		| {
-		/**
-		 * Name of state to transition to
-		 */
-		nextState: string;
-		/**
-		 * Array of events to be produced before the transition happens
-		 */
-		produceEvents?: ProduceEventsDef;
-		/**
-		 * If set to true, triggers workflow compensation when before this transition is taken. Default is false
-		 */
-		compensate?: boolean;
-	};
+	transition?: Transition;
 	/**
 	 * State end definition
 	 */
