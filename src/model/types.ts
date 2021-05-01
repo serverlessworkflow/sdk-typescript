@@ -466,3 +466,37 @@ export interface TransitionDataCondition {
 	 */
 	metadata?: Metadata;
 }
+
+
+
+export type Branch =
+	{
+		/**
+		 * Branch name
+		 */
+		name: string;
+		/**
+		 * Actions to be executed in this branch
+		 */
+		actions?: Action[];
+		/**
+		 * Unique Id of a workflow to be executed in this branch
+		 */
+		workflowId: string;
+	} | {
+	/**
+	 * Branch name
+	 */
+	name: string;
+	/**
+	 * Actions to be executed in this branch
+	 */
+	actions: Action[];
+	/**
+	 * Unique Id of a workflow to be executed in this branch
+	 */
+	workflowId?: string;
+};
+export type Branches = Branch[];
+
+export type CompletionType = "and" | "xor" | "n_of_m";

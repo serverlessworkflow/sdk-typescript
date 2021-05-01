@@ -19,6 +19,7 @@ export {BaseWorkflow} from "./base-workflow";
 
 export {ActionBuilder} from "./model/action.builder";
 export {ActionDataFilterBuilder} from "./model/action-data-filter.builder";
+export {BranchBuilder} from "./model/branch.builder";
 export {CronDefBuilder} from "./model/cron-def.builder";
 export {DelayStateBuilder} from "./model/delay-state.builder";
 export {DatabasedSwitchBuilder} from "./model/databased-switch.builder";
@@ -38,6 +39,7 @@ export {MetadataBuilder} from "./model/metadata.builder";
 export {OnEventBuilder} from "./model/on-event.builder";
 export {OnErrorBuilder} from "./model/on-error.builder";
 export {OperationStateBuilder} from "./model/operation-state.builder";
+export {ParallelStateBuilder} from './model/parallel-state.builder';
 export {ProduceEventDefBuilder} from "./model/produce-event-def.builder";
 export {RepeatBuilder} from "./model/repeat.builder";
 export {ScheduleBuilder} from "./model/schedule.builder";
