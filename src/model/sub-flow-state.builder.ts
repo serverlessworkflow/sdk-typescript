@@ -15,6 +15,7 @@
  *
  */
 import {SubFlowState} from "./workflow";
+import {Repeat} from './types';
 
 export class SubFlowStateBuilder {
     private model: SubFlowState = {
@@ -38,8 +39,13 @@ export class SubFlowStateBuilder {
 
     }
 
+	withRepeat(value: Repeat): SubFlowStateBuilder {
+        this.model.repeat = value;
+        return this;
+	}
+	
     build(): SubFlowState {
         return this.model;
     }
-
+	
 }

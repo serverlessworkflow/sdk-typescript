@@ -14,41 +14,18 @@
  * limitations under the License.
  *
  */
-import {EventsName, Repeat} from './types';
+import {StateDataFilter} from '../index';
 
-export class RepeatBuilder {
-	private model: Repeat = {};
+export class StateDataFilterBuilder {
+	private model: StateDataFilter = {};
 	
-	
-	withExpression(value: string): RepeatBuilder {
-		this.model.expression = value;
+	withOutput(value: string): StateDataFilterBuilder {
+		this.model.output = value;
 		return this;
 	}
 	
-	
-	withCheckBefore(value: boolean): RepeatBuilder {
-		this.model.checkBefore = value;
-		return this;
-	}
-	
-	withMax(value: number): RepeatBuilder {
-		this.model.max = value;
-		return this;
-	}
-	
-	withContinueOnError(value: boolean): RepeatBuilder {
-		this.model.continueOnError = value;
-		return this;
-	}
-	
-	
-	withStopOnEvents(value: EventsName): RepeatBuilder {
-		this.model.stopOnEvents = value;
-		return this;
-	}
-	
-	build(): Repeat {
+	build(): StateDataFilter {
 		return this.model;
+		
 	}
-	
 }

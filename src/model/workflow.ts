@@ -26,7 +26,7 @@ import {
 	Interval,
 	Metadata,
 	ProduceEventsDef,
-	RepeatType,
+	Repeat,
 	RetriesDef,
 	StartScheduled,
 	StateDataFilter,
@@ -589,7 +589,7 @@ export interface SubFlowState {
 	/**
 	 * SubFlow state repeat exec definition
 	 */
-	repeat?: RepeatType;
+	repeat?: Repeat;
 	/**
 	 * State data filter
 	 */
@@ -705,14 +705,7 @@ export interface ForEachState {
 	/**
 	 * Actions to be executed for each of the elements of inputCollection
 	 */
-	actions?: (
-		| {
-		[k: string]: unknown;
-	}
-		| {
-		[k: string]: unknown;
-	}
-		)[];
+	actions?: Actions;
 	/**
 	 * Unique Id of a workflow to be executed for each of the elements of inputCollection
 	 */

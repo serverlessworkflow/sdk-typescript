@@ -16,12 +16,12 @@
  */
 import {ActionBuilder, FunctionDefBuilder, WorkflowBuilder} from '../../src';
 import * as fs from 'fs';
-import {StartBuilder} from '../../src/model/start.builder';
-import {EventsBuilder} from '../../src/model/events.builder';
-import {EventBuilder} from '../../src/model/event.builder';
-import {EventStateBuilder} from '../../src/model/event-state.builder';
-import {OnEventBuilder} from '../../src/model/on-event.builder';
-import {FunctionRefBuilder} from '../../src/model/function-ref.builder';
+import {StartBuilder} from "../../src";
+import {EventsBuilder} from "../../src";
+import {EventBuilder} from "../../src";
+import {EventStateBuilder} from "../../src";
+import {OnEventBuilder} from "../../src";
+import {FunctionRefBuilder} from "../../src";
 
 describe("carauctionbids workflow example", () => {
 	

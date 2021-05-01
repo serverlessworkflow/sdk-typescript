@@ -297,7 +297,7 @@ export type EventName = string;
 
 export type EventsName = [EventName, ...EventName[]];
 
-export type RepeatType = {
+export type Repeat = {
 	/**
 	 * Expression evaluated against SubFlow state data. SubFlow will repeat execution as long as this expression is true or until the max property count is reached
 	 */
