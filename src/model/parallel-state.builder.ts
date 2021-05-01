@@ -14,29 +14,41 @@
  * limitations under the License.
  *
  */
-import {ActionDataFilter} from '../index';
+import {ParallelState} from './workflow';
+import {Branches, CompletionType, End} from './types';
 
-export class ActionDataFilterBuilder {
-	private readonly model: ActionDataFilter = {};
+export class ParallelStateBuilder {
+	private model: ParallelState = {
+		type: "parallel",
+	};
 	
 	
-	withFromStateData(value: string): ActionDataFilterBuilder {
-		this.model.fromStateData = value;
+	withName(value: string): ParallelStateBuilder {
+		this.model.name = value;
+		return this;
+		
+	}
+	
+	withCompletionType(value: CompletionType): ParallelStateBuilder {
+		this.model.completionType = value;
+		return this;
+		
+	}
+	
+	withBranches(value: Branches): ParallelStateBuilder {
+		this.model.branches = value;
 		return this;
 	}
 	
-	withToStateData(value: string): ActionDataFilterBuilder {
-		this.model.toStateData = value;
+	withEnd(value: End): ParallelStateBuilder {
+		this.model.end = value;
 		return this;
+		
 	}
 	
-	withResults(value: string): ActionDataFilterBuilder {
-		this.model.results = value;
-		return this;
-	}
-	
-	build(): ActionDataFilter {
+	build(): ParallelState {
 		return this.model;
 	}
+	
 	
 }

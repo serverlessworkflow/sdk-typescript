@@ -18,50 +18,52 @@ import {OnErrors, OperationState, Transition} from "./workflow";
 import {ActionModeType, Actions, End, StateDataFilter} from "./types";
 
 export class OperationStateBuilder {
-
-    private model: OperationState = {
-        type: "operation"
-    }
-
-    withName(value: string): OperationStateBuilder {
-        this.model.name = value;
-        return this;
-
-    }
-
-
-    withActionMode(value: ActionModeType): OperationStateBuilder {
-        this.model.actionMode = value;
-        return this;
-
-    }
-
-    withEnd(value: End): OperationStateBuilder {
-        this.model.end = value;
-        return this;
-    }
-
-    withActions(value: Actions): OperationStateBuilder {
-        this.model.actions = value;
-        return this;
-    }
-
-    withTransition(value: Transition): OperationStateBuilder {
-        this.model.transition = value;
-        return this;
-        
-    }
+	
+	private model: OperationState = {
+		type: "operation",
+	};
+	
+	withName(value: string): OperationStateBuilder {
+		this.model.name = value;
+		return this;
+		
+	}
+	
+	
+	withActionMode(value: ActionModeType): OperationStateBuilder {
+		this.model.actionMode = value;
+		return this;
+		
+	}
+	
+	withEnd(value: End): OperationStateBuilder {
+		this.model.end = value;
+		return this;
+	}
+	
+	withActions(value: Actions): OperationStateBuilder {
+		this.model.actions = value;
+		return this;
+	}
+	
+	withTransition(value: Transition): OperationStateBuilder {
+		this.model.transition = value;
+		return this;
+		
+	}
+	
 	withStateDataFilter(value: StateDataFilter): OperationStateBuilder {
 		this.model.stateDataFilter = value;
 		return this;
 	}
-    withOnErrors(value: OnErrors): OperationStateBuilder {
-        this.model.onErrors = value;
-        return this;
-    }
-
-    build(): OperationState {
-        return this.model;
-    }
-    
+	
+	withOnErrors(value: OnErrors): OperationStateBuilder {
+		this.model.onErrors = value;
+		return this;
+	}
+	
+	build(): OperationState {
+		return this.model;
+	}
+	
 }

@@ -22,7 +22,7 @@ import {TransitionDataConditionBuilder} from "../../src";
 import {OperationStateBuilder} from "../../src";
 import {SubFlowStateBuilder} from "../../src";
 import {ActionBuilder} from "../../src";
-import {DefaultTransitionTypeBuilder} from "../../src";
+import {DefaultTransitionBuilder} from "../../src";
 import {FunctionRefBuilder} from "../../src";
 
 
@@ -53,7 +53,7 @@ describe("applicationrequest workflow example", () => {
 								.withCondition("${ .applicants | .age < 18 }")
 								.withTransition("RejectApplication")
 								.build()])
-					.withDefault(new DefaultTransitionTypeBuilder()
+					.withDefault(new DefaultTransitionBuilder()
 						.withTransition(
 							"RejectApplication",
 						).build())

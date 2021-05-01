@@ -14,29 +14,21 @@
  * limitations under the License.
  *
  */
-import {ActionDataFilter} from '../index';
+import {DefaultTransition} from "./types";
+import {Transition} from "./workflow";
 
-export class ActionDataFilterBuilder {
-	private readonly model: ActionDataFilter = {};
-	
-	
-	withFromStateData(value: string): ActionDataFilterBuilder {
-		this.model.fromStateData = value;
-		return this;
-	}
-	
-	withToStateData(value: string): ActionDataFilterBuilder {
-		this.model.toStateData = value;
-		return this;
-	}
-	
-	withResults(value: string): ActionDataFilterBuilder {
-		this.model.results = value;
-		return this;
-	}
-	
-	build(): ActionDataFilter {
-		return this.model;
-	}
-	
+export class DefaultTransitionBuilder {
+    // @ts-ignore
+    private model: DefaultTransition = {};
+
+    withTransition(value: Transition): DefaultTransitionBuilder {
+        this.model.transition = value;
+        return this;
+
+    }
+
+    build(): DefaultTransition {
+        //TODO validate either transition or end
+        return this.model;
+    }
 }

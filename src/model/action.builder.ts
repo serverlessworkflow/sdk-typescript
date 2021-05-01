@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-import {ActionDataFilterType, Action, EventRef, FunctionRef} from "./types";
+import {ActionDataFilter, Action, EventRef, FunctionRef} from "./types";
 
 export class ActionBuilder {
 	
@@ -42,7 +42,7 @@ export class ActionBuilder {
 		
 	}
 	
-	withActionDataFilter(value: ActionDataFilterType): ActionBuilder {
+	withActionDataFilter(value: ActionDataFilter): ActionBuilder {
 		this.model.actionDataFilter = value;
 		return this;
 		

@@ -14,10 +14,16 @@
  * limitations under the License.
  *
  */
-import {WorkflowBuilder} from "../../src/model/workflow.builder";
+import {
+	EventBuilder,
+	EventsBuilder,
+	EventStateBuilder,
+	OnEventBuilder,
+	RepeatBuilder,
+	SubFlowStateBuilder,
+	WorkflowBuilder,
+} from "../../src";
 import * as fs from "fs";
-import {SubFlowStateBuilder} from "../../src/model/sub-flow-state.builder";
-import {EventBuilder, EventsBuilder, EventStateBuilder, OnEventBuilder, RepeatBuilder} from '../../src';
 
 
 describe("checkcarvitals workflow example", () => {

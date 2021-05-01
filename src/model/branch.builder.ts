@@ -14,21 +14,26 @@
  * limitations under the License.
  *
  */
-import {DefaultTransitionType} from "./types";
-import {Transition} from "./workflow";
+import {Branch} from './types';
 
-export class DefaultTransitionTypeBuilder {
-    // @ts-ignore
-    private model: DefaultTransitionType = {};
-
-    withTransition(value: Transition): DefaultTransitionTypeBuilder {
-        this.model.transition = value;
-        return this;
-
-    }
-
-    build(): DefaultTransitionType {
-        //TODO validate either transition or end
-        return this.model;
-    }
+export class BranchBuilder {
+	// @ts-ignore
+	private model: Branch = {};
+	
+	withName(value: string): BranchBuilder {
+		this.model.name = value;
+		return this;
+		
+	}
+	
+	withWorkflowId(value: string): BranchBuilder {
+		this.model.workflowId = value;
+		return this;
+		
+	}
+	
+	build(): Branch {
+		return this.model;
+		
+	}
 }

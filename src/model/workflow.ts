@@ -16,11 +16,12 @@
  */
 import {
 	ActionModeType,
-	Actions,
+	Actions, Branches, CompletionType,
 	CronDef,
 	DataConditions,
-	DefaultTransitionType,
-	End, EventName,
+	DefaultTransition,
+	End,
+	EventName,
 	Events,
 	Functions,
 	Interval,
@@ -256,6 +257,7 @@ export interface OperationState {
 	metadata?: Metadata;
 }
 
+
 /**
  * Consists of a number of states that are executed in parallel
  */
@@ -284,18 +286,11 @@ export interface ParallelState {
 	/**
 	 * Branch Definitions
 	 */
-	branches?: (
-		| {
-		[k: string]: unknown;
-	}
-		| {
-		[k: string]: unknown;
-	}
-		)[];
+	branches?: Branches;
 	/**
 	 * Option model on how to complete branch execution.
 	 */
-	completionType?: "and" | "xor" | "n_of_m";
+	completionType?: CompletionType;
 	/**
 	 * Used when completionType is set to 'n_of_m' to specify the 'N' value
 	 */
@@ -354,7 +349,7 @@ export interface DataDasedSwitch {
 	/**
 	 * Default transition of the workflow if there is no matching data conditions. Can include a transition or end definition
 	 */
-	default?: DefaultTransitionType;
+	default?: DefaultTransition;
 	/**
 	 * Unique Name of a workflow state which is responsible for compensation of this state
 	 */
@@ -368,7 +363,6 @@ export interface DataDasedSwitch {
 	 */
 	metadata?: Metadata;
 }
-
 
 
 /**
@@ -454,7 +448,7 @@ export interface EventBasedSwitch {
 	/**
 	 * Default transition of the workflow if there is no matching data conditions. Can include a transition or end definition
 	 */
-	default?: DefaultTransitionType;
+	default?: DefaultTransition;
 	/**
 	 * Unique Name of a workflow state which is responsible for compensation of this state
 	 */
