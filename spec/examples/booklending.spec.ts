@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  */
+import * as fs from 'fs';
 import {
 	ActionBuilder,
 	DatabasedSwitchBuilder,
@@ -22,15 +23,14 @@ import {
 	TransitionDataConditionBuilder,
 	WorkflowBuilder,
 } from '../../src';
-import * as fs from 'fs';
-import {StartBuilder} from '../../src/model/start.builder';
-import {EventStateBuilder} from '../../src/model/event-state.builder';
-import {OnEventBuilder} from '../../src/model/on-event.builder';
-import {FunctionRefBuilder} from '../../src/model/function-ref.builder';
-import {FunctionsBuilder} from '../../src/model/functions.builder';
-import {EventBasedSwitchBuilder} from '../../src/model/event-based-switch.builder';
-import {TransitionEventConditionBuilder} from '../../src/model/transition-event-condition.builder';
-import {DelayStateBuilder} from '../../src/model/delay-state.builder';
+import {StartBuilder} from "../../src";
+import {EventStateBuilder} from "../../src";
+import {OnEventBuilder} from "../../src";
+import {FunctionRefBuilder} from "../../src";
+import {FunctionsBuilder} from "../../src";
+import {EventBasedSwitchBuilder} from "../../src";
+import {TransitionEventConditionBuilder} from "../../src";
+import {DelayStateBuilder} from "../../src";
 
 
 describe("booklending workflow example", () => {
@@ -127,11 +127,11 @@ describe("booklending workflow example", () => {
 					])
 					.withTransition("Wait two weeks")
 					.build(),
-			new DelayStateBuilder()
-				.withName("Wait two weeks")
-				.withTimeDelay("PT2W")
-				.withTransition("Get Book Status")
-				.build(),
+				new DelayStateBuilder()
+					.withName("Wait two weeks")
+					.withTimeDelay("PT2W")
+					.withTransition("Get Book Status")
+					.build(),
 				new OperationStateBuilder()
 					.withName("Check Out Book")
 					.withActions([
@@ -140,7 +140,7 @@ describe("booklending workflow example", () => {
 								new FunctionRefBuilder()
 									.withRefName("Check out book with id")
 									.withArguments({
-										"bookid": "${ .book.id }"
+										"bookid": "${ .book.id }",
 									})
 									.build())
 							.build(),
@@ -150,14 +150,14 @@ describe("booklending workflow example", () => {
 									.withRefName("Notify Lender for checkout")
 									.withArguments({
 										"bookid": "${ .book.id }",
-										"lender": "${ .lender }"
+										"lender": "${ .lender }",
 									})
 									.build())
-							.build()
+							.build(),
 					
 					])
 					.withEnd(true)
-					.build()
+					.build(),
 			
 			])
 			.withFunctions(new FunctionsBuilder()

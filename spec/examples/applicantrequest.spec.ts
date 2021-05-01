@@ -14,16 +14,16 @@
  * limitations under the License.
  *
  */
-import {WorkflowBuilder} from "../../src/model/workflow.builder";
 import * as fs from "fs";
-import {FunctionDefBuilder} from "../../src/model/function-def.builder";
-import {DatabasedSwitchBuilder} from "../../src/model/databased-switch.builder";
-import {TransitionDataConditionBuilder} from "../../src/model/transition-data-condition.builder";
-import {OperationStateBuilder} from "../../src/model/operation-state.builder";
-import {SubFlowStateBuilder} from "../../src/model/sub-flow-state.builder";
-import {ActionBuilder} from "../../src/model/action.builder";
-import {DefaultTransitionTypeBuilder} from "../../src/model/default-transition-type.builder";
-import {FunctionRefBuilder} from '../../src/model/function-ref.builder';
+import {WorkflowBuilder} from "../../src";
+import {FunctionDefBuilder} from "../../src";
+import {DatabasedSwitchBuilder} from "../../src";
+import {TransitionDataConditionBuilder} from "../../src";
+import {OperationStateBuilder} from "../../src";
+import {SubFlowStateBuilder} from "../../src";
+import {ActionBuilder} from "../../src";
+import {DefaultTransitionTypeBuilder} from "../../src";
+import {FunctionRefBuilder} from "../../src";
 
 
 describe("applicationrequest workflow example", () => {
