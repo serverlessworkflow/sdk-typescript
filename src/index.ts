@@ -36,6 +36,7 @@ export {FunctionsBuilder} from "./model/functions.builder";
 export {InjectStateBuilder} from "./model/inject-state.builder";
 export {MetadataBuilder} from "./model/metadata.builder";
 export {OnEventBuilder} from "./model/on-event.builder";
+export {OnErrorBuilder} from "./model/on-error.builder";
 export {OperationStateBuilder} from "./model/operation-state.builder";
 export {ProduceEventDefBuilder} from "./model/produce-event-def.builder";
 export {RepeatBuilder} from "./model/repeat.builder";

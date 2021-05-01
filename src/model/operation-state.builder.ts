@@ -14,8 +14,8 @@
  * limitations under the License.
  *
  */
-import {OperationState, Transition} from "./workflow";
-import {ActionModeType, Actions, End} from "./types";
+import {OnErrors, OperationState, Transition} from "./workflow";
+import {ActionModeType, Actions, End, StateDataFilter} from "./types";
 
 export class OperationStateBuilder {
 
@@ -51,6 +51,15 @@ export class OperationStateBuilder {
         return this;
         
     }
+	withStateDataFilter(value: StateDataFilter): OperationStateBuilder {
+		this.model.stateDataFilter = value;
+		return this;
+	}
+    withOnErrors(value: OnErrors): OperationStateBuilder {
+        this.model.onErrors = value;
+        return this;
+    }
+
     build(): OperationState {
         return this.model;
     }
