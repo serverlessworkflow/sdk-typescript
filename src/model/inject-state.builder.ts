@@ -15,6 +15,7 @@
  *
  */
 import {InjectState} from "./workflow";
+import {End} from './types';
 
 export class InjectStateBuilder {
     private model: InjectState = {
@@ -35,7 +36,7 @@ export class InjectStateBuilder {
 
     }
 
-    withEnd(value: boolean) {
+    withEnd(value: End): InjectStateBuilder {
         this.model.end = value;
         return this;
 

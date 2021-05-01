@@ -32,12 +32,14 @@
     {
       "name": "CarTurnedOnEvent",
       "type": "car.events",
-      "source": "my/car/start"
+      "source": "my/car/start",
+      "kind": "consumed"
     },
     {
       "name": "CarTurnedOffEvent",
       "type": "car.events",
-      "source": "my/car/start"
+      "source": "my/car/start",
+      "kind": "consumed"
     }
   ]
 }

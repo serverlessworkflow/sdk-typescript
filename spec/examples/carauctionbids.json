@@ -18,7 +18,8 @@
     {
       "name": "CarBidEvent",
       "type": "carBidMadeType",
-      "source": "carBidEventSource"
+      "source": "carBidEventSource",
+      "kind": "consumed"
     }
   ],
   "states": [

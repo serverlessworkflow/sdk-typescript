@@ -14,34 +14,42 @@
  * limitations under the License.
  *
  */
-import {EventData, EventName, ProduceEventDef} from '../index';
+import {End, ProduceEventsDef, Terminate} from './types';
 
-export class ProduceEventDefBuilder {
-	// @ts-ignore
-	private readonly model: ProduceEventDef = {};
+export class EndBuilder {
+	private terminate: Terminate = false;
+	private produceEvents: ProduceEventsDef;
+	private compensate: boolean;
 	
-	
-	withEventRef(value: EventName): ProduceEventDefBuilder {
-		this.model.eventRef = value;
+	withProduceEvents(value: ProduceEventsDef): EndBuilder {
+		this.produceEvents = value;
 		return this;
 	}
 	
-	withData(value: EventData): ProduceEventDefBuilder {
-		this.model.data = value;
+	withCompensate(value: boolean): EndBuilder {
+		this.compensate = value;
 		return this;
+	}
+	
+	build(): End {
 		
-	}
-	
-	withContextAttributes(value: object): ProduceEventDefBuilder {
-		this.model.contextAttributes = value;
-		return this;
-	}
-	
-	build(): ProduceEventDef {
-		if (!this.model.eventRef) {
-			throw new Error("Field eventRef can not be undefined");
+		let isObject: boolean = false;
+		const result: End = {};
+		
+		
+		if (this.produceEvents) {
+			result.produceEvents = this.produceEvents;
+			isObject = true;
 		}
-		return this.model;
+		if (this.compensate) {
+			result.compensate = this.compensate;
+			isObject = true;
+		}
+		if (isObject) {
+			return result;
+		}
+		
+		return this.terminate;
 	}
 	
 }

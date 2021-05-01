@@ -15,7 +15,7 @@
  *
  */
 import {SubFlowState} from "./workflow";
-import {Repeat} from './types';
+import {End, Repeat} from './types';
 
 export class SubFlowStateBuilder {
     private model: SubFlowState = {
@@ -33,7 +33,7 @@ export class SubFlowStateBuilder {
         return this;
     }
 
-    withEnd(value: boolean): SubFlowStateBuilder {
+    withEnd(value: End): SubFlowStateBuilder {
         this.model.end = value;
         return this;
 

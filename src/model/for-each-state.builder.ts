@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-import {Actions, ForEachState, StateDataFilter} from '../index';
+import {Actions, End, ForEachState, StateDataFilter} from '../index';
 
 export class ForEachStateBuilder {
 	
@@ -53,7 +53,7 @@ export class ForEachStateBuilder {
 		return this;
 	}
 	
-	withEnd(value: boolean): any {
+	withEnd(value: End): any {
 		this.model.end = value;
 		return this;
 	}
