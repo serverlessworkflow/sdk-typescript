@@ -15,7 +15,7 @@
  *
  */
 import {OperationState, Transition} from "./workflow";
-import {ActionModeType, Actions} from "./types";
+import {ActionModeType, Actions, End} from "./types";
 
 export class OperationStateBuilder {
 
@@ -36,7 +36,7 @@ export class OperationStateBuilder {
 
     }
 
-    withEnd(value: boolean): OperationStateBuilder {
+    withEnd(value: End): OperationStateBuilder {
         this.model.end = value;
         return this;
     }

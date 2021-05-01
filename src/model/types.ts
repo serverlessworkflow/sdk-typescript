@@ -17,7 +17,6 @@
 import {
 	CallbackState,
 	DelayState,
-	End,
 	EndDataCondition,
 	ForEachState,
 	InjectState, OnErrors,
@@ -162,12 +161,13 @@ export type StateDataFilter = {
 	output?: string;
 };
 
-export type EndType = | boolean
+export type Terminate = boolean;
+export type End = | Terminate
 	| {
 	/**
 	 * If true, completes all execution flows in the given workflow instance
 	 */
-	terminate?: boolean;
+	terminate?: Terminate;
 	/**
 	 * Defines events that should be produced
 	 */
@@ -202,6 +202,7 @@ export type Metadata = {
 	[k: string]: string;
 };
 
+export type EventKind = "consumed" | "produced";
 export type EventDef = {
 	/**
 	 * Unique event name
@@ -218,7 +219,7 @@ export type EventDef = {
 	/**
 	 * Defines the CloudEvent as either 'consumed' or 'produced' by the workflow. Default is 'consumed'
 	 */
-	kind?: "consumed" | "produced";
+	kind?: EventKind;
 	/**
 	 * CloudEvent correlation definitions
 	 */

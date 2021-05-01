@@ -20,7 +20,7 @@ import {
 	CronDef,
 	DataConditions,
 	DefaultTransitionType,
-	EndType, EventName,
+	End, EventName,
 	Events,
 	Functions,
 	Interval,
@@ -134,22 +134,6 @@ export type Transition =
 	 */
 	compensate?: boolean;
 };
-export type End =
-	| boolean
-	| {
-	/**
-	 * If true, completes all execution flows in the given workflow instance
-	 */
-	terminate?: boolean;
-	/**
-	 * Defines events that should be produced
-	 */
-	produceEvents?: ProduceEventsDef;
-	/**
-	 * If set to true, triggers workflow compensation. Default is false
-	 */
-	compensate?: boolean;
-};
 
 export interface Exectimeout {
 	/**
@@ -185,7 +169,7 @@ export interface DelayState {
 	/**
 	 * State end definition
 	 */
-	end?: EndType;
+	end?: End;
 	/**
 	 * State data filter
 	 */
@@ -237,7 +221,7 @@ export interface OperationState {
 	 * State end definition
 	 */
 	end?:
-		EndType;
+		End;
 	/**
 	 * State data filter
 	 */
@@ -292,7 +276,7 @@ export interface ParallelState {
 	 * State end definition
 	 */
 	end?:
-		EndType;
+		End;
 	/**
 	 * State data filter
 	 */
@@ -402,7 +386,7 @@ export interface EndDataCondition {
 	/**
 	 * Workflow end definition
 	 */
-	end: EndType;
+	end: End;
 	/**
 	 * Metadata information
 	 */
@@ -536,7 +520,7 @@ export interface EnddEventCondition {
 	 * Explicit transition to end
 	 */
 	end:
-		EndType;
+		End;
 	/**
 	 * Event data filter definition
 	 */
@@ -577,7 +561,7 @@ export interface SubFlowState {
 	 * State end definition
 	 */
 	end?:
-		EndType;
+		End;
 	/**
 	 * Workflow execution must wait for sub-workflow to finish before continuing
 	 */
@@ -636,7 +620,7 @@ export interface InjectState {
 	 * State end definition
 	 */
 	end?:
-		EndType;
+		End;
 	/**
 	 * JSON object which can be set as states data input and can be manipulated via filters
 	 */
@@ -685,7 +669,7 @@ export interface ForEachState {
 	 * State end definition
 	 */
 	end?:
-		EndType;
+		End;
 	/**
 	 * Workflow expression selecting an array element of the states data
 	 */
@@ -799,7 +783,7 @@ export interface CallbackState {
 	 * State end definition
 	 */
 	end?:
-		EndType;
+		End;
 	/**
 	 * Unique Name of a workflow state which is responsible for compensation of this state
 	 */

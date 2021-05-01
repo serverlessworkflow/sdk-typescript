@@ -23,6 +23,7 @@ export {CronDefBuilder} from "./model/cron-def.builder";
 export {DelayStateBuilder} from "./model/delay-state.builder";
 export {DatabasedSwitchBuilder} from "./model/databased-switch.builder";
 export {DefaultTransitionTypeBuilder} from "./model/default-transition-type.builder";
+export {EndBuilder} from "./model/end.builder";
 export {EventBuilder} from "./model/event.builder";
 export {EventBasedSwitchBuilder} from "./model/event-based-switch.builder";
 export {EventRefBuilder} from "./model/event-ref.builder";
