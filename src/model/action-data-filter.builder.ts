@@ -14,10 +14,10 @@
  * limitations under the License.
  *
  */
-import {ActionDataFilterType} from '../index';
+import {ActionDataFilter} from '../index';
 
 export class ActionDataFilterBuilder {
-	private readonly model: ActionDataFilterType = {};
+	private readonly model: ActionDataFilter = {};
 	
 	
 	withFromStateData(value: string): ActionDataFilterBuilder {
@@ -35,7 +35,7 @@ export class ActionDataFilterBuilder {
 		return this;
 	}
 	
-	build(): ActionDataFilterType {
+	build(): ActionDataFilter {
 		return this.model;
 	}
 	

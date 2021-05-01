@@ -14,20 +14,20 @@
  * limitations under the License.
  *
  */
-import {DefaultTransitionType} from "./types";
+import {DefaultTransition} from "./types";
 import {Transition} from "./workflow";
 
-export class DefaultTransitionTypeBuilder {
+export class DefaultTransitionBuilder {
     // @ts-ignore
-    private model: DefaultTransitionType = {};
+    private model: DefaultTransition = {};
 
-    withTransition(value: Transition): DefaultTransitionTypeBuilder {
+    withTransition(value: Transition): DefaultTransitionBuilder {
         this.model.transition = value;
         return this;
 
     }
 
-    build(): DefaultTransitionType {
+    build(): DefaultTransition {
         //TODO validate either transition or end
         return this.model;
     }

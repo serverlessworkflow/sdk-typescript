@@ -15,7 +15,7 @@
  *
  */
 
-import {ActionBuilder, ActionDataFilterType, EventRef} from '../../src';
+import {ActionBuilder, ActionDataFilter, EventRef} from '../../src';
 import {ActionDataFilterBuilder} from '../../src/model/action-data-filter.builder';
 
 
@@ -63,7 +63,7 @@ describe("ActionBuilder", () => {
 });
 
 
-function validActionDataFilter(): ActionDataFilterType {
+function validActionDataFilter(): ActionDataFilter {
 	return {};
 }
 

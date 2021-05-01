@@ -62,7 +62,7 @@ export  type EventRef = {
 	contextAttributes?: ContextAttributes;
 };
 
-export type ActionDataFilterType = {
+export type ActionDataFilter = {
 	/**
 	 * Workflow expression that selects state data that the state action can use
 	 */
@@ -97,7 +97,7 @@ export type Action = {
 	/**
 	 * Action data filter
 	 */
-	actionDataFilter?: ActionDataFilterType;
+	actionDataFilter?: ActionDataFilter;
 };
 export type Actions = Action[];
 
@@ -181,7 +181,7 @@ export type End = | Terminate
 export type DataConditions = (TransitionDataCondition | EndDataCondition)[];
 
 export type ActionModeType = "sequential" | "parallel";
-export type DefaultTransitionType = {
+export type DefaultTransition = {
 	transition: Transition;
 	end: End;
 };

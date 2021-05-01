@@ -19,7 +19,7 @@ import {
 	Actions, Branches, CompletionType,
 	CronDef,
 	DataConditions,
-	DefaultTransitionType,
+	DefaultTransition,
 	End,
 	EventName,
 	Events,
@@ -349,7 +349,7 @@ export interface DataDasedSwitch {
 	/**
 	 * Default transition of the workflow if there is no matching data conditions. Can include a transition or end definition
 	 */
-	default?: DefaultTransitionType;
+	default?: DefaultTransition;
 	/**
 	 * Unique Name of a workflow state which is responsible for compensation of this state
 	 */
@@ -448,7 +448,7 @@ export interface EventBasedSwitch {
 	/**
 	 * Default transition of the workflow if there is no matching data conditions. Can include a transition or end definition
 	 */
-	default?: DefaultTransitionType;
+	default?: DefaultTransition;
 	/**
 	 * Unique Name of a workflow state which is responsible for compensation of this state
 	 */
