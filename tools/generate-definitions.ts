@@ -215,12 +215,12 @@ This directory and its content has been generated automatically. Do not modify i
   }
 };
 
-const srcFile = path.resolve(process.cwd(), 'src/schema/workflow.json');
-const destFile = 'src/definitions/workflow.d.ts';
+const srcFile = path.resolve(process.cwd(), 'src/lib/schema/workflow.json');
+const destFile = 'src/lib/definitions/workflow.d.ts';
 /*
 const additionnalSchemas = [
-  path.resolve(process.cwd(), 'src/schema/common.json'), // should be resolved already, no need to add it manually
-  path.resolve(process.cwd(), 'src/schema/extensions/kpi.json'), // not linked by workflow, manually added
+  path.resolve(process.cwd(), 'src/lib/schema/common.json'), // should be resolved already, no need to add it manually
+  path.resolve(process.cwd(), 'src/lib/schema/extensions/kpi.json'), // not linked by workflow, manually added
 ];
 generate(srcFile, destFile, additionnalSchemas)
 */

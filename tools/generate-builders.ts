@@ -171,8 +171,8 @@ This directory and its content has been generated automatically. Do not modify i
   }
 };
 
-const buildersDir = path.resolve(process.cwd(), 'src/builders');
-const definitionSrc = path.resolve(process.cwd(), 'src/definitions/workflow.d.ts');
+const buildersDir = path.resolve(process.cwd(), 'src/lib/builders');
+const definitionSrc = path.resolve(process.cwd(), 'src/lib/definitions/workflow.d.ts');
 generate(definitionSrc, buildersDir)
   .then(console.log.bind(console))
   .catch(console.error.bind(console))

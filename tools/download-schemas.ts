@@ -88,12 +88,12 @@ const mapFilePaths = async (items: GithubContentItem[]): Promise<Map<string, str
  * @returns {void}
  */
 const downloadFile = async (url: string, dest: string): Promise<void> => mkdir(
-    path.resolve(process.cwd(), 'src', dest.split('/').slice(0, -1).join('/')), 
+    path.resolve(process.cwd(), 'src/lib', dest.split('/').slice(0, -1).join('/')), 
     { recursive: true }
   )
   .then(() => fetch(url))
   .then((res: any) => res.arrayBuffer())
-  .then((data) => writeFile(path.resolve(process.cwd(), 'src', dest), Buffer.from(data)))
+  .then((data) => writeFile(path.resolve(process.cwd(), 'src/lib', dest), Buffer.from(data)))
   ;
 /**
  * A promise to download the provided files
@@ -105,7 +105,7 @@ const downloadFiles = async (filesMap: Map<string, string>): Promise<void[]> => 
 /** The schema registry base url */
 const registryUrl = 'https://api.github.com/repos/serverlessworkflow/specification/contents/schema?ref=main';
 /** List, map, download */
-reset(path.resolve(process.cwd(), 'src/schema'))
+reset(path.resolve(process.cwd(), 'src/lib/schema'))
   .then(() => listFiles(registryUrl))
   .then(mapFilePaths)
   .then(downloadFiles)

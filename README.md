@@ -68,7 +68,7 @@ const workflow = workflowBuilder()
     .end(true)
     .build()
   ])
-  .build());
+  .build();
 ```
 
 #### Load a file JSON/YAML to a Workflow instance
@@ -100,7 +100,7 @@ const workflow = workflowBuilder()
     .end(true)
     .build()
   ])
-  .build());
+  .build();
 ```
 
 You can convert it to its string representation in JSON or YAML format 

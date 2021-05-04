@@ -1,7 +1,10 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "./out-tsc/src"
+    "declarationDir": "./dist",
+    "declarationMap": true,
+    "target": "ES5",
+    "module": "ES2015"
   },
   "include": [
     "./src/**/*.ts",

@@ -1,19 +1,23 @@
 {
-  "name": "sdk-typescript",
+  "name": "@severlessworkflow/sdk-typescript",
   "version": "0.1.0",
   "description": "Typescript SDK for Serverless Workflow Specification",
-  "main": "dist/src/index.js",
-  "typings": "dist/src/index.d.ts",
+  "main": "umd/index.umd.min.js",
+  "module": "esm/index.esm.min.js",
+  "typings": "serverless-workflow-sdk.d.ts",
   "scripts": {
-    "build": "npm run clean && tsc",
-    "clean": "shx rm -rf dist && shx rm -rf out-tsc",
-    "tsc": "node ./node_modules/typescript/bin/tsc",
-    "ts-node": "ts-node",
+    "rimraf": "npx rimraf",
+    "tsc": "npx tsc",
+    "ts-node": "npx ts-node",
+    "prebuild": "rimraf dist",
+    "build": "rollup -c rollup.config.ts",
+    "clean": "rimraf dist && rimraf out-tsc",
     "tools:download-schemas": "ts-node --project tsconfig.tools.json ./tools/download-schemas.ts",
     "tools:generate-definitions": "ts-node --project tsconfig.tools.json ./tools/generate-definitions.ts",
     "tools:generate-builders": "ts-node --project tsconfig.tools.json ./tools/generate-builders.ts",
     "update-code-base": "npm run tools:download-schemas && npm run tools:generate-definitions && npm run tools:generate-builders",
-    "test": "npm run clean && tsc --project tsconfig.spec.json && jasmine --config=./tests/support/jasmine.json"
+    "pretest": "rimraf out-tsc",
+    "test": "tsc --project tsconfig.spec.json && jasmine --config=./tests/support/jasmine.json"
   },
   "dependencies": {
     "ajv": "^8.1.0",
@@ -22,6 +26,7 @@
   "devDependencies": {
     "@apidevtools/json-schema-ref-parser": "^9.0.7",
     "@dtsgenerator/replace-namespace": "^1.4.1",
+    "@rollup/plugin-json": "^4.1.0",
     "@types/jasmine": "^3.6.10",
     "@types/js-yaml": "^4.0.1",
     "@types/node-fetch": "^2.5.10",
@@ -30,7 +35,12 @@
     "jasmine": "^3.7.0",
     "node-fetch": "^2.6.1",
     "rimraf": "^3.0.2",
-    "shx": "^0.3.3",
+    "rollup": "^2.47.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-sourcemaps": "^0.6.3",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.30.0",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.4"
   },
@@ -54,7 +64,7 @@
   },
   "homepage": "https://serverlessworkflow.io",
   "files": [
-    "dist/src/*"
+    "dist/*"
   ],
   "engines": {
     "node": ">=15.0",

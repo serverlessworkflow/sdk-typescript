@@ -15,9 +15,11 @@
  *
  */
 import Workflow = ServerlessWorkflow.Workflow;
-import { workflowBuilder } from "../src/builders/workflow-builder";
-import { injectstateBuilder } from "../src/builders/injectstate-builder";
-import { WorkflowConverter } from "../src/workflow-converter";
+import { 
+  workflowBuilder, 
+  injectstateBuilder,
+  WorkflowConverter
+} from "../src/";
 import { readFileSync } from 'fs';
 
 
