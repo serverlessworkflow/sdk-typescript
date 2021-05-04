@@ -10,7 +10,16 @@ const rimrafP = async (f: string): Promise<void> => new Promise<void>((resolve, 
     resolve();
   })
 );
-
+/**
+ * Capitalized the first letter of the provided string
+ * @param {} value The string to capitalize
+ * @returns {string} The capitalized string
+ */
+const capitalizeFirstLetter = (value: string):string => {
+  if (!value) return '';
+  const transformable = value.trim();
+  return transformable[0].toUpperCase() + transformable.slice(1);
+};
 /**
  * Tells if the provided objects hold a reference to another definition
  * @param {any} obj The object to test
@@ -44,7 +53,7 @@ const getPropName = ($ref: string, known$Refs:  Map<string, string>): string => 
     propName = baseName + variantIndex;
   }
   return propName;
-}
+};
 
 /**
  * Merges the definitions founds in the schemas in path into the root schema's definitions
@@ -54,29 +63,34 @@ const getPropName = ($ref: string, known$Refs:  Map<string, string>): string => 
  * @param {string[]} parentPaths (internal) The previously known paths
  */
 const mergeDefinitions = async ($refParser: $RefParser, paths: string[], known$Refs: Map<string, string>, parentPaths: string[] = []): Promise<void> => {
-  if (!parentPaths?.length) {
-    Object.keys($refParser.schema.definitions||{}).forEach((key: string) => {
-      if (!known$Refs.has(key)) {
-        known$Refs.set(key, `#/definitions/${key}`);
-      }
-    });
-    parentPaths = paths;
-  }
-  await Promise.all(
-    paths.map(async (schemaPath: string) => {
-      const fileName = path.basename(schemaPath);
-      const schema = await $RefParser.parse(schemaPath);
-      Object.entries(schema.definitions||{}).forEach(([key, value]) => {
-        const propName = getPropName(key, known$Refs);
-        known$Refs.set(propName, `${fileName}#/definitions/${key}`);
-        $refParser.$refs.set(`#/definitions/${propName}`, value);
+  try {
+    if (!parentPaths?.length) {
+      Object.keys($refParser.schema.definitions||{}).forEach((key: string) => {
+        if (!known$Refs.has(key)) {
+          known$Refs.set(key, `#/definitions/${key}`);
+        }
       });
-      const $schemaRefs = await $RefParser.resolve(schemaPath);
-      const otherPaths = $schemaRefs.paths().filter(p => !parentPaths.includes(p));
-      otherPaths.forEach(p => parentPaths.push(p));
-      await mergeDefinitions($refParser, otherPaths, known$Refs, parentPaths);
-    })
-  );
+      parentPaths = paths;
+    }
+    await Promise.all(
+      paths.map(async (schemaPath: string) => {
+        const fileName = path.basename(schemaPath);
+        const schema = await $RefParser.parse(schemaPath);
+        Object.entries(schema.definitions||{}).forEach(([key, value]) => {
+          const propName = getPropName(key, known$Refs);
+          known$Refs.set(propName, `${fileName}#/definitions/${key}`);
+          $refParser.$refs.set(`#/definitions/${propName}`, value);
+        });
+        const $schemaRefs = await $RefParser.resolve(schemaPath);
+        const otherPaths = $schemaRefs.paths().filter(p => !parentPaths.includes(p));
+        otherPaths.forEach(p => parentPaths.push(p));
+        await mergeDefinitions($refParser, otherPaths, known$Refs, parentPaths);
+      })
+    );
+  }
+  catch(ex) {
+    return Promise.reject(ex);
+  }
 };
 
 /**
@@ -124,7 +138,31 @@ const mergeSchemas = ($refParser: $RefParser, known$Refs: Map<string, string>, t
         $refParser.$refs.set(`#/definitions/${propName}`, referencedSchema);
       }
     });
-}
+};
+
+/**
+ * Creates the type->path map for the ajv validators
+ * @param {string} dest The output path
+ * @param {Map<string, string>} known$Refs The know references map
+ * @returns {void}
+ */
+const createValidatorsPaths = async (dest: string, known$Refs: Map<string, string>): Promise<void> => {
+  try {
+    const validatorsPathsCode = `export const validatorsPaths: [string, string][] = [
+  ["Workflow", "https://serverlessworkflow.org/core/workflow.json"],
+${Array.from(known$Refs).map(([dataType, path]) => `  ['${capitalizeFirstLetter(dataType)}', 'https://serverlessworkflow.org/core/${path.includes('.json') ? path : 'workflow.json' + path}'],`).join('\r\n')}
+]`;
+    const destDir = path.dirname(dest);
+    await rimrafP(destDir);
+    await mkdir(destDir, { recursive: true });
+    await writeFile(path.resolve(destDir, 'README.md'), `# Auto generated notice
+This directory and its content has been generated automatically. Do not modify its content, it WILL be lost.`);
+    await writeFile(dest, validatorsPathsCode);
+  }
+  catch(ex) {
+    return Promise.reject(ex);
+  }
+};
 
 /**
  * Generates TypeScript equivalent of the provided JSON Schema
@@ -135,20 +173,41 @@ const mergeSchemas = ($refParser: $RefParser, known$Refs: Map<string, string>, t
 const generate = async (source: string, dest: string, additionnalSchemas: string[] = []): Promise<void> => {
   try {
     const $refParser = new $RefParser();
-    const refsMap = new Map<string, string>();
+    const known$Refs = new Map<string, string>();
     await $refParser.resolve(source);
     const paths = [ ...$refParser.$refs.paths(), ...additionnalSchemas ].filter((p, index, arr) => arr.indexOf(p) === index && p !== source);
-    await mergeDefinitions($refParser, paths, refsMap);
-    mergeSchemas($refParser, refsMap, $refParser.schema, '#/');
-    const generatedTS = await dtsGenerator({
-      contents: [parseSchema($refParser.schema as dtsGeneratorJsonSchema)]
-    });
+    await mergeDefinitions($refParser, paths, known$Refs);
+    mergeSchemas($refParser, known$Refs, $refParser.schema, '#/');
+    const generatedTS = (await dtsGenerator({
+        contents: [parseSchema($refParser.schema as dtsGeneratorJsonSchema)],
+        config: {
+          plugins: {
+            "@dtsgenerator/replace-namespace": {
+              map: [
+                {
+                  from: ["ServerlessworkflowOrg", "Core", "WorkflowJson"],
+                  to: ["ServerlessWorkflow"]
+                },
+                {
+                  from: ["ServerlessworkflowOrg", "Core", "WorkflowJson", "Definitions"],
+                  to: ["ServerlessWorkflow"]
+                }
+            ]
+            }
+          }
+        }
+      }))
+      .replace(/WorkflowJson\.Definitions\./g, '')
+      .replace(/WorkflowJson/g, 'Workflow')
+      ;
     const destDir = path.dirname(dest);
     await rimrafP(destDir);
     await mkdir(destDir, { recursive: true });
     await writeFile(path.resolve(destDir, 'README.md'), `# Auto generated notice
 This directory and its content has been generated automatically. Do not modify its content, it WILL be lost.`);
     await writeFile(dest, generatedTS);
+    const validatorsDest = path.resolve(path.dirname(dest), '../validation/validators-paths.ts');
+    await createValidatorsPaths(validatorsDest, known$Refs);
     return Promise.resolve();
   }
   catch (ex) {

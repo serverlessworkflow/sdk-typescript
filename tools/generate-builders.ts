@@ -23,6 +23,41 @@ if (!String.prototype.matchAll) {
     return results;
   };
 }
+
+interface BuilderExtension {
+  preValidate: string;
+};
+/** Stores additional code that needs to be added to builders depending on their type */
+const buildersExtensions: { [key: string]: BuilderExtension } = {
+  "Callbackstate": {
+    preValidate: `\r\n    data.type = 'callback';`
+  },
+  "Databasedswitch": {
+    preValidate: `\r\n    data.type = 'switch';`
+  },
+  "Delaystate": {
+    preValidate: `\r\n    data.type = 'delay';`
+  },
+  "Eventbasedswitch": {
+    preValidate: `\r\n    data.type = 'switch';`
+  },
+  "Eventstate": {
+    preValidate: `\r\n    data.type = 'event';`
+  },
+  "Foreachstate": {
+    preValidate: `\r\n    data.type = 'foreach';`
+  },
+  "Injectstate": {
+    preValidate: `\r\n    data.type = 'inject';`
+  },
+  "Operationstate": {
+    preValidate: `\r\n    data.type = 'operation';`
+  },
+  "Parallelstate": {
+    preValidate: `\r\n    data.type = 'parallel';`
+  }
+};
+
 /**
  * Transforms PascalCase/camelCase/snake_case into kebab-case
  * @param {string} value A string
@@ -60,13 +95,14 @@ const toCamelCase = (value: string): string => {
 const createBuilder = async (destDir: string, dataType: string): Promise<void> => {
   try {
     const camelType = toCamelCase(dataType);
+    const extension = buildersExtensions[dataType];
     const builderCode = `import { DefinedError } from 'ajv';
 import { Builder, builder } from '../builder';
 import { validators } from '../validators';
-import ${dataType} = ${ dataType === 'WorkflowJson' ? 'ServerlessworkflowOrg.Core.WorkflowJson' : 'ServerlessworkflowOrg.Core.WorkflowJson.Definitions.' + dataType };
+import ${dataType} = ServerlessWorkflow.${dataType};
 
 export function ${camelType}Validator(data: ${dataType}): (() => ${dataType}) {
-  return () => {
+  return () => {${extension?.preValidate ? extension.preValidate : ''}
     const validate = validators.get('${dataType}');
     // TODO: ignore validation if no validator or throw ?
     if (!validate) return data;
