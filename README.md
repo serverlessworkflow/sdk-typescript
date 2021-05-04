@@ -60,7 +60,6 @@ const workflow = workflowBuilder()
   .description("Inject Hello World")
   .start("Hello State")
   .states([injectstateBuilder()
-    .type("inject")
     .name("Hello State")
     .data({
         "result": "Hello World!"
@@ -92,7 +91,6 @@ const workflow = workflowBuilder()
   .description("Inject Hello World")
   .start("Hello State")
   .states([injectstateBuilder()
-    .type("inject")
     .name("Hello State")
     .data({
       "result": "Hello World!"
