@@ -49,15 +49,9 @@
     "url": "https://github.com/serverlessworkflow/sdk-typescript.git"
   },
   "author": {
-    "name": "Serverless Workflow Specification Authors",
+    "name": "Serverless Workflow Contributors",
     "url": "https://serverlessworkflow.io"
   },
-  "contributors": [
-    {
-      "name": "Jean-Baptiste Bianchi",
-      "url": "https://neuroglia.io"
-    }
-  ],
   "license": "http://www.apache.org/licenses/LICENSE-2.0.txt",
   "bugs": {
     "url": "https://github.com/serverlessworkflow/sdk-typescript/issues"
