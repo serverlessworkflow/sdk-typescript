@@ -1,13 +1,11 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "declarationDir": "./dist",
-    "declarationMap": true,
-    "target": "ES5",
-    "module": "ES2015"
+    "outDir": "./out-tsc/tests"
   },
   "include": [
     "./src/**/*.ts",
+    "./tests/**/*.spec.ts",
   ],
   "exclude": [
     "node_modules",

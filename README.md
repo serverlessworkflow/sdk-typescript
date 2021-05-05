@@ -7,8 +7,8 @@ Provides the Typescript API/SPI for the [Serverless Workflow Specification](http
 
 With the SDK you can:
 * Parse workflow JSON and YAML definitions
-* (_WIP_) Programmatically build workflow definitions
-* (_WIP_) Validate workflow definitions
+* Programmatically build workflow definitions
+* Validate workflow definitions
 
 ## Getting Started
 
@@ -20,7 +20,7 @@ To build the project and run tests locally:
 ```sh
 git clone https://github.com/serverlessworkflow/sdk-typescript.git
 cd sdk-typescript
-npm install && npm run test
+npm install && npm run update-code-base && npm run test
 ```
 
 
@@ -53,28 +53,29 @@ It will create a symbolic link from globally-installed `sdk-typescript` to `node
 #### Create Workflow using builder API
 
 ```typescript
-
-    const workflow = new WorkflowBuilder()
-        .withId("helloworld")
-        .withVersion("1.0")
-        .withName("Hello World Workflow")
-        .withDescription("Inject Hello World")
-        .withStart("Hello State")
-        .withStates([new InjectStateBuilder()
-            .withName("Hello State")
-            .withData({
-                "result": "Hello World!"
-            })
-            .withEnd(true).build()])
-        .build();
+const workflow = workflowBuilder()
+  .id("helloworld")
+  .version("1.0")
+  .name("Hello World Workflow")
+  .description("Inject Hello World")
+  .start("Hello State")
+  .states([injectstateBuilder()
+    .name("Hello State")
+    .data({
+        "result": "Hello World!"
+    })
+    .end(true)
+    .build()
+  ])
+  .build();
 ```
 
 #### Load a file JSON/YAML to a Workflow instance
 
 ```typescript
-    const workflow = BaseWorkflow.fromSource(source)
+    const workflow = WorkflowConverter.fromString(source)
 ```
-Where `source` is the file location.
+Where `source` is a JSON or a YAML string.
 
 
 
@@ -83,52 +84,45 @@ Where `source` is the file location.
 Having the following workflow instance:
 
 ```typescript
-    const workflow = new WorkflowBuilder()
-        .withId("helloworld")
-        .withVersion("1.0")
-        .withName("Hello World Workflow")
-        .withDescription("Inject Hello World")
-        .withStart("Hello State")
-        .withStates([new InjectStateBuilder()
-            .withName("Hello State")
-            .withData({
-                "result": "Hello World!"
-            })
-            .withEnd(true).build()])
-        .build();
+const workflow = workflowBuilder()
+  .id("helloworld")
+  .version("1.0")
+  .name("Hello World Workflow")
+  .description("Inject Hello World")
+  .start("Hello State")
+  .states([injectstateBuilder()
+    .name("Hello State")
+    .data({
+      "result": "Hello World!"
+    })
+    .end(true)
+    .build()
+  ])
+  .build();
 ```
 
 You can convert it to its string representation in JSON or YAML format 
-by using the static methods `toJSON` or `toYAML` respectively:
+by using the static methods `toJson` or `toYaml` respectively:
 
 ```typescript
-    const workflowAsJSON = BaseWorkflow.toJSON(workflow);
+    const workflowAsJson = WorkflowConverter.toJson(workflow);
 ```
 
 ```typescript
-    const workflowAsYAML = BaseWorkflow.toYAML(workflow);
+    const workflowAsYaml = WorkflowConverter.toYaml(workflow);
 ```
 
 #### Validate workflow definitions
 
 The sdk provides a way to validate if a workflow object is compliant with the serverlessworkflow specification.
 
-`WorkflowValidator` class provides two methods: 
+`WorkflowValidator` class provides a validation method: 
 
-- `isValid(): boolean`
-
-```typescript
-
-const isValid = new WorkflowValidator(workflow).isValid();
-
-```
-
-- `validate(): ValidationErrors`
+- `validate(): boolean`
 
 ```typescript
-
-const validationErrors = new WorkflowValidator(workflow).validate();
-validationErrors.errors().forEach(error => console.error(error.message()))
-
-
+const workflowValidator = new WorkflowValidator(workflow);
+if (!workflowValidator.validate()) {
+  workflowValidator.validationErrors.forEach(error => console.error(error.message));
+}
 ```
