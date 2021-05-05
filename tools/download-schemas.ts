@@ -2,6 +2,8 @@ import fetch from 'node-fetch';
 import * as path from 'path';
 import {promises as fsPromises} from 'fs';
 import rimraf from 'rimraf';
+import yargs from 'yargs';
+import { version } from '../package.json';
 const {writeFile,mkdir} = fsPromises;
 const rimrafP = async (f: string): Promise<void> => new Promise<void>((resolve, reject) => 
   rimraf(f, (err) => {
@@ -102,8 +104,11 @@ const downloadFile = async (url: string, dest: string): Promise<void> => mkdir(
  */
 const downloadFiles = async (filesMap: Map<string, string>): Promise<void[]> => Promise.all(Array.from(filesMap).map(([dest, url]) => downloadFile(url, dest)));
 
-/** The schema registry base url */
-const registryUrl = 'https://api.github.com/repos/serverlessworkflow/specification/contents/schema?ref=main';
+const argv = yargs(process.argv.slice(2)).argv;
+const ref = `v${version.split('.').slice(0,-1).join('.')}`;
+/** The schema registry base url, either provided in args or based on the package version */
+const registryUrl: string = argv.registry as string || `https://api.github.com/repos/serverlessworkflow/specification/contents/schema?ref=${ref}`;
+console.log(`Using registry '${registryUrl}'`);
 /** List, map, download */
 reset(path.resolve(process.cwd(), 'src/lib/schema'))
   .then(() => listFiles(registryUrl))

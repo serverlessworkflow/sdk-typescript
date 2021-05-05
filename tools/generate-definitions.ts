@@ -146,11 +146,11 @@ const mergeSchemas = ($refParser: $RefParser, known$Refs: Map<string, string>, t
  * @param {Map<string, string>} known$Refs The know references map
  * @returns {void}
  */
-const createValidatorsPaths = async (dest: string, known$Refs: Map<string, string>): Promise<void> => {
+const createValidatorsPaths = async (dest: string, known$Refs: Map<string, string>, baseUrl: string): Promise<void> => {
   try {
     const validatorsPathsCode = `export const validatorsPaths: [string, string][] = [
-  ["Workflow", "https://serverlessworkflow.org/core/workflow.json"],
-${Array.from(known$Refs).map(([dataType, path]) => `  ['${capitalizeFirstLetter(dataType)}', 'https://serverlessworkflow.org/core/${path.includes('.json') ? path : 'workflow.json' + path}'],`).join('\r\n')}
+  ['Workflow', '${baseUrl}/workflow.json'],
+${Array.from(known$Refs).map(([dataType, path]) => `  ['${capitalizeFirstLetter(dataType)}', '${baseUrl}/${path.includes('.json') ? path : 'workflow.json' + path}'],`).join('\r\n')}
 ]`;
     const destDir = path.dirname(dest);
     await rimrafP(destDir);
@@ -185,11 +185,15 @@ const generate = async (source: string, dest: string, additionnalSchemas: string
             "@dtsgenerator/replace-namespace": {
               map: [
                 {
-                  from: ["ServerlessworkflowOrg", "Core", "WorkflowJson"],
+                  from: ["ServerlessworkflowOrg", "Core", true, "WorkflowJson"],
                   to: ["ServerlessWorkflow"]
                 },
                 {
-                  from: ["ServerlessworkflowOrg", "Core", "WorkflowJson", "Definitions"],
+                  from: ["ServerlessworkflowOrg", "Core", true, "WorkflowJson", "Definitions"],
+                  to: ["ServerlessWorkflow"]
+                },
+                {
+                  from: ["ServerlessworkflowOrg", "Core", true, "Definitions"],
                   to: ["ServerlessWorkflow"]
                 }
             ]
@@ -207,7 +211,9 @@ const generate = async (source: string, dest: string, additionnalSchemas: string
 This directory and its content has been generated automatically. Do not modify its content, it WILL be lost.`);
     await writeFile(dest, generatedTS);
     const validatorsDest = path.resolve(path.dirname(dest), '../validation/validators-paths.ts');
-    await createValidatorsPaths(validatorsDest, known$Refs);
+    const $id = $refParser.schema.$id;
+    const baseUrl = path.dirname($id);
+    await createValidatorsPaths(validatorsDest, known$Refs, baseUrl);
     return Promise.resolve();
   }
   catch (ex) {

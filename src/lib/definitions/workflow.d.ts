@@ -2,16 +2,12 @@ declare namespace ServerlessWorkflow {
     /**
      * Serverless Workflow specification - workflow schema
      */
-    export type Workflow = /* Serverless Workflow specification - workflow schema */ {
+    export interface Workflow {
         /**
          * Workflow unique identifier
          */
         id: string;
         /**
-         * Domain-specific workflow identifier
-         */
-        key?: string;
-        /**
          * Workflow name
          */
         name: string;
@@ -22,24 +18,7 @@ declare namespace ServerlessWorkflow {
         /**
          * Workflow version
          */
-        version?: string;
-        /**
-         * List of helpful terms describing the workflows intended purpose, subject areas, or other important qualities
-         */
-        annotations?: [
-            string,
-            ...string[]
-        ];
-        dataInputSchema?: string | {
-            /**
-             * URI of the JSON Schema used to validate the workflow data input
-             */
-            schema: string;
-            /**
-             * Determines if workflow execution should continue if there are validation errors
-             */
-            failOnValidationErrors: boolean;
-        };
+        version: string;
         start: Startdef;
         /**
          * Serverless Workflow schema version
@@ -62,73 +41,10 @@ declare namespace ServerlessWorkflow {
          * State definitions
          */
         states: [
-            (/* Causes the workflow execution to delay for a specified duration */ Delaystate | /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ Eventstate | /* Defines actions be performed. Does not wait for incoming events */ Operationstate | /* Consists of a number of states that are executed in parallel */ Parallelstate | Switchstate | /* Inject static data into state data. Does not perform any actions */ Injectstate | /* Execute a set of defined actions or workflows for each element of a data array */ Foreachstate | /* This state performs an action, then waits for the callback event that denotes completion of the action */ Callbackstate),
-            ...(/* Causes the workflow execution to delay for a specified duration */ Delaystate | /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ Eventstate | /* Defines actions be performed. Does not wait for incoming events */ Operationstate | /* Consists of a number of states that are executed in parallel */ Parallelstate | Switchstate | /* Inject static data into state data. Does not perform any actions */ Injectstate | /* Execute a set of defined actions or workflows for each element of a data array */ Foreachstate | /* This state performs an action, then waits for the callback event that denotes completion of the action */ Callbackstate)[]
+            (/* Causes the workflow execution to delay for a specified duration */ Delaystate | /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ Eventstate | /* Defines actions be performed. Does not wait for incoming events */ Operationstate | /* Consists of a number of states that are executed in parallel */ Parallelstate | Switchstate | /* Defines a sub-workflow to be executed */ Subflowstate | /* Inject static data into state data. Does not perform any actions */ Injectstate | /* Execute a set of defined actions or workflows for each element of a data array */ Foreachstate | /* This state performs an action, then waits for the callback event that denotes completion of the action */ Callbackstate),
+            ...(/* Causes the workflow execution to delay for a specified duration */ Delaystate | /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ Eventstate | /* Defines actions be performed. Does not wait for incoming events */ Operationstate | /* Consists of a number of states that are executed in parallel */ Parallelstate | Switchstate | /* Defines a sub-workflow to be executed */ Subflowstate | /* Inject static data into state data. Does not perform any actions */ Injectstate | /* Execute a set of defined actions or workflows for each element of a data array */ Foreachstate | /* This state performs an action, then waits for the callback event that denotes completion of the action */ Callbackstate)[]
         ];
-    } | {
-        /**
-         * Workflow unique identifier
-         */
-        id?: string;
-        /**
-         * Domain-specific workflow identifier
-         */
-        key: string;
-        /**
-         * Workflow name
-         */
-        name: string;
-        /**
-         * Workflow description
-         */
-        description?: string;
-        /**
-         * Workflow version
-         */
-        version?: string;
-        /**
-         * List of helpful terms describing the workflows intended purpose, subject areas, or other important qualities
-         */
-        annotations?: [
-            string,
-            ...string[]
-        ];
-        dataInputSchema?: string | {
-            /**
-             * URI of the JSON Schema used to validate the workflow data input
-             */
-            schema: string;
-            /**
-             * Determines if workflow execution should continue if there are validation errors
-             */
-            failOnValidationErrors: boolean;
-        };
-        start: Startdef;
-        /**
-         * Serverless Workflow schema version
-         */
-        schemaVersion?: string;
-        /**
-         * Identifies the expression language used for workflow expressions. Default is 'jq'
-         */
-        expressionLang?: string;
-        execTimeout?: Exectimeout;
-        /**
-         * If 'true', workflow instances is not terminated when there are no active execution paths. Instance can be terminated via 'terminate end definition' or reaching defined 'execTimeout'
-         */
-        keepActive?: boolean;
-        metadata?: /* Metadata information */ Metadata;
-        events?: Events;
-        functions?: Functions;
-        retries?: Retries;
-        /**
-         * State definitions
-         */
-        states: [
-            (/* Causes the workflow execution to delay for a specified duration */ Delaystate | /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ Eventstate | /* Defines actions be performed. Does not wait for incoming events */ Operationstate | /* Consists of a number of states that are executed in parallel */ Parallelstate | Switchstate | /* Inject static data into state data. Does not perform any actions */ Injectstate | /* Execute a set of defined actions or workflows for each element of a data array */ Foreachstate | /* This state performs an action, then waits for the callback event that denotes completion of the action */ Callbackstate),
-            ...(/* Causes the workflow execution to delay for a specified duration */ Delaystate | /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ Eventstate | /* Defines actions be performed. Does not wait for incoming events */ Operationstate | /* Consists of a number of states that are executed in parallel */ Parallelstate | Switchstate | /* Inject static data into state data. Does not perform any actions */ Injectstate | /* Execute a set of defined actions or workflows for each element of a data array */ Foreachstate | /* This state performs an action, then waits for the callback event that denotes completion of the action */ Callbackstate)[]
-        ];
-    };
+    }
     export type Action = {
         /**
          * Unique action definition name
@@ -147,9 +63,8 @@ declare namespace ServerlessWorkflow {
             };
         };
         eventRef?: /* Event References */ Eventref;
-        subFlowRef?: Subflowref;
         /**
-         * Time period to wait for function execution to complete (ISO 8601 format)
+         * Time period to wait for function execution to complete
          */
         timeout?: string;
         actionDataFilter?: Actiondatafilter;
@@ -171,33 +86,8 @@ declare namespace ServerlessWorkflow {
             };
         };
         eventRef: /* Event References */ Eventref;
-        subFlowRef?: Subflowref;
         /**
-         * Time period to wait for function execution to complete (ISO 8601 format)
-         */
-        timeout?: string;
-        actionDataFilter?: Actiondatafilter;
-    } | {
-        /**
-         * Unique action definition name
-         */
-        name?: string;
-        functionRef?: string | {
-            /**
-             * Name of the referenced function
-             */
-            refName: string;
-            /**
-             * Function arguments
-             */
-            arguments?: {
-                [key: string]: any;
-            };
-        };
-        eventRef?: /* Event References */ Eventref;
-        subFlowRef: Subflowref;
-        /**
-         * Time period to wait for function execution to complete (ISO 8601 format)
+         * Time period to wait for function execution to complete
          */
         timeout?: string;
         actionDataFilter?: Actiondatafilter;
@@ -219,7 +109,20 @@ declare namespace ServerlessWorkflow {
     /**
      * Branch Definition
      */
-    export interface Branch {
+    export type Branch = /* Branch Definition */ {
+        /**
+         * Branch name
+         */
+        name: string;
+        /**
+         * Actions to be executed in this branch
+         */
+        actions?: Action[];
+        /**
+         * Unique Id of a workflow to be executed in this branch
+         */
+        workflowId: string;
+    } | {
         /**
          * Branch name
          */
@@ -228,7 +131,11 @@ declare namespace ServerlessWorkflow {
          * Actions to be executed in this branch
          */
         actions: Action[];
-    }
+        /**
+         * Unique Id of a workflow to be executed in this branch
+         */
+        workflowId?: string;
+    };
     /**
      * This state performs an action, then waits for the callback event that denotes completion of the action
      */
@@ -341,7 +248,7 @@ declare namespace ServerlessWorkflow {
         /**
          * Default transition of the workflow if there is no matching data conditions. Can include a transition or end definition
          */
-        defaultCondition?: /* DefaultCondition definition. Can be either a transition or end definition */ Defaultconditiondef;
+        default?: /* Default definition. Can be either a transition or end definition */ Defaultdef;
         /**
          * Unique Name of a workflow state which is responsible for compensation of this state
          */
@@ -354,9 +261,9 @@ declare namespace ServerlessWorkflow {
     }
     export type Datacondition = /* Switch state data based condition */ Transitiondatacondition | /* Switch state data based condition */ Enddatacondition;
     /**
-     * DefaultCondition definition. Can be either a transition or end definition
+     * Default definition. Can be either a transition or end definition
      */
-    export type Defaultconditiondef = /* DefaultCondition definition. Can be either a transition or end definition */ {
+    export type Defaultdef = /* Default definition. Can be either a transition or end definition */ {
         transition: Transition;
         end?: End;
     } | {
@@ -529,7 +436,7 @@ declare namespace ServerlessWorkflow {
         /**
          * Default transition of the workflow if there is no matching data conditions. Can include a transition or end definition
          */
-        defaultCondition?: /* DefaultCondition definition. Can be either a transition or end definition */ Defaultconditiondef;
+        default?: /* Default definition. Can be either a transition or end definition */ Defaultdef;
         /**
          * Unique Name of a workflow state which is responsible for compensation of this state
          */
@@ -779,6 +686,10 @@ declare namespace ServerlessWorkflow {
          */
         actions?: Action[];
         /**
+         * Unique Id of a workflow to be executed for each of the elements of inputCollection
+         */
+        workflowId?: string;
+        /**
          * State data filter
          */
         stateDataFilter?: Statedatafilter;
@@ -849,7 +760,7 @@ declare namespace ServerlessWorkflow {
          */
         stateDataFilter?: Statedatafilter;
         /**
-         * Next transition of the workflow after injection has completed
+         * Next transition of the workflow after subflow has completed
          */
         transition?: Transition;
         /**
@@ -970,11 +881,11 @@ declare namespace ServerlessWorkflow {
         /**
          * Option types on how to complete branch execution.
          */
-        completionType?: "allOf" | "atLeast";
+        completionType?: "and" | "xor" | "n_of_m";
         /**
-         * Used when completionType is set to 'atLeast' to specify the minimum number of branches that must complete before the state will transition.
+         * Used when completionType is set to 'n_of_m' to specify the 'N' value
          */
-        numCompleted?: number | string;
+        n?: number | string;
         /**
          * States error handling and retries definitions
          */
@@ -1013,6 +924,31 @@ declare namespace ServerlessWorkflow {
         contextAttributes?: {
             [name: string]: string;
         };
+    }
+    export interface Repeat {
+        /**
+         * Expression evaluated against SubFlow state data. SubFlow will repeat execution as long as this expression is true or until the max property count is reached
+         */
+        expression?: string;
+        /**
+         * If true, the expression is evaluated before each repeat execution, if false the expression is evaluated after each repeat execution
+         */
+        checkBefore?: boolean;
+        /**
+         * Sets the maximum amount of repeat executions
+         */
+        max?: number;
+        /**
+         * If true, repeats executions in a case unhandled errors propagate from the sub-workflow to this state
+         */
+        continueOnError?: boolean;
+        /**
+         * List referencing defined consumed workflow events. SubFlow will repeat execution until one of the defined events is consumed, or until the max property count is reached
+         */
+        stopOnEvents?: [
+            string,
+            ...string[]
+        ];
     }
     export type Retries = string /* uri */ | [
         Retrydef,
@@ -1089,16 +1025,60 @@ declare namespace ServerlessWorkflow {
          */
         output?: string;
     }
-    export type Subflowref = string | {
+    /**
+     * Defines a sub-workflow to be executed
+     */
+    export interface Subflowstate {
+        /**
+         * Unique state id
+         */
+        id?: string;
+        /**
+         * State name
+         */
+        name?: string;
+        /**
+         * State type
+         */
+        type?: "subflow";
+        /**
+         * State end definition
+         */
+        end?: End;
         /**
          * Workflow execution must wait for sub-workflow to finish before continuing
          */
         waitForCompletion?: boolean;
         /**
-         * Unique id of the sub-workflow to be invoked
+         * Sub-workflow unique id
          */
-        workflowId: string;
-    };
+        workflowId?: string;
+        /**
+         * SubFlow state repeat exec definition
+         */
+        repeat?: Repeat;
+        /**
+         * State data filter
+         */
+        stateDataFilter?: Statedatafilter;
+        /**
+         * States error handling and retries definitions
+         */
+        onErrors?: Error[];
+        /**
+         * Next transition of the workflow after SubFlow has completed execution
+         */
+        transition?: Transition;
+        /**
+         * Unique Name of a workflow state which is responsible for compensation of this state
+         */
+        compensatedBy?: string;
+        /**
+         * If true, this state is used to compensate another state. Default is false
+         */
+        usedForCompensation?: boolean;
+        metadata?: /* Metadata information */ Metadata;
+    }
     export type Switchstate = /* Permits transitions to other states based on data conditions */ Databasedswitch | /* Permits transitions to other states based on events */ Eventbasedswitch;
     export type Transition = string | {
         /**
