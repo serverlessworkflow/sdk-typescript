@@ -17,10 +17,7 @@ export default {
   ],
   plugins: [
     json(),
-    typescript({ 
-      useTsconfigDeclarationDir: true,
-      exclude: []
-    }),
+    typescript({ useTsconfigDeclarationDir: true }),
     commonjs(),
     resolve(),
     sourceMaps(),
