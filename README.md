@@ -52,7 +52,8 @@ It will create a symbolic link from globally-installed `sdk-typescript` to `node
 #### Create Workflow using builder API
 
 ```typescript
-const workflow: ServerlessWorkflow.Workflow = workflowBuilder()
+
+const workflow: Specification.Workflow = workflowBuilder()
   .id("helloworld")
   .version("1.0")
   .name("Hello World Workflow")
@@ -73,7 +74,7 @@ const workflow: ServerlessWorkflow.Workflow = workflowBuilder()
 #### Create Workflow using object literals
 
 ```typescript
-const workflow: ServerlessWorkflow.Workflow = {
+const workflow: Specification.Workflow = {
   id: 'helloworld',
   version: '1.0',
   name: 'Hello World Workflow',
@@ -87,7 +88,7 @@ const workflow: ServerlessWorkflow.Workflow = {
       data: {
         result: "Hello World!"
       }
-    } as ServerlessWorkflow.Injectstate
+    } as Specification.Injectstate
   ]
 };
 ```
