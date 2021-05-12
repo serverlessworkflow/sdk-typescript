@@ -1,9 +1,9 @@
 import { DefinedError } from 'ajv';
 import { Builder, builder } from '../builder';
+import { Specification } from '../definitions';
 import { validators } from '../validators';
-import Exectimeout = ServerlessWorkflow.Exectimeout;
 
-export function exectimeoutValidator(data: Exectimeout): (() => Exectimeout) {
+export function exectimeoutValidator(data: Specification.Exectimeout): (() => Specification.Exectimeout) {
   return () => {
     const validate = validators.get('Exectimeout');
     // TODO: ignore validation if no validator or throw ?
@@ -17,6 +17,6 @@ export function exectimeoutValidator(data: Exectimeout): (() => Exectimeout) {
   };
 }
 
-export function exectimeoutBuilder(): Builder<Exectimeout> {
-  return builder<Exectimeout>(exectimeoutValidator);
+export function exectimeoutBuilder(): Builder<Specification.Exectimeout> {
+  return builder<Specification.Exectimeout>(exectimeoutValidator);
 }

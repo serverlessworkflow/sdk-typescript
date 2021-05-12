@@ -1,4 +1,3 @@
-declare namespace ServerlessWorkflow {
     /**
      * Serverless Workflow specification - workflow schema
      */
@@ -1134,4 +1133,3 @@ declare namespace ServerlessWorkflow {
         eventDataFilter?: Eventdatafilter;
         metadata?: /* Metadata information */ Metadata;
     }
-}

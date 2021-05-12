@@ -20,7 +20,7 @@
     "test": "npx tsc --project ./tests/tsconfig.json && npx jasmine --config=./tests/support/jasmine.json",
     "prebuild": "npx rimraf dist",
     "build": "npx rollup -c rollup.config.ts",
-    "postbuild":"npx shx cp ./package.json ./README.md ./LICENSE ./dist/",
+    "postbuild": "npx shx cp ./package.json ./README.md ./LICENSE ./dist/",
     "verify-publish-directory": "node -e 'if (!process.cwd().endsWith(\"dist\")) { console.error(\"Packaging/Publishing should be done from ./dist/\"); process.exitCode = 1; } process.exit();'",
     "prepack": "npm run verify-publish-directory",
     "prepublish": "npm run verify-publish-directory"

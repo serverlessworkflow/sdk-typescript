@@ -1,9 +1,9 @@
 import { DefinedError } from 'ajv';
 import { Builder, builder } from '../builder';
+import { Specification } from '../definitions';
 import { validators } from '../validators';
-import Foreachstate = ServerlessWorkflow.Foreachstate;
 
-export function foreachstateValidator(data: Foreachstate): (() => Foreachstate) {
+export function foreachstateValidator(data: Specification.Foreachstate): (() => Specification.Foreachstate) {
   return () => {
     data.type = 'foreach';
     const validate = validators.get('Foreachstate');
@@ -18,6 +18,6 @@ export function foreachstateValidator(data: Foreachstate): (() => Foreachstate) 
   };
 }
 
-export function foreachstateBuilder(): Builder<Foreachstate> {
-  return builder<Foreachstate>(foreachstateValidator);
+export function foreachstateBuilder(): Builder<Specification.Foreachstate> {
+  return builder<Specification.Foreachstate>(foreachstateValidator);
 }

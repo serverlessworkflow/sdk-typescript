@@ -1,9 +1,9 @@
 import { DefinedError } from 'ajv';
 import { Builder, builder } from '../builder';
+import { Specification } from '../definitions';
 import { validators } from '../validators';
-import Retrydef = ServerlessWorkflow.Retrydef;
 
-export function retrydefValidator(data: Retrydef): (() => Retrydef) {
+export function retrydefValidator(data: Specification.Retrydef): (() => Specification.Retrydef) {
   return () => {
     const validate = validators.get('Retrydef');
     // TODO: ignore validation if no validator or throw ?
@@ -17,6 +17,6 @@ export function retrydefValidator(data: Retrydef): (() => Retrydef) {
   };
 }
 
-export function retrydefBuilder(): Builder<Retrydef> {
-  return builder<Retrydef>(retrydefValidator);
+export function retrydefBuilder(): Builder<Specification.Retrydef> {
+  return builder<Specification.Retrydef>(retrydefValidator);
 }

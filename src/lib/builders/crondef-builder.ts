@@ -1,9 +1,9 @@
 import { DefinedError } from 'ajv';
 import { Builder, builder } from '../builder';
+import { Specification } from '../definitions';
 import { validators } from '../validators';
-import Crondef = ServerlessWorkflow.Crondef;
 
-export function crondefValidator(data: Crondef): (() => Crondef) {
+export function crondefValidator(data: Specification.Crondef): (() => Specification.Crondef) {
   return () => {
     const validate = validators.get('Crondef');
     // TODO: ignore validation if no validator or throw ?
@@ -17,6 +17,6 @@ export function crondefValidator(data: Crondef): (() => Crondef) {
   };
 }
 
-export function crondefBuilder(): Builder<Crondef> {
-  return builder<Crondef>(crondefValidator);
+export function crondefBuilder(): Builder<Specification.Crondef> {
+  return builder<Specification.Crondef>(crondefValidator);
 }

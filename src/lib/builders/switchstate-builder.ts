@@ -1,9 +1,9 @@
 import { DefinedError } from 'ajv';
 import { Builder, builder } from '../builder';
+import { Specification } from '../definitions';
 import { validators } from '../validators';
-import Switchstate = ServerlessWorkflow.Switchstate;
 
-export function switchstateValidator(data: Switchstate): (() => Switchstate) {
+export function switchstateValidator(data: Specification.Switchstate): (() => Specification.Switchstate) {
   return () => {
     const validate = validators.get('Switchstate');
     // TODO: ignore validation if no validator or throw ?
@@ -17,6 +17,6 @@ export function switchstateValidator(data: Switchstate): (() => Switchstate) {
   };
 }
 
-export function switchstateBuilder(): Builder<Switchstate> {
-  return builder<Switchstate>(switchstateValidator);
+export function switchstateBuilder(): Builder<Specification.Switchstate> {
+  return builder<Specification.Switchstate>(switchstateValidator);
 }

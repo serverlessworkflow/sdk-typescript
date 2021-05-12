@@ -1,9 +1,9 @@
 import { DefinedError } from 'ajv';
 import { Builder, builder } from '../builder';
+import { Specification } from '../definitions';
 import { validators } from '../validators';
-import Actiondatafilter = ServerlessWorkflow.Actiondatafilter;
 
-export function actiondatafilterValidator(data: Actiondatafilter): (() => Actiondatafilter) {
+export function actiondatafilterValidator(data: Specification.Actiondatafilter): (() => Specification.Actiondatafilter) {
   return () => {
     const validate = validators.get('Actiondatafilter');
     // TODO: ignore validation if no validator or throw ?
@@ -17,6 +17,6 @@ export function actiondatafilterValidator(data: Actiondatafilter): (() => Action
   };
 }
 
-export function actiondatafilterBuilder(): Builder<Actiondatafilter> {
-  return builder<Actiondatafilter>(actiondatafilterValidator);
+export function actiondatafilterBuilder(): Builder<Specification.Actiondatafilter> {
+  return builder<Specification.Actiondatafilter>(actiondatafilterValidator);
 }

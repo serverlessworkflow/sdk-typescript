@@ -98,10 +98,10 @@ const createBuilder = async (destDir: string, dataType: string): Promise<void> =
     const extension = buildersExtensions[dataType];
     const builderCode = `import { DefinedError } from 'ajv';
 import { Builder, builder } from '../builder';
+import { Specification } from '../definitions';
 import { validators } from '../validators';
-import ${dataType} = ServerlessWorkflow.${dataType};
 
-export function ${camelType}Validator(data: ${dataType}): (() => ${dataType}) {
+export function ${camelType}Validator(data: Specification.${dataType}): (() => Specification.${dataType}) {
   return () => {${extension?.preValidate ? extension.preValidate : ''}
     const validate = validators.get('${dataType}');
     // TODO: ignore validation if no validator or throw ?
@@ -115,8 +115,8 @@ export function ${camelType}Validator(data: ${dataType}): (() => ${dataType}) {
   };
 }
 
-export function ${camelType}Builder(): Builder<${dataType}> {
-  return builder<${dataType}>(${camelType}Validator);
+export function ${camelType}Builder(): Builder<Specification.${dataType}> {
+  return builder<Specification.${dataType}>(${camelType}Validator);
 }`;
     const destFile = path.resolve(destDir, toKebabCase(camelType) + '-builder.ts');
     await writeFile(destFile, builderCode);
@@ -172,7 +172,7 @@ This directory and its content has been generated automatically. Do not modify i
 };
 
 const buildersDir = path.resolve(process.cwd(), 'src/lib/builders');
-const definitionSrc = path.resolve(process.cwd(), 'src/lib/definitions/workflow.d.ts');
+const definitionSrc = path.resolve(process.cwd(), 'src/lib/definitions/workflow.ts');
 generate(definitionSrc, buildersDir)
   .then(console.log.bind(console))
   .catch(console.error.bind(console))
