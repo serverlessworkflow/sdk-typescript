@@ -1,9 +1,9 @@
 import { DefinedError } from 'ajv';
 import { Builder, builder } from '../builder';
+import { Specification } from '../definitions';
 import { validators } from '../validators';
-import Metadata = ServerlessWorkflow.Metadata;
 
-export function metadataValidator(data: Metadata): (() => Metadata) {
+export function metadataValidator(data: Specification.Metadata): (() => Specification.Metadata) {
   return () => {
     const validate = validators.get('Metadata');
     // TODO: ignore validation if no validator or throw ?
@@ -17,6 +17,6 @@ export function metadataValidator(data: Metadata): (() => Metadata) {
   };
 }
 
-export function metadataBuilder(): Builder<Metadata> {
-  return builder<Metadata>(metadataValidator);
+export function metadataBuilder(): Builder<Specification.Metadata> {
+  return builder<Specification.Metadata>(metadataValidator);
 }

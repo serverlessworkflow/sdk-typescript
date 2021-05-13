@@ -1,5 +1,5 @@
 import * as yaml from "js-yaml";
-import Workflow = ServerlessWorkflow.Workflow;
+import { Specification } from './definitions';
 
 /**
  * Exposes utils to parse and serialize Workflow
@@ -10,9 +10,9 @@ export const WorkflowConverter = {
    * @param {string} data The JSON or YAML workflow to parse
    * @returns {Workflow} The parse Workflow
    */
-  fromString: (data: string): Workflow => {
+  fromString: (data: string): Specification.Workflow => {
     try {
-      return yaml.load(data) as Workflow;
+      return yaml.load(data) as Specification.Workflow;
     }
     catch (ex) {
       throw new Error('Format not supported');
@@ -23,11 +23,11 @@ export const WorkflowConverter = {
    * @param {Workflow} workflow The workflow to strigify
    * @returns {string} The workflow as JSON
    */
-  toJson: (workflow: Workflow): string => JSON.stringify(workflow),
+  toJson: (workflow: Specification.Workflow): string => JSON.stringify(workflow),
   /**
    * Stringifies the provided workflow to the YAML format
    * @param {Workflow} workflow The workflow to strigify
    * @returns {string} The workflow as YAML
    */
-  toYaml: (workflow: Workflow): string => yaml.dump(workflow),
+  toYaml: (workflow: Specification.Workflow): string => yaml.dump(workflow),
 }

@@ -1,9 +1,9 @@
 import { DefinedError } from 'ajv';
 import { Builder, builder } from '../builder';
+import { Specification } from '../definitions';
 import { validators } from '../validators';
-import Datacondition = ServerlessWorkflow.Datacondition;
 
-export function dataconditionValidator(data: Datacondition): (() => Datacondition) {
+export function dataconditionValidator(data: Specification.Datacondition): (() => Specification.Datacondition) {
   return () => {
     const validate = validators.get('Datacondition');
     // TODO: ignore validation if no validator or throw ?
@@ -17,6 +17,6 @@ export function dataconditionValidator(data: Datacondition): (() => Dataconditio
   };
 }
 
-export function dataconditionBuilder(): Builder<Datacondition> {
-  return builder<Datacondition>(dataconditionValidator);
+export function dataconditionBuilder(): Builder<Specification.Datacondition> {
+  return builder<Specification.Datacondition>(dataconditionValidator);
 }

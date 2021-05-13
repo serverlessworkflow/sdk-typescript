@@ -1,9 +1,9 @@
 import { DefinedError } from 'ajv';
 import { Builder, builder } from '../builder';
+import { Specification } from '../definitions';
 import { validators } from '../validators';
-import Parallelstate = ServerlessWorkflow.Parallelstate;
 
-export function parallelstateValidator(data: Parallelstate): (() => Parallelstate) {
+export function parallelstateValidator(data: Specification.Parallelstate): (() => Specification.Parallelstate) {
   return () => {
     data.type = 'parallel';
     const validate = validators.get('Parallelstate');
@@ -18,6 +18,6 @@ export function parallelstateValidator(data: Parallelstate): (() => Parallelstat
   };
 }
 
-export function parallelstateBuilder(): Builder<Parallelstate> {
-  return builder<Parallelstate>(parallelstateValidator);
+export function parallelstateBuilder(): Builder<Specification.Parallelstate> {
+  return builder<Specification.Parallelstate>(parallelstateValidator);
 }

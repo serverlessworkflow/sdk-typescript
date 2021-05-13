@@ -14,11 +14,11 @@
  * limitations under the License.
  *
  */
-import Workflow = ServerlessWorkflow.Workflow;
 import { 
   workflowBuilder, 
   injectstateBuilder,
-  WorkflowConverter
+  WorkflowConverter,
+  Specification
 } from "../src/";
 import { readFileSync } from 'fs';
 
@@ -43,7 +43,7 @@ describe("workflow-converter fromSource", () => {
   ];
   testCases.forEach(test => {
     it(test.description, function () {
-      const workflow: Workflow = WorkflowConverter.fromString(readFileSync(test.file, 'utf-8'));
+      const workflow: Specification.Workflow = WorkflowConverter.fromString(readFileSync(test.file, 'utf-8'));
       expect(workflow.id).toBe("helloworld");
       expect(workflow.version).toBe("1.0");
       expect(workflow.name).toBe("Hello World Workflow");

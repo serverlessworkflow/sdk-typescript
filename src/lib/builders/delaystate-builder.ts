@@ -1,9 +1,9 @@
 import { DefinedError } from 'ajv';
 import { Builder, builder } from '../builder';
+import { Specification } from '../definitions';
 import { validators } from '../validators';
-import Delaystate = ServerlessWorkflow.Delaystate;
 
-export function delaystateValidator(data: Delaystate): (() => Delaystate) {
+export function delaystateValidator(data: Specification.Delaystate): (() => Specification.Delaystate) {
   return () => {
     data.type = 'delay';
     const validate = validators.get('Delaystate');
@@ -18,6 +18,6 @@ export function delaystateValidator(data: Delaystate): (() => Delaystate) {
   };
 }
 
-export function delaystateBuilder(): Builder<Delaystate> {
-  return builder<Delaystate>(delaystateValidator);
+export function delaystateBuilder(): Builder<Specification.Delaystate> {
+  return builder<Specification.Delaystate>(delaystateValidator);
 }

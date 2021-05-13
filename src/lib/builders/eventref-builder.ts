@@ -1,9 +1,9 @@
 import { DefinedError } from 'ajv';
 import { Builder, builder } from '../builder';
+import { Specification } from '../definitions';
 import { validators } from '../validators';
-import Eventref = ServerlessWorkflow.Eventref;
 
-export function eventrefValidator(data: Eventref): (() => Eventref) {
+export function eventrefValidator(data: Specification.Eventref): (() => Specification.Eventref) {
   return () => {
     const validate = validators.get('Eventref');
     // TODO: ignore validation if no validator or throw ?
@@ -17,6 +17,6 @@ export function eventrefValidator(data: Eventref): (() => Eventref) {
   };
 }
 
-export function eventrefBuilder(): Builder<Eventref> {
-  return builder<Eventref>(eventrefValidator);
+export function eventrefBuilder(): Builder<Specification.Eventref> {
+  return builder<Specification.Eventref>(eventrefValidator);
 }

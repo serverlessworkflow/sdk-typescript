@@ -1,9 +1,9 @@
 import { DefinedError } from 'ajv';
 import { Builder, builder } from '../builder';
+import { Specification } from '../definitions';
 import { validators } from '../validators';
-import Callbackstate = ServerlessWorkflow.Callbackstate;
 
-export function callbackstateValidator(data: Callbackstate): (() => Callbackstate) {
+export function callbackstateValidator(data: Specification.Callbackstate): (() => Specification.Callbackstate) {
   return () => {
     data.type = 'callback';
     const validate = validators.get('Callbackstate');
@@ -18,6 +18,6 @@ export function callbackstateValidator(data: Callbackstate): (() => Callbackstat
   };
 }
 
-export function callbackstateBuilder(): Builder<Callbackstate> {
-  return builder<Callbackstate>(callbackstateValidator);
+export function callbackstateBuilder(): Builder<Specification.Callbackstate> {
+  return builder<Specification.Callbackstate>(callbackstateValidator);
 }

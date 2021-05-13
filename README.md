@@ -4,14 +4,13 @@
 
 Provides the Typescript API/SPI for the [Serverless Workflow Specification](https://github.com/serverlessworkflow/specification)
 
-
 With the SDK you can:
 * Parse workflow JSON and YAML definitions
 * Programmatically build workflow definitions
 * Validate workflow definitions
 
-## Getting Started
 
+## Getting Started
 
 ### Building locally
 
@@ -53,7 +52,8 @@ It will create a symbolic link from globally-installed `sdk-typescript` to `node
 #### Create Workflow using builder API
 
 ```typescript
-const workflow = workflowBuilder()
+
+const workflow: Specification.Workflow = workflowBuilder()
   .id("helloworld")
   .version("1.0")
   .name("Hello World Workflow")
@@ -70,13 +70,36 @@ const workflow = workflowBuilder()
   .build();
 ```
 
+
+#### Create Workflow using object literals
+
+```typescript
+const workflow: Specification.Workflow = {
+  id: 'helloworld',
+  version: '1.0',
+  name: 'Hello World Workflow',
+  description: 'Inject Hello World',
+  start: 'Hello State',
+  states: [
+    {
+      type: 'inject',
+      name: 'Hello State',
+      end: true,
+      data: {
+        result: "Hello World!"
+      }
+    } as Specification.Injectstate
+  ]
+};
+```
+
+
 #### Load a file JSON/YAML to a Workflow instance
 
 ```typescript
     const workflow = WorkflowConverter.fromString(source)
 ```
 Where `source` is a JSON or a YAML string.
-
 
 
 #### Parse a Workflow instance to JSON/YAML
@@ -111,6 +134,7 @@ by using the static methods `toJson` or `toYaml` respectively:
 ```typescript
     const workflowAsYaml = WorkflowConverter.toYaml(workflow);
 ```
+
 
 #### Validate workflow definitions
 

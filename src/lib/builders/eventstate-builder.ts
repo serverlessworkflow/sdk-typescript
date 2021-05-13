@@ -1,9 +1,9 @@
 import { DefinedError } from 'ajv';
 import { Builder, builder } from '../builder';
+import { Specification } from '../definitions';
 import { validators } from '../validators';
-import Eventstate = ServerlessWorkflow.Eventstate;
 
-export function eventstateValidator(data: Eventstate): (() => Eventstate) {
+export function eventstateValidator(data: Specification.Eventstate): (() => Specification.Eventstate) {
   return () => {
     data.type = 'event';
     const validate = validators.get('Eventstate');
@@ -18,6 +18,6 @@ export function eventstateValidator(data: Eventstate): (() => Eventstate) {
   };
 }
 
-export function eventstateBuilder(): Builder<Eventstate> {
-  return builder<Eventstate>(eventstateValidator);
+export function eventstateBuilder(): Builder<Specification.Eventstate> {
+  return builder<Specification.Eventstate>(eventstateValidator);
 }

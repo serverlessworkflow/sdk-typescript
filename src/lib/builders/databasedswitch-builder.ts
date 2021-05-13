@@ -1,9 +1,9 @@
 import { DefinedError } from 'ajv';
 import { Builder, builder } from '../builder';
+import { Specification } from '../definitions';
 import { validators } from '../validators';
-import Databasedswitch = ServerlessWorkflow.Databasedswitch;
 
-export function databasedswitchValidator(data: Databasedswitch): (() => Databasedswitch) {
+export function databasedswitchValidator(data: Specification.Databasedswitch): (() => Specification.Databasedswitch) {
   return () => {
     data.type = 'switch';
     const validate = validators.get('Databasedswitch');
@@ -18,6 +18,6 @@ export function databasedswitchValidator(data: Databasedswitch): (() => Database
   };
 }
 
-export function databasedswitchBuilder(): Builder<Databasedswitch> {
-  return builder<Databasedswitch>(databasedswitchValidator);
+export function databasedswitchBuilder(): Builder<Specification.Databasedswitch> {
+  return builder<Specification.Databasedswitch>(databasedswitchValidator);
 }

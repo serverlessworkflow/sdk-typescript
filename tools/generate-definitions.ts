@@ -178,7 +178,7 @@ const generate = async (source: string, dest: string, additionnalSchemas: string
     const paths = [ ...$refParser.$refs.paths(), ...additionnalSchemas ].filter((p, index, arr) => arr.indexOf(p) === index && p !== source);
     await mergeDefinitions($refParser, paths, known$Refs);
     mergeSchemas($refParser, known$Refs, $refParser.schema, '#/');
-    const generatedTS = (await dtsGenerator({
+    let generatedTS = (await dtsGenerator({
         contents: [parseSchema($refParser.schema as dtsGeneratorJsonSchema)],
         config: {
           plugins: {
@@ -204,12 +204,15 @@ const generate = async (source: string, dest: string, additionnalSchemas: string
       .replace(/WorkflowJson\.Definitions\./g, '')
       .replace(/WorkflowJson/g, 'Workflow')
       ;
+    const lines = generatedTS.split('\n');
+    generatedTS = lines.slice(1, lines.length - 2).join('\n'); // removes 'declare namespace' and keeps 'exports'.
     const destDir = path.dirname(dest);
     await rimrafP(destDir);
     await mkdir(destDir, { recursive: true });
     await writeFile(path.resolve(destDir, 'README.md'), `# Auto generated notice
 This directory and its content has been generated automatically. Do not modify its content, it WILL be lost.`);
     await writeFile(dest, generatedTS);
+    await writeFile(path.resolve(destDir, 'index.ts'), "export * as Specification from './workflow';");
     const validatorsDest = path.resolve(path.dirname(dest), '../validation/validators-paths.ts');
     const $id = $refParser.schema.$id;
     const baseUrl = path.dirname($id);
@@ -222,7 +225,7 @@ This directory and its content has been generated automatically. Do not modify i
 };
 
 const srcFile = path.resolve(process.cwd(), 'src/lib/schema/workflow.json');
-const destFile = 'src/lib/definitions/workflow.d.ts';
+const destFile = 'src/lib/definitions/workflow.ts';
 /*
 const additionnalSchemas = [
   path.resolve(process.cwd(), 'src/lib/schema/common.json'), // should be resolved already, no need to add it manually

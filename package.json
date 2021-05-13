@@ -3,21 +3,27 @@
   "version": "0.6.0",
   "description": "Typescript SDK for Serverless Workflow Specification",
   "main": "umd/index.umd.min.js",
+  "browser": "umd/index.umd.min.js",
   "module": "esm/index.esm.min.js",
-  "typings": "serverless-workflow-sdk.d.ts",
+  "typings": "index.d.ts",
   "scripts": {
     "rimraf": "npx rimraf",
+    "shx": "npx shx",
     "tsc": "npx tsc",
     "ts-node": "npx ts-node",
-    "prebuild": "rimraf dist",
-    "build": "rollup -c rollup.config.ts",
-    "clean": "rimraf dist && rimraf out-tsc",
-    "tools:download-schemas": "ts-node --project tsconfig.tools.json ./tools/download-schemas.ts",
-    "tools:generate-definitions": "ts-node --project tsconfig.tools.json ./tools/generate-definitions.ts",
-    "tools:generate-builders": "ts-node --project tsconfig.tools.json ./tools/generate-builders.ts",
+    "clean": "npx rimraf dist && rimraf out-tsc",
+    "tools:download-schemas": "npx ts-node --project ./tools/tsconfig.json ./tools/download-schemas.ts",
+    "tools:generate-definitions": "npx ts-node --project ./tools/tsconfig.json ./tools/generate-definitions.ts",
+    "tools:generate-builders": "npx ts-node --project ./tools/tsconfig.json ./tools/generate-builders.ts",
     "update-code-base": "npm run tools:download-schemas && npm run tools:generate-definitions && npm run tools:generate-builders",
-    "pretest": "rimraf out-tsc",
-    "test": "tsc --project tsconfig.spec.json && jasmine --config=./tests/support/jasmine.json"
+    "pretest": "npx rimraf out-tsc",
+    "test": "npx tsc --project ./tests/tsconfig.json && npx jasmine --config=./tests/support/jasmine.json",
+    "prebuild": "npx rimraf dist",
+    "build": "npx rollup -c rollup.config.ts",
+    "postbuild": "npx shx cp ./package.json ./README.md ./LICENSE ./dist/",
+    "verify-publish-directory": "node -e 'if (!process.cwd().endsWith(\"dist\")) { console.error(\"Packaging/Publishing should be done from ./dist/\"); process.exitCode = 1; } process.exit();'",
+    "prepack": "npm run verify-publish-directory",
+    "prepublishOnly": "npm run verify-publish-directory"
   },
   "dependencies": {
     "ajv": "^8.1.0",
@@ -42,6 +48,7 @@
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.30.0",
+    "shx": "^0.3.3",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.4",
     "yargs": "^17.0.1"
@@ -59,9 +66,6 @@
     "url": "https://github.com/serverlessworkflow/sdk-typescript/issues"
   },
   "homepage": "https://serverlessworkflow.io",
-  "files": [
-    "dist/*"
-  ],
   "engines": {
     "node": ">=15.0",
     "npm": ">=7.0.0"

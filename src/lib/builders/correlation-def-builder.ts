@@ -1,9 +1,9 @@
 import { DefinedError } from 'ajv';
 import { Builder, builder } from '../builder';
+import { Specification } from '../definitions';
 import { validators } from '../validators';
-import CorrelationDef = ServerlessWorkflow.CorrelationDef;
 
-export function correlationDefValidator(data: CorrelationDef): (() => CorrelationDef) {
+export function correlationDefValidator(data: Specification.CorrelationDef): (() => Specification.CorrelationDef) {
   return () => {
     const validate = validators.get('CorrelationDef');
     // TODO: ignore validation if no validator or throw ?
@@ -17,6 +17,6 @@ export function correlationDefValidator(data: CorrelationDef): (() => Correlatio
   };
 }
 
-export function correlationDefBuilder(): Builder<CorrelationDef> {
-  return builder<CorrelationDef>(correlationDefValidator);
+export function correlationDefBuilder(): Builder<Specification.CorrelationDef> {
+  return builder<Specification.CorrelationDef>(correlationDefValidator);
 }

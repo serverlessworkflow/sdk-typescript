@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Serveless Workflow JS SDK</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <!-- 
+      Run http-server from the project root then navigate to http://localhost:8080/examples/browser/index.html
+    -->
+    <div id="output"></div>
+    <script src="../../dist/umd/index.umd.js"></script>
+    <script type="text/javascript">
+      (() => {
+        const { workflowBuilder, injectstateBuilder } = serverWorkflowSdk;
+        const outputDiv = document.getElementById('output');
+        const workflow = workflowBuilder()
+                          .id("helloworld")
+                          .version("1.0")
+                          .name("Hello World Workflow")
+                          .description("Inject Hello World")
+                          .start("Hello State")
+                          .states([
+                            injectstateBuilder()
+                              .name("Hello State")
+                              .data({
+                                  "result": "Hello World!"
+                              })
+                              .end(true)
+                              .build()
+                          ])
+                          .build();
+        outputDiv.innerHTML = workflow.id;
+      })();
+    </script>
+  </body>
+</html>

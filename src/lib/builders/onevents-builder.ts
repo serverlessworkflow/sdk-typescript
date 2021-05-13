@@ -1,9 +1,9 @@
 import { DefinedError } from 'ajv';
 import { Builder, builder } from '../builder';
+import { Specification } from '../definitions';
 import { validators } from '../validators';
-import Onevents = ServerlessWorkflow.Onevents;
 
-export function oneventsValidator(data: Onevents): (() => Onevents) {
+export function oneventsValidator(data: Specification.Onevents): (() => Specification.Onevents) {
   return () => {
     const validate = validators.get('Onevents');
     // TODO: ignore validation if no validator or throw ?
@@ -17,6 +17,6 @@ export function oneventsValidator(data: Onevents): (() => Onevents) {
   };
 }
 
-export function oneventsBuilder(): Builder<Onevents> {
-  return builder<Onevents>(oneventsValidator);
+export function oneventsBuilder(): Builder<Specification.Onevents> {
+  return builder<Specification.Onevents>(oneventsValidator);
 }
