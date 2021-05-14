@@ -1,3 +1,6 @@
+/**
+ * Represents a builder proxy
+ */
 export type Builder<T> = {
   build: () => T
 } & {
@@ -5,7 +8,7 @@ export type Builder<T> = {
 };
 
 /**
- * A builder factory to proxy properties assignations and validate against schema on build
+ * A factory for builders that proxy properties assignations and validate against schema on build
  * @param {Function} validatorFn The function used to validated and produce the object on build()
  * @returns {Builder} A builder proxy
  */

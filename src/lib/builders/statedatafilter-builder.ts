@@ -3,6 +3,11 @@ import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { validators } from '../validators';
 
+/**
+ * The internal function used by the builder proxy to validate and return its underlying object
+ * @param {Specification.Statedatafilter} data The underlying object
+ * @returns {Specification.Statedatafilter} The validated underlying object
+ */
 export function statedatafilterValidator(data: Specification.Statedatafilter): (() => Specification.Statedatafilter) {
   return () => {
     const validate = validators.get('Statedatafilter');
@@ -17,6 +22,10 @@ export function statedatafilterValidator(data: Specification.Statedatafilter): (
   };
 }
 
+/**
+ * A factory to create a builder proxy for the type `Specification.Statedatafilter`
+ * @returns {Specification.Statedatafilter} A builder for `Specification.Statedatafilter`
+ */
 export function statedatafilterBuilder(): Builder<Specification.Statedatafilter> {
   return builder<Specification.Statedatafilter>(statedatafilterValidator);
 }

@@ -3,6 +3,11 @@ import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { validators } from '../validators';
 
+/**
+ * The internal function used by the builder proxy to validate and return its underlying object
+ * @param {Specification.Transitiondatacondition} data The underlying object
+ * @returns {Specification.Transitiondatacondition} The validated underlying object
+ */
 export function transitiondataconditionValidator(data: Specification.Transitiondatacondition): (() => Specification.Transitiondatacondition) {
   return () => {
     const validate = validators.get('Transitiondatacondition');
@@ -17,6 +22,10 @@ export function transitiondataconditionValidator(data: Specification.Transitiond
   };
 }
 
+/**
+ * A factory to create a builder proxy for the type `Specification.Transitiondatacondition`
+ * @returns {Specification.Transitiondatacondition} A builder for `Specification.Transitiondatacondition`
+ */
 export function transitiondataconditionBuilder(): Builder<Specification.Transitiondatacondition> {
   return builder<Specification.Transitiondatacondition>(transitiondataconditionValidator);
 }

@@ -3,6 +3,11 @@ import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { validators } from '../validators';
 
+/**
+ * The internal function used by the builder proxy to validate and return its underlying object
+ * @param {Specification.Delaystate} data The underlying object
+ * @returns {Specification.Delaystate} The validated underlying object
+ */
 export function delaystateValidator(data: Specification.Delaystate): (() => Specification.Delaystate) {
   return () => {
     data.type = 'delay';
@@ -18,6 +23,10 @@ export function delaystateValidator(data: Specification.Delaystate): (() => Spec
   };
 }
 
+/**
+ * A factory to create a builder proxy for the type `Specification.Delaystate`
+ * @returns {Specification.Delaystate} A builder for `Specification.Delaystate`
+ */
 export function delaystateBuilder(): Builder<Specification.Delaystate> {
   return builder<Specification.Delaystate>(delaystateValidator);
 }

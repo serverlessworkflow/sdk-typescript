@@ -4,7 +4,7 @@ import { validators } from './validators';
 
 export class WorkflowValidator {
   /** The validation errors after running validate(), if any */
-  validationErrors: DefinedError[] | never[] = [];
+  errors: DefinedError[] | never[] = [];
   /** The validate function */
   private validateFn: ValidateFunction<Specification.Workflow>;
   /**
@@ -15,12 +15,12 @@ export class WorkflowValidator {
     this.validateFn = validators.get('Workflow') as ValidateFunction<Specification.Workflow>;
   }
   /**
-   * Validates the workflow, populates the validationErrors if any
+   * Validates the workflow, populates the errors if any
    * @returns {boolean} If the workflow is valid or not
    */
   validate() {
     const isValid = this.validateFn(this.workflow);
-    this.validationErrors = this.validateFn.errors as DefinedError[];
+    this.errors = this.validateFn.errors as DefinedError[];
     return isValid;
   }
 }

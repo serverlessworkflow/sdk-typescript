@@ -148,7 +148,10 @@ const mergeSchemas = ($refParser: $RefParser, known$Refs: Map<string, string>, t
  */
 const createValidatorsPaths = async (dest: string, known$Refs: Map<string, string>, baseUrl: string): Promise<void> => {
   try {
-    const validatorsPathsCode = `export const validatorsPaths: [string, string][] = [
+    const validatorsPathsCode = `/**
+* A map of type names and their corresponding schema
+*/
+export const validatorsPaths: [string, string][] = [
   ['Workflow', '${baseUrl}/workflow.json'],
 ${Array.from(known$Refs).map(([dataType, path]) => `  ['${capitalizeFirstLetter(dataType)}', '${baseUrl}/${path.includes('.json') ? path : 'workflow.json' + path}'],`).join('\r\n')}
 ]`;

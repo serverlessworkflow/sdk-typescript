@@ -3,6 +3,11 @@ import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { validators } from '../validators';
 
+/**
+ * The internal function used by the builder proxy to validate and return its underlying object
+ * @param {Specification.Workflow} data The underlying object
+ * @returns {Specification.Workflow} The validated underlying object
+ */
 export function workflowValidator(data: Specification.Workflow): (() => Specification.Workflow) {
   return () => {
     const validate = validators.get('Workflow');
@@ -17,6 +22,10 @@ export function workflowValidator(data: Specification.Workflow): (() => Specific
   };
 }
 
+/**
+ * A factory to create a builder proxy for the type `Specification.Workflow`
+ * @returns {Specification.Workflow} A builder for `Specification.Workflow`
+ */
 export function workflowBuilder(): Builder<Specification.Workflow> {
   return builder<Specification.Workflow>(workflowValidator);
 }

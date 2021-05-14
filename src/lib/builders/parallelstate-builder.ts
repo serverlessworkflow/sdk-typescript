@@ -3,6 +3,11 @@ import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { validators } from '../validators';
 
+/**
+ * The internal function used by the builder proxy to validate and return its underlying object
+ * @param {Specification.Parallelstate} data The underlying object
+ * @returns {Specification.Parallelstate} The validated underlying object
+ */
 export function parallelstateValidator(data: Specification.Parallelstate): (() => Specification.Parallelstate) {
   return () => {
     data.type = 'parallel';
@@ -18,6 +23,10 @@ export function parallelstateValidator(data: Specification.Parallelstate): (() =
   };
 }
 
+/**
+ * A factory to create a builder proxy for the type `Specification.Parallelstate`
+ * @returns {Specification.Parallelstate} A builder for `Specification.Parallelstate`
+ */
 export function parallelstateBuilder(): Builder<Specification.Parallelstate> {
   return builder<Specification.Parallelstate>(parallelstateValidator);
 }

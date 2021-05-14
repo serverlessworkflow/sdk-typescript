@@ -15,6 +15,9 @@ const schemas: any[] = [
 ];
 const strict: boolean = false;
 const ajv = new Ajv({ schemas, strict });
+/**
+ * A Map of validation functions, where the key is the name of the schema to validate with
+ */
 export const validators: Map<string, ValidateFunction> = new Map<string, ValidateFunction>(
   validatorsPaths.map(([dataType, schemaPath]) => {
     const validate = ajv.getSchema(schemaPath);

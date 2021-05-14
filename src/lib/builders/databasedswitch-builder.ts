@@ -3,6 +3,11 @@ import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { validators } from '../validators';
 
+/**
+ * The internal function used by the builder proxy to validate and return its underlying object
+ * @param {Specification.Databasedswitch} data The underlying object
+ * @returns {Specification.Databasedswitch} The validated underlying object
+ */
 export function databasedswitchValidator(data: Specification.Databasedswitch): (() => Specification.Databasedswitch) {
   return () => {
     data.type = 'switch';
@@ -18,6 +23,10 @@ export function databasedswitchValidator(data: Specification.Databasedswitch): (
   };
 }
 
+/**
+ * A factory to create a builder proxy for the type `Specification.Databasedswitch`
+ * @returns {Specification.Databasedswitch} A builder for `Specification.Databasedswitch`
+ */
 export function databasedswitchBuilder(): Builder<Specification.Databasedswitch> {
   return builder<Specification.Databasedswitch>(databasedswitchValidator);
 }

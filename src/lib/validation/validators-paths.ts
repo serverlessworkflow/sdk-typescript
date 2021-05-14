@@ -1,3 +1,6 @@
+/**
+* A map of type names and their corresponding schema
+*/
 export const validatorsPaths: [string, string][] = [
   ['Workflow', 'https://serverlessworkflow.org/core/0.6/workflow.json'],
   ['Crondef', 'https://serverlessworkflow.org/core/0.6/workflow.json#/definitions/crondef'],
@@ -34,11 +37,11 @@ export const validatorsPaths: [string, string][] = [
   ['Eventdatafilter', 'https://serverlessworkflow.org/core/0.6/workflow.json#/definitions/eventdatafilter'],
   ['Actiondatafilter', 'https://serverlessworkflow.org/core/0.6/workflow.json#/definitions/actiondatafilter'],
   ['Repeat', 'https://serverlessworkflow.org/core/0.6/workflow.json#/definitions/repeat'],
-  ['Retrydef', 'https://serverlessworkflow.org/core/0.6/retries.json#/definitions/retrydef'],
+  ['Metadata', 'https://serverlessworkflow.org/core/0.6/common.json#/definitions/metadata'],
   ['Function', 'https://serverlessworkflow.org/core/0.6/functions.json#/definitions/function'],
   ['Eventdef', 'https://serverlessworkflow.org/core/0.6/events.json#/definitions/eventdef'],
   ['CorrelationDef', 'https://serverlessworkflow.org/core/0.6/events.json#/definitions/correlationDef'],
-  ['Metadata', 'https://serverlessworkflow.org/core/0.6/common.json#/definitions/metadata'],
+  ['Retrydef', 'https://serverlessworkflow.org/core/0.6/retries.json#/definitions/retrydef'],
   ['Events', 'https://serverlessworkflow.org/core/0.6/events.json#/events'],
   ['Functions', 'https://serverlessworkflow.org/core/0.6/functions.json#/functions'],
   ['Retries', 'https://serverlessworkflow.org/core/0.6/retries.json#/retries'],

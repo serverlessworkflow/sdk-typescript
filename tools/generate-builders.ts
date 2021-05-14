@@ -101,6 +101,11 @@ import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { validators } from '../validators';
 
+/**
+ * The internal function used by the builder proxy to validate and return its underlying object
+ * @param {Specification.${dataType}} data The underlying object
+ * @returns {Specification.${dataType}} The validated underlying object
+ */
 export function ${camelType}Validator(data: Specification.${dataType}): (() => Specification.${dataType}) {
   return () => {${extension?.preValidate ? extension.preValidate : ''}
     const validate = validators.get('${dataType}');
@@ -115,6 +120,10 @@ export function ${camelType}Validator(data: Specification.${dataType}): (() => S
   };
 }
 
+/**
+ * A factory to create a builder proxy for the type \`Specification.${dataType}\`
+ * @returns {Specification.${dataType}} A builder for \`Specification.${dataType}\`
+ */
 export function ${camelType}Builder(): Builder<Specification.${dataType}> {
   return builder<Specification.${dataType}>(${camelType}Validator);
 }`;

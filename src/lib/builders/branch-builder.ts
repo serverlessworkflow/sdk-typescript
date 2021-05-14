@@ -3,6 +3,11 @@ import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { validators } from '../validators';
 
+/**
+ * The internal function used by the builder proxy to validate and return its underlying object
+ * @param {Specification.Branch} data The underlying object
+ * @returns {Specification.Branch} The validated underlying object
+ */
 export function branchValidator(data: Specification.Branch): (() => Specification.Branch) {
   return () => {
     const validate = validators.get('Branch');
@@ -17,6 +22,10 @@ export function branchValidator(data: Specification.Branch): (() => Specificatio
   };
 }
 
+/**
+ * A factory to create a builder proxy for the type `Specification.Branch`
+ * @returns {Specification.Branch} A builder for `Specification.Branch`
+ */
 export function branchBuilder(): Builder<Specification.Branch> {
   return builder<Specification.Branch>(branchValidator);
 }

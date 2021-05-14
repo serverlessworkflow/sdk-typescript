@@ -3,6 +3,11 @@ import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { validators } from '../validators';
 
+/**
+ * The internal function used by the builder proxy to validate and return its underlying object
+ * @param {Specification.Repeat} data The underlying object
+ * @returns {Specification.Repeat} The validated underlying object
+ */
 export function repeatValidator(data: Specification.Repeat): (() => Specification.Repeat) {
   return () => {
     const validate = validators.get('Repeat');
@@ -17,6 +22,10 @@ export function repeatValidator(data: Specification.Repeat): (() => Specificatio
   };
 }
 
+/**
+ * A factory to create a builder proxy for the type `Specification.Repeat`
+ * @returns {Specification.Repeat} A builder for `Specification.Repeat`
+ */
 export function repeatBuilder(): Builder<Specification.Repeat> {
   return builder<Specification.Repeat>(repeatValidator);
 }

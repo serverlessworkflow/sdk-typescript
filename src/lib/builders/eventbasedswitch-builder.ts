@@ -3,6 +3,11 @@ import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { validators } from '../validators';
 
+/**
+ * The internal function used by the builder proxy to validate and return its underlying object
+ * @param {Specification.Eventbasedswitch} data The underlying object
+ * @returns {Specification.Eventbasedswitch} The validated underlying object
+ */
 export function eventbasedswitchValidator(data: Specification.Eventbasedswitch): (() => Specification.Eventbasedswitch) {
   return () => {
     data.type = 'switch';
@@ -18,6 +23,10 @@ export function eventbasedswitchValidator(data: Specification.Eventbasedswitch):
   };
 }
 
+/**
+ * A factory to create a builder proxy for the type `Specification.Eventbasedswitch`
+ * @returns {Specification.Eventbasedswitch} A builder for `Specification.Eventbasedswitch`
+ */
 export function eventbasedswitchBuilder(): Builder<Specification.Eventbasedswitch> {
   return builder<Specification.Eventbasedswitch>(eventbasedswitchValidator);
 }
