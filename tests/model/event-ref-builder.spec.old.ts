@@ -14,54 +14,36 @@
  * limitations under the License.
  *
  */
-import {EventRefBuilder} from '../../src/model/event-ref.builder';
+import { EventRefBuilder } from '../../src/model/event-ref.builder';
 
+describe('event ref builder', () => {
+  it('should create an object with the required fields ', () => {
+    expect(new EventRefBuilder().withResultEventRef('resultValue').withTriggerEventRef('triggerValue').build()).toEqual(
+      { resultEventRef: 'resultValue', triggerEventRef: 'triggerValue' }
+    );
+  });
 
-describe("event ref builder", () => {
-	
-	
-	it("should create an object with the required fields ", () => {
-		
-		expect(new EventRefBuilder()
-			.withResultEventRef("resultValue")
-			.withTriggerEventRef("triggerValue")
-			.build()).toEqual(
-			{resultEventRef: "resultValue", triggerEventRef: 'triggerValue'},
-		);
-		
-	});
-	
-	
-	it("should create an object with all possible fields ", () => {
-		
-		expect(new EventRefBuilder()
-			.withResultEventRef("resultValue")
-			.withTriggerEventRef("triggerValue")
-			.withContextAttributes({key: "valuect"})
-			.withData({key: "valuedata"})
-			.build()).toEqual(
-			{
-				resultEventRef: "resultValue",
-				triggerEventRef: 'triggerValue',
-				contextAttributes: {key: "valuect"},
-				data: {key: "valuedata"},
-			},
-		);
-	});
-	
-	
-	it("should throws an error if mandatory fields are not set ", () => {
-		
-		expect(() => new EventRefBuilder().build()).toThrowError();
-		
-		expect(() => new EventRefBuilder()
-			.withResultEventRef("").build())
-			.toThrowError();
-		
-		expect(() => new EventRefBuilder()
-			.withTriggerEventRef("")
-			.build()).toThrowError();
-		
-	});
-	
+  it('should create an object with all possible fields ', () => {
+    expect(
+      new EventRefBuilder()
+        .withResultEventRef('resultValue')
+        .withTriggerEventRef('triggerValue')
+        .withContextAttributes({ key: 'valuect' })
+        .withData({ key: 'valuedata' })
+        .build()
+    ).toEqual({
+      resultEventRef: 'resultValue',
+      triggerEventRef: 'triggerValue',
+      contextAttributes: { key: 'valuect' },
+      data: { key: 'valuedata' },
+    });
+  });
+
+  it('should throws an error if mandatory fields are not set ', () => {
+    expect(() => new EventRefBuilder().build()).toThrowError();
+
+    expect(() => new EventRefBuilder().withResultEventRef('').build()).toThrowError();
+
+    expect(() => new EventRefBuilder().withTriggerEventRef('').build()).toThrowError();
+  });
 });

@@ -14,39 +14,30 @@
  * limitations under the License.
  *
  */
-import {ProduceEventDefBuilder} from '../../src/model/produce-event-def.builder';
+import { ProduceEventDefBuilder } from '../../src/model/produce-event-def.builder';
 
+describe('ProduceEventDefBuilder', () => {
+  it('should throws an error if mandatory fields are not set ', () => {
+    expect(() => new ProduceEventDefBuilder().build()).toThrowError();
 
-describe("ProduceEventDefBuilder", () => {
-	
-	it("should throws an error if mandatory fields are not set ", () => {
-		
-		expect(() => new ProduceEventDefBuilder()
-			.build()).toThrowError();
-		
-		expect(() => new ProduceEventDefBuilder()
-			.withEventRef("").build())
-			.toThrowError();
-	});
-	
-	it("should build a valid ProduceEventDef object ", () => {
-		
-		expect(new ProduceEventDefBuilder()
-			.withEventRef("ConfirmationCompletedEvent")
-			.withData("${ .payment }")
-			.withContextAttributes({
-				kContext: "kcValue",
-			})
-			.build())
-			.toEqual({
-				eventRef: "ConfirmationCompletedEvent",
-				data: "${ .payment }",
-				contextAttributes: {
-					kContext: "kcValue",
-				},
-			});
-	});
-	
-	
+    expect(() => new ProduceEventDefBuilder().withEventRef('').build()).toThrowError();
+  });
+
+  it('should build a valid ProduceEventDef object ', () => {
+    expect(
+      new ProduceEventDefBuilder()
+        .withEventRef('ConfirmationCompletedEvent')
+        .withData('${ .payment }')
+        .withContextAttributes({
+          kContext: 'kcValue',
+        })
+        .build()
+    ).toEqual({
+      eventRef: 'ConfirmationCompletedEvent',
+      data: '${ .payment }',
+      contextAttributes: {
+        kContext: 'kcValue',
+      },
+    });
+  });
 });
-

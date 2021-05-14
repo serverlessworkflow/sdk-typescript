@@ -14,55 +14,27 @@
  * limitations under the License.
  *
  */
-import {MetadataBuilder} from '../../src/model/metadata.builder';
+import { MetadataBuilder } from '../../src/model/metadata.builder';
 
+describe('MetadataBuilder', () => {
+  it('should create an empty object ', () => {
+    expect(new MetadataBuilder().build()).toEqual({});
+  });
 
-describe("MetadataBuilder", () => {
-	
-	it("should create an empty object ", () => {
-		
-		expect(new MetadataBuilder().build()).toEqual({});
-		
-	});
-	
-	it("should create an object with key/value strings ", () => {
-		
-		expect(new MetadataBuilder()
-			.withKeyValue("k1", "v1")
-			.build()).toEqual(
-			{
-				"k1": "v1",
-			});
-		
-		
-		expect(new MetadataBuilder()
-			.withKeyValue("k2", "v2")
-			.withKeyValue("k3", "v3")
-			.build()).toEqual(
-			{
-				"k2": "v2",
-				"k3": "v3",
-			});
-		
-		
-	});
-	
-	
-	it("should allow to overwrite pairs of key/value  ", () => {
-		
-		expect(new MetadataBuilder()
-			.withKeyValue("k1", "v1")
-			.withKeyValue("k1", "v2")
-			.build()).toEqual(
-			{
-				"k1": "v2",
-			});
-		
-		
-	});
-	
-	
+  it('should create an object with key/value strings ', () => {
+    expect(new MetadataBuilder().withKeyValue('k1', 'v1').build()).toEqual({
+      k1: 'v1',
+    });
+
+    expect(new MetadataBuilder().withKeyValue('k2', 'v2').withKeyValue('k3', 'v3').build()).toEqual({
+      k2: 'v2',
+      k3: 'v3',
+    });
+  });
+
+  it('should allow to overwrite pairs of key/value  ', () => {
+    expect(new MetadataBuilder().withKeyValue('k1', 'v1').withKeyValue('k1', 'v2').build()).toEqual({
+      k1: 'v2',
+    });
+  });
 });
-
-
-

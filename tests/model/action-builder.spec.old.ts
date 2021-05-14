@@ -15,58 +15,45 @@
  *
  */
 
-import {ActionBuilder, ActionDataFilter, EventRef} from '../../src';
-import {ActionDataFilterBuilder} from '../../src/model/action-data-filter.builder';
+import { ActionBuilder, ActionDataFilter, EventRef } from '../../src';
+import { ActionDataFilterBuilder } from '../../src/model/action-data-filter.builder';
 
+describe('ActionBuilder', () => {
+  it('should throws an error if mandatory fields are not set ', () => {
+    expect(() => new ActionBuilder().build()).toThrowError();
 
-describe("ActionBuilder", () => {
-	
-	it("should throws an error if mandatory fields are not set ", () => {
-		
-		expect(() => new ActionBuilder().build()).toThrowError();
-		
-		expect(() => new ActionBuilder()
-			.withFunctionRef("").build())
-			.toThrowError();
-	});
-	
-	
-	it("should throws an error if both functionRef and eventRef are set", () => {
-		
-		expect(() => new ActionBuilder().build()).toThrowError();
-		
-		expect(() => new ActionBuilder()
-			.withFunctionRef("functionRef")
-			.withEventRef(validEventRef()).build())
-			.toThrowError();
-	});
-	
-	it("should generate a populated object", () => {
-		expect(new ActionBuilder()
-			.withName("actionName")
-			.withEventRef(validEventRef())
-			.withTimeOut("PT1H")
-			.withActionDataFilter(new ActionDataFilterBuilder().build())
-			.build()).toEqual(
-			{
-				name: "actionName",
-				eventRef: validEventRef(),
-				timeout: "PT1H",
-				actionDataFilter: validActionDataFilter(),
-			},
-		);
-		
-		
-	});
-	
-	
+    expect(() => new ActionBuilder().withFunctionRef('').build()).toThrowError();
+  });
+
+  it('should throws an error if both functionRef and eventRef are set', () => {
+    expect(() => new ActionBuilder().build()).toThrowError();
+
+    expect(() =>
+      new ActionBuilder().withFunctionRef('functionRef').withEventRef(validEventRef()).build()
+    ).toThrowError();
+  });
+
+  it('should generate a populated object', () => {
+    expect(
+      new ActionBuilder()
+        .withName('actionName')
+        .withEventRef(validEventRef())
+        .withTimeOut('PT1H')
+        .withActionDataFilter(new ActionDataFilterBuilder().build())
+        .build()
+    ).toEqual({
+      name: 'actionName',
+      eventRef: validEventRef(),
+      timeout: 'PT1H',
+      actionDataFilter: validActionDataFilter(),
+    });
+  });
 });
 
-
 function validActionDataFilter(): ActionDataFilter {
-	return {};
+  return {};
 }
 
 function validEventRef(): EventRef {
-	return {resultEventRef: "result"};
+  return { resultEventRef: 'result' };
 }

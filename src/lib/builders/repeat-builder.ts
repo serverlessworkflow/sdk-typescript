@@ -8,7 +8,7 @@ import { validators } from '../validators';
  * @param {Specification.Repeat} data The underlying object
  * @returns {Specification.Repeat} The validated underlying object
  */
-export function repeatValidator(data: Specification.Repeat): (() => Specification.Repeat) {
+export function repeatValidator(data: Specification.Repeat): () => Specification.Repeat {
   return () => {
     const validate = validators.get('Repeat');
     // TODO: ignore validation if no validator or throw ?

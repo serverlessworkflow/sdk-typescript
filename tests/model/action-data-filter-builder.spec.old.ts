@@ -15,30 +15,24 @@
  *
  */
 
-import {ActionDataFilterBuilder} from '../../src/model/action-data-filter.builder';
+import { ActionDataFilterBuilder } from '../../src/model/action-data-filter.builder';
 
-describe("ActionDataFilter", () => {
-	
-	it("should generate an empty object", () => {
-		expect(new ActionDataFilterBuilder().build()).toEqual({});
-	});
-	
-	it("should generate a populated object", () => {
-		expect(new ActionDataFilterBuilder()
-			.withFromStateData("fromState")
-			.withToStateData("toState")
-			.withResults("result")
-			.build()).toEqual(
-			{
-				fromStateData: "fromState",
-				toStateData: "toState",
-				results: "result",
-			},
-		);
-		
-		
-	});
-	
-	
+describe('ActionDataFilter', () => {
+  it('should generate an empty object', () => {
+    expect(new ActionDataFilterBuilder().build()).toEqual({});
+  });
+
+  it('should generate a populated object', () => {
+    expect(
+      new ActionDataFilterBuilder()
+        .withFromStateData('fromState')
+        .withToStateData('toState')
+        .withResults('result')
+        .build()
+    ).toEqual({
+      fromStateData: 'fromState',
+      toStateData: 'toState',
+      results: 'result',
+    });
+  });
 });
-

@@ -15,100 +15,75 @@
  *
  */
 import {
-	ActionBuilder,
-	FunctionDefBuilder,
-	FunctionRefBuilder,
-	OnErrorBuilder,
-	OperationStateBuilder,
-	StateDataFilterBuilder,
-	SubFlowStateBuilder,
-	WorkflowBuilder,
-} from "../../src";
-import * as fs from "fs";
+  ActionBuilder,
+  FunctionDefBuilder,
+  FunctionRefBuilder,
+  OnErrorBuilder,
+  OperationStateBuilder,
+  StateDataFilterBuilder,
+  SubFlowStateBuilder,
+  WorkflowBuilder,
+} from '../../src';
+import * as fs from 'fs';
 
+describe('provisionorder workflow example', () => {
+  it('should generate Workflow object', function () {
+    const workflow = new WorkflowBuilder()
+      .withId('provisionorders')
+      .withVersion('1.0')
+      .withName('Provision Orders')
+      .withDescription('Provision Orders and handle errors thrown')
+      .withStart('ProvisionOrder')
+      .withFunctions([
+        new FunctionDefBuilder()
+          .withName('provisionOrderFunction')
+          .withOperation('http://myapis.org/provisioningapi.json#doProvision')
+          .build(),
+      ])
+      .withStates([
+        new OperationStateBuilder()
+          .withName('ProvisionOrder')
+          .withActionMode('sequential')
+          .withActions([
+            new ActionBuilder()
+              .withFunctionRef(
+                new FunctionRefBuilder()
+                  .withRefName('provisionOrderFunction')
+                  .withArguments({
+                    order: '${ .order }',
+                  })
+                  .build()
+              )
+              .build(),
+          ])
+          .withStateDataFilter(new StateDataFilterBuilder().withOutput('${ .exceptions }').build())
+          .withTransition('ApplyOrder')
+          .withOnErrors([
+            new OnErrorBuilder().withError('Missing order id').withTransition('MissingId').build(),
+            new OnErrorBuilder().withError('Missing order item').withTransition('MissingItem').build(),
+            new OnErrorBuilder().withError('Missing order quantity').withTransition('MissingQuantity').build(),
+          ])
+          .build(),
+        new SubFlowStateBuilder()
+          .withName('MissingId')
+          .withWorkflowId('handleMissingIdExceptionWorkflow')
+          .withEnd(true)
+          .build(),
+        new SubFlowStateBuilder()
+          .withName('MissingItem')
+          .withWorkflowId('handleMissingItemExceptionWorkflow')
+          .withEnd(true)
+          .build(),
+        new SubFlowStateBuilder()
+          .withName('MissingQuantity')
+          .withWorkflowId('handleMissingQuantityExceptionWorkflow')
+          .withEnd(true)
+          .build(),
+        new SubFlowStateBuilder().withName('ApplyOrder').withWorkflowId('applyOrderWorkflowId').withEnd(true).build(),
+      ])
+      .build();
 
-describe("provisionorder workflow example", () => {
-	
-	
-	it('should generate Workflow object', function () {
-		
-		const workflow = new WorkflowBuilder()
-			.withId("provisionorders")
-			.withVersion("1.0")
-			.withName("Provision Orders")
-			.withDescription("Provision Orders and handle errors thrown")
-			.withStart("ProvisionOrder")
-			.withFunctions([
-				new FunctionDefBuilder()
-					.withName("provisionOrderFunction")
-					.withOperation("http://myapis.org/provisioningapi.json#doProvision")
-					.build(),
-			])
-			.withStates([
-				new OperationStateBuilder()
-					.withName("ProvisionOrder")
-					.withActionMode("sequential")
-					.withActions([
-						new ActionBuilder()
-							.withFunctionRef(
-								new FunctionRefBuilder()
-									.withRefName("provisionOrderFunction")
-									.withArguments({
-										"order": "${ .order }",
-									})
-									.build(),
-							)
-							.build(),
-					])
-					.withStateDataFilter(
-						new StateDataFilterBuilder()
-							.withOutput("${ .exceptions }")
-							.build())
-					.withTransition("ApplyOrder")
-					.withOnErrors([
-						new OnErrorBuilder()
-							.withError("Missing order id")
-							.withTransition("MissingId")
-							.build(),
-						new OnErrorBuilder()
-							.withError("Missing order item")
-							.withTransition("MissingItem")
-							.build(),
-						new OnErrorBuilder()
-							.withError("Missing order quantity")
-							.withTransition("MissingQuantity")
-							.build(),
-					])
-					.build(),
-				new SubFlowStateBuilder()
-					.withName("MissingId")
-					.withWorkflowId("handleMissingIdExceptionWorkflow")
-					.withEnd(true)
-					.build(),
-				new SubFlowStateBuilder()
-					.withName("MissingItem")
-					.withWorkflowId("handleMissingItemExceptionWorkflow")
-					.withEnd(true)
-					.build(),
-				new SubFlowStateBuilder()
-					.withName("MissingQuantity")
-					.withWorkflowId("handleMissingQuantityExceptionWorkflow")
-					.withEnd(true)
-					.build(),
-				new SubFlowStateBuilder()
-					.withName("ApplyOrder")
-					.withWorkflowId("applyOrderWorkflowId")
-					.withEnd(true)
-					.build(),
-			])
-			.build();
-		
-		
-		const expected = JSON.parse(fs.readFileSync("./spec/examples/provisionorder.json")
-			.toLocaleString()) as any;
-		expect(workflow).toEqual(expected);
-		
-	});
-	
-	
+    const expected = JSON.parse(fs.readFileSync('./spec/examples/provisionorder.json').toLocaleString()) as any;
+    expect(workflow).toEqual(expected);
+  });
 });

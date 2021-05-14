@@ -1,4 +1,4 @@
-import * as yaml from "js-yaml";
+import * as yaml from 'js-yaml';
 import { Specification } from './definitions';
 
 /**
@@ -13,8 +13,7 @@ export const WorkflowConverter = {
   fromString: (data: string): Specification.Workflow => {
     try {
       return yaml.load(data) as Specification.Workflow;
-    }
-    catch (ex) {
+    } catch (ex) {
       throw new Error('Format not supported');
     }
   },
@@ -30,4 +29,4 @@ export const WorkflowConverter = {
    * @returns {string} The workflow as YAML
    */
   toYaml: (workflow: Specification.Workflow): string => yaml.dump(workflow),
-}
+};

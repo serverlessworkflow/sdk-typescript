@@ -8,7 +8,7 @@ import { validators } from '../validators';
  * @param {Specification.Databasedswitch} data The underlying object
  * @returns {Specification.Databasedswitch} The validated underlying object
  */
-export function databasedswitchValidator(data: Specification.Databasedswitch): (() => Specification.Databasedswitch) {
+export function databasedswitchValidator(data: Specification.Databasedswitch): () => Specification.Databasedswitch {
   return () => {
     data.type = 'switch';
     const validate = validators.get('Databasedswitch');

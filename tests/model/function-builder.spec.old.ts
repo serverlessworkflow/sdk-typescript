@@ -15,63 +15,41 @@
  *
  */
 
-import {FunctionDefBuilder} from '../../src';
+import { FunctionDefBuilder } from '../../src';
 
+describe('FunctionBuilder', () => {
+  it('should throws an error if mandatory fields are not set ', () => {
+    expect(() => new FunctionDefBuilder().build()).toThrowError();
 
-describe("FunctionBuilder", () => {
-	
-	
-	it("should throws an error if mandatory fields are not set ", () => {
-		
-		expect(() => new FunctionDefBuilder().build()).toThrowError();
-		
-		expect(() => new FunctionDefBuilder()
-			.withName("")
-			.withOperation("")
-			.build())
-			.toThrowError();
-		
-		expect(() => new FunctionDefBuilder()
-			.withOperation("http://myapis.org/applicationapi.json#emailRejection")
-			.build())
-			.toThrowError();
-		
-		expect(() => new FunctionDefBuilder()
-			.withName("functionName")
-			.build())
-			.toThrowError();
-	});
-	
-	
-	it("should generate a populated object with default type value", () => {
-		expect(new FunctionDefBuilder()
-			.withName("functionName")
-			.withOperation("http://myapis.org/applicationapi.json#emailRejection")
-			.build()).toEqual(
-			{
-				name: "functionName",
-				operation: "http://myapis.org/applicationapi.json#emailRejection",
-				type: "rest",
-			},
-		);
-		
-	});
-	
-	it("should generate a populated object with default type value", () => {
-		expect(new FunctionDefBuilder()
-			.withName("functionName")
-			.withOperation("file#serviceName#method")
-			.withType("rpc")
-			.build()).toEqual(
-			{
-				name: "functionName",
-				operation: "file#serviceName#method",
-				type: "rpc",
-			},
-		);
-		
-	});
-	
+    expect(() => new FunctionDefBuilder().withName('').withOperation('').build()).toThrowError();
+
+    expect(() =>
+      new FunctionDefBuilder().withOperation('http://myapis.org/applicationapi.json#emailRejection').build()
+    ).toThrowError();
+
+    expect(() => new FunctionDefBuilder().withName('functionName').build()).toThrowError();
+  });
+
+  it('should generate a populated object with default type value', () => {
+    expect(
+      new FunctionDefBuilder()
+        .withName('functionName')
+        .withOperation('http://myapis.org/applicationapi.json#emailRejection')
+        .build()
+    ).toEqual({
+      name: 'functionName',
+      operation: 'http://myapis.org/applicationapi.json#emailRejection',
+      type: 'rest',
+    });
+  });
+
+  it('should generate a populated object with default type value', () => {
+    expect(
+      new FunctionDefBuilder().withName('functionName').withOperation('file#serviceName#method').withType('rpc').build()
+    ).toEqual({
+      name: 'functionName',
+      operation: 'file#serviceName#method',
+      type: 'rpc',
+    });
+  });
 });
-
-

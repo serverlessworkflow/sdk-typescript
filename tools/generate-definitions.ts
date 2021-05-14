@@ -1,8 +1,5 @@
 import $RefParser from '@apidevtools/json-schema-ref-parser';
-import dtsGenerator, {
-  JsonSchema as dtsGeneratorJsonSchema,
-  parseSchema,
-} from 'dtsgenerator';
+import dtsGenerator, { JsonSchema as dtsGeneratorJsonSchema, parseSchema } from 'dtsgenerator';
 import { promises as fsPromises } from 'fs';
 import * as path from 'path';
 import rimraf from 'rimraf';
@@ -29,15 +26,13 @@ const capitalizeFirstLetter = (value: string): string => {
  * @param {any} obj The object to test
  * @returns {boolean} Returns true if the object holds a reference to another schema
  */
-const isRef = (obj: any): boolean =>
-  obj && obj.$ref && typeof obj.$ref === typeof '';
+const isRef = (obj: any): boolean => obj && obj.$ref && typeof obj.$ref === typeof '';
 /**
  * Tells if the provided object holds an external reference
  * @param {any} obj  The object to test
  * @returns {boolean} Returns true if the reference hold by the object is external
  */
-const isRefExernal = (obj: any): boolean =>
-  obj && obj.$ref && !obj.$ref.startsWith('#');
+const isRefExernal = (obj: any): boolean => obj && obj.$ref && !obj.$ref.startsWith('#');
 /**
  * Gets the property name (key) in the root schema definitions for the provided ref. Used to avoid key collision
  * @param {string} $ref The reference path
@@ -70,13 +65,11 @@ const mergeDefinitions = async (
 ): Promise<void> => {
   try {
     if (!parentPaths?.length) {
-      Object.keys($refParser.schema.definitions || {}).forEach(
-        (key: string) => {
-          if (!known$Refs.has(key)) {
-            known$Refs.set(key, `#/definitions/${key}`);
-          }
+      Object.keys($refParser.schema.definitions || {}).forEach((key: string) => {
+        if (!known$Refs.has(key)) {
+          known$Refs.set(key, `#/definitions/${key}`);
         }
-      );
+      });
       parentPaths = paths;
     }
     await Promise.all(
@@ -89,9 +82,7 @@ const mergeDefinitions = async (
           $refParser.$refs.set(`#/definitions/${propName}`, value);
         });
         const $schemaRefs = await $RefParser.resolve(schemaPath);
-        const otherPaths = $schemaRefs
-          .paths()
-          .filter((p) => !parentPaths.includes(p));
+        const otherPaths = $schemaRefs.paths().filter((p) => !parentPaths.includes(p));
         otherPaths.forEach((p) => parentPaths.push(p));
         await mergeDefinitions($refParser, otherPaths, known$Refs, parentPaths);
       })
@@ -117,15 +108,10 @@ const mergeSchemas = (
   const isRootDocument = target$Ref.startsWith('#');
   // todo ? handle circular refs ?
   Object.entries(target)
-    .filter(
-      ([, value]: [string, any]) =>
-        value && typeof value === typeof {} && !ArrayBuffer.isView(value)
-    )
+    .filter(([, value]: [string, any]) => value && typeof value === typeof {} && !ArrayBuffer.isView(value))
     .forEach(([key, value]: [string, any]) => {
       if (!isRef(value) || (isRootDocument && !isRefExernal(value))) {
-        const newTargetRef = `${
-          target$Ref.endsWith('/') ? target$Ref : target$Ref + '/'
-        }${key}/`;
+        const newTargetRef = `${target$Ref.endsWith('/') ? target$Ref : target$Ref + '/'}${key}/`;
         mergeSchemas($refParser, known$Refs, value, newTargetRef);
         return;
       }
@@ -163,11 +149,7 @@ const mergeSchemas = (
  * @param {Map<string, string>} known$Refs The know references map
  * @returns {void}
  */
-const createValidatorsPaths = async (
-  dest: string,
-  known$Refs: Map<string, string>,
-  baseUrl: string
-): Promise<void> => {
+const createValidatorsPaths = async (dest: string, known$Refs: Map<string, string>, baseUrl: string): Promise<void> => {
   try {
     const validatorsPathsCode = `/**
 * A map of type names and their corresponding schema
@@ -203,11 +185,7 @@ This directory and its content has been generated automatically. Do not modify i
  * @param {string} dest The output TypeScript path
  * @param {string[]} additionnalSchemas Optional schemas to gather and merge definitions from
  */
-const generate = async (
-  source: string,
-  dest: string,
-  additionnalSchemas: string[] = []
-): Promise<void> => {
+const generate = async (source: string, dest: string, additionnalSchemas: string[] = []): Promise<void> => {
   try {
     const $refParser = new $RefParser();
     const known$Refs = new Map<string, string>();
@@ -229,13 +207,7 @@ const generate = async (
                   to: ['ServerlessWorkflow'],
                 },
                 {
-                  from: [
-                    'ServerlessworkflowOrg',
-                    'Core',
-                    true,
-                    'WorkflowJson',
-                    'Definitions',
-                  ],
+                  from: ['ServerlessworkflowOrg', 'Core', true, 'WorkflowJson', 'Definitions'],
                   to: ['ServerlessWorkflow'],
                 },
                 {
@@ -261,14 +233,8 @@ const generate = async (
 This directory and its content has been generated automatically. Do not modify its content, it WILL be lost.`
     );
     await writeFile(dest, generatedTS);
-    await writeFile(
-      path.resolve(destDir, 'index.ts'),
-      "export * as Specification from './workflow';"
-    );
-    const validatorsDest = path.resolve(
-      path.dirname(dest),
-      '../validation/validators-paths.ts'
-    );
+    await writeFile(path.resolve(destDir, 'index.ts'), "export * as Specification from './workflow';");
+    const validatorsDest = path.resolve(path.dirname(dest), '../validation/validators-paths.ts');
     const $id = $refParser.schema.$id;
     const baseUrl = path.dirname($id);
     await createValidatorsPaths(validatorsDest, known$Refs, baseUrl);
@@ -287,6 +253,4 @@ const additionnalSchemas = [
 ];
 generate(srcFile, destFile, additionnalSchemas)
 */
-generate(srcFile, destFile)
-  .then(console.log.bind(console))
-  .catch(console.error.bind(console));
+generate(srcFile, destFile).then(console.log.bind(console)).catch(console.error.bind(console));

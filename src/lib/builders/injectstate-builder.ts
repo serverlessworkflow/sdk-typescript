@@ -8,7 +8,7 @@ import { validators } from '../validators';
  * @param {Specification.Injectstate} data The underlying object
  * @returns {Specification.Injectstate} The validated underlying object
  */
-export function injectstateValidator(data: Specification.Injectstate): (() => Specification.Injectstate) {
+export function injectstateValidator(data: Specification.Injectstate): () => Specification.Injectstate {
   return () => {
     data.type = 'inject';
     const validate = validators.get('Injectstate');

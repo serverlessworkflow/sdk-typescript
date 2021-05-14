@@ -93,10 +93,7 @@ const toCamelCase = (value: string): string => {
  * @param {string} dataType The type to create the builder for
  * @returns {void}
  */
-const createBuilder = async (
-  destDir: string,
-  dataType: string
-): Promise<void> => {
+const createBuilder = async (destDir: string, dataType: string): Promise<void> => {
   try {
     const camelType = toCamelCase(dataType);
     const extension = buildersExtensions[dataType];
@@ -131,10 +128,7 @@ export function ${camelType}Validator(data: Specification.${dataType}): (() => S
 export function ${camelType}Builder(): Builder<Specification.${dataType}> {
   return builder<Specification.${dataType}>(${camelType}Validator);
 }`;
-    const destFile = path.resolve(
-      destDir,
-      toKebabCase(camelType) + '-builder.ts'
-    );
+    const destFile = path.resolve(destDir, toKebabCase(camelType) + '-builder.ts');
     await writeFile(destFile, builderCode);
     return Promise.resolve();
   } catch (ex) {
@@ -151,9 +145,7 @@ export function ${camelType}Builder(): Builder<Specification.${dataType}> {
 const createIndex = async (destDir: string, types: string[]): Promise<void> => {
   try {
     const indexCode: string = types.reduce(
-      (acc, t) =>
-        acc +
-        `export * from './${toKebabCase(toCamelCase(t)) + '-builder'}';\r\n`,
+      (acc, t) => acc + `export * from './${toKebabCase(toCamelCase(t)) + '-builder'}';\r\n`,
       ''
     );
     const indexFile = path.resolve(destDir, 'index.ts');
@@ -181,9 +173,7 @@ This directory and its content has been generated automatically. Do not modify i
     );
     const extractor: RegExp = /export \w* (\w*)/g;
     const definition: string = await readFile(source, 'utf-8');
-    const types: string[] = [...definition.matchAll(extractor)].map(
-      ([, type]) => type
-    );
+    const types: string[] = [...definition.matchAll(extractor)].map(([, type]) => type);
     await Promise.all(types.map(createBuilder.bind(null, destDir)));
     createIndex(destDir, types);
     return Promise.resolve();
@@ -193,10 +183,5 @@ This directory and its content has been generated automatically. Do not modify i
 };
 
 const buildersDir = path.resolve(process.cwd(), 'src/lib/builders');
-const definitionSrc = path.resolve(
-  process.cwd(),
-  'src/lib/definitions/workflow.ts'
-);
-generate(definitionSrc, buildersDir)
-  .then(console.log.bind(console))
-  .catch(console.error.bind(console));
+const definitionSrc = path.resolve(process.cwd(), 'src/lib/definitions/workflow.ts');
+generate(definitionSrc, buildersDir).then(console.log.bind(console)).catch(console.error.bind(console));

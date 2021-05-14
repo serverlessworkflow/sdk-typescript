@@ -8,7 +8,7 @@ import { validators } from '../validators';
  * @param {Specification.Callbackstate} data The underlying object
  * @returns {Specification.Callbackstate} The validated underlying object
  */
-export function callbackstateValidator(data: Specification.Callbackstate): (() => Specification.Callbackstate) {
+export function callbackstateValidator(data: Specification.Callbackstate): () => Specification.Callbackstate {
   return () => {
     data.type = 'callback';
     const validate = validators.get('Callbackstate');

@@ -14,61 +14,37 @@
  * limitations under the License.
  *
  */
-import {ScheduleBuilder} from '../../src/model/schedule.builder';
-import {CronDef} from '../../src';
+import { ScheduleBuilder } from '../../src/model/schedule.builder';
+import { CronDef } from '../../src';
 
+describe('ScheduleBuilder', () => {
+  it('should throws an error if mandatory fields are not set ', () => {
+    expect(() => new ScheduleBuilder().build()).toThrowError();
 
-describe("ScheduleBuilder", () => {
-	
-	it("should throws an error if mandatory fields are not set ", () => {
-		
-		expect(() => new ScheduleBuilder().build()).toThrowError();
-		
-		expect(() => new ScheduleBuilder()
-			.withInterval("").build())
-			.toThrowError();
-	});
-	
-	
-	it("should create a valid object when interval is set", () => {
-		expect(new ScheduleBuilder()
-			.withInterval("PT2S").build())
-			.toEqual("PT2S");
-	});
-	
-	
-	it("should create a valid object when interval and cron are set", () => {
-		
-		expect(new ScheduleBuilder()
-			.withInterval("PT2S")
-			.withCron(validCronDef())
-			.build())
-			.toEqual({
-				interval: "PT2S",
-				cron: validCronDef(),
-				timezone: "UTC",
-			});
-	});
-	
-	
-	it("should allow set timezone", () => {
-		
-		expect(new ScheduleBuilder()
-			.withInterval("PT2S")
-			.withCron(validCronDef())
-			.withTimezone("CET")
-			.build())
-			.toEqual({
-				interval: "PT2S",
-				cron: validCronDef(),
-				timezone: "CET",
-			});
-	});
+    expect(() => new ScheduleBuilder().withInterval('').build()).toThrowError();
+  });
+
+  it('should create a valid object when interval is set', () => {
+    expect(new ScheduleBuilder().withInterval('PT2S').build()).toEqual('PT2S');
+  });
+
+  it('should create a valid object when interval and cron are set', () => {
+    expect(new ScheduleBuilder().withInterval('PT2S').withCron(validCronDef()).build()).toEqual({
+      interval: 'PT2S',
+      cron: validCronDef(),
+      timezone: 'UTC',
+    });
+  });
+
+  it('should allow set timezone', () => {
+    expect(new ScheduleBuilder().withInterval('PT2S').withCron(validCronDef()).withTimezone('CET').build()).toEqual({
+      interval: 'PT2S',
+      cron: validCronDef(),
+      timezone: 'CET',
+    });
+  });
 });
 
-
 function validCronDef(): CronDef {
-	return "0 * * ? * *";
+  return '0 * * ? * *';
 }
-
-

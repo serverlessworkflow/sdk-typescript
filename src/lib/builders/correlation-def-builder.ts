@@ -8,7 +8,7 @@ import { validators } from '../validators';
  * @param {Specification.CorrelationDef} data The underlying object
  * @returns {Specification.CorrelationDef} The validated underlying object
  */
-export function correlationDefValidator(data: Specification.CorrelationDef): (() => Specification.CorrelationDef) {
+export function correlationDefValidator(data: Specification.CorrelationDef): () => Specification.CorrelationDef {
   return () => {
     const validate = validators.get('CorrelationDef');
     // TODO: ignore validation if no validator or throw ?

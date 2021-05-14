@@ -14,44 +14,26 @@
  * limitations under the License.
  *
  */
-import {CronDefBuilder} from '../../src/model/cron-def.builder';
+import { CronDefBuilder } from '../../src/model/cron-def.builder';
 
-const cronExpression = "0 * * ? * *";
+const cronExpression = '0 * * ? * *';
 
-describe("CronDefBuilder", () => {
-	
-	
-	it("Should create a valid object containing cron expresion", () => {
-		
-		expect(new CronDefBuilder()
-			.withCronExpresion(cronExpression)
-			.build(),
-		).toEqual(cronExpression);
-		
-	});
-	
-	
-	it("Should create a valid object containing expression and expiration time", () => {
-		
-		const dateTimeISO8601Format = "2013-07-16T19:23:51Z";
-		expect(new CronDefBuilder()
-			.withCronExpresion(cronExpression)
-			.withValidUntil(dateTimeISO8601Format)
-			.build(),
-		).toEqual({
-			expression: cronExpression,
-			validUntil: dateTimeISO8601Format,
-		});
-		
-		
-	});
-	
-	
-	it("should throws an error if cron expression is not set", () => {
-		
-		expect(() => new CronDefBuilder().build()).toThrowError();
-		
-	});
-	
+describe('CronDefBuilder', () => {
+  it('Should create a valid object containing cron expresion', () => {
+    expect(new CronDefBuilder().withCronExpresion(cronExpression).build()).toEqual(cronExpression);
+  });
+
+  it('Should create a valid object containing expression and expiration time', () => {
+    const dateTimeISO8601Format = '2013-07-16T19:23:51Z';
+    expect(
+      new CronDefBuilder().withCronExpresion(cronExpression).withValidUntil(dateTimeISO8601Format).build()
+    ).toEqual({
+      expression: cronExpression,
+      validUntil: dateTimeISO8601Format,
+    });
+  });
+
+  it('should throws an error if cron expression is not set', () => {
+    expect(() => new CronDefBuilder().build()).toThrowError();
+  });
 });
-

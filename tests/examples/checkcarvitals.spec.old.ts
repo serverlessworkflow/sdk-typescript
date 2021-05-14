@@ -15,70 +15,47 @@
  *
  */
 import {
-	EventBuilder,
-	EventsBuilder,
-	EventStateBuilder,
-	OnEventBuilder,
-	RepeatBuilder,
-	SubFlowStateBuilder,
-	WorkflowBuilder,
-} from "../../src";
-import * as fs from "fs";
+  EventBuilder,
+  EventsBuilder,
+  EventStateBuilder,
+  OnEventBuilder,
+  RepeatBuilder,
+  SubFlowStateBuilder,
+  WorkflowBuilder,
+} from '../../src';
+import * as fs from 'fs';
 
+describe('checkcarvitals workflow example', () => {
+  it('should generate Workflow object', function () {
+    const workflow = new WorkflowBuilder()
+      .withId('checkcarvitals')
+      .withVersion('1.0')
+      .withName('Check Car Vitals Workflow')
+      .withStart('WhenCarIsOn')
+      .withStates([
+        new EventStateBuilder()
+          .withName('WhenCarIsOn')
+          .withOnEvents([new OnEventBuilder().withEventsRef(['CarTurnedOnEvent']).build()])
+          .withTransition('DoCarVitalsChecks')
+          .build(),
+        new SubFlowStateBuilder()
+          .withName('DoCarVitalsChecks')
+          .withWorkflowId('vitalscheck')
+          .withRepeat(new RepeatBuilder().withStopOnEvents(['CarTurnedOffEvent']).build())
+          .withEnd(true)
+          .build(),
+      ])
+      .withEvents(
+        new EventsBuilder()
+          .withEvents([
+            new EventBuilder().withName('CarTurnedOnEvent').withType('car.events').withSource('my/car/start').build(),
+            new EventBuilder().withName('CarTurnedOffEvent').withType('car.events').withSource('my/car/start').build(),
+          ])
+          .build()
+      )
+      .build();
 
-describe("checkcarvitals workflow example", () => {
-	
-	
-	it('should generate Workflow object', function () {
-		
-		const workflow = new WorkflowBuilder()
-			.withId("checkcarvitals")
-			.withVersion("1.0")
-			.withName("Check Car Vitals Workflow")
-			.withStart("WhenCarIsOn")
-			.withStates([
-				new EventStateBuilder()
-					.withName("WhenCarIsOn")
-					.withOnEvents([
-						new OnEventBuilder()
-							.withEventsRef(["CarTurnedOnEvent"])
-							.build(),
-					])
-					.withTransition("DoCarVitalsChecks")
-					.build(),
-				new SubFlowStateBuilder()
-					.withName("DoCarVitalsChecks")
-					.withWorkflowId("vitalscheck")
-					.withRepeat(new RepeatBuilder()
-						.withStopOnEvents(["CarTurnedOffEvent"])
-						.build())
-					.withEnd(true)
-					.build(),
-			])
-			.withEvents(
-				new EventsBuilder()
-					.withEvents([
-						new EventBuilder()
-							.withName("CarTurnedOnEvent")
-							.withType("car.events")
-							.withSource("my/car/start")
-							.build(),
-						new EventBuilder()
-							.withName("CarTurnedOffEvent")
-							.withType("car.events")
-							.withSource("my/car/start")
-							.build(),
-					
-					]).build(),
-			)
-			.build();
-		
-		
-		const expected = JSON.parse(fs.readFileSync("./spec/examples/checkcarvitals.json")
-			.toLocaleString()) as any;
-		expect(workflow).toEqual(expected);
-		
-	});
-	
-	
+    const expected = JSON.parse(fs.readFileSync('./spec/examples/checkcarvitals.json').toLocaleString()) as any;
+    expect(workflow).toEqual(expected);
+  });
 });

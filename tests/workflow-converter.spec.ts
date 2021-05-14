@@ -14,12 +14,7 @@
  * limitations under the License.
  *
  */
-import {
-  workflowBuilder,
-  injectstateBuilder,
-  WorkflowConverter,
-  Specification,
-} from '../src/';
+import { workflowBuilder, injectstateBuilder, WorkflowConverter, Specification } from '../src/';
 import { readFileSync } from 'fs';
 
 describe('workflow-converter fromSource', () => {
@@ -39,9 +34,7 @@ describe('workflow-converter fromSource', () => {
   ];
   testCases.forEach((test) => {
     it(test.description, function () {
-      const workflow: Specification.Workflow = WorkflowConverter.fromString(
-        readFileSync(test.file, 'utf-8')
-      );
+      const workflow: Specification.Workflow = WorkflowConverter.fromString(readFileSync(test.file, 'utf-8'));
       expect(workflow.id).toBe('helloworld');
       expect(workflow.version).toBe('1.0');
       expect(workflow.name).toBe('Hello World Workflow');
@@ -69,9 +62,7 @@ describe('workflow-converter fromSource', () => {
 
   it('should throws error if format is not json or yaml', () => {
     expect(() => {
-      WorkflowConverter.fromString(
-        readFileSync('./tests/workflow-converter-hello-world.xxx', 'utf-8')
-      );
+      WorkflowConverter.fromString(readFileSync('./tests/workflow-converter-hello-world.xxx', 'utf-8'));
     }).toThrow(new Error('Format not supported'));
   });
 });

@@ -8,7 +8,7 @@ import { validators } from '../validators';
  * @param {Specification.Parallelstate} data The underlying object
  * @returns {Specification.Parallelstate} The validated underlying object
  */
-export function parallelstateValidator(data: Specification.Parallelstate): (() => Specification.Parallelstate) {
+export function parallelstateValidator(data: Specification.Parallelstate): () => Specification.Parallelstate {
   return () => {
     data.type = 'parallel';
     const validate = validators.get('Parallelstate');

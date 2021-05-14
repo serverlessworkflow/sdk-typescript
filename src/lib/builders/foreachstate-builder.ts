@@ -8,7 +8,7 @@ import { validators } from '../validators';
  * @param {Specification.Foreachstate} data The underlying object
  * @returns {Specification.Foreachstate} The validated underlying object
  */
-export function foreachstateValidator(data: Specification.Foreachstate): (() => Specification.Foreachstate) {
+export function foreachstateValidator(data: Specification.Foreachstate): () => Specification.Foreachstate {
   return () => {
     data.type = 'foreach';
     const validate = validators.get('Foreachstate');

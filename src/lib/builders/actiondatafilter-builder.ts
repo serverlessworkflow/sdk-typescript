@@ -8,7 +8,7 @@ import { validators } from '../validators';
  * @param {Specification.Actiondatafilter} data The underlying object
  * @returns {Specification.Actiondatafilter} The validated underlying object
  */
-export function actiondatafilterValidator(data: Specification.Actiondatafilter): (() => Specification.Actiondatafilter) {
+export function actiondatafilterValidator(data: Specification.Actiondatafilter): () => Specification.Actiondatafilter {
   return () => {
     const validate = validators.get('Actiondatafilter');
     // TODO: ignore validation if no validator or throw ?

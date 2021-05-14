@@ -8,7 +8,7 @@ import { validators } from '../validators';
  * @param {Specification.End} data The underlying object
  * @returns {Specification.End} The validated underlying object
  */
-export function endValidator(data: Specification.End): (() => Specification.End) {
+export function endValidator(data: Specification.End): () => Specification.End {
   return () => {
     const validate = validators.get('End');
     // TODO: ignore validation if no validator or throw ?

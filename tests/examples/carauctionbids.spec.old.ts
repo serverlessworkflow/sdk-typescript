@@ -14,67 +14,72 @@
  * limitations under the License.
  *
  */
-import {ActionBuilder, FunctionDefBuilder, WorkflowBuilder} from '../../src';
+import { ActionBuilder, FunctionDefBuilder, WorkflowBuilder } from '../../src';
 import * as fs from 'fs';
-import {StartBuilder} from "../../src";
-import {EventsBuilder} from "../../src";
-import {EventBuilder} from "../../src";
-import {EventStateBuilder} from "../../src";
-import {OnEventBuilder} from "../../src";
-import {FunctionRefBuilder} from "../../src";
+import { StartBuilder } from '../../src';
+import { EventsBuilder } from '../../src';
+import { EventBuilder } from '../../src';
+import { EventStateBuilder } from '../../src';
+import { OnEventBuilder } from '../../src';
+import { FunctionRefBuilder } from '../../src';
 
-describe("carauctionbids workflow example", () => {
-	
-	
-	it('should generate Workflow object', function () {
-		
-		const workflow = new WorkflowBuilder()
-			.withId("handleCarAuctionBid")
-			.withVersion("1.0")
-			.withName("Car Auction Bidding Workflow")
-			.withDescription("Store a single bid whole the car auction is active")
-			.withStart(new StartBuilder()
-				.withName("StoreCarAuctionBid")
-				.withSchedule("2020-03-20T09:00:00Z/2020-03-20T15:00:00Z").build())
-			.withFunctions([new FunctionDefBuilder()
-				.withName("StoreBidFunction")
-				.withOperation("http://myapis.org/carauctionapi.json#storeBid")
-				.build()])
-			.withEvents(new EventsBuilder().withEvents(
-				[new EventBuilder()
-					.withName("CarBidEvent")
-					.withType("carBidMadeType")
-					.withSource("carBidEventSource")
-					.build()],
-			).build())
-			.withStates([
-				new EventStateBuilder()
-					.withName("StoreCarAuctionBid")
-					.withExclusive(true)
-					.withOnEvents([
-						new OnEventBuilder()
-							.withEventsRef(["CarBidEvent"])
-							.withActions([
-								new ActionBuilder().withFunctionRef(
-									new FunctionRefBuilder()
-										.withRefName("StoreBidFunction")
-										.withArguments({
-											"bid": "${ .bid }",
-										})
-										.build()).build(),
-							]).build(),
-					])
-					.withEnd(true)
-					.build(),
-			])
-			.build();
-		
-		
-		const expected = JSON.parse(fs.readFileSync("./spec/examples/carauctionbids.json")
-			.toLocaleString()) as any;
-		expect(workflow).toEqual(expected);
-		
-	});
-	
-	
+describe('carauctionbids workflow example', () => {
+  it('should generate Workflow object', function () {
+    const workflow = new WorkflowBuilder()
+      .withId('handleCarAuctionBid')
+      .withVersion('1.0')
+      .withName('Car Auction Bidding Workflow')
+      .withDescription('Store a single bid whole the car auction is active')
+      .withStart(
+        new StartBuilder()
+          .withName('StoreCarAuctionBid')
+          .withSchedule('2020-03-20T09:00:00Z/2020-03-20T15:00:00Z')
+          .build()
+      )
+      .withFunctions([
+        new FunctionDefBuilder()
+          .withName('StoreBidFunction')
+          .withOperation('http://myapis.org/carauctionapi.json#storeBid')
+          .build(),
+      ])
+      .withEvents(
+        new EventsBuilder()
+          .withEvents([
+            new EventBuilder()
+              .withName('CarBidEvent')
+              .withType('carBidMadeType')
+              .withSource('carBidEventSource')
+              .build(),
+          ])
+          .build()
+      )
+      .withStates([
+        new EventStateBuilder()
+          .withName('StoreCarAuctionBid')
+          .withExclusive(true)
+          .withOnEvents([
+            new OnEventBuilder()
+              .withEventsRef(['CarBidEvent'])
+              .withActions([
+                new ActionBuilder()
+                  .withFunctionRef(
+                    new FunctionRefBuilder()
+                      .withRefName('StoreBidFunction')
+                      .withArguments({
+                        bid: '${ .bid }',
+                      })
+                      .build()
+                  )
+                  .build(),
+              ])
+              .build(),
+          ])
+          .withEnd(true)
+          .build(),
+      ])
+      .build();
+
+    const expected = JSON.parse(fs.readFileSync('./spec/examples/carauctionbids.json').toLocaleString()) as any;
+    expect(workflow).toEqual(expected);
+  });
 });

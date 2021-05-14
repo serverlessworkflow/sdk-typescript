@@ -8,7 +8,7 @@ import { validators } from '../validators';
  * @param {Specification.Subflowstate} data The underlying object
  * @returns {Specification.Subflowstate} The validated underlying object
  */
-export function subflowstateValidator(data: Specification.Subflowstate): (() => Specification.Subflowstate) {
+export function subflowstateValidator(data: Specification.Subflowstate): () => Specification.Subflowstate {
   return () => {
     const validate = validators.get('Subflowstate');
     // TODO: ignore validation if no validator or throw ?

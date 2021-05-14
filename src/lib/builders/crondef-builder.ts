@@ -8,7 +8,7 @@ import { validators } from '../validators';
  * @param {Specification.Crondef} data The underlying object
  * @returns {Specification.Crondef} The validated underlying object
  */
-export function crondefValidator(data: Specification.Crondef): (() => Specification.Crondef) {
+export function crondefValidator(data: Specification.Crondef): () => Specification.Crondef {
   return () => {
     const validate = validators.get('Crondef');
     // TODO: ignore validation if no validator or throw ?

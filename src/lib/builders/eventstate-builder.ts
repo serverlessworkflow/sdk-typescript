@@ -8,7 +8,7 @@ import { validators } from '../validators';
  * @param {Specification.Eventstate} data The underlying object
  * @returns {Specification.Eventstate} The validated underlying object
  */
-export function eventstateValidator(data: Specification.Eventstate): (() => Specification.Eventstate) {
+export function eventstateValidator(data: Specification.Eventstate): () => Specification.Eventstate {
   return () => {
     data.type = 'event';
     const validate = validators.get('Eventstate');

@@ -75,17 +75,13 @@ const listFiles = async (url: string): Promise<GithubContentItem[]> =>
       });
       return Promise.all(queue);
     })
-    .then((items: GithubContentItem[][]) =>
-      items.reduce((acc, i) => [...acc, ...i])
-    );
+    .then((items: GithubContentItem[][]) => items.reduce((acc, i) => [...acc, ...i]));
 /**
  * A promise that maps the item paths and their urls
  * @param {GithubContentItem[]} items The list of items
  * @returns {Map<string, string>} The path/url map
  */
-const mapFilePaths = async (
-  items: GithubContentItem[]
-): Promise<Map<string, string>> => {
+const mapFilePaths = async (items: GithubContentItem[]): Promise<Map<string, string>> => {
   const filesMap = new Map<string, string>();
   items.forEach((i) => {
     filesMap.set(i.path, i.download_url);
@@ -99,28 +95,17 @@ const mapFilePaths = async (
  * @returns {void}
  */
 const downloadFile = async (url: string, dest: string): Promise<void> =>
-  mkdir(
-    path.resolve(
-      process.cwd(),
-      'src/lib',
-      dest.split('/').slice(0, -1).join('/')
-    ),
-    { recursive: true }
-  )
+  mkdir(path.resolve(process.cwd(), 'src/lib', dest.split('/').slice(0, -1).join('/')), { recursive: true })
     .then(() => fetch(url))
     .then((res: any) => res.arrayBuffer())
-    .then((data) =>
-      writeFile(path.resolve(process.cwd(), 'src/lib', dest), Buffer.from(data))
-    );
+    .then((data) => writeFile(path.resolve(process.cwd(), 'src/lib', dest), Buffer.from(data)));
 /**
  * A promise to download the provided files
  * @param {Map<string, string>} filesMap The path/url map to download to/from
  * @returns {void}
  */
 const downloadFiles = async (filesMap: Map<string, string>): Promise<void[]> =>
-  Promise.all(
-    Array.from(filesMap).map(([dest, url]) => downloadFile(url, dest))
-  );
+  Promise.all(Array.from(filesMap).map(([dest, url]) => downloadFile(url, dest)));
 
 const argv = yargs(process.argv.slice(2)).argv;
 const ref = `v${version.split('.').slice(0, -1).join('.')}`;

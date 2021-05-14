@@ -8,7 +8,7 @@ import { validators } from '../validators';
  * @param {Specification.Exectimeout} data The underlying object
  * @returns {Specification.Exectimeout} The validated underlying object
  */
-export function exectimeoutValidator(data: Specification.Exectimeout): (() => Specification.Exectimeout) {
+export function exectimeoutValidator(data: Specification.Exectimeout): () => Specification.Exectimeout {
   return () => {
     const validate = validators.get('Exectimeout');
     // TODO: ignore validation if no validator or throw ?
