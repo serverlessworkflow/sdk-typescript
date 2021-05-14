@@ -17,7 +17,7 @@ if (!String.prototype.matchAll) {
   String.prototype.matchAll = function(re) {
     const results: RegExpExecArray[] = [];
     let matches: RegExpExecArray | null;
-    while(matches = re.exec(this)) {
+    while( (matches = re.exec(this)) ) {
       results.push(matches);
     }
     return results;
@@ -26,7 +26,7 @@ if (!String.prototype.matchAll) {
 
 interface BuilderExtension {
   preValidate: string;
-};
+}
 /** Stores additional code that needs to be added to builders depending on their type */
 const buildersExtensions: { [key: string]: BuilderExtension } = {
   "Callbackstate": {
@@ -168,7 +168,7 @@ const generate = async (source: string, destDir: string): Promise<void> => {
 This directory and its content has been generated automatically. Do not modify its content, it WILL be lost.`);
     const extractor: RegExp = /export \w* (\w*)/g;    
     const definition: string = await readFile(source, 'utf-8');
-    const types: string[] = [...definition.matchAll(extractor)].map(([capture, type]) => type);
+    const types: string[] = [...definition.matchAll(extractor)].map(([, type]) => type);
     await Promise.all(
       types.map(createBuilder.bind(null, destDir))
     );

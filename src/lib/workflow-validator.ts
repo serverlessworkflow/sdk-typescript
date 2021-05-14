@@ -18,7 +18,7 @@ export class WorkflowValidator {
    * Validates the workflow, populates the errors if any
    * @returns {boolean} If the workflow is valid or not
    */
-  validate() {
+  validate(): boolean {
     const isValid = this.validateFn(this.workflow);
     this.errors = this.validateFn.errors as DefinedError[];
     return isValid;

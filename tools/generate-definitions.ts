@@ -42,13 +42,7 @@ const getPropName = ($ref: string, known$Refs:  Map<string, string>): string => 
   const baseName = $ref.split('/').slice(-1)[0];
   let propName = baseName;
   let variantIndex = 0;
-  while(true) {
-    if (!known$Refs.has(propName)) {
-      break;
-    }
-    if (known$Refs.get(propName) === $ref) {
-      break;
-    }
+  while(known$Refs.has(propName) && known$Refs.get(propName) !== $ref) {
     variantIndex++;
     propName = baseName + variantIndex;
   }
@@ -104,10 +98,10 @@ const mergeSchemas = ($refParser: $RefParser, known$Refs: Map<string, string>, t
   const isRootDocument = target$Ref.startsWith('#');
   // todo ? handle circular refs ?
   Object.entries(target)
-    .filter(([key, value]: [string, any]) => value && typeof value === typeof {} && !ArrayBuffer.isView(value))
+    .filter(([, value]: [string, any]) => value && typeof value === typeof {} && !ArrayBuffer.isView(value))
     .forEach(([key, value]: [string, any]) => {
       if (!isRef(value) || (isRootDocument && !isRefExernal(value))) {
-        let newTargetRef = `${target$Ref.endsWith('/') ? target$Ref : target$Ref + '/'}${key}/`;
+        const newTargetRef = `${target$Ref.endsWith('/') ? target$Ref : target$Ref + '/'}${key}/`;
         mergeSchemas($refParser, known$Refs, value, newTargetRef);
         return;
       }

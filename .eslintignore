@@ -1,0 +1,7 @@
+# don't ever lint node_modules
+node_modules
+# don't lint definitions
+src/lib/definitions/**/*
+# don't lint build output
+dist
+out-tsc
