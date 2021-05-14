@@ -1,23 +1,24 @@
-import {promises as fsPromises} from 'fs';
+import { promises as fsPromises } from 'fs';
 import * as path from 'path';
 import rimraf from 'rimraf';
-const {readFile, writeFile, mkdir} = fsPromises;
-const rimrafP = async (f: string): Promise<void> => new Promise<void>((resolve, reject) => 
-  rimraf(f, (err) => {
-    if (err) return reject(err);
-    resolve();
-  })
-);
+const { readFile, writeFile, mkdir } = fsPromises;
+const rimrafP = async (f: string): Promise<void> =>
+  new Promise<void>((resolve, reject) =>
+    rimraf(f, (err) => {
+      if (err) return reject(err);
+      resolve();
+    })
+  );
 declare global {
   interface String {
     matchAll(re: RegExp): RegExpExecArray[];
   }
 }
 if (!String.prototype.matchAll) {
-  String.prototype.matchAll = function(re) {
+  String.prototype.matchAll = function (re) {
     const results: RegExpExecArray[] = [];
     let matches: RegExpExecArray | null;
-    while( (matches = re.exec(this)) ) {
+    while ((matches = re.exec(this))) {
       results.push(matches);
     }
     return results;
@@ -29,33 +30,33 @@ interface BuilderExtension {
 }
 /** Stores additional code that needs to be added to builders depending on their type */
 const buildersExtensions: { [key: string]: BuilderExtension } = {
-  "Callbackstate": {
-    preValidate: `\r\n    data.type = 'callback';`
+  Callbackstate: {
+    preValidate: `\r\n    data.type = 'callback';`,
   },
-  "Databasedswitch": {
-    preValidate: `\r\n    data.type = 'switch';`
+  Databasedswitch: {
+    preValidate: `\r\n    data.type = 'switch';`,
   },
-  "Delaystate": {
-    preValidate: `\r\n    data.type = 'delay';`
+  Delaystate: {
+    preValidate: `\r\n    data.type = 'delay';`,
   },
-  "Eventbasedswitch": {
-    preValidate: `\r\n    data.type = 'switch';`
+  Eventbasedswitch: {
+    preValidate: `\r\n    data.type = 'switch';`,
   },
-  "Eventstate": {
-    preValidate: `\r\n    data.type = 'event';`
+  Eventstate: {
+    preValidate: `\r\n    data.type = 'event';`,
   },
-  "Foreachstate": {
-    preValidate: `\r\n    data.type = 'foreach';`
+  Foreachstate: {
+    preValidate: `\r\n    data.type = 'foreach';`,
   },
-  "Injectstate": {
-    preValidate: `\r\n    data.type = 'inject';`
+  Injectstate: {
+    preValidate: `\r\n    data.type = 'inject';`,
   },
-  "Operationstate": {
-    preValidate: `\r\n    data.type = 'operation';`
+  Operationstate: {
+    preValidate: `\r\n    data.type = 'operation';`,
   },
-  "Parallelstate": {
-    preValidate: `\r\n    data.type = 'parallel';`
-  }
+  Parallelstate: {
+    preValidate: `\r\n    data.type = 'parallel';`,
+  },
 };
 
 /**
@@ -92,7 +93,10 @@ const toCamelCase = (value: string): string => {
  * @param {string} dataType The type to create the builder for
  * @returns {void}
  */
-const createBuilder = async (destDir: string, dataType: string): Promise<void> => {
+const createBuilder = async (
+  destDir: string,
+  dataType: string
+): Promise<void> => {
   try {
     const camelType = toCamelCase(dataType);
     const extension = buildersExtensions[dataType];
@@ -127,11 +131,13 @@ export function ${camelType}Validator(data: Specification.${dataType}): (() => S
 export function ${camelType}Builder(): Builder<Specification.${dataType}> {
   return builder<Specification.${dataType}>(${camelType}Validator);
 }`;
-    const destFile = path.resolve(destDir, toKebabCase(camelType) + '-builder.ts');
+    const destFile = path.resolve(
+      destDir,
+      toKebabCase(camelType) + '-builder.ts'
+    );
     await writeFile(destFile, builderCode);
     return Promise.resolve();
-  }
-  catch(ex) {
+  } catch (ex) {
     return Promise.reject(ex);
   }
 };
@@ -144,15 +150,19 @@ export function ${camelType}Builder(): Builder<Specification.${dataType}> {
  */
 const createIndex = async (destDir: string, types: string[]): Promise<void> => {
   try {
-    const indexCode: string = types.reduce((acc, t) => acc + `export * from './${toKebabCase(toCamelCase(t)) + '-builder'}';\r\n`, '');
+    const indexCode: string = types.reduce(
+      (acc, t) =>
+        acc +
+        `export * from './${toKebabCase(toCamelCase(t)) + '-builder'}';\r\n`,
+      ''
+    );
     const indexFile = path.resolve(destDir, 'index.ts');
     await writeFile(indexFile, indexCode);
     return Promise.resolve();
-  }
-  catch(ex) {
+  } catch (ex) {
     return Promise.reject(ex);
   }
-}
+};
 
 /**
  * Generates builders
@@ -164,25 +174,29 @@ const generate = async (source: string, destDir: string): Promise<void> => {
   try {
     await rimrafP(destDir);
     await mkdir(destDir, { recursive: true });
-    await writeFile(path.resolve(destDir, 'README.md'), `# Auto generated notice
-This directory and its content has been generated automatically. Do not modify its content, it WILL be lost.`);
-    const extractor: RegExp = /export \w* (\w*)/g;    
-    const definition: string = await readFile(source, 'utf-8');
-    const types: string[] = [...definition.matchAll(extractor)].map(([, type]) => type);
-    await Promise.all(
-      types.map(createBuilder.bind(null, destDir))
+    await writeFile(
+      path.resolve(destDir, 'README.md'),
+      `# Auto generated notice
+This directory and its content has been generated automatically. Do not modify its content, it WILL be lost.`
     );
+    const extractor: RegExp = /export \w* (\w*)/g;
+    const definition: string = await readFile(source, 'utf-8');
+    const types: string[] = [...definition.matchAll(extractor)].map(
+      ([, type]) => type
+    );
+    await Promise.all(types.map(createBuilder.bind(null, destDir)));
     createIndex(destDir, types);
     return Promise.resolve();
-  }
-  catch(ex) {
+  } catch (ex) {
     return Promise.reject(ex);
   }
 };
 
 const buildersDir = path.resolve(process.cwd(), 'src/lib/builders');
-const definitionSrc = path.resolve(process.cwd(), 'src/lib/definitions/workflow.ts');
+const definitionSrc = path.resolve(
+  process.cwd(),
+  'src/lib/definitions/workflow.ts'
+);
 generate(definitionSrc, buildersDir)
   .then(console.log.bind(console))
-  .catch(console.error.bind(console))
-  ;
+  .catch(console.error.bind(console));
