@@ -26,7 +26,7 @@ describe("solvemathproblems workflow example", () => {
 	
 	it('should generate Workflow object', function () {
 		
-		const workflow = new WorkflowBuilder()
+		const workflow = workflowBuilder()
 			.withId("solvemathproblems")
 			.withVersion("1.0")
 			.withName("Solve Math Problems Workflow")
@@ -45,7 +45,7 @@ describe("solvemathproblems workflow example", () => {
 					.withIterationParam("singleexpression")
 					.withOutputCollection("${ .results }")
 					.withActions([
-						new ActionBuilder()
+						actionBuilder()
 							.withFunctionRef(
 								new FunctionRefBuilder()
 									.withRefName("solveMathExpressionFunction")
@@ -66,7 +66,7 @@ describe("solvemathproblems workflow example", () => {
 			.build();
 		
 		
-		const expected = JSON.parse(fs.readFileSync("./spec/examples/solvemathproblems.json")
+		const expected = JSON.parse(fs.readFileSync("./tests/examples/solvemathproblems.json")
 			.toLocaleString()) as any;
 		expect(workflow).toEqual(expected);
 		

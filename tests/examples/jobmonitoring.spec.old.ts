@@ -37,7 +37,7 @@ describe("jobmonitoring workflow example", () => {
 	
 	it('should generate Workflow object', function () {
 		
-		const workflow = new WorkflowBuilder()
+		const workflow = workflowBuilder()
 			.withId("jobmonitoring")
 			.withVersion("1.0")
 			.withName("Job Monitoring")
@@ -62,11 +62,11 @@ describe("jobmonitoring workflow example", () => {
 					.build(),
 			])
 			.withStates([
-				new OperationStateBuilder()
+				operationstateBuilder()
 					.withName("SubmitJob")
 					.withActionMode('sequential')
 					.withActions([
-						new ActionBuilder()
+						actionBuilder()
 							.withFunctionRef(
 								new FunctionRefBuilder()
 									.withRefName("submitJob")
@@ -100,16 +100,16 @@ describe("jobmonitoring workflow example", () => {
 					.withWorkflowId("handleJobSubmissionErrorWorkflow")
 					.withEnd(true)
 					.build(),
-				new DelayStateBuilder()
+				delaystateBuilder()
 					.withName("WaitForCompletion")
 					.withTimeDelay("PT5S")
 					.withTransition("GetJobStatus")
 					.build(),
-				new OperationStateBuilder()
+				operationstateBuilder()
 					.withName("GetJobStatus")
 					.withActionMode('sequential')
 					.withActions([
-						new ActionBuilder()
+						actionBuilder()
 							.withFunctionRef(
 								new FunctionRefBuilder()
 									.withRefName("checkJobStatus")
@@ -149,11 +149,11 @@ describe("jobmonitoring workflow example", () => {
 							.withTransition("WaitForCompletion")
 							.build())
 					.build(),
-				new OperationStateBuilder()
+				operationstateBuilder()
 					.withName("JobSucceeded")
 					.withActionMode('sequential')
 					.withActions([
-						new ActionBuilder()
+						actionBuilder()
 							.withFunctionRef(
 								new FunctionRefBuilder()
 									.withRefName("reportJobSuceeded")
@@ -166,11 +166,11 @@ describe("jobmonitoring workflow example", () => {
 					])
 					.withEnd(true)
 					.build(),
-				new OperationStateBuilder()
+				operationstateBuilder()
 					.withName("JobFailed")
 					.withActionMode('sequential')
 					.withActions([
-						new ActionBuilder()
+						actionBuilder()
 							.withFunctionRef(
 								new FunctionRefBuilder()
 									.withRefName("reportJobFailed")
@@ -187,7 +187,7 @@ describe("jobmonitoring workflow example", () => {
 			.build();
 		
 		
-		const expected = JSON.parse(fs.readFileSync("./spec/examples/jobmonitoring.json")
+		const expected = JSON.parse(fs.readFileSync("./tests/examples/jobmonitoring.json")
 			.toLocaleString()) as any;
 		expect(workflow).toEqual(expected);
 		

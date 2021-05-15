@@ -28,7 +28,7 @@ describe("carauctionbids workflow example", () => {
 	
 	it('should generate Workflow object', function () {
 		
-		const workflow = new WorkflowBuilder()
+		const workflow = workflowBuilder()
 			.withId("handleCarAuctionBid")
 			.withVersion("1.0")
 			.withName("Car Auction Bidding Workflow")
@@ -55,7 +55,7 @@ describe("carauctionbids workflow example", () => {
 						new OnEventBuilder()
 							.withEventsRef(["CarBidEvent"])
 							.withActions([
-								new ActionBuilder().withFunctionRef(
+								actionBuilder().withFunctionRef(
 									new FunctionRefBuilder()
 										.withRefName("StoreBidFunction")
 										.withArguments({
@@ -70,7 +70,7 @@ describe("carauctionbids workflow example", () => {
 			.build();
 		
 		
-		const expected = JSON.parse(fs.readFileSync("./spec/examples/carauctionbids.json")
+		const expected = JSON.parse(fs.readFileSync("./tests/examples/carauctionbids.json")
 			.toLocaleString()) as any;
 		expect(workflow).toEqual(expected);
 		

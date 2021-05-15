@@ -32,7 +32,7 @@ describe("sendcloudevent workflow example", () => {
 	
 	it('should generate Workflow object', function () {
 		
-		const workflow = new WorkflowBuilder()
+		const workflow = workflowBuilder()
 			.withId("sendcloudeventonprovision")
 			.withVersion("1.0")
 			.withName("Send CloudEvent on provision completion")
@@ -61,7 +61,7 @@ describe("sendcloudevent workflow example", () => {
 					.withIterationParam("singleorder")
 					.withOutputCollection("${ .provisionedOrders }")
 					.withActions([
-						new ActionBuilder()
+						actionBuilder()
 							.withFunctionRef(
 								new FunctionRefBuilder()
 									.withRefName("provisionOrderFunction")
@@ -89,7 +89,7 @@ describe("sendcloudevent workflow example", () => {
 		
 		
 		
-		const expected = JSON.parse(fs.readFileSync("./spec/examples/sendcloudevent.json")
+		const expected = JSON.parse(fs.readFileSync("./tests/examples/sendcloudevent.json")
 			.toLocaleString()) as any;
 		expect(workflow).toEqual(expected);
 		

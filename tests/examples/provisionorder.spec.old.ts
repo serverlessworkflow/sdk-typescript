@@ -32,7 +32,7 @@ describe("provisionorder workflow example", () => {
 	
 	it('should generate Workflow object', function () {
 		
-		const workflow = new WorkflowBuilder()
+		const workflow = workflowBuilder()
 			.withId("provisionorders")
 			.withVersion("1.0")
 			.withName("Provision Orders")
@@ -45,11 +45,11 @@ describe("provisionorder workflow example", () => {
 					.build(),
 			])
 			.withStates([
-				new OperationStateBuilder()
+				operationstateBuilder()
 					.withName("ProvisionOrder")
 					.withActionMode("sequential")
 					.withActions([
-						new ActionBuilder()
+						actionBuilder()
 							.withFunctionRef(
 								new FunctionRefBuilder()
 									.withRefName("provisionOrderFunction")
@@ -104,7 +104,7 @@ describe("provisionorder workflow example", () => {
 			.build();
 		
 		
-		const expected = JSON.parse(fs.readFileSync("./spec/examples/provisionorder.json")
+		const expected = JSON.parse(fs.readFileSync("./tests/examples/provisionorder.json")
 			.toLocaleString()) as any;
 		expect(workflow).toEqual(expected);
 		

@@ -31,7 +31,7 @@ describe("checkcarvitals workflow example", () => {
 	
 	it('should generate Workflow object', function () {
 		
-		const workflow = new WorkflowBuilder()
+		const workflow = workflowBuilder()
 			.withId("checkcarvitals")
 			.withVersion("1.0")
 			.withName("Check Car Vitals Workflow")
@@ -74,7 +74,7 @@ describe("checkcarvitals workflow example", () => {
 			.build();
 		
 		
-		const expected = JSON.parse(fs.readFileSync("./spec/examples/checkcarvitals.json")
+		const expected = JSON.parse(fs.readFileSync("./tests/examples/checkcarvitals.json")
 			.toLocaleString()) as any;
 		expect(workflow).toEqual(expected);
 		
