@@ -55,6 +55,12 @@ const buildersExtensions: { [key: string]: BuilderExtension } = {
   },
   "Parallelstate": {
     preValidate: `\r\n    data.type = 'parallel';`
+  },
+  "Subflowstate": {
+    preValidate: `\r\n    data.type = 'subflow';`
+  },
+  "Function": {
+    preValidate: `\r\n    data.type = 'rest';`
   }
 };
 

@@ -5,6 +5,7 @@ import { validators } from '../validators';
 
 export function functionValidator(data: Specification.Function): (() => Specification.Function) {
   return () => {
+    data.type = 'rest';
     const validate = validators.get('Function');
     // TODO: ignore validation if no validator or throw ?
     if (!validate) return data;

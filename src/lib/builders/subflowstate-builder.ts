@@ -5,6 +5,7 @@ import { validators } from '../validators';
 
 export function subflowstateValidator(data: Specification.Subflowstate): (() => Specification.Subflowstate) {
   return () => {
+    data.type = 'subflow';
     const validate = validators.get('Subflowstate');
     // TODO: ignore validation if no validator or throw ?
     if (!validate) return data;
