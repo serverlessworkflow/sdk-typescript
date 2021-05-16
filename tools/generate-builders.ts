@@ -61,7 +61,10 @@ const buildersExtensions: { [key: string]: BuilderExtension } = {
   },
   "Function": {
     preValidate: `\r\n    data.type = 'rest';`
-  }
+  },
+  "Eventdef": {
+    preValidate: `\r\n    data.kind =  data.kind || 'consumed';`
+  },
 };
 
 /**

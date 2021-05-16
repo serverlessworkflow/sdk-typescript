@@ -14,16 +14,17 @@
  * limitations under the License.
  *
  */
-import {
-	EventBuilder,
-	EventsBuilder,
-	EventStateBuilder,
-	OnEventBuilder,
-	RepeatBuilder,
-	SubFlowStateBuilder,
-	WorkflowBuilder,
-} from "../../src";
+
+
 import * as fs from "fs";
+import {
+	eventdefBuilder,
+	eventstateBuilder,
+	oneventsBuilder,
+	repeatBuilder,
+	subflowstateBuilder,
+	workflowBuilder,
+} from '../../src';
 
 
 describe("checkcarvitals workflow example", () => {
@@ -32,44 +33,42 @@ describe("checkcarvitals workflow example", () => {
 	it('should generate Workflow object', function () {
 		
 		const workflow = workflowBuilder()
-			.withId("checkcarvitals")
-			.withVersion("1.0")
-			.withName("Check Car Vitals Workflow")
-			.withStart("WhenCarIsOn")
-			.withStates([
-				new EventStateBuilder()
-					.withName("WhenCarIsOn")
-					.withOnEvents([
-						new OnEventBuilder()
-							.withEventsRef(["CarTurnedOnEvent"])
+			.id("checkcarvitals")
+			.version("1.0")
+			.name("Check Car Vitals Workflow")
+			.start("WhenCarIsOn")
+			.states([
+				eventstateBuilder()
+					.name("WhenCarIsOn")
+					.onEvents([
+						oneventsBuilder()
+							.eventRefs(["CarTurnedOnEvent"])
 							.build(),
 					])
-					.withTransition("DoCarVitalsChecks")
+					.transition("DoCarVitalsChecks")
 					.build(),
-				new SubFlowStateBuilder()
-					.withName("DoCarVitalsChecks")
-					.withWorkflowId("vitalscheck")
-					.withRepeat(new RepeatBuilder()
-						.withStopOnEvents(["CarTurnedOffEvent"])
+				subflowstateBuilder()
+					.name("DoCarVitalsChecks")
+					.workflowId("vitalscheck")
+					.repeat(repeatBuilder()
+						.stopOnEvents(["CarTurnedOffEvent"])
 						.build())
-					.withEnd(true)
+					.end(true)
 					.build(),
 			])
-			.withEvents(
-				new EventsBuilder()
-					.withEvents([
-						new EventBuilder()
-							.withName("CarTurnedOnEvent")
-							.withType("car.events")
-							.withSource("my/car/start")
-							.build(),
-						new EventBuilder()
-							.withName("CarTurnedOffEvent")
-							.withType("car.events")
-							.withSource("my/car/start")
-							.build(),
-					
-					]).build(),
+			.events([
+					eventdefBuilder()
+						.name("CarTurnedOnEvent")
+						.type("car.events")
+						.source("my/car/start")
+						.build(),
+					eventdefBuilder()
+						.name("CarTurnedOffEvent")
+						.type("car.events")
+						.source("my/car/start")
+						.build(),
+				
+				],
 			)
 			.build();
 		

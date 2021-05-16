@@ -5,6 +5,7 @@ import { validators } from '../validators';
 
 export function eventdefValidator(data: Specification.Eventdef): (() => Specification.Eventdef) {
   return () => {
+    data.kind =  data.kind || 'consumed';
     const validate = validators.get('Eventdef');
     // TODO: ignore validation if no validator or throw ?
     if (!validate) return data;

@@ -24,6 +24,7 @@
       "inputCollection": "${ .orders }",
       "iterationParam": "singleorder",
       "outputCollection": "${ .provisionedOrders }",
+      "usedForCompensation": false,
       "actions": [
         {
           "functionRef": {

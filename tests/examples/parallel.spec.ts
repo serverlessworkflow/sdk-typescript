@@ -15,7 +15,7 @@
  *
  */
 import * as fs from "fs";
-import {BranchBuilder, ParallelStateBuilder, WorkflowBuilder} from '../../src';
+import {branchBuilder, parallelstateBuilder, workflowBuilder} from '../../src';
 
 
 describe("parallel workflow example", () => {
@@ -24,26 +24,26 @@ describe("parallel workflow example", () => {
 	it('should generate Workflow object', function () {
 		
 		const workflow = workflowBuilder()
-			.withId("parallelexec")
-			.withVersion("1.0")
-			.withName("Parallel Execution Workflow")
-			.withDescription("Executes two branches in parallel")
-			.withStart("ParallelExec")
-			.withStates([
-				new ParallelStateBuilder()
-					.withName("ParallelExec")
-					.withCompletionType("and")
-					.withBranches([
-						new BranchBuilder()
-							.withName("ShortDelayBranch")
-							.withWorkflowId("shortdelayworkflowid")
+			.id("parallelexec")
+			.version("1.0")
+			.name("Parallel Execution Workflow")
+			.description("Executes two branches in parallel")
+			.start("ParallelExec")
+			.states([
+				parallelstateBuilder()
+					.name("ParallelExec")
+					.completionType("and")
+					.branches([
+						branchBuilder()
+							.name("ShortDelayBranch")
+							.workflowId("shortdelayworkflowid")
 							.build(),
-						new BranchBuilder()
-							.withName("LongDelayBranch")
-							.withWorkflowId("longdelayworkflowid")
+						branchBuilder()
+							.name("LongDelayBranch")
+							.workflowId("longdelayworkflowid")
 							.build(),
 					])
-					.withEnd(true)
+					.end(true)
 					.build(),
 			])
 			.build();

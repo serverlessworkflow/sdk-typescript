@@ -1,7 +1,9 @@
 export type Builder<T> = {
   build: () => T
 } & {
+  //[k in T extends T ? keyof T : never]-?: (arg: T[k]) => Builder<T>
   [k in keyof T]-?: (arg: T[k]) => Builder<T>
+
 };
 
 /**

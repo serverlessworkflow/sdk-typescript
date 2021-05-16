@@ -590,14 +590,6 @@
             "onEvents",
             "transition"
           ]
-        },
-        {
-          "required": [
-            "name",
-            "type",
-            "onEvents",
-            "end"
-          ]
         }
       ]
     },
