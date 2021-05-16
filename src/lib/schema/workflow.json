@@ -133,7 +133,9 @@
             }
           },
           "additionalProperties": false,
-          "required": ["expression"]
+          "required": [
+            "expression"
+          ]
         }
       ]
     },
@@ -695,14 +697,6 @@
               "actions",
               "transition"
             ]
-          },
-          {
-            "required": [
-              "name",
-              "type",
-              "actions",
-              "end"
-            ]
           }
         ]
       }
@@ -819,14 +813,6 @@
               "type",
               "branches",
               "transition"
-            ]
-          },
-          {
-            "required": [
-              "name",
-              "type",
-              "branches",
-              "end"
             ]
           }
         ]
@@ -1680,8 +1666,7 @@
             }
           },
           "additionalProperties": false,
-          "required": [
-          ]
+          "required": []
         }
       ]
     },
