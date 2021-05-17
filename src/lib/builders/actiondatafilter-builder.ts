@@ -1,3 +1,20 @@
+/*
+ * Copyright 2021-Present The Serverless Workflow Specification Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * oUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 import { DefinedError } from 'ajv';
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
@@ -8,7 +25,7 @@ import { validators } from '../validators';
  * @param {Specification.Actiondatafilter} data The underlying object
  * @returns {Specification.Actiondatafilter} The validated underlying object
  */
-export function actiondatafilterValidator(data: Specification.Actiondatafilter): () => Specification.Actiondatafilter {
+function actiondatafilterBuildingFn(data: Specification.Actiondatafilter): () => Specification.Actiondatafilter {
   return () => {
     const validate = validators.get('Actiondatafilter');
     // TODO: ignore validation if no validator or throw ?
@@ -27,5 +44,5 @@ export function actiondatafilterValidator(data: Specification.Actiondatafilter):
  * @returns {Specification.Actiondatafilter} A builder for `Specification.Actiondatafilter`
  */
 export function actiondatafilterBuilder(): Builder<Specification.Actiondatafilter> {
-  return builder<Specification.Actiondatafilter>(actiondatafilterValidator);
+  return builder<Specification.Actiondatafilter>(actiondatafilterBuildingFn);
 }

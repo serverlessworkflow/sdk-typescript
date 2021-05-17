@@ -1,9 +1,27 @@
+/*
+ * Copyright 2021-Present The Serverless Workflow Specification Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * oUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 import fetch from 'node-fetch';
 import * as path from 'path';
 import { promises as fsPromises } from 'fs';
 import rimraf from 'rimraf';
 import yargs from 'yargs';
 import { version } from '../package.json';
+import { readMeDisclaimer } from './consts';
 const { writeFile, mkdir } = fsPromises;
 const rimrafP = async (f: string): Promise<void> =>
   new Promise<void>((resolve, reject) =>
@@ -49,13 +67,7 @@ interface GithubContentItem {
 const reset = async (destDir: string) =>
   rimrafP(destDir)
     .then(() => mkdir(destDir, { recursive: true }))
-    .then(() =>
-      writeFile(
-        path.resolve(destDir, 'README.md'),
-        `# Auto generated notice
-This directory and its content has been generated automatically. Do not modify its content, it WILL be lost.`
-      )
-    );
+    .then(() => writeFile(path.resolve(destDir, 'README.md'), readMeDisclaimer));
 
 /**
  * A promise that list the schemas in the registry

@@ -1,8 +1,26 @@
+/*
+ * Copyright 2021-Present The Serverless Workflow Specification Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * oUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 import $RefParser from '@apidevtools/json-schema-ref-parser';
 import dtsGenerator, { JsonSchema as dtsGeneratorJsonSchema, parseSchema } from 'dtsgenerator';
 import { promises as fsPromises } from 'fs';
 import * as path from 'path';
 import rimraf from 'rimraf';
+import { fileHeader, readMeDisclaimer } from './consts';
 const { writeFile, mkdir } = fsPromises;
 const rimrafP = async (f: string): Promise<void> =>
   new Promise<void>((resolve, reject) =>
@@ -151,7 +169,9 @@ const mergeSchemas = (
  */
 const createValidatorsPaths = async (dest: string, known$Refs: Map<string, string>, baseUrl: string): Promise<void> => {
   try {
-    const validatorsPathsCode = `/**
+    const validatorsPathsCode =
+      fileHeader +
+      `/**
 * A map of type names and their corresponding schema
 */
 export const validatorsPaths: [string, string][] = [
@@ -168,11 +188,7 @@ ${Array.from(known$Refs)
     const destDir = path.dirname(dest);
     await rimrafP(destDir);
     await mkdir(destDir, { recursive: true });
-    await writeFile(
-      path.resolve(destDir, 'README.md'),
-      `# Auto generated notice
-This directory and its content has been generated automatically. Do not modify its content, it WILL be lost.`
-    );
+    await writeFile(path.resolve(destDir, 'README.md'), readMeDisclaimer);
     await writeFile(dest, validatorsPathsCode);
   } catch (ex) {
     return Promise.reject(ex);
@@ -227,13 +243,9 @@ const generate = async (source: string, dest: string, additionnalSchemas: string
     const destDir = path.dirname(dest);
     await rimrafP(destDir);
     await mkdir(destDir, { recursive: true });
-    await writeFile(
-      path.resolve(destDir, 'README.md'),
-      `# Auto generated notice
-This directory and its content has been generated automatically. Do not modify its content, it WILL be lost.`
-    );
-    await writeFile(dest, generatedTS);
-    await writeFile(path.resolve(destDir, 'index.ts'), "export * as Specification from './workflow';");
+    await writeFile(path.resolve(destDir, 'README.md'), readMeDisclaimer);
+    await writeFile(dest, fileHeader + generatedTS);
+    await writeFile(path.resolve(destDir, 'index.ts'), fileHeader + "export * as Specification from './workflow';");
     const validatorsDest = path.resolve(path.dirname(dest), '../validation/validators-paths.ts');
     const $id = $refParser.schema.$id;
     const baseUrl = path.dirname($id);

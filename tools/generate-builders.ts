@@ -1,6 +1,24 @@
+/*
+ * Copyright 2021-Present The Serverless Workflow Specification Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * oUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 import { promises as fsPromises } from 'fs';
 import * as path from 'path';
 import rimraf from 'rimraf';
+import { fileHeader, readMeDisclaimer } from './consts';
 const { readFile, writeFile, mkdir } = fsPromises;
 const rimrafP = async (f: string): Promise<void> =>
   new Promise<void>((resolve, reject) =>
@@ -57,6 +75,15 @@ const buildersExtensions: { [key: string]: BuilderExtension } = {
   Parallelstate: {
     preValidate: `\r\n    data.type = 'parallel';`,
   },
+  Subflowstate: {
+    preValidate: `\r\n    data.type = 'subflow';`,
+  },
+  Function: {
+    preValidate: `\r\n    data.type =  data.type || 'rest';`,
+  },
+  Eventdef: {
+    preValidate: `\r\n    data.kind =  data.kind || 'consumed';`,
+  },
 };
 
 /**
@@ -97,7 +124,9 @@ const createBuilder = async (destDir: string, dataType: string): Promise<void> =
   try {
     const camelType = toCamelCase(dataType);
     const extension = buildersExtensions[dataType];
-    const builderCode = `import { DefinedError } from 'ajv';
+    const builderCode =
+      fileHeader +
+      `import { DefinedError } from 'ajv';
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { validators } from '../validators';
@@ -107,7 +136,7 @@ import { validators } from '../validators';
  * @param {Specification.${dataType}} data The underlying object
  * @returns {Specification.${dataType}} The validated underlying object
  */
-export function ${camelType}Validator(data: Specification.${dataType}): (() => Specification.${dataType}) {
+function ${camelType}BuildingFn(data: Specification.${dataType}): (() => Specification.${dataType}) {
   return () => {${extension?.preValidate ? extension.preValidate : ''}
     const validate = validators.get('${dataType}');
     // TODO: ignore validation if no validator or throw ?
@@ -126,7 +155,7 @@ export function ${camelType}Validator(data: Specification.${dataType}): (() => S
  * @returns {Specification.${dataType}} A builder for \`Specification.${dataType}\`
  */
 export function ${camelType}Builder(): Builder<Specification.${dataType}> {
-  return builder<Specification.${dataType}>(${camelType}Validator);
+  return builder<Specification.${dataType}>(${camelType}BuildingFn);
 }`;
     const destFile = path.resolve(destDir, toKebabCase(camelType) + '-builder.ts');
     await writeFile(destFile, builderCode);
@@ -144,10 +173,9 @@ export function ${camelType}Builder(): Builder<Specification.${dataType}> {
  */
 const createIndex = async (destDir: string, types: string[]): Promise<void> => {
   try {
-    const indexCode: string = types.reduce(
-      (acc, t) => acc + `export * from './${toKebabCase(toCamelCase(t)) + '-builder'}';\r\n`,
-      ''
-    );
+    const indexCode: string =
+      fileHeader +
+      types.reduce((acc, t) => acc + `export * from './${toKebabCase(toCamelCase(t)) + '-builder'}';\r\n`, '');
     const indexFile = path.resolve(destDir, 'index.ts');
     await writeFile(indexFile, indexCode);
     return Promise.resolve();
@@ -166,11 +194,7 @@ const generate = async (source: string, destDir: string): Promise<void> => {
   try {
     await rimrafP(destDir);
     await mkdir(destDir, { recursive: true });
-    await writeFile(
-      path.resolve(destDir, 'README.md'),
-      `# Auto generated notice
-This directory and its content has been generated automatically. Do not modify its content, it WILL be lost.`
-    );
+    await writeFile(path.resolve(destDir, 'README.md'), readMeDisclaimer);
     const extractor: RegExp = /export \w* (\w*)/g;
     const definition: string = await readFile(source, 'utf-8');
     const types: string[] = [...definition.matchAll(extractor)].map(([, type]) => type);
