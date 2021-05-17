@@ -24,7 +24,7 @@ npm install && npm run update-code-base && npm run test
 
 
 ### Add as dependency to your project
-You can use [npm link](https://docs.npmjs.com/cli/v7/commands/npm-link) to add the `sdk-typescript` 
+You can use [npm link](https://docs.npmjs.com/cli/v7/commands/npm-link) to add the `@severlessworkflow/sdk-typescript` 
 as dependency in your project.
 
 - Clone the `sdk-typescript` project and build it:
@@ -34,17 +34,17 @@ cd sdk-typescript
 npm install && npm run build
 ```
 
-- Make the package visible globally to npm. Inside the `sdk-typescript` project folder run: 
+- Make the package visible globally to npm. Inside the `sdk-typescript\dist` project folder run: 
 ```sh
 npm link
 ```
 
 - Navigate to the folder/project in which you want to use the sdk, and run the following command: 
 ```sh
-npm link sdk-typescript
+npm link @severlessworkflow/sdk-typescript
 ```
 
-It will create a symbolic link from globally-installed `sdk-typescript` to `node_modules/` of the current folder.
+It will create a symbolic link from globally-installed `@severlessworkflow/sdk-typescript` to `node_modules/` of the current folder.
 
 
 ### How to use
@@ -52,6 +52,7 @@ It will create a symbolic link from globally-installed `sdk-typescript` to `node
 #### Create Workflow using builder API
 
 ```typescript
+import { workflowBuilder, injectstateBuilder, Specification } from '@severlessworkflow/sdk-typescript';
 
 const workflow: Specification.Workflow = workflowBuilder()
   .id("helloworld")
@@ -59,13 +60,14 @@ const workflow: Specification.Workflow = workflowBuilder()
   .name("Hello World Workflow")
   .description("Inject Hello World")
   .start("Hello State")
-  .states([injectstateBuilder()
-    .name("Hello State")
-    .data({
-        "result": "Hello World!"
-    })
-    .end(true)
-    .build()
+  .states([
+    injectstateBuilder()
+      .name("Hello State")
+      .data({
+          "result": "Hello World!"
+      })
+      .end(true)
+      .build()
   ])
   .build();
 ```
@@ -74,6 +76,8 @@ const workflow: Specification.Workflow = workflowBuilder()
 #### Create Workflow using object literals
 
 ```typescript
+import { Specification } from '@severlessworkflow/sdk-typescript';
+
 const workflow: Specification.Workflow = {
   id: 'helloworld',
   version: '1.0',
@@ -97,7 +101,9 @@ const workflow: Specification.Workflow = {
 #### Load a file JSON/YAML to a Workflow instance
 
 ```typescript
-    const workflow = WorkflowConverter.fromString(source)
+import { Specification, WorkflowConverter } from '@severlessworkflow/sdk-typescript';
+
+const workflow: Specification.Workflow = WorkflowConverter.fromString(source);
 ```
 Where `source` is a JSON or a YAML string.
 
@@ -107,19 +113,22 @@ Where `source` is a JSON or a YAML string.
 Having the following workflow instance:
 
 ```typescript
-const workflow = workflowBuilder()
+import { workflowBuilder, injectstateBuilder, Specification } from '@severlessworkflow/sdk-typescript';
+
+const workflow: Specification.Workflow = workflowBuilder()
   .id("helloworld")
   .version("1.0")
   .name("Hello World Workflow")
   .description("Inject Hello World")
   .start("Hello State")
-  .states([injectstateBuilder()
-    .name("Hello State")
-    .data({
-      "result": "Hello World!"
-    })
-    .end(true)
-    .build()
+  .states([
+    injectstateBuilder()
+      .name("Hello State")
+      .data({
+        "result": "Hello World!"
+      })
+      .end(true)
+      .build()
   ])
   .build();
 ```
@@ -128,11 +137,15 @@ You can convert it to its string representation in JSON or YAML format
 by using the static methods `toJson` or `toYaml` respectively:
 
 ```typescript
-    const workflowAsJson = WorkflowConverter.toJson(workflow);
+import { WorkflowConverter } from '@severlessworkflow/sdk-typescript';
+
+const workflowAsJson: string = WorkflowConverter.toJson(workflow);
 ```
 
 ```typescript
-    const workflowAsYaml = WorkflowConverter.toYaml(workflow);
+import { WorkflowConverter } from '@severlessworkflow/sdk-typescript';
+
+const workflowAsYaml: string = WorkflowConverter.toYaml(workflow);
 ```
 
 
@@ -145,8 +158,40 @@ The sdk provides a way to validate if a workflow object is compliant with the se
 - `validate(): boolean`
 
 ```typescript
-const workflowValidator = new WorkflowValidator(workflow);
+import { WorkflowValidator, Specification } from '@severlessworkflow/sdk-typescript';
+
+const workflow: Specification.Workflow = {
+  id: 'helloworld',
+  version: '1.0',
+  name: 'Hello World Workflow',
+  description: 'Inject Hello World',
+  start: 'Hello State',
+  states: [
+    {
+      type: 'inject',
+      name: 'Hello State',
+      end: true,
+      data: {
+        result: "Hello World!"
+      }
+    } as Specification.Injectstate
+  ]
+};
+const workflowValidator: WorkflowValidator = new WorkflowValidator(workflow);
 if (!workflowValidator.validate()) {
-  workflowValidator.validationErrors.forEach(error => console.error(error.message));
+  workflowValidator.errors.forEach(error => console.error(error.message));
+}
+```
+
+You can also validate parts of a workflow using `validators`:
+
+```typescript
+import { ValidateFunction } from 'ajv';
+import { validators, Specification } from '@severlessworkflow/sdk-typescript';
+
+const injectionState: Specification.Injectstate = workflow.states[0];
+const injectionStateValidator: ValidateFunction<Specification.Injectstate> = validators.get('Injectstate');
+if (!injectionStateValidator(injectionState)) {
+  injectionStateValidator.errors.forEach(error => console.error(error.message));
 }
 ```
