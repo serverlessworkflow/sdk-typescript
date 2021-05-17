@@ -133,9 +133,7 @@
             }
           },
           "additionalProperties": false,
-          "required": [
-            "expression"
-          ]
+          "required": ["expression"]
         }
       ]
     },
@@ -1666,7 +1664,8 @@
             }
           },
           "additionalProperties": false,
-          "required": []
+          "required": [
+          ]
         }
       ]
     },

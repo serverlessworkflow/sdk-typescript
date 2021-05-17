@@ -651,44 +651,6 @@ export type Eventstate =
        */
       compensatedBy?: string;
       metadata?: /* Metadata information */ Metadata;
-    }
-  | {
-      /**
-       * Unique State id
-       */
-      id?: string;
-      /**
-       * State name
-       */
-      name: string;
-      /**
-       * State type
-       */
-      type: 'event';
-      /**
-       * If true consuming one of the defined events causes its associated actions to be performed. If false all of the defined events must be consumed in order for actions to be performed
-       */
-      exclusive?: boolean;
-      /**
-       * Define the events to be consumed and optional actions to be performed
-       */
-      onEvents: Onevents[];
-      /**
-       * Time period to wait for incoming events (ISO 8601 format)
-       */
-      timeout?: string;
-      stateDataFilter?: Statedatafilter;
-      /**
-       * States error handling and retries definitions
-       */
-      onErrors?: Error[];
-      transition?: Transition;
-      end: End;
-      /**
-       * Unique Name of a workflow state which is responsible for compensation of this state
-       */
-      compensatedBy?: string;
-      metadata?: /* Metadata information */ Metadata;
     };
 export interface Exectimeout {
   /**
