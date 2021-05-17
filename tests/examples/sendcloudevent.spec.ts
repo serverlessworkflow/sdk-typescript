@@ -14,76 +14,58 @@
  * limitations under the License.
  *
  */
-import * as fs from "fs";
+import * as fs from 'fs';
 import {
-	actionBuilder,
-	eventdefBuilder,
-	foreachstateBuilder,
-	functionBuilder,
-	produceeventdefBuilder,
-	workflowBuilder,
+  actionBuilder,
+  eventdefBuilder,
+  foreachstateBuilder,
+  functionBuilder,
+  produceeventdefBuilder,
+  workflowBuilder,
 } from '../../src';
 
+describe('sendcloudevent workflow example', () => {
+  it('should generate Workflow object', function () {
+    const workflow = workflowBuilder()
+      .id('sendcloudeventonprovision')
+      .version('1.0')
+      .name('Send CloudEvent on provision completion')
+      .start('ProvisionOrdersState')
+      .events([
+        eventdefBuilder().name('provisioningCompleteEvent').type('provisionCompleteType').kind('produced').build(),
+      ])
+      .functions([
+        functionBuilder()
+          .name('provisionOrderFunction')
+          .operation('http://myapis.org/provisioning.json#doProvision')
+          .build(),
+      ])
+      .states([
+        foreachstateBuilder()
+          .name('ProvisionOrdersState')
+          .inputCollection('${ .orders }')
+          .iterationParam('singleorder')
+          .outputCollection('${ .provisionedOrders }')
+          .actions([
+            actionBuilder()
+              .functionRef({
+                refName: 'provisionOrderFunction',
+                arguments: {
+                  order: '${ .singleorder }',
+                },
+              })
+              .build(),
+          ])
+          .end({
+            produceEvents: [
+              produceeventdefBuilder().eventRef('provisioningCompleteEvent').data('${ .provisionedOrders }').build(),
+            ],
+          })
+          .build(),
+      ])
+      .build();
 
-describe("sendcloudevent workflow example", () => {
-	
-	
-	it('should generate Workflow object', function () {
-		
-		const workflow = workflowBuilder()
-			.id("sendcloudeventonprovision")
-			.version("1.0")
-			.name("Send CloudEvent on provision completion")
-			.start("ProvisionOrdersState")
-			.events([
-				eventdefBuilder()
-					.name("provisioningCompleteEvent")
-					.type("provisionCompleteType")
-					.kind("produced")
-					.build(),
-			
-			])
-			.functions([
-				functionBuilder()
-					.name("provisionOrderFunction")
-					.operation("http://myapis.org/provisioning.json#doProvision")
-					.build(),
-			])
-			.states([
-				foreachstateBuilder()
-					.name("ProvisionOrdersState")
-					.inputCollection("${ .orders }")
-					.iterationParam("singleorder")
-					.outputCollection("${ .provisionedOrders }")
-					.actions([
-						actionBuilder()
-							.functionRef({
-									refName: "provisionOrderFunction",
-									arguments: {
-										"order": "${ .singleorder }",
-									},
-								},
-							)
-							.build(),
-					])
-					.end({
-							produceEvents: ([
-								produceeventdefBuilder()
-									.eventRef("provisioningCompleteEvent")
-									.data("${ .provisionedOrders }")
-									.build(),
-							]),
-						},
-					)
-					.build(),
-			])
-			.build();
-		
-		const expected = JSON.parse(fs.readFileSync("./tests/examples/sendcloudevent.json")
-			.toLocaleString()) as any;
-		expect(workflow).toEqual(expected);
-		
-	});
-	
-	
+    const expected = JSON.parse(fs.readFileSync('./tests/examples/sendcloudevent.json').toLocaleString()) as any;
+    expect(workflow).toEqual(expected);
+  });
 });

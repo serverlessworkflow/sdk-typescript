@@ -151,7 +151,7 @@ export interface Actiondatafilter {
 /**
  * Branch Definition
  */
-export type Branch = /* Branch Definition */
+export type Branch /* Branch Definition */ =
   | {
       /**
        * Branch name
@@ -305,13 +305,13 @@ export interface Databasedswitch {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
-export type Datacondition = /* Switch state data based condition */
+export type Datacondition /* Switch state data based condition */ =
   | Transitiondatacondition
   | /* Switch state data based condition */ Enddatacondition;
 /**
  * Default definition. Can be either a transition or end definition
  */
-export type Defaultdef = /* Default definition. Can be either a transition or end definition */
+export type Defaultdef /* Default definition. Can be either a transition or end definition */ =
   | {
       transition: Transition;
       end?: End;
@@ -501,7 +501,7 @@ export interface Eventbasedswitch {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
-export type Eventcondition = /* Switch state data event condition */
+export type Eventcondition /* Switch state data event condition */ =
   | Transitioneventcondition
   | /* Switch state data event condition */ Enddeventcondition;
 export interface Eventdatafilter {
@@ -576,120 +576,120 @@ export type Events = string /* uri */ | [Eventdef, ...Eventdef[]];
  */
 export type Eventstate =
   /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */
-    | {
-        /**
-         * Unique State id
-         */
-        id?: string;
-        /**
-         * State name
-         */
-        name: string;
-        /**
-         * State type
-         */
-        type: 'event';
-        /**
-         * If true consuming one of the defined events causes its associated actions to be performed. If false all of the defined events must be consumed in order for actions to be performed
-         */
-        exclusive?: boolean;
-        /**
-         * Define the events to be consumed and optional actions to be performed
-         */
-        onEvents: Onevents[];
-        /**
-         * Time period to wait for incoming events (ISO 8601 format)
-         */
-        timeout?: string;
-        stateDataFilter?: Statedatafilter;
-        /**
-         * States error handling and retries definitions
-         */
-        onErrors?: Error[];
-        transition?: Transition;
-        end: End;
-        /**
-         * Unique Name of a workflow state which is responsible for compensation of this state
-         */
-        compensatedBy?: string;
-        metadata?: /* Metadata information */ Metadata;
-      }
-    | {
-        /**
-         * Unique State id
-         */
-        id?: string;
-        /**
-         * State name
-         */
-        name: string;
-        /**
-         * State type
-         */
-        type: 'event';
-        /**
-         * If true consuming one of the defined events causes its associated actions to be performed. If false all of the defined events must be consumed in order for actions to be performed
-         */
-        exclusive?: boolean;
-        /**
-         * Define the events to be consumed and optional actions to be performed
-         */
-        onEvents: Onevents[];
-        /**
-         * Time period to wait for incoming events (ISO 8601 format)
-         */
-        timeout?: string;
-        stateDataFilter?: Statedatafilter;
-        /**
-         * States error handling and retries definitions
-         */
-        onErrors?: Error[];
-        transition: Transition;
-        end?: End;
-        /**
-         * Unique Name of a workflow state which is responsible for compensation of this state
-         */
-        compensatedBy?: string;
-        metadata?: /* Metadata information */ Metadata;
-      }
-    | {
-        /**
-         * Unique State id
-         */
-        id?: string;
-        /**
-         * State name
-         */
-        name: string;
-        /**
-         * State type
-         */
-        type: 'event';
-        /**
-         * If true consuming one of the defined events causes its associated actions to be performed. If false all of the defined events must be consumed in order for actions to be performed
-         */
-        exclusive?: boolean;
-        /**
-         * Define the events to be consumed and optional actions to be performed
-         */
-        onEvents: Onevents[];
-        /**
-         * Time period to wait for incoming events (ISO 8601 format)
-         */
-        timeout?: string;
-        stateDataFilter?: Statedatafilter;
-        /**
-         * States error handling and retries definitions
-         */
-        onErrors?: Error[];
-        transition?: Transition;
-        end: End;
-        /**
-         * Unique Name of a workflow state which is responsible for compensation of this state
-         */
-        compensatedBy?: string;
-        metadata?: /* Metadata information */ Metadata;
-      };
+  | {
+      /**
+       * Unique State id
+       */
+      id?: string;
+      /**
+       * State name
+       */
+      name: string;
+      /**
+       * State type
+       */
+      type: 'event';
+      /**
+       * If true consuming one of the defined events causes its associated actions to be performed. If false all of the defined events must be consumed in order for actions to be performed
+       */
+      exclusive?: boolean;
+      /**
+       * Define the events to be consumed and optional actions to be performed
+       */
+      onEvents: Onevents[];
+      /**
+       * Time period to wait for incoming events (ISO 8601 format)
+       */
+      timeout?: string;
+      stateDataFilter?: Statedatafilter;
+      /**
+       * States error handling and retries definitions
+       */
+      onErrors?: Error[];
+      transition?: Transition;
+      end: End;
+      /**
+       * Unique Name of a workflow state which is responsible for compensation of this state
+       */
+      compensatedBy?: string;
+      metadata?: /* Metadata information */ Metadata;
+    }
+  | {
+      /**
+       * Unique State id
+       */
+      id?: string;
+      /**
+       * State name
+       */
+      name: string;
+      /**
+       * State type
+       */
+      type: 'event';
+      /**
+       * If true consuming one of the defined events causes its associated actions to be performed. If false all of the defined events must be consumed in order for actions to be performed
+       */
+      exclusive?: boolean;
+      /**
+       * Define the events to be consumed and optional actions to be performed
+       */
+      onEvents: Onevents[];
+      /**
+       * Time period to wait for incoming events (ISO 8601 format)
+       */
+      timeout?: string;
+      stateDataFilter?: Statedatafilter;
+      /**
+       * States error handling and retries definitions
+       */
+      onErrors?: Error[];
+      transition: Transition;
+      end?: End;
+      /**
+       * Unique Name of a workflow state which is responsible for compensation of this state
+       */
+      compensatedBy?: string;
+      metadata?: /* Metadata information */ Metadata;
+    }
+  | {
+      /**
+       * Unique State id
+       */
+      id?: string;
+      /**
+       * State name
+       */
+      name: string;
+      /**
+       * State type
+       */
+      type: 'event';
+      /**
+       * If true consuming one of the defined events causes its associated actions to be performed. If false all of the defined events must be consumed in order for actions to be performed
+       */
+      exclusive?: boolean;
+      /**
+       * Define the events to be consumed and optional actions to be performed
+       */
+      onEvents: Onevents[];
+      /**
+       * Time period to wait for incoming events (ISO 8601 format)
+       */
+      timeout?: string;
+      stateDataFilter?: Statedatafilter;
+      /**
+       * States error handling and retries definitions
+       */
+      onErrors?: Error[];
+      transition?: Transition;
+      end: End;
+      /**
+       * Unique Name of a workflow state which is responsible for compensation of this state
+       */
+      compensatedBy?: string;
+      metadata?: /* Metadata information */ Metadata;
+    };
 export interface Exectimeout {
   /**
    * Timeout duration (ISO 8601 duration format)
@@ -1135,7 +1135,7 @@ export interface Subflowstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
-export type Switchstate = /* Permits transitions to other states based on data conditions */
+export type Switchstate /* Permits transitions to other states based on data conditions */ =
   | Databasedswitch
   | /* Permits transitions to other states based on events */ Eventbasedswitch;
 export type Transition =

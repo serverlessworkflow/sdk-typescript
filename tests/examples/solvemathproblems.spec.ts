@@ -14,59 +14,52 @@
  * limitations under the License.
  *
  */
-import * as fs from "fs";
-import {actionBuilder, foreachstateBuilder, functionBuilder, statedatafilterBuilder, workflowBuilder} from '../../src';
+import * as fs from 'fs';
+import {
+  actionBuilder,
+  foreachstateBuilder,
+  functionBuilder,
+  statedatafilterBuilder,
+  workflowBuilder,
+} from '../../src';
 
+describe('solvemathproblems workflow example', () => {
+  it('should generate Workflow object', function () {
+    const workflow = workflowBuilder()
+      .id('solvemathproblems')
+      .version('1.0')
+      .name('Solve Math Problems Workflow')
+      .description('Solve math problems')
+      .start('Solve')
+      .functions([
+        functionBuilder()
+          .name('solveMathExpressionFunction')
+          .operation('http://myapis.org/mapthapis.json#solveExpression')
+          .build(),
+      ])
+      .states([
+        foreachstateBuilder()
+          .name('Solve')
+          .inputCollection('${ .expressions }')
+          .iterationParam('singleexpression')
+          .outputCollection('${ .results }')
+          .actions([
+            actionBuilder()
+              .functionRef({
+                refName: 'solveMathExpressionFunction',
+                arguments: {
+                  expression: '${ .singleexpression }',
+                },
+              })
+              .build(),
+          ])
+          .stateDataFilter(statedatafilterBuilder().output('${ .results }').build())
+          .end(true)
+          .build(),
+      ])
+      .build();
 
-describe("solvemathproblems workflow example", () => {
-	
-	
-	it('should generate Workflow object', function () {
-		
-		const workflow = workflowBuilder()
-			.id("solvemathproblems")
-			.version("1.0")
-			.name("Solve Math Problems Workflow")
-			.description("Solve math problems")
-			.start("Solve")
-			.functions([
-				functionBuilder()
-					.name("solveMathExpressionFunction")
-					.operation("http://myapis.org/mapthapis.json#solveExpression")
-					.build(),
-			])
-			.states([
-				foreachstateBuilder()
-					.name("Solve")
-					.inputCollection("${ .expressions }")
-					.iterationParam("singleexpression")
-					.outputCollection("${ .results }")
-					.actions([
-						actionBuilder()
-							.functionRef({
-								refName: "solveMathExpressionFunction",
-								arguments: {
-									"expression": "${ .singleexpression }",
-								},
-							})
-							.build(),
-					])
-					.stateDataFilter(
-						statedatafilterBuilder()
-							.output("${ .results }")
-							.build(),
-					)
-					.end(true)
-					.build(),
-			])
-			.build();
-		
-		
-		const expected = JSON.parse(fs.readFileSync("./tests/examples/solvemathproblems.json")
-			.toLocaleString()) as any;
-		expect(workflow).toEqual(expected);
-		
-	});
-	
-	
+    const expected = JSON.parse(fs.readFileSync('./tests/examples/solvemathproblems.json').toLocaleString()) as any;
+    expect(workflow).toEqual(expected);
+  });
 });

@@ -15,45 +15,30 @@
  *
  */
 import * as fs from 'fs';
-import {branchBuilder, parallelstateBuilder, workflowBuilder} from '../../src';
+import { branchBuilder, parallelstateBuilder, workflowBuilder } from '../../src';
 
+describe('parallel workflow example', () => {
+  it('should generate Workflow object', function () {
+    const workflow = workflowBuilder()
+      .id('parallelexec')
+      .version('1.0')
+      .name('Parallel Execution Workflow')
+      .description('Executes two branches in parallel')
+      .start('ParallelExec')
+      .states([
+        parallelstateBuilder()
+          .name('ParallelExec')
+          .completionType('and')
+          .branches([
+            branchBuilder().name('ShortDelayBranch').workflowId('shortdelayworkflowid').build(),
+            branchBuilder().name('LongDelayBranch').workflowId('longdelayworkflowid').build(),
+          ])
+          .end(true)
+          .build(),
+      ])
+      .build();
 
-describe("parallel workflow example", () => {
-	
-	
-	it('should generate Workflow object', function () {
-		
-		const workflow = workflowBuilder()
-			.id("parallelexec")
-			.version("1.0")
-			.name("Parallel Execution Workflow")
-			.description("Executes two branches in parallel")
-			.start("ParallelExec")
-			.states([
-				parallelstateBuilder()
-					.name("ParallelExec")
-					.completionType("and")
-					.branches([
-						branchBuilder()
-							.name("ShortDelayBranch")
-							.workflowId("shortdelayworkflowid")
-							.build(),
-						branchBuilder()
-							.name("LongDelayBranch")
-							.workflowId("longdelayworkflowid")
-							.build(),
-					])
-					.end(true)
-					.build(),
-			])
-			.build();
-		
-		
-		const expected = JSON.parse(fs.readFileSync("./tests/examples/parallel.json")
-			.toLocaleString()) as any;
-		expect(workflow).toEqual(expected);
-		
-	});
-	
-	
+    const expected = JSON.parse(fs.readFileSync('./tests/examples/parallel.json').toLocaleString()) as any;
+    expect(workflow).toEqual(expected);
+  });
 });

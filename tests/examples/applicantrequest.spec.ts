@@ -14,79 +14,65 @@
  * limitations under the License.
  *
  */
-import * as fs from "fs";
+import * as fs from 'fs';
 import {
-	actionBuilder,
-	databasedswitchBuilder,
-	defaultdefBuilder,
-	functionBuilder,
-	operationstateBuilder,
-	subflowstateBuilder,
-	transitiondataconditionBuilder,
-	workflowBuilder,
+  actionBuilder,
+  databasedswitchBuilder,
+  defaultdefBuilder,
+  functionBuilder,
+  operationstateBuilder,
+  subflowstateBuilder,
+  transitiondataconditionBuilder,
+  workflowBuilder,
 } from '../../src';
 
+describe('applicationrequest workflow example', () => {
+  it('should generate Workflow object', function () {
+    const workflow = workflowBuilder()
+      .id('applicantrequest')
+      .version('1.0')
+      .name('Applicant Request Decision Workflow')
+      .description('Determine if applicant request is valid')
+      .start('CheckApplication')
+      .functions([
+        functionBuilder()
+          .name('sendRejectionEmailFunction')
+          .operation('http://myapis.org/applicationapi.json#emailRejection')
+          .build(),
+      ])
+      .states([
+        databasedswitchBuilder()
+          .name('CheckApplication')
+          .dataConditions([
+            transitiondataconditionBuilder()
+              .condition('${ .applicants | .age >= 18 }')
+              .transition('StartApplication')
+              .build(),
+            transitiondataconditionBuilder()
+              .condition('${ .applicants | .age < 18 }')
+              .transition('RejectApplication')
+              .build(),
+          ])
+          .default(defaultdefBuilder().transition('RejectApplication').build())
+          .build(),
+        subflowstateBuilder().name('StartApplication').workflowId('startApplicationWorkflowId').end(true).build(),
+        operationstateBuilder()
+          .name('RejectApplication')
+          .actionMode('sequential')
+          .end(true)
+          .actions([
+            actionBuilder()
+              .functionRef({
+                refName: 'sendRejectionEmailFunction',
+                arguments: { applicant: '${ .applicant }' },
+              })
+              .build(),
+          ])
+          .build(),
+      ])
+      .build();
 
-describe("applicationrequest workflow example", () => {
-	
-	
-	it('should generate Workflow object', function () {
-		
-		const workflow = workflowBuilder()
-			.id("applicantrequest")
-			.version("1.0")
-			.name("Applicant Request Decision Workflow")
-			.description("Determine if applicant request is valid")
-			.start("CheckApplication")
-			.functions([functionBuilder()
-				.name("sendRejectionEmailFunction")
-				.operation("http://myapis.org/applicationapi.json#emailRejection")
-				.build()])
-			.states([
-				databasedswitchBuilder()
-					.name("CheckApplication")
-					.dataConditions(
-						[transitiondataconditionBuilder()
-							.condition("${ .applicants | .age >= 18 }")
-							.transition("StartApplication")
-							.build(),
-							transitiondataconditionBuilder()
-								.condition("${ .applicants | .age < 18 }")
-								.transition("RejectApplication")
-								.build()])
-					.default(defaultdefBuilder()
-						.transition(
-							"RejectApplication",
-						).build())
-					.build(),
-				subflowstateBuilder().name("StartApplication")
-					.workflowId("startApplicationWorkflowId")
-					.end(true)
-					.build(),
-				operationstateBuilder()
-					.name("RejectApplication")
-					.actionMode("sequential")
-					.end(true)
-					.actions([
-						actionBuilder().functionRef(
-							{
-								refName: "sendRejectionEmailFunction",
-								arguments: {applicant: '${ .applicant }'},
-								
-							},
-						)
-							.build(),
-					])
-					.build(),
-			])
-			.build();
-		
-		
-		const expected = JSON.parse(fs.readFileSync("./tests/examples/applicantrequest.json")
-			.toLocaleString()) as any;
-		expect(workflow).toEqual(expected);
-		
-	});
-	
-	
+    const expected = JSON.parse(fs.readFileSync('./tests/examples/applicantrequest.json').toLocaleString()) as any;
+    expect(workflow).toEqual(expected);
+  });
 });
