@@ -29,7 +29,7 @@
     "verify-publish-directory": "node -e 'if (!process.cwd().endsWith(\"dist\")) { console.error(\"Packaging/Publishing should be done from ./dist/\"); process.exitCode = 1; } process.exit();'",
     "prepack": "npm run verify-publish-directory",
     "prepublishOnly": "npm run verify-publish-directory",
-    "prepare": "husky install"
+    "prepublish": "husky install"
   },
   "dependencies": {
     "ajv": "^8.1.0",
@@ -38,7 +38,9 @@
   "devDependencies": {
     "@apidevtools/json-schema-ref-parser": "^9.0.7",
     "@dtsgenerator/replace-namespace": "^1.4.1",
+    "@rollup/plugin-commonjs": "^19.0.0",
     "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.0.0",
     "@types/jasmine": "^3.6.10",
     "@types/js-yaml": "^4.0.1",
     "@types/node-fetch": "^2.5.10",
@@ -57,8 +59,6 @@
     "prettier": "^2.3.0",
     "rimraf": "^3.0.2",
     "rollup": "^2.47.0",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.30.0",
