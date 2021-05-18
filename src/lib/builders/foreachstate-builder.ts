@@ -31,7 +31,7 @@ function foreachstateBuildingFn(data: Specification.Foreachstate): () => Specifi
 
     //FIXME https://github.com/serverlessworkflow/sdk-typescript/issues/95
 
-    data.usedForCompensation = false;
+    data.usedForCompensation = data.usedForCompensation || false;
     const validate = validators.get('Foreachstate');
     // TODO: ignore validation if no validator or throw ?
     if (!validate) return data;

@@ -66,7 +66,7 @@ const buildersExtensions: { [key: string]: BuilderExtension } = {
   Foreachstate: {
     preValidate: `\r\n    data.type = 'foreach';
                   \r\n    //FIXME https://github.com/serverlessworkflow/sdk-typescript/issues/95
-                  \r\n    data.usedForCompensation = false;`,
+                  \r\n    data.usedForCompensation = data.usedForCompensation || false;`,
   },
   Injectstate: {
     preValidate: `\r\n    data.type = 'inject';`,
