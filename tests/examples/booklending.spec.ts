@@ -143,7 +143,7 @@ describe('booklending workflow example', () => {
       .functions('file://books/lending/functions.json')
       .events('file://books/lending/events.json');
 
-    const expected = JSON.parse(fs.readFileSync('./tests/examples/booklending.json').toLocaleString()) as any;
+    const expected = JSON.parse(fs.readFileSync('./tests/examples/booklending.json', 'utf8'));
     expect(workflow).toEqual(expected);
   });
 });

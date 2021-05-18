@@ -59,7 +59,7 @@ describe('solvemathproblems workflow example', () => {
       ])
       .build();
 
-    const expected = JSON.parse(fs.readFileSync('./tests/examples/solvemathproblems.json').toLocaleString()) as any;
+    const expected = JSON.parse(fs.readFileSync('./tests/examples/solvemathproblems.json', 'utf8'));
     expect(workflow).toEqual(expected);
   });
 });
