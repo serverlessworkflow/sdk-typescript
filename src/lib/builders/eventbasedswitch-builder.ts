@@ -28,6 +28,7 @@ import { validators } from '../validators';
 function eventbasedswitchBuildingFn(data: Specification.Eventbasedswitch): () => Specification.Eventbasedswitch {
   return () => {
     data.type = 'switch';
+    data.usedForCompensation = data.usedForCompensation || false;
     const validate = validators.get('Eventbasedswitch');
     // TODO: ignore validation if no validator or throw ?
     if (!validate) return data;

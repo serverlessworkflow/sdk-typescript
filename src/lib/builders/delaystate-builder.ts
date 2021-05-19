@@ -28,6 +28,7 @@ import { validators } from '../validators';
 function delaystateBuildingFn(data: Specification.Delaystate): () => Specification.Delaystate {
   return () => {
     data.type = 'delay';
+    data.usedForCompensation = data.usedForCompensation || false;
     const validate = validators.get('Delaystate');
     // TODO: ignore validation if no validator or throw ?
     if (!validate) return data;

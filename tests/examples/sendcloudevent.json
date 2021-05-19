@@ -44,5 +44,7 @@
         ]
       }
     }
-  ]
+  ],
+  "expressionLang": "jq",
+  "keepActive": false
 }

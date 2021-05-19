@@ -53,19 +53,23 @@
       "stateDataFilter": {
         "output": "${ .jobuid }"
       },
-      "transition": "WaitForCompletion"
+      "transition": "WaitForCompletion",
+      "usedForCompensation": false
     },
     {
       "name": "SubmitError",
       "type": "subflow",
       "workflowId": "handleJobSubmissionErrorWorkflow",
-      "end": true
+      "end": true,
+      "usedForCompensation": false,
+      "waitForCompletion": false
     },
     {
       "name": "WaitForCompletion",
       "type": "delay",
       "timeDelay": "PT5S",
-      "transition": "GetJobStatus"
+      "transition": "GetJobStatus",
+      "usedForCompensation": false
     },
     {
       "name": "GetJobStatus",
@@ -87,7 +91,8 @@
       "stateDataFilter": {
         "output": "${ .jobstatus }"
       },
-      "transition": "DetermineCompletion"
+      "transition": "DetermineCompletion",
+      "usedForCompensation": false
     },
     {
       "name": "DetermineCompletion",
@@ -104,7 +109,8 @@
       ],
       "default": {
         "transition": "WaitForCompletion"
-      }
+      },
+      "usedForCompensation": false
     },
     {
       "name": "JobSucceeded",
@@ -120,7 +126,8 @@
           }
         }
       ],
-      "end": true
+      "end": true,
+      "usedForCompensation": false
     },
     {
       "name": "JobFailed",
@@ -136,7 +143,10 @@
           }
         }
       ],
-      "end": true
+      "end": true,
+      "usedForCompensation": false
     }
-  ]
+  ],
+  "expressionLang": "jq",
+  "keepActive": false
 }

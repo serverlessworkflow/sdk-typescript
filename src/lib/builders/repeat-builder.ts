@@ -27,6 +27,8 @@ import { validators } from '../validators';
  */
 function repeatBuildingFn(data: Specification.Repeat): () => Specification.Repeat {
   return () => {
+    if (data.checkBefore == null) data.checkBefore = true;
+    data.continueOnError = data.continueOnError || false;
     const validate = validators.get('Repeat');
     // TODO: ignore validation if no validator or throw ?
     if (!validate) return data;

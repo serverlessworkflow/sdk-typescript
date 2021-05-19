@@ -27,6 +27,7 @@ import { validators } from '../validators';
  */
 function exectimeoutBuildingFn(data: Specification.Exectimeout): () => Specification.Exectimeout {
   return () => {
+    data.interrupt = data.interrupt || false;
     const validate = validators.get('Exectimeout');
     // TODO: ignore validation if no validator or throw ?
     if (!validate) return data;

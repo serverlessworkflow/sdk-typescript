@@ -48,43 +48,78 @@ interface BuilderExtension {
 }
 /** Stores additional code that needs to be added to builders depending on their type */
 const buildersExtensions: { [key: string]: BuilderExtension } = {
+  Workflow: {
+    preValidate: `\n    data.expressionLang = data.expressionLang || 'jq';
+                        data.keepActive =  data.keepActive || false;`,
+  },
+  Exectimeout: {
+    preValidate: `\n    data.interrupt = data.interrupt || false;`,
+  },
+  Transition: {
+    preValidate: `\n    if (typeof data !== typeof '') (data as any).compensate = (data as any).compensate || false;`,
+  },
+  Onevents: {
+    preValidate: `\n    data.actionMode = data.actionMode || 'sequential';`,
+  },
   Callbackstate: {
-    preValidate: `\r\n    data.type = 'callback';`,
+    preValidate: `\n    data.type = 'callback';
+                        data.usedForCompensation = data.usedForCompensation || false;`,
   },
   Databasedswitch: {
-    preValidate: `\r\n    data.type = 'switch';`,
+    preValidate: `\n    data.type = 'switch';
+                        data.usedForCompensation = data.usedForCompensation || false;`,
   },
   Delaystate: {
-    preValidate: `\r\n    data.type = 'delay';`,
+    preValidate: `\n    data.type = 'delay';
+                        data.usedForCompensation = data.usedForCompensation || false;`,
   },
   Eventbasedswitch: {
-    preValidate: `\r\n    data.type = 'switch';`,
+    preValidate: `\n    data.type = 'switch';
+                        data.usedForCompensation = data.usedForCompensation || false;`,
   },
   Eventstate: {
-    preValidate: `\r\n    data.type = 'event';`,
+    preValidate: `\n    data.type = 'event';
+                        if (data.exclusive == null) data.exclusive = true;`,
   },
   Foreachstate: {
-    preValidate: `\r\n    data.type = 'foreach';
-                  \r\n    //FIXME https://github.com/serverlessworkflow/sdk-typescript/issues/95
-                  \r\n    data.usedForCompensation = data.usedForCompensation || false;`,
+    preValidate: `\n    data.type = 'foreach';
+                        //FIXME https://github.com/serverlessworkflow/sdk-typescript/issues/95
+                        data.usedForCompensation = data.usedForCompensation || false;`,
   },
   Injectstate: {
-    preValidate: `\r\n    data.type = 'inject';`,
+    preValidate: `\n    data.type = 'inject';
+                        data.usedForCompensation = data.usedForCompensation || false;`,
   },
   Operationstate: {
-    preValidate: `\r\n    data.type = 'operation';`,
+    preValidate: `\n    data.type = 'operation';
+                        data.actionMode = data.actionMode || 'sequential';
+                        data.usedForCompensation = data.usedForCompensation || false;`,
   },
   Parallelstate: {
-    preValidate: `\r\n    data.type = 'parallel';`,
+    preValidate: `\n    data.type = 'parallel';
+                        data.completionType = data.completionType || 'and';
+                        data.usedForCompensation = data.usedForCompensation || false;`,
   },
   Subflowstate: {
-    preValidate: `\r\n    data.type = 'subflow';`,
+    preValidate: `\n    data.type = 'subflow';
+                        data.waitForCompletion = data.waitForCompletion || false;
+                        data.usedForCompensation = data.usedForCompensation || false;`,
   },
   Function: {
-    preValidate: `\r\n    data.type =  data.type || 'rest';`,
+    preValidate: `\n    data.type =  data.type || 'rest';`,
   },
   Eventdef: {
-    preValidate: `\r\n    data.kind =  data.kind || 'consumed';`,
+    preValidate: `\n    data.kind =  data.kind || 'consumed';`,
+  },
+  End: {
+    preValidate: `\n    if (typeof data !== typeof true) {
+                          (data as any).terminate = (data as any).terminate || false;
+                          (data as any).compensate = (data as any).compensate || false;
+                        }`,
+  },
+  Repeat: {
+    preValidate: `\n    if (data.checkBefore == null) data.checkBefore = true;
+                        data.continueOnError = data.continueOnError || false;`,
   },
 };
 
@@ -177,7 +212,7 @@ const createIndex = async (destDir: string, types: string[]): Promise<void> => {
   try {
     const indexCode: string =
       fileHeader +
-      types.reduce((acc, t) => acc + `export * from './${toKebabCase(toCamelCase(t)) + '-builder'}';\r\n`, '');
+      types.reduce((acc, t) => acc + `export * from './${toKebabCase(toCamelCase(t)) + '-builder'}';\n`, '');
     const indexFile = path.resolve(destDir, 'index.ts');
     await writeFile(indexFile, indexCode);
     return Promise.resolve();

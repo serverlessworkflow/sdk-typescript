@@ -87,20 +87,7 @@ export type Action =
        * Unique action definition name
        */
       name?: string;
-      functionRef:
-        | string
-        | {
-            /**
-             * Name of the referenced function
-             */
-            refName: string;
-            /**
-             * Function arguments
-             */
-            arguments?: {
-              [key: string]: any;
-            };
-          };
+      functionRef: Functionref;
       eventRef?: /* Event References */ Eventref;
       /**
        * Time period to wait for function execution to complete
@@ -113,20 +100,7 @@ export type Action =
        * Unique action definition name
        */
       name?: string;
-      functionRef?:
-        | string
-        | {
-            /**
-             * Name of the referenced function
-             */
-            refName: string;
-            /**
-             * Function arguments
-             */
-            arguments?: {
-              [key: string]: any;
-            };
-          };
+      functionRef?: Functionref;
       eventRef: /* Event References */ Eventref;
       /**
        * Time period to wait for function execution to complete
@@ -746,6 +720,20 @@ export interface Function {
    */
   type?: 'rest' | 'rpc' | 'expression';
 }
+export type Functionref =
+  | string
+  | {
+      /**
+       * Name of the referenced function
+       */
+      refName: string;
+      /**
+       * Function arguments/inputs
+       */
+      arguments?: {
+        [key: string]: any;
+      };
+    };
 export type Functions = string /* uri */ | [Function, ...Function[]];
 /**
  * Inject static data into state data. Does not perform any actions

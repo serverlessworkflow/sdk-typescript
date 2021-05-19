@@ -54,8 +54,11 @@ describe('workflow-converter fromSource', () => {
               result: 'Hello World!',
             },
             end: true,
+            usedForCompensation: false,
           },
         ],
+        expressionLang: 'jq',
+        keepActive: false,
       });
     });
   });
@@ -101,9 +104,12 @@ describe('workflow-converter', () => {
         '"result":"Hello World!"' +
         '},' +
         '"end":true,' +
-        '"type":"inject"' +
+        '"type":"inject",' +
+        '"usedForCompensation":false' +
         '}' +
-        ']' +
+        '],' +
+        '"expressionLang":"jq",' +
+        '"keepActive":false' +
         '}'
     );
   });
@@ -138,7 +144,10 @@ describe('workflow-converter', () => {
         '    data:\n' +
         '      result: Hello World!\n' +
         '    end: true\n' +
-        '    type: inject\n'
+        '    type: inject\n' +
+        '    usedForCompensation: false\n' +
+        'expressionLang: jq\n' +
+        'keepActive: false\n'
     );
   });
 });

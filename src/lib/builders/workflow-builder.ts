@@ -27,6 +27,8 @@ import { validators } from '../validators';
  */
 function workflowBuildingFn(data: Specification.Workflow): () => Specification.Workflow {
   return () => {
+    data.expressionLang = data.expressionLang || 'jq';
+    data.keepActive = data.keepActive || false;
     const validate = validators.get('Workflow');
     // TODO: ignore validation if no validator or throw ?
     if (!validate) return data;

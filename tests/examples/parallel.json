@@ -19,7 +19,10 @@
           "workflowId": "longdelayworkflowid"
         }
       ],
-      "end": true
+      "end": true,
+      "usedForCompensation": false
     }
-  ]
+  ],
+  "expressionLang": "jq",
+  "keepActive": false
 }

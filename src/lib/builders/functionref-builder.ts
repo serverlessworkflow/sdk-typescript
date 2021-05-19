@@ -22,28 +22,27 @@ import { validators } from '../validators';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Onevents} data The underlying object
- * @returns {Specification.Onevents} The validated underlying object
+ * @param {Specification.Functionref} data The underlying object
+ * @returns {Specification.Functionref} The validated underlying object
  */
-function oneventsBuildingFn(data: Specification.Onevents): () => Specification.Onevents {
+function functionrefBuildingFn(data: Specification.Functionref): () => Specification.Functionref {
   return () => {
-    data.actionMode = data.actionMode || 'sequential';
-    const validate = validators.get('Onevents');
+    const validate = validators.get('Functionref');
     // TODO: ignore validation if no validator or throw ?
     if (!validate) return data;
     if (!validate(data)) {
       console.warn(validate.errors);
       const firstError: DefinedError = (validate.errors as DefinedError[])[0];
-      throw new Error(`Onevents is invalid: ${firstError.message}`);
+      throw new Error(`Functionref is invalid: ${firstError.message}`);
     }
     return data;
   };
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.Onevents`
- * @returns {Specification.Onevents} A builder for `Specification.Onevents`
+ * A factory to create a builder proxy for the type `Specification.Functionref`
+ * @returns {Specification.Functionref} A builder for `Specification.Functionref`
  */
-export function oneventsBuilder(): Builder<Specification.Onevents> {
-  return builder<Specification.Onevents>(oneventsBuildingFn);
+export function functionrefBuilder(): Builder<Specification.Functionref> {
+  return builder<Specification.Functionref>(functionrefBuildingFn);
 }

@@ -28,6 +28,7 @@ import { validators } from '../validators';
 function databasedswitchBuildingFn(data: Specification.Databasedswitch): () => Specification.Databasedswitch {
   return () => {
     data.type = 'switch';
+    data.usedForCompensation = data.usedForCompensation || false;
     const validate = validators.get('Databasedswitch');
     // TODO: ignore validation if no validator or throw ?
     if (!validate) return data;

@@ -28,6 +28,7 @@ import { validators } from '../validators';
 function injectstateBuildingFn(data: Specification.Injectstate): () => Specification.Injectstate {
   return () => {
     data.type = 'inject';
+    data.usedForCompensation = data.usedForCompensation || false;
     const validate = validators.get('Injectstate');
     // TODO: ignore validation if no validator or throw ?
     if (!validate) return data;

@@ -28,6 +28,8 @@ import { validators } from '../validators';
 function operationstateBuildingFn(data: Specification.Operationstate): () => Specification.Operationstate {
   return () => {
     data.type = 'operation';
+    data.actionMode = data.actionMode || 'sequential';
+    data.usedForCompensation = data.usedForCompensation || false;
     const validate = validators.get('Operationstate');
     // TODO: ignore validation if no validator or throw ?
     if (!validate) return data;

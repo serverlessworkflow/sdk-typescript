@@ -28,6 +28,8 @@ import { validators } from '../validators';
 function subflowstateBuildingFn(data: Specification.Subflowstate): () => Specification.Subflowstate {
   return () => {
     data.type = 'subflow';
+    data.waitForCompletion = data.waitForCompletion || false;
+    data.usedForCompensation = data.usedForCompensation || false;
     const validate = validators.get('Subflowstate');
     // TODO: ignore validation if no validator or throw ?
     if (!validate) return data;

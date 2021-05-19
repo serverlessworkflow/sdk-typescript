@@ -28,6 +28,7 @@ import { validators } from '../validators';
 function eventstateBuildingFn(data: Specification.Eventstate): () => Specification.Eventstate {
   return () => {
     data.type = 'event';
+    if (data.exclusive == null) data.exclusive = true;
     const validate = validators.get('Eventstate');
     // TODO: ignore validation if no validator or throw ?
     if (!validate) return data;

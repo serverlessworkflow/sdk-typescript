@@ -28,6 +28,8 @@ import { validators } from '../validators';
 function parallelstateBuildingFn(data: Specification.Parallelstate): () => Specification.Parallelstate {
   return () => {
     data.type = 'parallel';
+    data.completionType = data.completionType || 'and';
+    data.usedForCompensation = data.usedForCompensation || false;
     const validate = validators.get('Parallelstate');
     // TODO: ignore validation if no validator or throw ?
     if (!validate) return data;

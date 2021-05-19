@@ -40,6 +40,7 @@ export * from './eventstate-builder';
 export * from './exectimeout-builder';
 export * from './foreachstate-builder';
 export * from './function-builder';
+export * from './functionref-builder';
 export * from './functions-builder';
 export * from './injectstate-builder';
 export * from './metadata-builder';

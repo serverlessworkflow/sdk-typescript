@@ -28,6 +28,7 @@ import { validators } from '../validators';
 function callbackstateBuildingFn(data: Specification.Callbackstate): () => Specification.Callbackstate {
   return () => {
     data.type = 'callback';
+    data.usedForCompensation = data.usedForCompensation || false;
     const validate = validators.get('Callbackstate');
     // TODO: ignore validation if no validator or throw ?
     if (!validate) return data;

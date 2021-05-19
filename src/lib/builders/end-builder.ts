@@ -27,6 +27,10 @@ import { validators } from '../validators';
  */
 function endBuildingFn(data: Specification.End): () => Specification.End {
   return () => {
+    if (typeof data !== typeof true) {
+      (data as any).terminate = (data as any).terminate || false;
+      (data as any).compensate = (data as any).compensate || false;
+    }
     const validate = validators.get('End');
     // TODO: ignore validation if no validator or throw ?
     if (!validate) return data;

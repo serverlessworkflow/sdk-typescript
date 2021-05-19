@@ -27,6 +27,7 @@ import { validators } from '../validators';
  */
 function transitionBuildingFn(data: Specification.Transition): () => Specification.Transition {
   return () => {
+    if (typeof data !== typeof '') (data as any).compensate = (data as any).compensate || false;
     const validate = validators.get('Transition');
     // TODO: ignore validation if no validator or throw ?
     if (!validate) return data;

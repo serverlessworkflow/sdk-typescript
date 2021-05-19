@@ -16,6 +16,7 @@
  */
 
 import Ajv, { ValidateFunction } from 'ajv';
+import addFormats from 'ajv-formats';
 import commonSchema from './schema/common.json';
 import eventsChema from './schema/events.json';
 import functionsSchema from './schema/functions.json';
@@ -26,6 +27,7 @@ import { validatorsPaths } from './validation/validators-paths';
 const schemas: any[] = [commonSchema, eventsChema, functionsSchema, retriesSchema, workflowSchema];
 const strict: boolean = false;
 const ajv = new Ajv({ schemas, strict });
+addFormats(ajv, ['uri']);
 /**
  * A Map of validation functions, where the key is the name of the schema to validate with
  */

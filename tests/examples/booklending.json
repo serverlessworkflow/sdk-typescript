@@ -127,5 +127,7 @@
     }
   ],
   "functions": "file://books/lending/functions.json",
-  "events": "file://books/lending/events.json"
+  "events": "file://books/lending/events.json",
+  "expressionLang": "jq",
+  "keepActive": false
 }
