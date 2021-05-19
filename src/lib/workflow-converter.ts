@@ -15,11 +15,9 @@
  *
  */
 
-import { DefinedError, ValidateFunction } from 'ajv';
 import * as yaml from 'js-yaml';
 import { Specification } from './definitions';
-import { validators } from './validators';
-const validate = validators.get('Workflow') as ValidateFunction<Specification.Workflow>;
+import { validate } from './utils';
 
 /**
  * Exposes utils to parse and serialize Workflow
@@ -43,11 +41,7 @@ export const WorkflowConverter = {
    * @returns {string} The workflow as JSON
    */
   toJson: (workflow: Specification.Workflow): string => {
-    if (!validate(workflow)) {
-      console.warn(validate.errors);
-      const firstError: DefinedError = (validate.errors as DefinedError[])[0];
-      throw new Error(`Workflow is invalid: ${firstError.message}`);
-    }
+    validate('Workflow', workflow);
     return JSON.stringify(workflow);
   },
   /**
@@ -56,11 +50,7 @@ export const WorkflowConverter = {
    * @returns {string} The workflow as YAML
    */
   toYaml: (workflow: Specification.Workflow): string => {
-    if (!validate(workflow)) {
-      console.warn(validate.errors);
-      const firstError: DefinedError = (validate.errors as DefinedError[])[0];
-      throw new Error(`Workflow is invalid: ${firstError.message}`);
-    }
+    validate('Workflow', workflow);
     return yaml.dump(workflow);
   },
 };

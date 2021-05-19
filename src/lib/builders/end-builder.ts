@@ -15,10 +15,9 @@
  *
  */
 
-import { DefinedError } from 'ajv';
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
-import { validators } from '../validators';
+import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
@@ -31,14 +30,7 @@ function endBuildingFn(data: Specification.End): () => Specification.End {
       (data as any).terminate = (data as any).terminate || false;
       (data as any).compensate = (data as any).compensate || false;
     }
-    const validate = validators.get('End');
-    // TODO: ignore validation if no validator or throw ?
-    if (!validate) return data;
-    if (!validate(data)) {
-      console.warn(validate.errors);
-      const firstError: DefinedError = (validate.errors as DefinedError[])[0];
-      throw new Error(`End is invalid: ${firstError.message}`);
-    }
+    validate('End', data);
     return data;
   };
 }

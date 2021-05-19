@@ -15,10 +15,9 @@
  *
  */
 
-import { DefinedError } from 'ajv';
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
-import { validators } from '../validators';
+import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
@@ -29,14 +28,7 @@ function eventstateBuildingFn(data: Specification.Eventstate): () => Specificati
   return () => {
     data.type = 'event';
     if (data.exclusive == null) data.exclusive = true;
-    const validate = validators.get('Eventstate');
-    // TODO: ignore validation if no validator or throw ?
-    if (!validate) return data;
-    if (!validate(data)) {
-      console.warn(validate.errors);
-      const firstError: DefinedError = (validate.errors as DefinedError[])[0];
-      throw new Error(`Eventstate is invalid: ${firstError.message}`);
-    }
+    validate('Eventstate', data);
     return data;
   };
 }
