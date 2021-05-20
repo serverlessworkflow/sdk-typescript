@@ -33,7 +33,6 @@
   },
   "dependencies": {
     "ajv": "^8.1.0",
-    "ajv-formats": "^2.1.0",
     "js-yaml": "^4.1.0"
   },
   "devDependencies": {
