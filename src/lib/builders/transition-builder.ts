@@ -26,7 +26,6 @@ import { validate } from '../utils';
  */
 function transitionBuildingFn(data: Specification.Transition): () => Specification.Transition {
   return () => {
-    if (typeof data !== typeof '') (data as any).compensate = (data as any).compensate || false;
     validate('Transition', data);
     return data;
   };

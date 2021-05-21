@@ -27,7 +27,6 @@ import { validate } from '../utils';
 function injectstateBuildingFn(data: Specification.Injectstate): () => Specification.Injectstate {
   return () => {
     data.type = 'inject';
-    data.usedForCompensation = data.usedForCompensation || false;
     validate('Injectstate', data);
     return data;
   };

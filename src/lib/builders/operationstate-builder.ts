@@ -27,8 +27,6 @@ import { validate } from '../utils';
 function operationstateBuildingFn(data: Specification.Operationstate): () => Specification.Operationstate {
   return () => {
     data.type = 'operation';
-    data.actionMode = data.actionMode || 'sequential';
-    data.usedForCompensation = data.usedForCompensation || false;
     validate('Operationstate', data);
     return data;
   };

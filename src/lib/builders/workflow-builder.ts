@@ -26,8 +26,6 @@ import { validate } from '../utils';
  */
 function workflowBuildingFn(data: Specification.Workflow): () => Specification.Workflow {
   return () => {
-    data.expressionLang = data.expressionLang || 'jq';
-    data.keepActive = data.keepActive || false;
     validate('Workflow', data);
     return data;
   };

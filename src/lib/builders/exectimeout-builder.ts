@@ -26,7 +26,6 @@ import { validate } from '../utils';
  */
 function exectimeoutBuildingFn(data: Specification.Exectimeout): () => Specification.Exectimeout {
   return () => {
-    data.interrupt = data.interrupt || false;
     validate('Exectimeout', data);
     return data;
   };

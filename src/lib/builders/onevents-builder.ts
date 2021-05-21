@@ -26,7 +26,6 @@ import { validate } from '../utils';
  */
 function oneventsBuildingFn(data: Specification.Onevents): () => Specification.Onevents {
   return () => {
-    data.actionMode = data.actionMode || 'sequential';
     validate('Onevents', data);
     return data;
   };

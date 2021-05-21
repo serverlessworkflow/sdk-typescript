@@ -27,6 +27,9 @@ import { validate } from '../utils';
 function foreachstateBuildingFn(data: Specification.Foreachstate): () => Specification.Foreachstate {
   return () => {
     data.type = 'foreach';
+
+    //FIXME https://github.com/serverlessworkflow/sdk-typescript/issues/95
+
     data.usedForCompensation = data.usedForCompensation || false;
     validate('Foreachstate', data);
     return data;

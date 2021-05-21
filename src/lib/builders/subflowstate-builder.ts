@@ -27,8 +27,6 @@ import { validate } from '../utils';
 function subflowstateBuildingFn(data: Specification.Subflowstate): () => Specification.Subflowstate {
   return () => {
     data.type = 'subflow';
-    data.waitForCompletion = data.waitForCompletion || false;
-    data.usedForCompensation = data.usedForCompensation || false;
     validate('Subflowstate', data);
     return data;
   };

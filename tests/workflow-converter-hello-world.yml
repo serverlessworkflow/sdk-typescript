@@ -9,6 +9,3 @@ states:
     data:
       result: Hello World!
     end: true
-    usedForCompensation: false
-expressionLang: jq
-keepActive: false

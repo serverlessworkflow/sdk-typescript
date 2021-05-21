@@ -27,16 +27,13 @@
       ],
       "default": {
         "transition": "RejectApplication"
-      },
-      "usedForCompensation": false
+      }
     },
     {
       "name": "StartApplication",
       "type": "subflow",
       "workflowId": "startApplicationWorkflowId",
-      "end": true,
-      "usedForCompensation": false,
-      "waitForCompletion": false
+      "end": true
     },
     {
       "name":"RejectApplication",
@@ -52,10 +49,7 @@
           }
         }
       ],
-      "end": true,
-      "usedForCompensation": false
+      "end": true
     }
-  ],
-  "expressionLang": "jq",
-  "keepActive": false
+  ]
 }

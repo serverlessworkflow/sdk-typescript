@@ -26,10 +26,6 @@ import { validate } from '../utils';
  */
 function endBuildingFn(data: Specification.End): () => Specification.End {
   return () => {
-    if (typeof data !== typeof true) {
-      (data as any).terminate = (data as any).terminate || false;
-      (data as any).compensate = (data as any).compensate || false;
-    }
     validate('End', data);
     return data;
   };

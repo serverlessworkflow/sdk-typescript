@@ -11,12 +11,10 @@
         {
           "eventRefs": [
             "CarTurnedOnEvent"
-          ],
-          "actionMode": "sequential"
+          ]
         }
       ],
-      "transition": "DoCarVitalsChecks",
-      "exclusive": true
+      "transition": "DoCarVitalsChecks"
     },
     {
       "name": "DoCarVitalsChecks",
@@ -25,13 +23,9 @@
       "repeat": {
         "stopOnEvents": [
           "CarTurnedOffEvent"
-        ],
-        "checkBefore": true,
-        "continueOnError": false
+        ]
       },
-      "end": true,
-      "usedForCompensation": false,
-      "waitForCompletion": false
+      "end": true
     }
   ],
   "events": [
@@ -47,7 +41,5 @@
       "source": "my/car/start",
       "kind": "consumed"
     }
-  ],
-  "expressionLang": "jq",
-  "keepActive": false
+  ]
 }

@@ -27,7 +27,6 @@ import { validate } from '../utils';
 function callbackstateBuildingFn(data: Specification.Callbackstate): () => Specification.Callbackstate {
   return () => {
     data.type = 'callback';
-    data.usedForCompensation = data.usedForCompensation || false;
     validate('Callbackstate', data);
     return data;
   };

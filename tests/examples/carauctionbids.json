@@ -41,13 +41,10 @@
                 }
               }
             }
-          ],
-          "actionMode": "sequential"
+          ]
         }
       ],
       "end": true
     }
-  ],
-  "expressionLang": "jq",
-  "keepActive": false
+  ]
 }

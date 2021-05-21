@@ -27,7 +27,6 @@ import { validate } from '../utils';
 function delaystateBuildingFn(data: Specification.Delaystate): () => Specification.Delaystate {
   return () => {
     data.type = 'delay';
-    data.usedForCompensation = data.usedForCompensation || false;
     validate('Delaystate', data);
     return data;
   };

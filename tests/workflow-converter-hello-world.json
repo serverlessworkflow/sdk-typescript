@@ -11,10 +11,7 @@
       "data": {
         "result": "Hello World!"
       },
-      "end": true,
-      "usedForCompensation": false
+      "end": true
     }
-  ],
-  "expressionLang": "jq",
-  "keepActive": false
+  ]
 }

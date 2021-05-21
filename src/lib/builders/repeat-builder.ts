@@ -26,8 +26,6 @@ import { validate } from '../utils';
  */
 function repeatBuildingFn(data: Specification.Repeat): () => Specification.Repeat {
   return () => {
-    if (data.checkBefore == null) data.checkBefore = true;
-    data.continueOnError = data.continueOnError || false;
     validate('Repeat', data);
     return data;
   };

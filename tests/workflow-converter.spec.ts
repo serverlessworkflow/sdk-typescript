@@ -54,11 +54,8 @@ describe('workflow-converter fromSource', () => {
               result: 'Hello World!',
             },
             end: true,
-            usedForCompensation: false,
           },
         ],
-        expressionLang: 'jq',
-        keepActive: false,
       });
     });
   });
@@ -104,12 +101,9 @@ describe('workflow-converter', () => {
         '"result":"Hello World!"' +
         '},' +
         '"end":true,' +
-        '"type":"inject",' +
-        '"usedForCompensation":false' +
+        '"type":"inject"' +
         '}' +
-        '],' +
-        '"expressionLang":"jq",' +
-        '"keepActive":false' +
+        ']' +
         '}'
     );
   });
@@ -144,36 +138,7 @@ describe('workflow-converter', () => {
         '    data:\n' +
         '      result: Hello World!\n' +
         '    end: true\n' +
-        '    type: inject\n' +
-        '    usedForCompensation: false\n' +
-        'expressionLang: jq\n' +
-        'keepActive: false\n'
-    );
-  });
-
-  it('should throw when serializing an invalid workflow to JSON', () => {
-    const invalidWorkflow: Specification.Workflow = {
-      id: 'invalid',
-      name: 'I am invalid',
-      version: '1.0',
-      states: [{}],
-      start: 'none',
-    };
-    expect(() => WorkflowConverter.toJson(invalidWorkflow)).toThrowError(
-      "Workflow is invalid: /states/0 | #/then/required | must have required property 'name'"
-    );
-  });
-
-  it('should throw when serializing an invalid workflow to YAML', () => {
-    const invalidWorkflow: Specification.Workflow = {
-      id: 'invalid',
-      name: 'I am invalid',
-      version: '1.0',
-      states: [{}],
-      start: 'none',
-    };
-    expect(() => WorkflowConverter.toJson(invalidWorkflow)).toThrowError(
-      "Workflow is invalid: /states/0 | #/then/required | must have required property 'name'"
+        '    type: inject\n'
     );
   });
 });

@@ -27,7 +27,6 @@ import { validate } from '../utils';
 function eventstateBuildingFn(data: Specification.Eventstate): () => Specification.Eventstate {
   return () => {
     data.type = 'event';
-    if (data.exclusive == null) data.exclusive = true;
     validate('Eventstate', data);
     return data;
   };

@@ -43,42 +43,31 @@
           "error": "Missing order quantity",
           "transition": "MissingQuantity"
         }
-      ],
-      "usedForCompensation": false
+      ]
     },
     {
       "name": "MissingId",
       "type": "subflow",
       "workflowId": "handleMissingIdExceptionWorkflow",
-      "end": true,
-      "usedForCompensation": false,
-      "waitForCompletion": false
+      "end": true
     },
     {
       "name": "MissingItem",
       "type": "subflow",
       "workflowId": "handleMissingItemExceptionWorkflow",
-      "end": true,
-      "usedForCompensation": false,
-      "waitForCompletion": false
+      "end": true
     },
     {
       "name": "MissingQuantity",
       "type": "subflow",
       "workflowId": "handleMissingQuantityExceptionWorkflow",
-      "end": true,
-      "usedForCompensation": false,
-      "waitForCompletion": false
+      "end": true
     },
     {
       "name": "ApplyOrder",
       "type": "subflow",
       "workflowId": "applyOrderWorkflowId",
-      "end": true,
-      "usedForCompensation": false,
-      "waitForCompletion": false
+      "end": true
     }
-  ],
-  "expressionLang": "jq",
-  "keepActive": false
+  ]
 }

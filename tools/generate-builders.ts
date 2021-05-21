@@ -48,77 +48,43 @@ interface BuilderExtension {
 }
 /** Stores additional code that needs to be added to builders depending on their type */
 const buildersExtensions: { [key: string]: BuilderExtension } = {
-  Workflow: {
-    preValidate: `\n    data.expressionLang = data.expressionLang || 'jq';
-                        data.keepActive =  data.keepActive || false;`,
-  },
-  Exectimeout: {
-    preValidate: `\n    data.interrupt = data.interrupt || false;`,
-  },
-  Transition: {
-    preValidate: `\n    if (typeof data !== typeof '') (data as any).compensate = (data as any).compensate || false;`,
-  },
-  Onevents: {
-    preValidate: `\n    data.actionMode = data.actionMode || 'sequential';`,
-  },
   Callbackstate: {
-    preValidate: `\n    data.type = 'callback';
-                        data.usedForCompensation = data.usedForCompensation || false;`,
+    preValidate: `\r\n    data.type = 'callback';`,
   },
   Databasedswitch: {
-    preValidate: `\n    data.type = 'switch';
-                        data.usedForCompensation = data.usedForCompensation || false;`,
+    preValidate: `\r\n    data.type = 'switch';`,
   },
   Delaystate: {
-    preValidate: `\n    data.type = 'delay';
-                        data.usedForCompensation = data.usedForCompensation || false;`,
+    preValidate: `\r\n    data.type = 'delay';`,
   },
   Eventbasedswitch: {
-    preValidate: `\n    data.type = 'switch';
-                        data.usedForCompensation = data.usedForCompensation || false;`,
+    preValidate: `\r\n    data.type = 'switch';`,
   },
   Eventstate: {
-    preValidate: `\n    data.type = 'event';
-                        if (data.exclusive == null) data.exclusive = true;`,
+    preValidate: `\r\n    data.type = 'event';`,
   },
   Foreachstate: {
-    preValidate: `\n    data.type = 'foreach';
-                        data.usedForCompensation = data.usedForCompensation || false;`,
+    preValidate: `\r\n    data.type = 'foreach';
+                  \r\n    //FIXME https://github.com/serverlessworkflow/sdk-typescript/issues/95
+                  \r\n    data.usedForCompensation = data.usedForCompensation || false;`,
   },
   Injectstate: {
-    preValidate: `\n    data.type = 'inject';
-                        data.usedForCompensation = data.usedForCompensation || false;`,
+    preValidate: `\r\n    data.type = 'inject';`,
   },
   Operationstate: {
-    preValidate: `\n    data.type = 'operation';
-                        data.actionMode = data.actionMode || 'sequential';
-                        data.usedForCompensation = data.usedForCompensation || false;`,
+    preValidate: `\r\n    data.type = 'operation';`,
   },
   Parallelstate: {
-    preValidate: `\n    data.type = 'parallel';
-                        data.completionType = data.completionType || 'and';
-                        data.usedForCompensation = data.usedForCompensation || false;`,
+    preValidate: `\r\n    data.type = 'parallel';`,
   },
   Subflowstate: {
-    preValidate: `\n    data.type = 'subflow';
-                        data.waitForCompletion = data.waitForCompletion || false;
-                        data.usedForCompensation = data.usedForCompensation || false;`,
+    preValidate: `\r\n    data.type = 'subflow';`,
   },
   Function: {
-    preValidate: `\n    data.type =  data.type || 'rest';`,
+    preValidate: `\r\n    data.type =  data.type || 'rest';`,
   },
   Eventdef: {
-    preValidate: `\n    data.kind =  data.kind || 'consumed';`,
-  },
-  End: {
-    preValidate: `\n    if (typeof data !== typeof true) {
-                          (data as any).terminate = (data as any).terminate || false;
-                          (data as any).compensate = (data as any).compensate || false;
-                        }`,
-  },
-  Repeat: {
-    preValidate: `\n    if (data.checkBefore == null) data.checkBefore = true;
-                        data.continueOnError = data.continueOnError || false;`,
+    preValidate: `\r\n    data.kind =  data.kind || 'consumed';`,
   },
 };
 

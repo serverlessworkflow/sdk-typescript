@@ -27,8 +27,6 @@ import { validate } from '../utils';
 function parallelstateBuildingFn(data: Specification.Parallelstate): () => Specification.Parallelstate {
   return () => {
     data.type = 'parallel';
-    data.completionType = data.completionType || 'and';
-    data.usedForCompensation = data.usedForCompensation || false;
     validate('Parallelstate', data);
     return data;
   };
