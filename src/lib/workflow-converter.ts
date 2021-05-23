@@ -17,6 +17,7 @@
 
 import * as yaml from 'js-yaml';
 import { Specification } from './definitions';
+import { validate } from './utils';
 
 /**
  * Exposes utils to parse and serialize Workflow
@@ -39,11 +40,17 @@ export const WorkflowConverter = {
    * @param {Workflow} workflow The workflow to strigify
    * @returns {string} The workflow as JSON
    */
-  toJson: (workflow: Specification.Workflow): string => JSON.stringify(workflow),
+  toJson: (workflow: Specification.Workflow): string => {
+    validate('Workflow', workflow);
+    return JSON.stringify(workflow);
+  },
   /**
    * Stringifies the provided workflow to the YAML format
    * @param {Workflow} workflow The workflow to strigify
    * @returns {string} The workflow as YAML
    */
-  toYaml: (workflow: Specification.Workflow): string => yaml.dump(workflow),
+  toYaml: (workflow: Specification.Workflow): string => {
+    validate('Workflow', workflow);
+    return yaml.dump(workflow);
+  },
 };

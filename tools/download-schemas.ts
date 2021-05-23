@@ -120,7 +120,7 @@ const downloadFiles = async (filesMap: Map<string, string>): Promise<void[]> =>
   Promise.all(Array.from(filesMap).map(([dest, url]) => downloadFile(url, dest)));
 
 const argv = yargs(process.argv.slice(2)).argv;
-const ref = `v${version.split('.').slice(0, -1).join('.')}`;
+const ref = `${version.split('.').slice(0, -1).join('.')}.x`;
 /** The schema registry base url, either provided in args or based on the package version */
 const registryUrl: string =
   (argv.registry as string) ||

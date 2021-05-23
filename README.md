@@ -73,31 +73,6 @@ const workflow: Specification.Workflow = workflowBuilder()
 ```
 
 
-#### Create Workflow using object literals
-
-```typescript
-import { Specification } from '@severlessworkflow/sdk-typescript';
-
-const workflow: Specification.Workflow = {
-  id: 'helloworld',
-  version: '1.0',
-  name: 'Hello World Workflow',
-  description: 'Inject Hello World',
-  start: 'Hello State',
-  states: [
-    {
-      type: 'inject',
-      name: 'Hello State',
-      end: true,
-      data: {
-        result: "Hello World!"
-      }
-    } as Specification.Injectstate
-  ]
-};
-```
-
-
 #### Load a file JSON/YAML to a Workflow instance
 
 ```typescript

@@ -128,10 +128,9 @@ const createBuilder = async (destDir: string, dataType: string): Promise<void> =
     const extension = buildersExtensions[dataType];
     const builderCode =
       fileHeader +
-      `import { DefinedError } from 'ajv';
-import { Builder, builder } from '../builder';
+      `import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
-import { validators } from '../validators';
+import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
@@ -140,14 +139,7 @@ import { validators } from '../validators';
  */
 function ${camelType}BuildingFn(data: Specification.${dataType}): (() => Specification.${dataType}) {
   return () => {${extension?.preValidate ? extension.preValidate : ''}
-    const validate = validators.get('${dataType}');
-    // TODO: ignore validation if no validator or throw ?
-    if (!validate) return data;
-    if (!validate(data)) {
-      console.warn(validate.errors);
-      const firstError: DefinedError = (validate.errors as DefinedError[])[0];
-      throw new Error(\`${dataType} is invalid: \${firstError.message}\`);
-    }
+    validate('${dataType}', data);
     return data;
   };
 }
@@ -177,7 +169,7 @@ const createIndex = async (destDir: string, types: string[]): Promise<void> => {
   try {
     const indexCode: string =
       fileHeader +
-      types.reduce((acc, t) => acc + `export * from './${toKebabCase(toCamelCase(t)) + '-builder'}';\r\n`, '');
+      types.reduce((acc, t) => acc + `export * from './${toKebabCase(toCamelCase(t)) + '-builder'}';\n`, '');
     const indexFile = path.resolve(destDir, 'index.ts');
     await writeFile(indexFile, indexCode);
     return Promise.resolve();

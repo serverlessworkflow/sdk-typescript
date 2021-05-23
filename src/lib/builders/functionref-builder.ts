@@ -21,22 +21,20 @@ import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Transitioneventcondition} data The underlying object
- * @returns {Specification.Transitioneventcondition} The validated underlying object
+ * @param {Specification.Functionref} data The underlying object
+ * @returns {Specification.Functionref} The validated underlying object
  */
-function transitioneventconditionBuildingFn(
-  data: Specification.Transitioneventcondition
-): () => Specification.Transitioneventcondition {
+function functionrefBuildingFn(data: Specification.Functionref): () => Specification.Functionref {
   return () => {
-    validate('Transitioneventcondition', data);
+    validate('Functionref', data);
     return data;
   };
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.Transitioneventcondition`
- * @returns {Specification.Transitioneventcondition} A builder for `Specification.Transitioneventcondition`
+ * A factory to create a builder proxy for the type `Specification.Functionref`
+ * @returns {Specification.Functionref} A builder for `Specification.Functionref`
  */
-export function transitioneventconditionBuilder(): Builder<Specification.Transitioneventcondition> {
-  return builder<Specification.Transitioneventcondition>(transitioneventconditionBuildingFn);
+export function functionrefBuilder(): Builder<Specification.Functionref> {
+  return builder<Specification.Functionref>(functionrefBuildingFn);
 }

@@ -18,7 +18,7 @@
     "tools:download-schemas": "npx ts-node --project ./tools/tsconfig.json ./tools/download-schemas.ts",
     "tools:generate-definitions": "npx ts-node --project ./tools/tsconfig.json ./tools/generate-definitions.ts",
     "tools:generate-builders": "npx ts-node --project ./tools/tsconfig.json ./tools/generate-builders.ts",
-    "update-code-base": "npm run tools:download-schemas && npm run tools:generate-definitions && npm run tools:generate-builders",
+    "update-code-base": "npm run tools:download-schemas && npm run tools:generate-definitions && npm run tools:generate-builders && npm run format && npm run test",
     "format": "npx prettier --write \"**/*.ts\"",
     "lint": "npx eslint . --ext .ts && npx prettier --check \"**/*.ts\"",
     "pretest": "npx rimraf out-tsc",
