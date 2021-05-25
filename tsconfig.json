@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
+    "experimentalDecorators": true,
     "declarationDir": "./dist",
     "declarationMap": true,
     "target": "ES5",
