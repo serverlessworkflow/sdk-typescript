@@ -17,16 +17,10 @@
 
 import { promises as fsPromises } from 'fs';
 import * as path from 'path';
-import rimraf from 'rimraf';
-import { fileHeader, readMeDisclaimer } from './consts';
-const { readFile, writeFile, mkdir } = fsPromises;
-const rimrafP = async (f: string): Promise<void> =>
-  new Promise<void>((resolve, reject) =>
-    rimraf(f, (err) => {
-      if (err) return reject(err);
-      resolve();
-    })
-  );
+import { fileHeader } from './consts';
+import { reset } from './utils';
+const { readFile, writeFile } = fsPromises;
+
 declare global {
   interface String {
     matchAll(re: RegExp): RegExpExecArray[];
@@ -186,9 +180,7 @@ const createIndex = async (destDir: string, types: string[]): Promise<void> => {
  */
 const generate = async (source: string, destDir: string): Promise<void> => {
   try {
-    await rimrafP(destDir);
-    await mkdir(destDir, { recursive: true });
-    await writeFile(path.resolve(destDir, 'README.md'), readMeDisclaimer);
+    await reset(destDir);
     const extractor: RegExp = /export \w* (\w*)/g;
     const definition: string = await readFile(source, 'utf-8');
     const types: string[] = [...definition.matchAll(extractor)].map(([, type]) => type);

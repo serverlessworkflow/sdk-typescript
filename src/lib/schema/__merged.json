@@ -46,16 +46,16 @@
       "description": "If 'true', workflow instances is not terminated when there are no active execution paths. Instance can be terminated via 'terminate end definition' or reaching defined 'execTimeout'"
     },
     "metadata": {
-      "$ref": "common.json#/definitions/metadata"
+      "$ref": "#/definitions/metadata"
     },
     "events": {
-      "$ref": "events.json#/events"
+      "$ref": "#/definitions/events"
     },
     "functions": {
-      "$ref": "functions.json#/functions"
+      "$ref": "#/definitions/functions"
     },
     "retries": {
-      "$ref": "retries.json#/retries"
+      "$ref": "#/definitions/retries"
     },
     "states": {
       "type": "array",
@@ -474,7 +474,7 @@
           "description": "If true, this state is used to compensate another state. Default is false"
         },
         "metadata": {
-          "$ref": "common.json#/definitions/metadata"
+          "$ref": "#/definitions/metadata"
         }
       },
       "additionalProperties": false,
@@ -576,7 +576,7 @@
           "description": "Unique Name of a workflow state which is responsible for compensation of this state"
         },
         "metadata": {
-          "$ref": "common.json#/definitions/metadata"
+          "$ref": "#/definitions/metadata"
         }
       },
       "additionalProperties": false,
@@ -666,7 +666,7 @@
           "description": "If true, this state is used to compensate another state. Default is false"
         },
         "metadata": {
-          "$ref": "common.json#/definitions/metadata"
+          "$ref": "#/definitions/metadata"
         }
       },
       "additionalProperties": false,
@@ -783,7 +783,7 @@
           "description": "If true, this state is used to compensate another state. Default is false"
         },
         "metadata": {
-          "$ref": "common.json#/definitions/metadata"
+          "$ref": "#/definitions/metadata"
         }
       },
       "additionalProperties": false,
@@ -891,7 +891,7 @@
           "description": "If true, this state is used to compensate another state. Default is false"
         },
         "metadata": {
-          "$ref": "common.json#/definitions/metadata"
+          "$ref": "#/definitions/metadata"
         }
       },
       "additionalProperties": false,
@@ -956,7 +956,7 @@
           "description": "If true, this state is used to compensate another state. Default is false"
         },
         "metadata": {
-          "$ref": "common.json#/definitions/metadata"
+          "$ref": "#/definitions/metadata"
         }
       },
       "additionalProperties": false,
@@ -1022,7 +1022,7 @@
           "$ref": "#/definitions/eventdatafilter"
         },
         "metadata": {
-          "$ref": "common.json#/definitions/metadata"
+          "$ref": "#/definitions/metadata"
         }
       },
       "additionalProperties": false,
@@ -1052,7 +1052,7 @@
           "$ref": "#/definitions/eventdatafilter"
         },
         "metadata": {
-          "$ref": "common.json#/definitions/metadata"
+          "$ref": "#/definitions/metadata"
         }
       },
       "additionalProperties": false,
@@ -1088,7 +1088,7 @@
           "$ref": "#/definitions/transition"
         },
         "metadata": {
-          "$ref": "common.json#/definitions/metadata"
+          "$ref": "#/definitions/metadata"
         }
       },
       "additionalProperties": false,
@@ -1114,7 +1114,7 @@
           "description": "Workflow end definition"
         },
         "metadata": {
-          "$ref": "common.json#/definitions/metadata"
+          "$ref": "#/definitions/metadata"
         }
       },
       "additionalProperties": false,
@@ -1186,7 +1186,7 @@
           "description": "If true, this state is used to compensate another state. Default is false"
         },
         "metadata": {
-          "$ref": "common.json#/definitions/metadata"
+          "$ref": "#/definitions/metadata"
         }
       },
       "additionalProperties": false,
@@ -1270,7 +1270,7 @@
           "description": "If true, this state is used to compensate another state. Default is false"
         },
         "metadata": {
-          "$ref": "common.json#/definitions/metadata"
+          "$ref": "#/definitions/metadata"
         }
       },
       "additionalProperties": false,
@@ -1393,7 +1393,7 @@
           "description": "If true, this state is used to compensate another state. Default is false"
         },
         "metadata": {
-          "$ref": "common.json#/definitions/metadata"
+          "$ref": "#/definitions/metadata"
         }
       },
       "additionalProperties": false,
@@ -1524,7 +1524,7 @@
           "description": "If true, this state is used to compensate another state. Default is false"
         },
         "metadata": {
-          "$ref": "common.json#/definitions/metadata"
+          "$ref": "#/definitions/metadata"
         }
       },
       "additionalProperties": false,
@@ -1786,6 +1786,237 @@
       },
       "additionalProperties": false,
       "required": []
+    },
+    "function": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique function name",
+          "minLength": 1
+        },
+        "operation": {
+          "type": "string",
+          "description": "If type is `rest`, <path_to_openapi_definition>#<operation_id>. If type is `rpc`, <path_to_grpc_proto_file>#<service_name>#<service_method>. If type is `expression`, defines the workflow expression.",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "description": "Defines the function type. Is either `rest`, `rpc` or `expression`. Default is `rest`",
+          "enum": [
+            "rest",
+            "rpc",
+            "expression"
+          ],
+          "default": "rest"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "operation"
+      ]
+    },
+    "eventdef": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique event name",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string",
+          "description": "CloudEvent source"
+        },
+        "type": {
+          "type": "string",
+          "description": "CloudEvent type"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "consumed",
+            "produced"
+          ],
+          "description": "Defines the CloudEvent as either 'consumed' or 'produced' by the workflow. Default is 'consumed'",
+          "default": "consumed"
+        },
+        "correlation": {
+          "type": "array",
+          "description": "CloudEvent correlation definitions",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/correlationDef"
+          },
+          "additionalItems": false
+        },
+        "metadata": {
+          "$ref": "#/definitions/metadata",
+          "description": "Metadata information"
+        }
+      },
+      "additionalProperties": false,
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "consumed"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "name",
+          "source",
+          "type"
+        ]
+      },
+      "else": {
+        "required": [
+          "name",
+          "type"
+        ]
+      }
+    },
+    "correlationDef": {
+      "type": "object",
+      "description": "CloudEvent correlation definition",
+      "properties": {
+        "contextAttributeName": {
+          "type": "string",
+          "description": "CloudEvent Extension Context Attribute name",
+          "minLength": 1
+        },
+        "contextAttributeValue": {
+          "type": "string",
+          "description": "CloudEvent Extension Context Attribute value",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "contextAttributeName"
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Metadata information",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "retrydef": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique retry strategy name",
+          "minLength": 1
+        },
+        "delay": {
+          "type": "string",
+          "description": "Time delay between retry attempts (ISO 8601 duration format)"
+        },
+        "maxDelay": {
+          "type": "string",
+          "description": "Maximum time delay between retry attempts (ISO 8601 duration format)"
+        },
+        "increment": {
+          "type": "string",
+          "description": "Static value by which the delay increases during each attempt (ISO 8601 time format)"
+        },
+        "multiplier": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "minimum": 0,
+          "minLength": 1,
+          "multipleOf": 0.01,
+          "description": "Numeric value, if specified the delay between retries is multiplied by this value."
+        },
+        "maxAttempts": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "minimum": 1,
+          "minLength": 0,
+          "description": "Maximum number of retry attempts."
+        },
+        "jitter": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "If float type, maximum amount of random time added or subtracted from the delay between each retry relative to total delay (between 0 and 1). If string type, absolute maximum amount of random time added or subtracted from the delay between each retry (ISO 8601 duration format)"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "maxAttempts"
+      ]
+    },
+    "events": {
+      "oneOf": [
+        {
+          "type": "string",
+          "format": "uri",
+          "description": "URI to a resource containing event definitions (json or yaml)"
+        },
+        {
+          "type": "array",
+          "description": "Workflow CloudEvent definitions. Defines CloudEvents that can be consumed or produced",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/eventdef"
+          },
+          "additionalItems": false,
+          "minItems": 1
+        }
+      ]
+    },
+    "functions": {
+      "oneOf": [
+        {
+          "type": "string",
+          "format": "uri",
+          "description": "URI to a resource containing function definitions (json or yaml)"
+        },
+        {
+          "type": "array",
+          "description": "Workflow function definitions",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/function"
+          },
+          "additionalItems": false,
+          "minItems": 1
+        }
+      ]
+    },
+    "retries": {
+      "oneOf": [
+        {
+          "type": "string",
+          "format": "uri",
+          "description": "URI to a resource containing retry definitions (json or yaml)"
+        },
+        {
+          "type": "array",
+          "description": "Workflow Retry definitions. Define retry strategies that can be referenced in states onError definitions",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/retrydef"
+          },
+          "additionalItems": false,
+          "minItems": 1
+        }
+      ]
     }
   }
 }
