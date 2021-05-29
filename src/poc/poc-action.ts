@@ -11,9 +11,6 @@ import {validate} from '../lib/utils';
 
 export class PocAction {
 	
-	constructor() {
-	}
-	
 	/**
 	 * Unique action definition name
 	 */
@@ -29,10 +26,7 @@ export class PocAction {
 	
 	
 	static fromString(value: string): PocAction {
-	
-		
 		return plainToClass(PocAction, JSON.parse(value));
-		
 	}
 	
 	static builder(): Builder<PocAction> {
@@ -42,11 +36,7 @@ export class PocAction {
 	
 	private static fn(data: PocAction): () => PocAction {
 		return () => {
-			
-			Object.assign(data, new PocAction());
-			
 			validate('Action', data);
-			
 			return data;
 		};
 	}

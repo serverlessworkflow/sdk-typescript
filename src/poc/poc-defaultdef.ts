@@ -9,14 +9,14 @@ export class PocDefaultdef {
 	
 	
 	transition: Transition;
+	
 	end: End;
 	
 	private static fn(data: PocDefaultdef): () => PocDefaultdef {
 		return () => {
 			
-			Object.assign(data, new PocDefaultdef());
 			
-			if (!data.transition) {
+			if (!data.end && !data.transition) {
 				data.end = true;
 			}
 			
@@ -28,10 +28,7 @@ export class PocDefaultdef {
 	
 	
 	static fromString(value: string): PocDefaultdef {
-		
-		
 		return plainToClass(PocDefaultdef, JSON.parse(value));
-		
 	}
 	
 	static builder(): Builder<PocDefaultdef> {

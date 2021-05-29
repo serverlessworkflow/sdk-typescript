@@ -34,12 +34,12 @@ describe('PocInjectstate', () => {
 		
 		const expected = {
 			"type": "inject",
-			"usedForCompensation":false,
 			"name": "Hello State",
 			"id": "test",
 			"data": {
 				"result": "Hello World!",
 			},
+			"usedForCompensation":false,
 		};
 		
 		expect(JSON.stringify(test)).toEqual(

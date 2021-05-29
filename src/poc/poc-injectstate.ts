@@ -1,5 +1,5 @@
 import {End, Metadata, Statedatafilter, Transition} from '../lib/definitions/workflow';
-import {plainToClass} from 'class-transformer';
+import {Expose, plainToClass, Transform} from 'class-transformer';
 import 'es6-shim';
 import 'reflect-metadata';
 import {Builder, builder} from '../lib/builder';
@@ -46,22 +46,20 @@ export class PocInjectstate {
 	 * Unique Name of a workflow state which is responsible for compensation of this state
 	 */
 	compensatedBy?: string;
+	
 	/**
 	 * If true, this state is used to compensate another state. Default is false
 	 */
+	@Transform(({value}) => value || false, { toClassOnly: true })
+	@Expose({name: "usedForCompensation"})
 	usedForCompensation?: boolean;
+	
 	metadata?: /* Metadata information */ Metadata;
 	
 	
 	
 	static fromString(value: string): PocInjectstate {
-	
-		const defaultValues = {
-			usedForCompensation: false
-		} as PocInjectstate;
-		
-		return plainToClass(PocInjectstate, Object.assign(defaultValues, JSON.parse(value)));
-		
+		return plainToClass(PocInjectstate, JSON.parse(value));
 	}
 	
 	static builder(): Builder<PocInjectstate> {
@@ -74,7 +72,7 @@ export class PocInjectstate {
 			
 			Object.assign(data, new PocInjectstate());
 			
-			if (!data.transition) {
+			if (!data.end && !data.transition) {
 				data.end = true;
 			}
 			

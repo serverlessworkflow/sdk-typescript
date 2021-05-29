@@ -26,7 +26,6 @@ export class PocTransitiondatacondition {
 			
 			Object.assign(data, new PocTransitiondatacondition());
 			
-			
 			validate('Transitiondatacondition', data);
 			
 			return data;
@@ -35,10 +34,7 @@ export class PocTransitiondatacondition {
 	
 	
 	static fromString(value: string): PocTransitiondatacondition {
-		
-		
 		return plainToClass(PocTransitiondatacondition, JSON.parse(value));
-		
 	}
 	
 	static builder(): Builder<PocTransitiondatacondition> {

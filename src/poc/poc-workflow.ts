@@ -16,7 +16,7 @@ import {
 	Switchstate,
 } from '../lib/definitions/workflow';
 import {PocInjectstate} from './poc-injectstate';
-import {plainToClass, Transform, Type} from 'class-transformer';
+import {plainToClass, Transform, Type, Expose} from 'class-transformer';
 import 'es6-shim';
 import 'reflect-metadata';
 import {PocSubflowstate} from './poc-subflowstate';
@@ -26,6 +26,7 @@ import * as yaml from 'js-yaml';
 import {PocDatabasedswitch} from './poc-databasedswitch';
 import {PocOperationstate} from './poc-operationstate';
 import {PocFunction} from './poc-function';
+
 
 
 export class PocWorkflow {
@@ -51,10 +52,14 @@ export class PocWorkflow {
 	 * Serverless Workflow schema version
 	 */
 	schemaVersion?: string;
+	
 	/**
 	 * Identifies the expression language used for workflow expressions. Default is 'jq'
 	 */
+	@Transform(({value}) => value || 'jq', { toClassOnly: true })
+	@Expose({name: "expressionLang"})
 	expressionLang?: string;
+	
 	execTimeout?: Exectimeout;
 	/**
 	 * If 'true', workflow instances is not terminated when there are no active execution paths. Instance can be terminated via 'terminate end definition' or reaching defined 'execTimeout'
@@ -118,16 +123,11 @@ export class PocWorkflow {
 	
 	
 	static fromString(value: string): PocWorkflow {
-		const defaultValues = {
-			expressionLang: 'jq'
-		} as PocWorkflow;
-		
-		return plainToClass(PocWorkflow, Object.assign(defaultValues,yaml.load(value)));
+		return plainToClass(PocWorkflow, yaml.load(value));
 	}
 	
 	static builder(): Builder<PocWorkflow> {
 		return builder<PocWorkflow>(PocWorkflow.fn);
-		
 	}
 	
 	
@@ -137,7 +137,6 @@ export class PocWorkflow {
 	}
 
 	static toJson(workflow: PocWorkflow): string {
-		
 		validate('Workflow', workflow);
 		return JSON.stringify(workflow);
 		

@@ -2,9 +2,14 @@ import {Action, End, Error, Metadata, Statedatafilter, Transition} from '../lib/
 import {Builder, builder} from '../lib/builder';
 import {validate} from '../lib/utils';
 import {PocAction} from './poc-action';
-import {Type} from 'class-transformer';
+import {Expose, Transform, Type} from 'class-transformer';
 
 export class PocOperationstate {
+	
+	
+	constructor() {
+		this.type = "operation";
+	}
 	
 	
 	/**
@@ -53,18 +58,18 @@ export class PocOperationstate {
 	/**
 	 * If true, this state is used to compensate another state. Default is false
 	 */
+	@Transform(({value}) => value || false, { toClassOnly: true })
+	@Expose({name: "usedForCompensation"})
 	usedForCompensation?: boolean;
 	metadata?: /* Metadata information */ Metadata;
 
-	constructor() {
-		this.type = "operation";
-	}
 	
 	private static fn(data: PocOperationstate): () => PocOperationstate {
 		return () => {
 			
 			Object.assign(data, new PocOperationstate());
-			if (!data.transition) {
+			
+			if (!data.end && !data.transition) {
 				data.end = true;
 			}
 			

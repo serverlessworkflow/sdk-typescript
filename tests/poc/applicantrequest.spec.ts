@@ -76,8 +76,13 @@ describe('applicationrequest workflow example', () => {
 		// @ts-ignore
 		expect(workflow.functions[0]?.type).toEqual('rest');
 		
-		expect((workflow.states[1] as Subflowstate).end).toBeTrue();
-		expect((workflow.states[2] as PocOperationstate).end).toBeTrue();
+		const subflowState = workflow.states[1] as Subflowstate;
+		expect(subflowState.end).toBeTrue();
+		expect(subflowState.usedForCompensation).toBeFalse();
+		
+		const operationState = workflow.states[2] as PocOperationstate;
+		expect(operationState.end).toBeTrue();
+		expect(operationState.usedForCompensation).toBeFalse();
 		
 		
 	});

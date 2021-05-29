@@ -1,11 +1,17 @@
 import {Datacondition, Defaultdef, Error, Metadata, Statedatafilter} from '../lib/definitions/workflow';
-import {plainToClass} from 'class-transformer';
+import {Expose, plainToClass, Transform} from 'class-transformer';
 import 'es6-shim';
 import 'reflect-metadata';
 import {Builder, builder} from '../lib/builder';
 import {validate} from '../lib/utils';
 
 export class PocDatabasedswitch {
+	
+	constructor() {
+		//constants
+		this.type = "switch";
+	}
+	
 	/**
 	 * Unique State id
 	 */
@@ -41,35 +47,23 @@ export class PocDatabasedswitch {
 	/**
 	 * If true, this state is used to compensate another state. Default is false
 	 */
+	@Transform(({value}) => value || false, { toClassOnly: true })
+	@Expose({name: "usedForCompensation"})
 	usedForCompensation?: boolean;
 	metadata?: /* Metadata information */ Metadata;
-
-	constructor() {
-		//constants
-		this.type = "switch";
-	}
+	
 	
 	private static fn(data: PocDatabasedswitch): () => PocDatabasedswitch {
 		return () => {
-			
 			Object.assign(data, new PocDatabasedswitch());
-			
-			
 			validate('Databasedswitch', data);
-			
 			return data;
 		};
 	}
 	
 	
 	static fromString(value: string): PocDatabasedswitch {
-		
-		const defaultValues = {
-			usedForCompensation: false,
-		} as PocDatabasedswitch;
-		
-		return plainToClass(PocDatabasedswitch, Object.assign(defaultValues,JSON.parse(value) ));
-		
+		return plainToClass(PocDatabasedswitch, JSON.parse(value) );
 	}
 	
 	static builder(): Builder<PocDatabasedswitch> {

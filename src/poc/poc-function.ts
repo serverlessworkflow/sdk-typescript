@@ -1,4 +1,4 @@
-import {plainToClass} from 'class-transformer';
+import {Expose, plainToClass, Transform} from 'class-transformer';
 import 'es6-shim';
 import 'reflect-metadata';
 import {Builder, builder} from '../lib/builder';
@@ -17,31 +17,24 @@ export class PocFunction {
 	/**
 	 * Defines the function type. Is either `rest`, `rpc` or `expression`. Default is `rest`
 	 */
+	@Transform(({value}) => value || 'rest', { toClassOnly: true })
+	@Expose({name: "type"})
 	type?: 'rest' | 'rpc' | 'expression';
-
+	
 	constructor() {
-		this.type = 'rest';
+	
 	}
 	
 	private static fn(data: PocFunction): () => PocFunction {
 		return () => {
-			
-			
 			validate('Function', data);
-			
 			return data;
 		};
 	}
 	
 	
 	static fromString(value: string): PocFunction {
-		
-		const defaultValues = {
-			type: 'rest',
-		} as PocFunction;
-		
-		return plainToClass(PocFunction, Object.assign(defaultValues,  JSON.parse(value)));
-		
+		return plainToClass(PocFunction, JSON.parse(value));
 	}
 	
 	static builder(): Builder<PocFunction> {
