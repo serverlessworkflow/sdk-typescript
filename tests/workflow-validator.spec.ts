@@ -30,9 +30,7 @@ describe('workflow-validator', () => {
     } as Workflow;
 
     const workflowValidator = new WorkflowValidator(workflow);
-    expect(workflowValidator.errors.length).toBe(0);
-
-    workflowValidator.validate();
+    expect(workflowValidator.isValid).toBeFalsy('Expected isValid to be false');
     expect(workflowValidator.errors.length).toBe(1);
     expect(workflowValidator.errors[0].constructor === ValidationError).toBeTruthy(
       'Expected errors to be instance of ValidationError'
@@ -57,9 +55,9 @@ describe('workflow-validator', () => {
         },
       ],
     } as Workflow;
-    
+
     const workflowValidator = new WorkflowValidator(workflow);
-    workflowValidator.validate();
     expect(workflowValidator.errors.length).toBe(0);
+    expect(workflowValidator.isValid).toBeTruthy('Expected isValid to be true');
   });
 });

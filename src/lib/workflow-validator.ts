@@ -18,36 +18,33 @@
 import { ValidateFunction } from 'ajv';
 import { Specification } from './definitions';
 import { validators } from './validators';
+import { ValidationError } from './validation-error';
 
 export class WorkflowValidator {
   /** The validation errors after running validate(), if any */
   errors: ValidationError[] | never[] = [];
-  /** The validate function */
-  private validateFn: ValidateFunction<Specification.Workflow>;
+
+  /** Whether the workflow is valid or not */
+  isValid: boolean;
 
   /**
    * Creates a new WorkflowValidator for the provided workflow
    * @param {Workflow} workflow The workflow to validate
    */
   constructor(private workflow: Specification.Workflow) {
-    this.validateFn = validators.get('Workflow') as ValidateFunction<Specification.Workflow>;
+    this.validate();
   }
 
   /**
    * Validates the workflow, populates the errors if any
-   * @returns {boolean} If the workflow is valid or not
    */
-  validate(): boolean {
-    const isValid = this.validateFn(this.workflow);
-    if (this.validateFn.errors) {
-      this.errors = this.validateFn.errors.map(
+  private validate(): void {
+    const validateFn = validators.get('Workflow') as ValidateFunction<Specification.Workflow>;
+    this.isValid = validateFn(this.workflow);
+    if (validateFn.errors) {
+      this.errors = validateFn.errors.map(
         (error) => new ValidationError(`invalid: ${error.instancePath} | ${error.schemaPath} | ${error.message}`)
       );
     }
-    return isValid;
   }
-}
-
-export class ValidationError {
-  constructor(readonly message: string) {}
 }

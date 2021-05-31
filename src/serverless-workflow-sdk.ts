@@ -15,6 +15,7 @@
  *
  */
 
+export * from './lib/validation-error';
 export * from './lib/workflow-converter';
 export * from './lib/workflow-validator';
 export * from './lib/validators';
