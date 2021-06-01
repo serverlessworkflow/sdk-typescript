@@ -22,29 +22,20 @@ import { ValidationError } from './validation-error';
 
 export class WorkflowValidator {
   /** The validation errors after running validate(), if any */
-  errors: ValidationError[] | never[] = [];
+  readonly errors: ValidationError[] | never[] = [];
 
   /** Whether the workflow is valid or not */
-  isValid: boolean;
+  readonly isValid: boolean;
 
   /**
    * Creates a new WorkflowValidator for the provided workflow
    * @param {Workflow} workflow The workflow to validate
    */
   constructor(private workflow: Specification.Workflow) {
-    this.validate();
-  }
-
-  /**
-   * Validates the workflow, populates the errors if any
-   */
-  private validate(): void {
     const validateFn = validators.get('Workflow') as ValidateFunction<Specification.Workflow>;
     this.isValid = validateFn(this.workflow);
     if (validateFn.errors) {
-      this.errors = validateFn.errors.map(
-        (error) => new ValidationError(`invalid: ${error.instancePath} | ${error.schemaPath} | ${error.message}`)
-      );
+      this.errors = validateFn.errors.map((error) => new ValidationError(error));
     }
   }
 }
