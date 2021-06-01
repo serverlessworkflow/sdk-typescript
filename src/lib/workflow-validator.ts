@@ -15,7 +15,7 @@
  *
  */
 
-import { ValidateFunction } from 'ajv';
+import { ValidateFunction, DefinedError } from 'ajv';
 import { Specification } from './definitions';
 import { validators } from './validators';
 import { ValidationError } from './validation-error';
@@ -35,7 +35,7 @@ export class WorkflowValidator {
     const validateFn = validators.get('Workflow') as ValidateFunction<Specification.Workflow>;
     this.isValid = validateFn(this.workflow);
     if (validateFn.errors) {
-      this.errors = validateFn.errors.map((error) => new ValidationError(error));
+      this.errors = validateFn.errors.map((error) => new ValidationError(error as DefinedError));
     }
   }
 }
