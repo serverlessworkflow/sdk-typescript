@@ -19,13 +19,13 @@ import {PocInjectstate} from '../../src/poc/poc-injectstate';
 describe('PocInjectstate', () => {
 	
 	it('generate object from string', () => {
-		let value = {
+		const value = {
+			"type": "inject",
 			"name": "Hello State",
 			"id": "test",
 			"data": {
 				"result": "Hello World!",
 			},
-			"type": "inject",
 		};
 		
 		
