@@ -24,7 +24,7 @@ describe('pco-workflow', () => {
 	it('generate object from string ', () => {
 		
 		
-		const actual: PocWorkflow = PocWorkflow.fromString(JSON.stringify({
+		const actual: PocWorkflow = PocWorkflow.fromSource(JSON.stringify({
 			"id": "helloworld",
 			"version": "1.0",
 			"name": "Hello World Workflow",
@@ -128,7 +128,7 @@ describe('pco-workflow', () => {
 	
 	it("read json", function () {
 		const workflow: PocWorkflow =
-			PocWorkflow.fromString("{\n" +
+			PocWorkflow.fromSource("{\n" +
 				"  \"id\": \"helloworld\",\n" +
 				"  \"version\": \"1.0\",\n" +
 				"  \"name\": \"Hello World Workflow\",\n" +

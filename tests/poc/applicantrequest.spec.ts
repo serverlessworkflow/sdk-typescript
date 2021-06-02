@@ -70,7 +70,7 @@ describe('applicationrequest workflow example', () => {
 	
 	
 	it('should map json to Workflow object', function () {
-		const workflow = PocWorkflow.fromString(fs.readFileSync('./tests/poc/applicantrequest.json', 'utf8'));
+		const workflow = PocWorkflow.fromSource(fs.readFileSync('./tests/poc/applicantrequest.json', 'utf8'));
 		
 		expect(workflow.expressionLang).toEqual('jq');
 		// @ts-ignore
@@ -90,7 +90,7 @@ describe('applicationrequest workflow example', () => {
 	
 	
 	it('should map yml to Workflow object', function () {
-		const workflow = PocWorkflow.fromString(fs.readFileSync('./tests/poc/applicantrequest.yml', 'utf8'));
+		const workflow = PocWorkflow.fromSource(fs.readFileSync('./tests/poc/applicantrequest.yml', 'utf8'));
 		
 		expect(workflow.expressionLang).toEqual('jq');
 		// @ts-ignore

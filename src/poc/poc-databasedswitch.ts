@@ -62,7 +62,7 @@ export class PocDatabasedswitch {
 	}
 	
 	
-	static fromString(value: string): PocDatabasedswitch {
+	static fromSource(value: string): PocDatabasedswitch {
 		return plainToClass(PocDatabasedswitch, JSON.parse(value) );
 	}
 	

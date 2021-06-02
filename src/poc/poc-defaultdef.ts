@@ -27,7 +27,7 @@ export class PocDefaultdef {
 	}
 	
 	
-	static fromString(value: string): PocDefaultdef {
+	static fromSource(value: string): PocDefaultdef {
 		return plainToClass(PocDefaultdef, JSON.parse(value));
 	}
 	

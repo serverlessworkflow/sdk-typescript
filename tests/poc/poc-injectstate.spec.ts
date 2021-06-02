@@ -29,7 +29,7 @@ describe('PocInjectstate', () => {
 		};
 		
 		
-		const test = PocInjectstate.fromString(JSON.stringify(value));
+		const test = PocInjectstate.fromSource(JSON.stringify(value));
 		
 		
 		const expected = {

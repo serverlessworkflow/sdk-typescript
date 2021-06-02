@@ -25,7 +25,7 @@ export class PocAction {
 	
 	
 	
-	static fromString(value: string): PocAction {
+	static fromSource(value: string): PocAction {
 		return plainToClass(PocAction, JSON.parse(value));
 	}
 	

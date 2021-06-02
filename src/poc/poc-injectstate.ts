@@ -53,7 +53,7 @@ export class PocInjectstate {
   metadata?: /* Metadata information */ Metadata;
 
   
-  static fromString(value: string): PocInjectstate {
+  static fromSource(value: string): PocInjectstate {
     return plainToClass(PocInjectstate, JSON.parse(value));
   }
 

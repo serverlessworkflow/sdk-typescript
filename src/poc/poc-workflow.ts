@@ -72,7 +72,7 @@ export class PocWorkflow {
 	@Transform(({ value }) => {
 		if(typeof value  === typeof []){
 			return value.map((v: string) => {
-				return PocFunction.fromString(JSON.stringify(v));
+				return PocFunction.fromSource(JSON.stringify(v));
 			});
 		}
 		return value;
@@ -122,7 +122,7 @@ export class PocWorkflow {
 	];
 	
 	
-	static fromString(value: string): PocWorkflow {
+	static fromSource(value: string): PocWorkflow {
 		return plainToClass(PocWorkflow, yaml.load(value));
 	}
 	

@@ -33,7 +33,7 @@ export class PocFunction {
 	}
 	
 	
-	static fromString(value: string): PocFunction {
+	static fromSource(value: string): PocFunction {
 		return plainToClass(PocFunction, JSON.parse(value));
 	}
 	

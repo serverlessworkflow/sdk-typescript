@@ -33,7 +33,7 @@ export class PocTransitiondatacondition {
 	}
 	
 	
-	static fromString(value: string): PocTransitiondatacondition {
+	static fromSource(value: string): PocTransitiondatacondition {
 		return plainToClass(PocTransitiondatacondition, JSON.parse(value));
 	}
 	
