@@ -15,9 +15,12 @@
  *
  */
 
-export * from './lib/validation-error';
-export * from './lib/workflow-converter';
-export * from './lib/workflow-validator';
-export * from './lib/validators';
-export * from './lib/builders';
-export * from './lib/definitions';
+import { DefinedError } from 'ajv';
+
+export class ValidationError {
+  readonly message: string;
+  
+  constructor(readonly error: DefinedError) {
+    this.message = `invalid: ${error.instancePath} | ${error.schemaPath} | ${error.message}`;
+  }
+}
