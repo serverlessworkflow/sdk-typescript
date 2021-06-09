@@ -1,11 +1,13 @@
-import { End, Metadata, Statedatafilter, Transition } from '../lib/definitions/workflow';
-import { classToPlain, Expose, plainToClass, Transform } from 'class-transformer';
-import 'es6-shim';
-import 'reflect-metadata';
-import { Builder, builder } from '../lib/builder';
-import { validate } from '../lib/utils';
-
-export class PocInjectstate {
+import { validate } from '../../lib/utils';
+import { classToPlain, plainToClass } from 'class-transformer';
+import { Builder, builder } from '../../lib/builder';
+import * as yaml from 'js-yaml';
+import { Expose, Transform } from 'class-transformer';
+import { End } from './end';
+import { Metadata } from './metadata';
+import { Statedatafilter } from './statedatafilter';
+import { Transition } from './transition';
+export class Injectstate {
   /**
    * Unique state id
    */
@@ -17,13 +19,13 @@ export class PocInjectstate {
   /**
    * State type
    */
-  @Transform(() => 'inject')
+  @Transform(() => 'inject', {})
   @Expose({ name: 'type' })
   type?: 'inject';
   /**
    * State end definition
    */
-  end?: End;
+  end?: boolean | End;
   /**
    * JSON object which can be set as states data input and can be manipulated via filters
    */
@@ -37,32 +39,30 @@ export class PocInjectstate {
   /**
    * Next transition of the workflow after subflow has completed
    */
-  transition?: Transition;
+  transition?: string | Transition;
   /**
    * Unique Name of a workflow state which is responsible for compensation of this state
    */
   compensatedBy?: string;
-
   /**
    * If true, this state is used to compensate another state. Default is false
    */
   @Transform(({ value }) => value || false, { toClassOnly: true })
   @Expose({ name: 'usedForCompensation' })
   usedForCompensation?: boolean;
-
   metadata?: /* Metadata information */ Metadata;
 
-  
-  static fromSource(value: string): PocInjectstate {
-    return plainToClass(PocInjectstate, JSON.parse(value));
+  static builder(): Builder<Injectstate> {
+    return builder<Injectstate>(Injectstate.fn);
   }
 
-  static builder(): Builder<PocInjectstate> {
-    return builder<PocInjectstate>(PocInjectstate.fn);
+  static fromSource(value: string): Injectstate {
+    return plainToClass(Injectstate, yaml.load(value));
   }
-  private static fn(data: PocInjectstate): () => PocInjectstate {
+
+  private static fn(data: Injectstate): () => Injectstate {
     return () => {
-      Object.assign(data, classToPlain(new PocInjectstate()));
+      Object.assign(data, classToPlain(new Injectstate()));
 
       if (!data.end && !data.transition) {
         data.end = true;
@@ -73,7 +73,4 @@ export class PocInjectstate {
       return data;
     };
   }
-
-  
-
 }

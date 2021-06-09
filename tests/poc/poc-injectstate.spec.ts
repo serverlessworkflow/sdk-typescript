@@ -14,36 +14,32 @@
  * limitations under the License.
  *
  */
-import {PocInjectstate} from '../../src/poc/poc-injectstate';
 
-describe('PocInjectstate', () => {
-	
-	it('generate object from string', () => {
-		const value = {
-			"type": "inject",
-			"name": "Hello State",
-			"id": "test",
-			"data": {
-				"result": "Hello World!",
-			},
-		};
-		
-		
-		const test = PocInjectstate.fromSource(JSON.stringify(value));
-		
-		
-		const expected = {
-			"type": "inject",
-			"name": "Hello State",
-			"id": "test",
-			"data": {
-				"result": "Hello World!",
-			},
-			"usedForCompensation":false,
-		};
-		
-		expect(JSON.stringify(test)).toEqual(
-			JSON.stringify(expected)
-		);
-	});
+import { Injectstate } from '../../src/poc/definitions';
+
+describe('Injectstate', () => {
+  it('generate object from string', () => {
+    const value = {
+      type: 'inject',
+      name: 'Hello State',
+      id: 'test',
+      data: {
+        result: 'Hello World!',
+      },
+    };
+
+    const test = Injectstate.fromSource(JSON.stringify(value));
+
+    const expected = {
+      type: 'inject',
+      name: 'Hello State',
+      id: 'test',
+      data: {
+        result: 'Hello World!',
+      },
+      usedForCompensation: false,
+    };
+
+    expect(JSON.stringify(test)).toEqual(JSON.stringify(expected));
+  });
 });
