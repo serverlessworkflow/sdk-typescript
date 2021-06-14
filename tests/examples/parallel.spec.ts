@@ -33,7 +33,6 @@ describe('parallel workflow example', () => {
             branchBuilder().name('ShortDelayBranch').workflowId('shortdelayworkflowid').build(),
             branchBuilder().name('LongDelayBranch').workflowId('longdelayworkflowid').build(),
           ])
-          .end(true)
           .build(),
       ])
       .build();

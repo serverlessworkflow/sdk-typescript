@@ -14,8 +14,9 @@
  * limitations under the License.
  *
  */
-import { workflowBuilder, injectstateBuilder, WorkflowConverter, Specification } from '../src/';
+import { injectstateBuilder, Specification, workflowBuilder } from '../src/';
 import { readFileSync } from 'fs';
+import { Workflow } from '../src/lib/definitions/workflow';
 
 describe('workflow-converter fromSource', () => {
   const testCases = [
@@ -34,7 +35,7 @@ describe('workflow-converter fromSource', () => {
   ];
   testCases.forEach((test) => {
     it(test.description, function () {
-      const workflow: Specification.Workflow = WorkflowConverter.fromString(readFileSync(test.file, 'utf-8'));
+      const workflow: Specification.Workflow = Workflow.fromSource(readFileSync(test.file, 'utf-8'));
       expect(workflow.id).toBe('helloworld');
       expect(workflow.version).toBe('1.0');
       expect(workflow.name).toBe('Hello World Workflow');
@@ -49,11 +50,11 @@ describe('workflow-converter fromSource', () => {
         states: [
           {
             name: 'Hello State',
-            type: 'inject',
             data: {
               result: 'Hello World!',
             },
             end: true,
+            type: 'inject',
           },
         ],
       });
@@ -62,14 +63,14 @@ describe('workflow-converter fromSource', () => {
 
   it('should throws error if format is not json or yaml', () => {
     expect(() => {
-      WorkflowConverter.fromString(readFileSync('./tests/workflow-converter-hello-world.xxx', 'utf-8'));
+      Workflow.fromSource(readFileSync('./tests/workflow-converter-hello-world.xxx', 'utf-8'));
     }).toThrow(new Error('Format not supported'));
   });
 });
 
 describe('workflow-converter', () => {
   it('should generate JSON from workflow object', () => {
-    const jsonWorkflow: string = WorkflowConverter.toJson(
+    const jsonWorkflow: string = Workflow.toJson(
       workflowBuilder()
         .id('helloworld')
         .version('1.0')
@@ -96,12 +97,12 @@ describe('workflow-converter', () => {
         '"start":"Hello State",' +
         '"states":[' +
         '{' +
+        '"type":"inject",' +
         '"name":"Hello State",' +
         '"data":{' +
         '"result":"Hello World!"' +
         '},' +
-        '"end":true,' +
-        '"type":"inject"' +
+        '"end":true' +
         '}' +
         ']' +
         '}'
@@ -109,7 +110,7 @@ describe('workflow-converter', () => {
   });
 
   it('should generate YAML from workflow object', () => {
-    const yamlWorkflow: string = WorkflowConverter.toYaml(
+    const yamlWorkflow: string = Workflow.toYaml(
       workflowBuilder()
         .id('helloworld')
         .version('1.0')
@@ -134,11 +135,11 @@ describe('workflow-converter', () => {
         'description: Inject Hello World\n' +
         'start: Hello State\n' +
         'states:\n' +
-        '  - name: Hello State\n' +
+        '  - type: inject\n' +
+        '    name: Hello State\n' +
         '    data:\n' +
         '      result: Hello World!\n' +
-        '    end: true\n' +
-        '    type: inject\n'
+        '    end: true\n'
     );
   });
 });

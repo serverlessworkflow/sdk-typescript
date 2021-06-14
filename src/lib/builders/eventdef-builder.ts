@@ -26,9 +26,11 @@ import { validate } from '../utils';
  */
 function eventdefBuildingFn(data: Specification.Eventdef): () => Specification.Eventdef {
   return () => {
-    data.kind = data.kind || 'consumed';
-    validate('Eventdef', data);
-    return data;
+    const result = {} as Specification.Eventdef;
+
+    Object.assign(result, data);
+    validate('Eventdef', result);
+    return result;
   };
 }
 

@@ -58,7 +58,6 @@ describe('carauctionbids workflow example', () => {
               ])
               .build(),
           ])
-          .end(true)
           .build(),
       ])
       .build();

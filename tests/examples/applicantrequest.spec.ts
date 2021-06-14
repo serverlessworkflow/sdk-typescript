@@ -20,6 +20,7 @@ import {
   databasedswitchBuilder,
   defaultdefBuilder,
   functionBuilder,
+  functionrefBuilder,
   operationstateBuilder,
   subflowstateBuilder,
   transitiondataconditionBuilder,
@@ -55,17 +56,18 @@ describe('applicationrequest workflow example', () => {
           ])
           .default(defaultdefBuilder().transition('RejectApplication').build())
           .build(),
-        subflowstateBuilder().name('StartApplication').workflowId('startApplicationWorkflowId').end(true).build(),
+        subflowstateBuilder().name('StartApplication').workflowId('startApplicationWorkflowId').build(),
         operationstateBuilder()
           .name('RejectApplication')
           .actionMode('sequential')
-          .end(true)
           .actions([
             actionBuilder()
-              .functionRef({
-                refName: 'sendRejectionEmailFunction',
-                arguments: { applicant: '${ .applicant }' },
-              })
+              .functionRef(
+                functionrefBuilder()
+                  .refName('sendRejectionEmailFunction')
+                  .arguments({ applicant: '${ .applicant }' })
+                  .build()
+              )
               .build(),
           ])
           .build(),

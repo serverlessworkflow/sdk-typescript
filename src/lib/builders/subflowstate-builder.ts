@@ -26,9 +26,17 @@ import { validate } from '../utils';
  */
 function subflowstateBuildingFn(data: Specification.Subflowstate): () => Specification.Subflowstate {
   return () => {
-    data.type = 'subflow';
-    validate('Subflowstate', data);
-    return data;
+    const result = {
+      type: 'subflow',
+    } as Specification.Subflowstate;
+
+    if (!data.end && !data.transition) {
+      result.end = true;
+    }
+
+    Object.assign(result, data);
+    validate('Subflowstate', result);
+    return result;
   };
 }
 

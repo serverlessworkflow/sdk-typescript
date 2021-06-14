@@ -26,9 +26,11 @@ import { validate } from '../utils';
  */
 function functionBuildingFn(data: Specification.Function): () => Specification.Function {
   return () => {
-    data.type = data.type || 'rest';
-    validate('Function', data);
-    return data;
+    const result = {} as Specification.Function;
+
+    Object.assign(result, data);
+    validate('Function', result);
+    return result;
   };
 }
 

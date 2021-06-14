@@ -10,16 +10,14 @@
   "functions": [
     {
       "name": "StoreBidFunction",
-      "operation": "http://myapis.org/carauctionapi.json#storeBid",
-      "type": "rest"
+      "operation": "http://myapis.org/carauctionapi.json#storeBid"
     }
   ],
   "events": [
     {
       "name": "CarBidEvent",
       "type": "carBidMadeType",
-      "source": "carBidEventSource",
-      "kind": "consumed"
+      "source": "carBidEventSource"
     }
   ],
   "states": [

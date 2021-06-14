@@ -26,8 +26,11 @@ import { validate } from '../utils';
  */
 function startdefBuildingFn(data: Specification.Startdef): () => Specification.Startdef {
   return () => {
-    validate('Startdef', data);
-    return data;
+    const result = {} as Specification.Startdef;
+
+    Object.assign(result, data);
+    validate('Startdef', result);
+    return result;
   };
 }
 

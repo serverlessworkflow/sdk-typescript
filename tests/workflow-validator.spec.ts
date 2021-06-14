@@ -35,8 +35,7 @@ describe('workflow-validator', () => {
     expect(workflowValidator.errors[0].constructor === ValidationError).toBeTruthy(
       'Expected errors to be instance of ValidationError'
     );
-    expect(workflowValidator.errors[0].message).toMatch("states");
-
+    expect(workflowValidator.errors[0].message).toMatch('states');
   });
 
   it('should have no errors if the workflow is valid', () => {

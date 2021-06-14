@@ -26,8 +26,11 @@ import { validate } from '../utils';
  */
 function actionBuildingFn(data: Specification.Action): () => Specification.Action {
   return () => {
-    validate('Action', data);
-    return data;
+    const result = {} as Specification.Action;
+
+    Object.assign(result, data);
+    validate('Action', result);
+    return result;
   };
 }
 

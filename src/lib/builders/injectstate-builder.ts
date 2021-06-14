@@ -26,9 +26,17 @@ import { validate } from '../utils';
  */
 function injectstateBuildingFn(data: Specification.Injectstate): () => Specification.Injectstate {
   return () => {
-    data.type = 'inject';
-    validate('Injectstate', data);
-    return data;
+    const result = {
+      type: 'inject',
+    } as Specification.Injectstate;
+
+    if (!data.end && !data.transition) {
+      result.end = true;
+    }
+
+    Object.assign(result, data);
+    validate('Injectstate', result);
+    return result;
   };
 }
 

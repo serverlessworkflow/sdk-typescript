@@ -26,8 +26,11 @@ import { validate } from '../utils';
  */
 function workflowBuildingFn(data: Specification.Workflow): () => Specification.Workflow {
   return () => {
-    validate('Workflow', data);
-    return data;
+    const result = {} as Specification.Workflow;
+
+    Object.assign(result, data);
+    validate('Workflow', result);
+    return result;
   };
 }
 

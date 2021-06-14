@@ -107,7 +107,7 @@ const generate = async (source: string, dest: string, additionnalSchemas: string
 };
 
 const srcFile = path.resolve(process.cwd(), 'src/lib/schema/workflow.json');
-const destFile = 'src/lib/definitions/workflow.ts';
+const destFile = 'src/lib/schema/types/workflow.ts';
 /*
 const additionnalSchemas = [
   path.resolve(process.cwd(), 'src/lib/schema/common.json'), // should be resolved already, no need to add it manually

@@ -137,11 +137,11 @@ describe('booklending workflow example', () => {
               })
               .build(),
           ])
-          .end(true)
           .build(),
       ])
       .functions('file://books/lending/functions.json')
-      .events('file://books/lending/events.json');
+      .events('file://books/lending/events.json')
+      .build();
 
     const expected = JSON.parse(fs.readFileSync('./tests/examples/booklending.json', 'utf8'));
     expect(workflow).toEqual(expected);

@@ -26,8 +26,11 @@ import { validate } from '../utils';
  */
 function crondefBuildingFn(data: Specification.Crondef): () => Specification.Crondef {
   return () => {
-    validate('Crondef', data);
-    return data;
+    const result = {} as Specification.Crondef;
+
+    Object.assign(result, data);
+    validate('Crondef', result);
+    return result;
   };
 }
 

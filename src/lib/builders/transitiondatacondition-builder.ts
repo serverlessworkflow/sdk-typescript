@@ -28,8 +28,11 @@ function transitiondataconditionBuildingFn(
   data: Specification.Transitiondatacondition
 ): () => Specification.Transitiondatacondition {
   return () => {
-    validate('Transitiondatacondition', data);
-    return data;
+    const result = {} as Specification.Transitiondatacondition;
+
+    Object.assign(result, data);
+    validate('Transitiondatacondition', result);
+    return result;
   };
 }
 

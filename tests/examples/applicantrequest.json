@@ -7,14 +7,13 @@
   "functions": [
     {
       "name": "sendRejectionEmailFunction",
-      "operation": "http://myapis.org/applicationapi.json#emailRejection",
-      "type": "rest"
+      "operation": "http://myapis.org/applicationapi.json#emailRejection"
     }
   ],
-  "states":[
+  "states": [
     {
-      "name":"CheckApplication",
-      "type":"switch",
+      "name": "CheckApplication",
+      "type": "switch",
       "dataConditions": [
         {
           "condition": "${ .applicants | .age >= 18 }",
@@ -36,10 +35,10 @@
       "end": true
     },
     {
-      "name":"RejectApplication",
-      "type":"operation",
-      "actionMode":"sequential",
-      "actions":[
+      "name": "RejectApplication",
+      "type": "operation",
+      "actionMode": "sequential",
+      "actions": [
         {
           "functionRef": {
             "refName": "sendRejectionEmailFunction",

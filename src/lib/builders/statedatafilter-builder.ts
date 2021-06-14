@@ -26,8 +26,11 @@ import { validate } from '../utils';
  */
 function statedatafilterBuildingFn(data: Specification.Statedatafilter): () => Specification.Statedatafilter {
   return () => {
-    validate('Statedatafilter', data);
-    return data;
+    const result = {} as Specification.Statedatafilter;
+
+    Object.assign(result, data);
+    validate('Statedatafilter', result);
+    return result;
   };
 }
 

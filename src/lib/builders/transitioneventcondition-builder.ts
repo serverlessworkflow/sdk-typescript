@@ -28,8 +28,11 @@ function transitioneventconditionBuildingFn(
   data: Specification.Transitioneventcondition
 ): () => Specification.Transitioneventcondition {
   return () => {
-    validate('Transitioneventcondition', data);
-    return data;
+    const result = {} as Specification.Transitioneventcondition;
+
+    Object.assign(result, data);
+    validate('Transitioneventcondition', result);
+    return result;
   };
 }
 

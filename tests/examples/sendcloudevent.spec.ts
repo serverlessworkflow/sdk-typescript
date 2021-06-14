@@ -46,6 +46,7 @@ describe('sendcloudevent workflow example', () => {
           .inputCollection('${ .orders }')
           .iterationParam('singleorder')
           .outputCollection('${ .provisionedOrders }')
+          .usedForCompensation(false)
           .actions([
             actionBuilder()
               .functionRef({

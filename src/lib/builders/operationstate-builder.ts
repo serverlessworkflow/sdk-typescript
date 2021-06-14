@@ -26,9 +26,17 @@ import { validate } from '../utils';
  */
 function operationstateBuildingFn(data: Specification.Operationstate): () => Specification.Operationstate {
   return () => {
-    data.type = 'operation';
-    validate('Operationstate', data);
-    return data;
+    const result = {
+      type: 'operation',
+    } as Specification.Operationstate;
+
+    if (!data.end && !data.transition) {
+      result.end = true;
+    }
+
+    Object.assign(result, data);
+    validate('Operationstate', result);
+    return result;
   };
 }
 

@@ -26,8 +26,11 @@ import { validate } from '../utils';
  */
 function repeatBuildingFn(data: Specification.Repeat): () => Specification.Repeat {
   return () => {
-    validate('Repeat', data);
-    return data;
+    const result = {} as Specification.Repeat;
+
+    Object.assign(result, data);
+    validate('Repeat', result);
+    return result;
   };
 }
 

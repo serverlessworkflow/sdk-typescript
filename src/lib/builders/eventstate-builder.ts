@@ -26,9 +26,17 @@ import { validate } from '../utils';
  */
 function eventstateBuildingFn(data: Specification.Eventstate): () => Specification.Eventstate {
   return () => {
-    data.type = 'event';
-    validate('Eventstate', data);
-    return data;
+    const result = {
+      type: 'event',
+    } as Specification.Eventstate;
+
+    if (!data.end && !data.transition) {
+      result.end = true;
+    }
+
+    Object.assign(result, data);
+    validate('Eventstate', result);
+    return result;
   };
 }
 

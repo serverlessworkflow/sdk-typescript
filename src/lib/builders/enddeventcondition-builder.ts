@@ -26,8 +26,11 @@ import { validate } from '../utils';
  */
 function enddeventconditionBuildingFn(data: Specification.Enddeventcondition): () => Specification.Enddeventcondition {
   return () => {
-    validate('Enddeventcondition', data);
-    return data;
+    const result = {} as Specification.Enddeventcondition;
+
+    Object.assign(result, data);
+    validate('Enddeventcondition', result);
+    return result;
   };
 }
 

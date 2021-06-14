@@ -26,8 +26,11 @@ import { validate } from '../utils';
  */
 function oneventsBuildingFn(data: Specification.Onevents): () => Specification.Onevents {
   return () => {
-    validate('Onevents', data);
-    return data;
+    const result = {} as Specification.Onevents;
+
+    Object.assign(result, data);
+    validate('Onevents', result);
+    return result;
   };
 }
 

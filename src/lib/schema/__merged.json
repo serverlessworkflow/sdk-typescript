@@ -483,7 +483,10 @@
           "usedForCompensation": {
             "const": true
           }
-        }
+        },
+        "required": [
+          "usedForCompensation"
+        ]
       },
       "then": {
         "required": [
@@ -675,7 +678,10 @@
           "usedForCompensation": {
             "const": true
           }
-        }
+        },
+        "required": [
+          "usedForCompensation"
+        ]
       },
       "then": {
         "required": [
@@ -792,7 +798,10 @@
           "usedForCompensation": {
             "const": true
           }
-        }
+        },
+        "required": [
+          "usedForCompensation"
+        ]
       },
       "then": {
         "required": [
@@ -1279,7 +1288,10 @@
           "usedForCompensation": {
             "const": true
           }
-        }
+        },
+        "required": [
+          "usedForCompensation"
+        ]
       },
       "then": {
         "required": [
@@ -1402,7 +1414,10 @@
           "usedForCompensation": {
             "const": true
           }
-        }
+        },
+        "required": [
+          "usedForCompensation"
+        ]
       },
       "then": {
         "required": [
@@ -1533,7 +1548,10 @@
           "usedForCompensation": {
             "const": true
           }
-        }
+        },
+        "required": [
+          "usedForCompensation"
+        ]
       },
       "then": {
         "required": [
@@ -1787,6 +1805,68 @@
       "additionalProperties": false,
       "required": []
     },
+    "retrydef": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique retry strategy name",
+          "minLength": 1
+        },
+        "delay": {
+          "type": "string",
+          "description": "Time delay between retry attempts (ISO 8601 duration format)"
+        },
+        "maxDelay": {
+          "type": "string",
+          "description": "Maximum time delay between retry attempts (ISO 8601 duration format)"
+        },
+        "increment": {
+          "type": "string",
+          "description": "Static value by which the delay increases during each attempt (ISO 8601 time format)"
+        },
+        "multiplier": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "minimum": 0,
+          "minLength": 1,
+          "multipleOf": 0.01,
+          "description": "Numeric value, if specified the delay between retries is multiplied by this value."
+        },
+        "maxAttempts": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "minimum": 1,
+          "minLength": 0,
+          "description": "Maximum number of retry attempts."
+        },
+        "jitter": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "If float type, maximum amount of random time added or subtracted from the delay between each retry relative to total delay (between 0 and 1). If string type, absolute maximum amount of random time added or subtracted from the delay between each retry (ISO 8601 duration format)"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "maxAttempts"
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Metadata information",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
     "function": {
       "type": "object",
       "properties": {
@@ -1897,68 +1977,6 @@
       "additionalProperties": false,
       "required": [
         "contextAttributeName"
-      ]
-    },
-    "metadata": {
-      "type": "object",
-      "description": "Metadata information",
-      "additionalProperties": {
-        "type": "string"
-      }
-    },
-    "retrydef": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Unique retry strategy name",
-          "minLength": 1
-        },
-        "delay": {
-          "type": "string",
-          "description": "Time delay between retry attempts (ISO 8601 duration format)"
-        },
-        "maxDelay": {
-          "type": "string",
-          "description": "Maximum time delay between retry attempts (ISO 8601 duration format)"
-        },
-        "increment": {
-          "type": "string",
-          "description": "Static value by which the delay increases during each attempt (ISO 8601 time format)"
-        },
-        "multiplier": {
-          "type": [
-            "number",
-            "string"
-          ],
-          "minimum": 0,
-          "minLength": 1,
-          "multipleOf": 0.01,
-          "description": "Numeric value, if specified the delay between retries is multiplied by this value."
-        },
-        "maxAttempts": {
-          "type": [
-            "number",
-            "string"
-          ],
-          "minimum": 1,
-          "minLength": 0,
-          "description": "Maximum number of retry attempts."
-        },
-        "jitter": {
-          "type": [
-            "number",
-            "string"
-          ],
-          "minimum": 0,
-          "maximum": 1,
-          "description": "If float type, maximum amount of random time added or subtracted from the delay between each retry relative to total delay (between 0 and 1). If string type, absolute maximum amount of random time added or subtracted from the delay between each retry (ISO 8601 duration format)"
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "name",
-        "maxAttempts"
       ]
     },
     "events": {

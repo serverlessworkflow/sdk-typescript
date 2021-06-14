@@ -67,7 +67,7 @@ describe('jobmonitoring workflow example', () => {
           .stateDataFilter(statedatafilterBuilder().output('${ .jobuid }').build())
           .transition('WaitForCompletion')
           .build(),
-        subflowstateBuilder().name('SubmitError').workflowId('handleJobSubmissionErrorWorkflow').end(true).build(),
+        subflowstateBuilder().name('SubmitError').workflowId('handleJobSubmissionErrorWorkflow').build(),
         delaystateBuilder().name('WaitForCompletion').timeDelay('PT5S').transition('GetJobStatus').build(),
         operationstateBuilder()
           .name('GetJobStatus')
@@ -110,7 +110,7 @@ describe('jobmonitoring workflow example', () => {
               })
               .build(),
           ])
-          .end(true)
+
           .build(),
         operationstateBuilder()
           .name('JobFailed')
@@ -125,7 +125,6 @@ describe('jobmonitoring workflow example', () => {
               })
               .build(),
           ])
-          .end(true)
           .build(),
       ])
       .build();

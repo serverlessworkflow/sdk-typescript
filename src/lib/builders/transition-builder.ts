@@ -26,8 +26,11 @@ import { validate } from '../utils';
  */
 function transitionBuildingFn(data: Specification.Transition): () => Specification.Transition {
   return () => {
-    validate('Transition', data);
-    return data;
+    const result = {} as Specification.Transition;
+
+    Object.assign(result, data);
+    validate('Transition', result);
+    return result;
   };
 }
 

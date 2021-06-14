@@ -7,8 +7,7 @@
   "functions": [
     {
       "name": "provisionOrderFunction",
-      "operation": "http://myapis.org/provisioningapi.json#doProvision",
-      "type": "rest"
+      "operation": "http://myapis.org/provisioningapi.json#doProvision"
     }
   ],
   "states": [

@@ -13,8 +13,7 @@
   "functions": [
     {
       "name": "provisionOrderFunction",
-      "operation": "http://myapis.org/provisioning.json#doProvision",
-      "type": "rest"
+      "operation": "http://myapis.org/provisioning.json#doProvision"
     }
   ],
   "states": [

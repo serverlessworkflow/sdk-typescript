@@ -16,7 +16,7 @@ export const validate = (typeName: string, data: any): boolean => {
     const firstError: DefinedError = (validateFn.errors as DefinedError[])[0];
     throw new Error(
       `${typeName} is invalid: ${firstError.instancePath} | ${firstError.schemaPath} | ${firstError.message}
-      data: ${data}`
+      data: ${JSON.stringify(data, null, 4)}`
     );
   }
   return true;

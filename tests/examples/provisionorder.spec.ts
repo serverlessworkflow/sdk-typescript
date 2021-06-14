@@ -62,14 +62,10 @@ describe('provisionorder workflow example', () => {
             errorBuilder().error('Missing order quantity').transition('MissingQuantity').build(),
           ])
           .build(),
-        subflowstateBuilder().name('MissingId').workflowId('handleMissingIdExceptionWorkflow').end(true).build(),
-        subflowstateBuilder().name('MissingItem').workflowId('handleMissingItemExceptionWorkflow').end(true).build(),
-        subflowstateBuilder()
-          .name('MissingQuantity')
-          .workflowId('handleMissingQuantityExceptionWorkflow')
-          .end(true)
-          .build(),
-        subflowstateBuilder().name('ApplyOrder').workflowId('applyOrderWorkflowId').end(true).build(),
+        subflowstateBuilder().name('MissingId').workflowId('handleMissingIdExceptionWorkflow').build(),
+        subflowstateBuilder().name('MissingItem').workflowId('handleMissingItemExceptionWorkflow').build(),
+        subflowstateBuilder().name('MissingQuantity').workflowId('handleMissingQuantityExceptionWorkflow').build(),
+        subflowstateBuilder().name('ApplyOrder').workflowId('applyOrderWorkflowId').build(),
       ])
       .build();
 

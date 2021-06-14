@@ -26,8 +26,11 @@ import { validate } from '../utils';
  */
 function branchBuildingFn(data: Specification.Branch): () => Specification.Branch {
   return () => {
-    validate('Branch', data);
-    return data;
+    const result = {} as Specification.Branch;
+
+    Object.assign(result, data);
+    validate('Branch', result);
+    return result;
   };
 }
 

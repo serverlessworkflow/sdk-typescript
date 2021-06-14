@@ -7,23 +7,19 @@
   "functions": [
     {
       "name": "submitJob",
-      "operation": "http://myapis.org/monitorapi.json#doSubmit",
-      "type": "rest"
+      "operation": "http://myapis.org/monitorapi.json#doSubmit"
     },
     {
       "name": "checkJobStatus",
-      "operation": "http://myapis.org/monitorapi.json#checkStatus",
-      "type": "rest"
+      "operation": "http://myapis.org/monitorapi.json#checkStatus"
     },
     {
       "name": "reportJobSuceeded",
-      "operation": "http://myapis.org/monitorapi.json#reportSucceeded",
-      "type": "rest"
+      "operation": "http://myapis.org/monitorapi.json#reportSucceeded"
     },
     {
       "name": "reportJobFailed",
-      "operation": "http://myapis.org/monitorapi.json#reportFailure",
-      "type": "rest"
+      "operation": "http://myapis.org/monitorapi.json#reportFailure"
     }
   ],
   "states": [

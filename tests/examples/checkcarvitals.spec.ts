@@ -42,7 +42,6 @@ describe('checkcarvitals workflow example', () => {
           .name('DoCarVitalsChecks')
           .workflowId('vitalscheck')
           .repeat(repeatBuilder().stopOnEvents(['CarTurnedOffEvent']).build())
-          .end(true)
           .build(),
       ])
       .events([

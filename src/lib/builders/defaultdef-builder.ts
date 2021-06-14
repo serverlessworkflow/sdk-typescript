@@ -26,8 +26,11 @@ import { validate } from '../utils';
  */
 function defaultdefBuildingFn(data: Specification.Defaultdef): () => Specification.Defaultdef {
   return () => {
-    validate('Defaultdef', data);
-    return data;
+    const result = {} as Specification.Defaultdef;
+
+    Object.assign(result, data);
+    validate('Defaultdef', result);
+    return result;
   };
 }
 

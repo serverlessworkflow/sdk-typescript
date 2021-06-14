@@ -26,9 +26,13 @@ import { validate } from '../utils';
  */
 function callbackstateBuildingFn(data: Specification.Callbackstate): () => Specification.Callbackstate {
   return () => {
-    data.type = 'callback';
-    validate('Callbackstate', data);
-    return data;
+    const result = {
+      type: 'callback',
+    } as Specification.Callbackstate;
+
+    Object.assign(result, data);
+    validate('Callbackstate', result);
+    return result;
   };
 }
 

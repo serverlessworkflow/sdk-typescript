@@ -26,8 +26,11 @@ import { validate } from '../utils';
  */
 function errorBuildingFn(data: Specification.Error): () => Specification.Error {
   return () => {
-    validate('Error', data);
-    return data;
+    const result = {} as Specification.Error;
+
+    Object.assign(result, data);
+    validate('Error', result);
+    return result;
   };
 }
 

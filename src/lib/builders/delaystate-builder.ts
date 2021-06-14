@@ -26,9 +26,13 @@ import { validate } from '../utils';
  */
 function delaystateBuildingFn(data: Specification.Delaystate): () => Specification.Delaystate {
   return () => {
-    data.type = 'delay';
-    validate('Delaystate', data);
-    return data;
+    const result = {
+      type: 'delay',
+    } as Specification.Delaystate;
+
+    Object.assign(result, data);
+    validate('Delaystate', result);
+    return result;
   };
 }
 

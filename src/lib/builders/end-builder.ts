@@ -26,8 +26,11 @@ import { validate } from '../utils';
  */
 function endBuildingFn(data: Specification.End): () => Specification.End {
   return () => {
-    validate('End', data);
-    return data;
+    const result = {} as Specification.End;
+
+    Object.assign(result, data);
+    validate('End', result);
+    return result;
   };
 }
 

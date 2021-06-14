@@ -26,13 +26,17 @@ import { validate } from '../utils';
  */
 function foreachstateBuildingFn(data: Specification.Foreachstate): () => Specification.Foreachstate {
   return () => {
-    data.type = 'foreach';
+    const result = {
+      type: 'foreach',
+    } as Specification.Foreachstate;
 
-    //FIXME https://github.com/serverlessworkflow/sdk-typescript/issues/95
+    if (!data.end && !data.transition) {
+      result.end = true;
+    }
 
-    data.usedForCompensation = data.usedForCompensation || false;
-    validate('Foreachstate', data);
-    return data;
+    Object.assign(result, data);
+    validate('Foreachstate', result);
+    return result;
   };
 }
 
