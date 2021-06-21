@@ -14,13 +14,16 @@
  * limitations under the License.
  *
  */
-import { CorrelationDef } from './correlationDef';
 import { Metadata } from './metadata';
+import { overwriteCorrelationValue, overwriteMetadataValue } from './utils';
+import { CorrelationDefs } from './types';
 
 export class Eventdef {
   constructor(model: any) {
-    const result = {};
-    Object.assign(this, result, model);
+    Object.assign(this, model);
+
+    overwriteMetadataValue(this);
+    overwriteCorrelationValue(this);
   }
 
   /**
@@ -42,10 +45,7 @@ export class Eventdef {
   /**
    * CloudEvent correlation definitions
    */
-  correlation?: [
-    /* CloudEvent correlation definition */ CorrelationDef,
-    .../* CloudEvent correlation definition */ CorrelationDef[]
-  ];
+  correlation?: CorrelationDefs;
   /**
    * Metadata information
    */

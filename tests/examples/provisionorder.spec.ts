@@ -70,6 +70,6 @@ describe('provisionorder workflow example', () => {
       .build();
 
     const expected = JSON.parse(fs.readFileSync('./tests/examples/provisionorder.json', 'utf8'));
-    expect(workflow).toEqual(expected);
+    expect(JSON.stringify(workflow)).toEqual(JSON.stringify(expected));
   });
 });

@@ -26,11 +26,10 @@ import { validate } from '../utils';
  */
 function correlationDefBuildingFn(data: Specification.CorrelationDef): () => Specification.CorrelationDef {
   return () => {
-    const result = {} as Specification.CorrelationDef;
+    const model = new Specification.CorrelationDef(data);
 
-    Object.assign(result, data);
-    validate('CorrelationDef', result);
-    return result;
+    validate('CorrelationDef', model);
+    return model;
   };
 }
 

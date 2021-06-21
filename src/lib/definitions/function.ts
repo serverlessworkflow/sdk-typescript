@@ -17,8 +17,8 @@
 
 export class Function {
   constructor(model: any) {
-    const result = { type: 'rest' };
-    Object.assign(this, result, model);
+    const defaultModel = { type: 'rest' };
+    Object.assign(this, defaultModel, model);
   }
 
   /**

@@ -26,13 +26,10 @@ import { validate } from '../utils';
  */
 function delaystateBuildingFn(data: Specification.Delaystate): () => Specification.Delaystate {
   return () => {
-    const result = {
-      type: 'delay',
-    } as Specification.Delaystate;
+    const model = new Specification.Delaystate(data);
 
-    Object.assign(result, data);
-    validate('Delaystate', result);
-    return result;
+    validate('Delaystate', model);
+    return model;
   };
 }
 

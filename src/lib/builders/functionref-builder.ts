@@ -26,11 +26,10 @@ import { validate } from '../utils';
  */
 function functionrefBuildingFn(data: Specification.Functionref): () => Specification.Functionref {
   return () => {
-    const result = {} as Specification.Functionref;
+    const model = new Specification.Functionref(data);
 
-    Object.assign(result, data);
-    validate('Functionref', result);
-    return result;
+    validate('Functionref', model);
+    return model;
   };
 }
 

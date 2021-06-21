@@ -17,10 +17,7 @@
 
 export class Produceeventdef {
   constructor(model: any) {
-    const result = {
-      usedForCompensation: false,
-    };
-    Object.assign(this, result, model);
+    Object.assign(this, model);
   }
 
   /**

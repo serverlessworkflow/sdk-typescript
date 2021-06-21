@@ -12,8 +12,8 @@
   ],
   "states": [
     {
-      "name": "Solve",
       "type": "foreach",
+      "name": "Solve",
       "inputCollection": "${ .expressions }",
       "iterationParam": "singleexpression",
       "outputCollection": "${ .results }",

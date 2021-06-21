@@ -26,11 +26,10 @@ import { validate } from '../utils';
  */
 function actionBuildingFn(data: Specification.Action): () => Specification.Action {
   return () => {
-    const result = {} as Specification.Action;
+    const model = new Specification.Action(data);
 
-    Object.assign(result, data);
-    validate('Action', result);
-    return result;
+    validate('Action', model);
+    return model;
   };
 }
 

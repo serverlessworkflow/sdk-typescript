@@ -26,9 +26,8 @@ import { validate } from '../utils';
  */
 function metadataBuildingFn(data: Specification.Metadata): () => Specification.Metadata {
   return () => {
-    const result = {} as Specification.Metadata;
+    const result = new Specification.Metadata(data);
 
-    Object.assign(result, data);
     validate('Metadata', result);
     return result;
   };

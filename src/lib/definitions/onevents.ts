@@ -16,11 +16,14 @@
  */
 import { Action } from './action';
 import { Eventdatafilter } from './eventdatafilter';
+import { overwriteActionsValue, overwriteEventDataFilterValue } from './utils';
 
 export class Onevents {
   constructor(model: any) {
-    const result = {};
-    Object.assign(this, result, model);
+    Object.assign(this, model);
+
+    overwriteEventDataFilterValue(this);
+    overwriteActionsValue(this);
   }
 
   /**

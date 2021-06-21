@@ -26,17 +26,14 @@ import { validate } from '../utils';
  */
 function foreachstateBuildingFn(data: Specification.Foreachstate): () => Specification.Foreachstate {
   return () => {
-    const result = {
-      type: 'foreach',
-    } as Specification.Foreachstate;
+    const model = new Specification.Foreachstate(data);
 
     if (!data.end && !data.transition) {
-      result.end = true;
+      model.end = true;
     }
 
-    Object.assign(result, data);
-    validate('Foreachstate', result);
-    return result;
+    validate('Foreachstate', model);
+    return model;
   };
 }
 

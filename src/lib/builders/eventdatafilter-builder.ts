@@ -26,11 +26,10 @@ import { validate } from '../utils';
  */
 function eventdatafilterBuildingFn(data: Specification.Eventdatafilter): () => Specification.Eventdatafilter {
   return () => {
-    const result = {} as Specification.Eventdatafilter;
+    const model = new Specification.Eventdatafilter(data);
 
-    Object.assign(result, data);
-    validate('Eventdatafilter', result);
-    return result;
+    validate('Eventdatafilter', model);
+    return model;
   };
 }
 

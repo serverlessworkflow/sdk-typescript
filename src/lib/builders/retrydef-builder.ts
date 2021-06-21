@@ -26,11 +26,10 @@ import { validate } from '../utils';
  */
 function retrydefBuildingFn(data: Specification.Retrydef): () => Specification.Retrydef {
   return () => {
-    const result = {} as Specification.Retrydef;
+    const model = new Specification.Retrydef(data);
 
-    Object.assign(result, data);
-    validate('Retrydef', result);
-    return result;
+    validate('Retrydef', model);
+    return model;
   };
 }
 

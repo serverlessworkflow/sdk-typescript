@@ -15,11 +15,13 @@
  *
  */
 import { Produceeventdef } from './produceeventdef';
+import { overwriteProduceEventsValue } from './utils';
 
 export class Transition {
   constructor(model: any) {
-    const result = {};
-    Object.assign(this, result, model);
+    Object.assign(this, model);
+
+    overwriteProduceEventsValue(this);
   }
 
   /**

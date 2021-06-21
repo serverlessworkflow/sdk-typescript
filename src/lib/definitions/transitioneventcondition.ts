@@ -17,11 +17,15 @@
 import { Eventdatafilter } from './eventdatafilter';
 import { Metadata } from './metadata';
 import { Transition } from './transition';
+import { overwriteEventDataFilterValue, overwriteMetadataValue, overwriteTransitionValueIfObject } from './utils';
 
 export class Transitioneventcondition {
   constructor(model: any) {
-    const result = {};
-    Object.assign(this, result, model);
+    Object.assign(this, model);
+
+    overwriteTransitionValueIfObject(this);
+    overwriteEventDataFilterValue(this);
+    overwriteMetadataValue(this);
   }
 
   /**

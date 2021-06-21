@@ -26,11 +26,10 @@ import { validate } from '../utils';
  */
 function actiondatafilterBuildingFn(data: Specification.Actiondatafilter): () => Specification.Actiondatafilter {
   return () => {
-    const result = {} as Specification.Actiondatafilter;
+    const model = new Specification.Actiondatafilter(data);
 
-    Object.assign(result, data);
-    validate('Actiondatafilter', result);
-    return result;
+    validate('Actiondatafilter', model);
+    return model;
   };
 }
 

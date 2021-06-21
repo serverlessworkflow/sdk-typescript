@@ -16,11 +16,14 @@
  */
 import { End } from './end';
 import { Metadata } from './metadata';
+import { overwriteEndValueIfObject, overwriteMetadataValue } from './utils';
 
 export class Enddatacondition {
   constructor(model: any) {
-    const result = {};
-    Object.assign(this, result, model);
+    Object.assign(this, model);
+
+    overwriteMetadataValue(this);
+    overwriteEndValueIfObject(this);
   }
 
   /**

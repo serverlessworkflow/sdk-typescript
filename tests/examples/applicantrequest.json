@@ -12,8 +12,8 @@
   ],
   "states": [
     {
-      "name": "CheckApplication",
       "type": "switch",
+      "name": "CheckApplication",
       "dataConditions": [
         {
           "condition": "${ .applicants | .age >= 18 }",
@@ -29,14 +29,14 @@
       }
     },
     {
-      "name": "StartApplication",
       "type": "subflow",
+      "name": "StartApplication",
       "workflowId": "startApplicationWorkflowId",
       "end": true
     },
     {
-      "name": "RejectApplication",
       "type": "operation",
+      "name": "RejectApplication",
       "actionMode": "sequential",
       "actions": [
         {

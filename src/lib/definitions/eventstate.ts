@@ -20,11 +20,26 @@ import { Metadata } from './metadata';
 import { Onevents } from './onevents';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
+import {
+  overwriteEndValueIfObject,
+  overwriteMetadataValue,
+  overwriteOnErrorsValue,
+  overwriteOnEventsValue,
+  overwriteStateDataFilterValue,
+  overwriteTransitionValueIfObject,
+} from './utils';
 
 export class Eventstate /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ {
   constructor(model: any) {
-    const result = {};
-    Object.assign(this, result, model);
+    const defaultModel = { type: 'event' };
+    Object.assign(this, defaultModel, model);
+
+    overwriteOnEventsValue(this);
+    overwriteStateDataFilterValue(this);
+    overwriteOnErrorsValue(this);
+    overwriteTransitionValueIfObject(this);
+    overwriteEndValueIfObject(this);
+    overwriteMetadataValue(this);
   }
 
   /**

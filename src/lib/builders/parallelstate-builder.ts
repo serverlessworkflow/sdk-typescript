@@ -26,17 +26,14 @@ import { validate } from '../utils';
  */
 function parallelstateBuildingFn(data: Specification.Parallelstate): () => Specification.Parallelstate {
   return () => {
-    const result = {
-      type: 'parallel',
-    } as Specification.Parallelstate;
+    const model = new Specification.Parallelstate(data);
 
     if (!data.end && !data.transition) {
-      result.end = true;
+      model.end = true;
     }
 
-    Object.assign(result, data);
-    validate('Parallelstate', result);
-    return result;
+    validate('Parallelstate', model);
+    return model;
   };
 }
 

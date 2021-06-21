@@ -24,8 +24,8 @@
   ],
   "states": [
     {
-      "name": "SubmitJob",
       "type": "operation",
+      "name": "SubmitJob",
       "actionMode": "sequential",
       "actions": [
         {
@@ -52,20 +52,20 @@
       "transition": "WaitForCompletion"
     },
     {
-      "name": "SubmitError",
       "type": "subflow",
+      "name": "SubmitError",
       "workflowId": "handleJobSubmissionErrorWorkflow",
       "end": true
     },
     {
-      "name": "WaitForCompletion",
       "type": "delay",
+      "name": "WaitForCompletion",
       "timeDelay": "PT5S",
       "transition": "GetJobStatus"
     },
     {
-      "name": "GetJobStatus",
       "type": "operation",
+      "name": "GetJobStatus",
       "actionMode": "sequential",
       "actions": [
         {
@@ -86,8 +86,8 @@
       "transition": "DetermineCompletion"
     },
     {
-      "name": "DetermineCompletion",
       "type": "switch",
+      "name": "DetermineCompletion",
       "dataConditions": [
         {
           "condition": "${ .jobStatus == \"SUCCEEDED\" }",
@@ -103,8 +103,8 @@
       }
     },
     {
-      "name": "JobSucceeded",
       "type": "operation",
+      "name": "JobSucceeded",
       "actionMode": "sequential",
       "actions": [
         {
@@ -119,8 +119,8 @@
       "end": true
     },
     {
-      "name": "JobFailed",
       "type": "operation",
+      "name": "JobFailed",
       "actionMode": "sequential",
       "actions": [
         {

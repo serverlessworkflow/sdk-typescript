@@ -26,11 +26,10 @@ import { validate } from '../utils';
  */
 function oneventsBuildingFn(data: Specification.Onevents): () => Specification.Onevents {
   return () => {
-    const result = {} as Specification.Onevents;
+    const model = new Specification.Onevents(data);
 
-    Object.assign(result, data);
-    validate('Onevents', result);
-    return result;
+    validate('Onevents', model);
+    return model;
   };
 }
 

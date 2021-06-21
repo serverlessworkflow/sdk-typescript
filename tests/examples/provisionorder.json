@@ -12,8 +12,8 @@
   ],
   "states": [
     {
-      "name": "ProvisionOrder",
       "type": "operation",
+      "name": "ProvisionOrder",
       "actionMode": "sequential",
       "actions": [
         {
@@ -45,26 +45,26 @@
       ]
     },
     {
-      "name": "MissingId",
       "type": "subflow",
+      "name": "MissingId",
       "workflowId": "handleMissingIdExceptionWorkflow",
       "end": true
     },
     {
-      "name": "MissingItem",
       "type": "subflow",
+      "name": "MissingItem",
       "workflowId": "handleMissingItemExceptionWorkflow",
       "end": true
     },
     {
-      "name": "MissingQuantity",
       "type": "subflow",
+      "name": "MissingQuantity",
       "workflowId": "handleMissingQuantityExceptionWorkflow",
       "end": true
     },
     {
-      "name": "ApplyOrder",
       "type": "subflow",
+      "name": "ApplyOrder",
       "workflowId": "applyOrderWorkflowId",
       "end": true
     }

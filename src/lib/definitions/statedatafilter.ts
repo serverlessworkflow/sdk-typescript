@@ -17,8 +17,7 @@
 
 export class Statedatafilter {
   constructor(model: any) {
-    const result = {};
-    Object.assign(this, result, model);
+    Object.assign(this, model);
   }
 
   /**

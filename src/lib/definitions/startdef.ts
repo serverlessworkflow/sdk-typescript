@@ -15,11 +15,13 @@
  *
  */
 import { Schedule } from './schedule';
+import { overwriteScheduleValueIfObject } from './utils';
 
 export class Startdef {
   constructor(model: any) {
-    const result = {};
-    Object.assign(this, result, model);
+    Object.assign(this, model);
+
+    overwriteScheduleValueIfObject(this);
   }
 
   /**

@@ -14,8 +14,8 @@
  * limitations under the License.
  *
  */
-import { ValidationError, WorkflowValidator } from '../src/';
-import { Workflow } from '../src/lib/definitions/workflow';
+import { ValidationError, WorkflowValidator } from '../../src';
+import { Workflow } from '../../src/lib/definitions/workflow';
 
 describe('workflow-validator', () => {
   it('should return errors instance of ValidationError if the workflow provided is not valid', () => {

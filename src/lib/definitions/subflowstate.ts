@@ -20,13 +20,28 @@ import { Metadata } from './metadata';
 import { Repeat } from './repeat';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
+import {
+  overwriteEndValueIfObject,
+  overwriteMetadataValue,
+  overwriteOnErrorsValue,
+  overwriteRepeatValue,
+  overwriteStateDataFilterValue,
+  overwriteTransitionValueIfObject,
+} from './utils';
 
 export class Subflowstate {
   constructor(model: any) {
-    const result = {
-      usedForCompensation: false,
+    const defaultModel = {
+      type: 'subflow',
     };
-    Object.assign(this, result, model);
+    Object.assign(this, defaultModel, model);
+
+    overwriteEndValueIfObject(this);
+    overwriteRepeatValue(this);
+    overwriteStateDataFilterValue(this);
+    overwriteOnErrorsValue(this);
+    overwriteTransitionValueIfObject(this);
+    overwriteMetadataValue(this);
   }
 
   /**

@@ -17,11 +17,15 @@
 import { Actiondatafilter } from './actiondatafilter';
 import { Eventref } from './eventref';
 import { Functionref } from './functionref';
+import { overwriteActionDataFilterValue, overwriteEventRefValue, overwriteFunctionRefValue } from './utils';
 
 export class Action {
   constructor(model: any) {
-    const result = {};
-    Object.assign(this, result, model);
+    Object.assign(this, model);
+
+    overwriteFunctionRefValue(this);
+    overwriteEventRefValue(this);
+    overwriteActionDataFilterValue(this);
   }
 
   /**

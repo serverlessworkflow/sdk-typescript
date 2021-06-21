@@ -18,11 +18,22 @@ import { End } from './end';
 import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
+import {
+  overwriteEndValueIfObject,
+  overwriteMetadataValue,
+  overwriteStateDataFilterValue,
+  overwriteTransitionValueIfObject,
+} from './utils';
 
 export class Injectstate {
   constructor(model: any) {
-    const result = {};
-    Object.assign(this, result, model);
+    const defaultModel = { type: 'inject' };
+    Object.assign(this, defaultModel, model);
+
+    overwriteEndValueIfObject(this);
+    overwriteStateDataFilterValue(this);
+    overwriteTransitionValueIfObject(this);
+    overwriteMetadataValue(this);
   }
 
   /**

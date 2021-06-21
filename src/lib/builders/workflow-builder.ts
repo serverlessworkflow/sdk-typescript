@@ -26,11 +26,13 @@ import { validate } from '../utils';
  */
 function workflowBuildingFn(data: Specification.Workflow): () => Specification.Workflow {
   return () => {
-    const result = {} as Specification.Workflow;
+    const model = new Specification.Workflow(data);
 
-    Object.assign(result, data);
-    validate('Workflow', result);
-    return result;
+    //set the value from coming from data
+    model.expressionLang = data.expressionLang;
+
+    validate('Workflow', model);
+    return model;
   };
 }
 

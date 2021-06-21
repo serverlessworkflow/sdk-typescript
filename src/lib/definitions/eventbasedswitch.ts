@@ -16,14 +16,29 @@
  */
 import { Defaultdef } from './defaultdef';
 import { Error } from './error';
-import { Eventcondition } from './eventcondition';
 import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
+import {
+  overwriteDefaultValue,
+  overwriteEventConditionsValue,
+  overwriteMetadataValue,
+  overwriteOnErrorsValue,
+  overwriteStateDataFilterValue,
+} from './utils';
+import { Eventcondition } from './types';
 
 export class Eventbasedswitch {
   constructor(model: any) {
-    const result = { usedForCompensation: false };
-    Object.assign(this, result, model);
+    const defaultModel = {
+      type: 'switch',
+    };
+    Object.assign(this, defaultModel, model);
+
+    overwriteMetadataValue(this);
+    overwriteOnErrorsValue(this);
+    overwriteEventConditionsValue(this);
+    overwriteDefaultValue(this);
+    overwriteStateDataFilterValue(this);
   }
 
   /**

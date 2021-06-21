@@ -6,8 +6,8 @@
   "start": "ParallelExec",
   "states": [
     {
-      "name": "ParallelExec",
       "type": "parallel",
+      "name": "ParallelExec",
       "completionType": "and",
       "branches": [
         {

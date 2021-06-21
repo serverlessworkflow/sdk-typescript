@@ -19,11 +19,28 @@ import { Error } from './error';
 import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
+import {
+  overwriteEndValueIfObject,
+  overwriteMetadataValue,
+  overwriteOnErrorsValue,
+  overwriteStateDataFilterValue,
+  overwriteTransitionValueIfObject,
+} from './utils';
 
 export class Delaystate {
   constructor(model: any) {
-    const result = { usedForCompensation: false };
-    Object.assign(this, result, model);
+    const defaultModel = { type: 'delay' };
+    Object.assign(this, defaultModel, model);
+
+    overwriteMetadataValue(this);
+
+    overwriteOnErrorsValue(this);
+
+    overwriteEndValueIfObject(this);
+
+    overwriteTransitionValueIfObject(this);
+
+    overwriteStateDataFilterValue(this);
   }
 
   /**

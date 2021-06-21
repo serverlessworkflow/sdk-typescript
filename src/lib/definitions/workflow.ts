@@ -16,52 +16,38 @@
  */
 import { Specification } from '.';
 import * as yaml from 'js-yaml';
-import { Delaystate } from './delaystate';
-import { Eventstate } from './eventstate';
-import { Operationstate } from './operationstate';
-import { Parallelstate } from './parallelstate';
-import { Switchstate } from './switchstate';
-import { Callbackstate } from './callbackstate';
-import { Foreachstate } from './foreachstate';
-import { Injectstate } from './injectstate';
-import { Subflowstate } from './subflowstate';
 
 import { validate } from '../utils';
-import { Function } from './function';
-import { Databasedswitch } from './databasedswitch';
 import { Events } from './events';
 import { Exectimeout } from './exectimeout';
-import { Functions } from './functions';
 import { Metadata } from './metadata';
-import { Retries } from './retries';
 import { Startdef } from './startdef';
-
-type States = [
-  (
-    | /* Causes the workflow execution to delay for a specified duration */ Delaystate
-    | /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ Eventstate
-    | /* Defines actions be performed. Does not wait for incoming events */ Operationstate
-    | /* Consists of a number of states that are executed in parallel */ Parallelstate
-    | Switchstate
-    | /* Defines a sub-workflow to be executed */ Subflowstate
-    | /* Inject static data into state data. Does not perform any actions */ Injectstate
-    | /* Execute a set of defined actions or workflows for each element of a data array */ Foreachstate
-    | /* This state performs an action, then waits for the callback event that denotes completion of the action */ Callbackstate
-  ),
-  ...(
-    | /* Causes the workflow execution to delay for a specified duration */ Delaystate
-    | /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ Eventstate
-    | /* Defines actions be performed. Does not wait for incoming events */ Operationstate
-    | /* Consists of a number of states that are executed in parallel */ Parallelstate
-    | Switchstate
-    | /* Defines a sub-workflow to be executed */ Subflowstate
-    | /* Inject static data into state data. Does not perform any actions */ Injectstate
-    | /* Execute a set of defined actions or workflows for each element of a data array */ Foreachstate
-    | /* This state performs an action, then waits for the callback event that denotes completion of the action */ Callbackstate
-  )[]
-];
+import { Functions, Retries, States } from './types';
+import {
+  overwriteEventsValue,
+  overwriteExecTimeoutValue,
+  overwriteFunctionsValue,
+  overwriteMetadataValue,
+  overwriteRetriesValue,
+  overwriteStatesValue,
+} from './utils';
 
 export class Workflow {
+  constructor(model: any) {
+    const defaultModel = {
+      expressionLang: 'jq',
+    } as Specification.Workflow;
+
+    Object.assign(this, defaultModel, model);
+
+    overwriteFunctionsValue(this);
+    overwriteStatesValue(this);
+    overwriteEventsValue(this);
+    overwriteRetriesValue(this);
+    overwriteExecTimeoutValue(this);
+    overwriteMetadataValue(this);
+  }
+
   /**
    * Workflow unique identifier
    */
@@ -101,32 +87,6 @@ export class Workflow {
    */
   states: States;
 
-  constructor(model: any) {
-    const result = { expressionLang: 'jq' } as Specification.Workflow;
-    Object.assign(this, result, model);
-
-    const functions = this.functions;
-    if (typeof functions === typeof []) {
-      this.functions = (functions as Function[]).map((f) => new Function(JSON.stringify(f))) as Functions;
-    }
-
-    const states = this.states;
-    this.states = (states as States).map((v) => {
-      switch (v.type) {
-        case 'inject':
-          return new Injectstate(JSON.stringify(v));
-        case 'subflow':
-          return new Subflowstate(JSON.stringify(v));
-        case 'switch':
-          return new Databasedswitch(JSON.stringify(v));
-        case 'operation':
-          return new Operationstate(JSON.stringify(v));
-        default:
-          throw new Error(`Unexpected type= ${v.type} `);
-      }
-    }) as States;
-  }
-
   /**
    * Parses the provided string as Workflow
    * @param {string} data The JSON or YAML workflow to parse
@@ -134,7 +94,8 @@ export class Workflow {
    */
   static fromSource(value: string): Specification.Workflow {
     try {
-      return yaml.load(value) as Specification.Workflow;
+      const model = yaml.load(value);
+      return new Workflow(model);
     } catch (ex) {
       throw new Error('Format not supported');
     }

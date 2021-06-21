@@ -21,3 +21,14 @@ export const validate = (typeName: string, data: any): boolean => {
   }
   return true;
 };
+
+/**
+ * Determine if the provided value is an object or a primitive type
+ * @param value The data
+ * @returns {boolean} True if the provided value is an object
+ */
+export const isObject = (value: any): boolean => {
+  if (!value) return false;
+  const type = typeof value;
+  return type === 'object';
+};

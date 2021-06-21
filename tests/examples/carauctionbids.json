@@ -22,8 +22,8 @@
   ],
   "states": [
     {
-      "name": "StoreCarAuctionBid",
       "type": "event",
+      "name": "StoreCarAuctionBid",
       "exclusive": true,
       "onEvents": [
         {

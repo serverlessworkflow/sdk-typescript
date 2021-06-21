@@ -20,11 +20,26 @@ import { Error } from './error';
 import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
+import {
+  overwriteActionsValue,
+  overwriteEndValueIfObject,
+  overwriteMetadataValue,
+  overwriteOnErrorsValue,
+  overwriteStateDataFilterValue,
+  overwriteTransitionValueIfObject,
+} from './utils';
 
 export class Foreachstate {
   constructor(model: any) {
-    const result = {};
-    Object.assign(this, result, model);
+    const defaultModel = { type: 'foreach' };
+    Object.assign(this, defaultModel, model);
+
+    overwriteEndValueIfObject(this);
+    overwriteActionsValue(this);
+    overwriteStateDataFilterValue(this);
+    overwriteOnErrorsValue(this);
+    overwriteTransitionValueIfObject(this);
+    overwriteMetadataValue(this);
   }
 
   /**

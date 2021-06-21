@@ -16,11 +16,14 @@
  */
 import { End } from './end';
 import { Transition } from './transition';
+import { overwriteEndValueIfObject, overwriteTransitionValueIfObject } from './utils';
 
 export class Error {
   constructor(model: any) {
-    const result = {};
-    Object.assign(this, result, model);
+    Object.assign(this, model);
+
+    overwriteTransitionValueIfObject(this);
+    overwriteEndValueIfObject(this);
   }
 
   /**

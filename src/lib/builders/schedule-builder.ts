@@ -26,11 +26,10 @@ import { validate } from '../utils';
  */
 function scheduleBuildingFn(data: Specification.Schedule): () => Specification.Schedule {
   return () => {
-    const result = {} as Specification.Schedule;
+    const model = new Specification.Schedule(data);
 
-    Object.assign(result, data);
-    validate('Schedule', result);
-    return result;
+    validate('Schedule', model);
+    return model;
   };
 }
 

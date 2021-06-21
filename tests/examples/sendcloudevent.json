@@ -18,8 +18,8 @@
   ],
   "states": [
     {
-      "name": "ProvisionOrdersState",
       "type": "foreach",
+      "name": "ProvisionOrdersState",
       "inputCollection": "${ .orders }",
       "iterationParam": "singleorder",
       "outputCollection": "${ .provisionedOrders }",

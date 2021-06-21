@@ -26,11 +26,10 @@ import { validate } from '../utils';
  */
 function defaultdefBuildingFn(data: Specification.Defaultdef): () => Specification.Defaultdef {
   return () => {
-    const result = {} as Specification.Defaultdef;
+    const model = new Specification.Defaultdef(data);
 
-    Object.assign(result, data);
-    validate('Defaultdef', result);
-    return result;
+    validate('Defaultdef', model);
+    return model;
   };
 }
 

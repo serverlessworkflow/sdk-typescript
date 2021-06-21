@@ -15,11 +15,13 @@
  *
  */
 import { Crondef } from './crondef';
+import { overwriteCronValueIfObject } from './utils';
 
 export class Schedule {
   constructor(model: any) {
-    const result = {};
-    Object.assign(this, result, model);
+    Object.assign(this, model);
+
+    overwriteCronValueIfObject(this);
   }
 
   /**

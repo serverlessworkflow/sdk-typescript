@@ -15,11 +15,13 @@
  *
  */
 import { Action } from './action';
+import { overwriteActionsValue } from './utils';
 
 export class Branch /* Branch Definition */ {
   constructor(model: any) {
-    const result = {};
-    Object.assign(this, result, model);
+    Object.assign(this, model);
+
+    overwriteActionsValue(this);
   }
 
   /**

@@ -17,11 +17,16 @@
 import { End } from './end';
 import { Eventdatafilter } from './eventdatafilter';
 import { Metadata } from './metadata';
+import { overwriteEndValueIfObject, overwriteEventDataFilterValue, overwriteMetadataValue } from './utils';
 
 export class Enddeventcondition {
   constructor(model: any) {
-    const result = {};
-    Object.assign(this, result, model);
+    Object.assign(this, model);
+
+    overwriteMetadataValue(this);
+    overwriteEndValueIfObject(this);
+
+    overwriteEventDataFilterValue(this);
   }
 
   /**

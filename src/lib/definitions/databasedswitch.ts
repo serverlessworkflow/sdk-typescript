@@ -14,16 +14,29 @@
  * limitations under the License.
  *
  */
-import { Datacondition } from './datacondition';
 import { Defaultdef } from './defaultdef';
 import { Error } from './error';
 import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
+import {
+  overwriteDataConditionsValue,
+  overwriteDefaultValue,
+  overwriteMetadataValue,
+  overwriteOnErrorsValue,
+  overwriteStateDataFilterValue,
+} from './utils';
+import { Datacondition } from './types';
 
 export class Databasedswitch {
   constructor(model: any) {
-    const result = {};
-    Object.assign(this, result, model);
+    const defaultModel = { type: 'switch' };
+    Object.assign(this, defaultModel, model);
+
+    overwriteMetadataValue(this);
+    overwriteOnErrorsValue(this);
+    overwriteDataConditionsValue(this);
+    overwriteDefaultValue(this);
+    overwriteStateDataFilterValue(this);
   }
 
   /**

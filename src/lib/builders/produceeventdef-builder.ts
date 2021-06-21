@@ -26,11 +26,10 @@ import { validate } from '../utils';
  */
 function produceeventdefBuildingFn(data: Specification.Produceeventdef): () => Specification.Produceeventdef {
   return () => {
-    const result = {} as Specification.Produceeventdef;
+    const model = new Specification.Produceeventdef(data);
 
-    Object.assign(result, data);
-    validate('Produceeventdef', result);
-    return result;
+    validate('Produceeventdef', model);
+    return model;
   };
 }
 

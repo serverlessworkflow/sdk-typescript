@@ -16,11 +16,14 @@
  */
 import { Metadata } from './metadata';
 import { Transition } from './transition';
+import { overwriteMetadataValue, overwriteTransitionValueIfObject } from './utils';
 
 export class Transitiondatacondition {
   constructor(model: any) {
-    const result = {};
-    Object.assign(this, result, model);
+    Object.assign(this, model);
+
+    overwriteTransitionValueIfObject(this);
+    overwriteMetadataValue(this);
   }
 
   /**

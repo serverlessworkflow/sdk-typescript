@@ -26,11 +26,10 @@ import { validate } from '../utils';
  */
 function errorBuildingFn(data: Specification.Error): () => Specification.Error {
   return () => {
-    const result = {} as Specification.Error;
+    const model = new Specification.Error(data);
 
-    Object.assign(result, data);
-    validate('Error', result);
-    return result;
+    validate('Error', model);
+    return model;
   };
 }
 

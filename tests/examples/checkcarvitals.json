@@ -1,12 +1,12 @@
 {
   "id": "checkcarvitals",
-  "name": "Check Car Vitals Workflow",
   "version": "1.0",
+  "name": "Check Car Vitals Workflow",
   "start": "WhenCarIsOn",
   "states": [
     {
-      "name": "WhenCarIsOn",
       "type": "event",
+      "name": "WhenCarIsOn",
       "onEvents": [
         {
           "eventRefs": [
@@ -17,8 +17,8 @@
       "transition": "DoCarVitalsChecks"
     },
     {
-      "name": "DoCarVitalsChecks",
       "type": "subflow",
+      "name": "DoCarVitalsChecks",
       "workflowId": "vitalscheck",
       "repeat": {
         "stopOnEvents": [

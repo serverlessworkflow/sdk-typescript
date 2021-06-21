@@ -20,11 +20,26 @@ import { Error } from './error';
 import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
+import {
+  overwriteBranchesValue,
+  overwriteEndValueIfObject,
+  overwriteMetadataValue,
+  overwriteOnErrorsValue,
+  overwriteStateDataFilterValue,
+  overwriteTransitionValueIfObject,
+} from './utils';
 
 export class Parallelstate {
   constructor(model: any) {
-    const result = { usedForCompensation: false };
-    Object.assign(this, result, model);
+    const defaultModel = { type: 'parallel' };
+    Object.assign(this, defaultModel, model);
+
+    overwriteEndValueIfObject(this);
+    overwriteStateDataFilterValue(this);
+    overwriteBranchesValue(this);
+    overwriteOnErrorsValue(this);
+    overwriteTransitionValueIfObject(this);
+    overwriteMetadataValue(this);
   }
 
   /**

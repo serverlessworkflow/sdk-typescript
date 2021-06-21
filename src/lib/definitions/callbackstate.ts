@@ -23,11 +23,28 @@ import { Eventdatafilter } from './eventdatafilter';
 import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
+import {
+  overwriteActionValue,
+  overwriteEndValueIfObject,
+  overwriteEventDataFilterValue,
+  overwriteMetadataValue,
+  overwriteOnErrorsValue,
+  overwriteStateDataFilterValue,
+  overwriteTransitionValueIfObject,
+} from './utils';
 
 export class Callbackstate {
   constructor(model: any) {
-    const result = { usedForCompensation: false } as Specification.Callbackstate;
-    Object.assign(this, result, model);
+    const defaultModel = { type: 'callback' } as Specification.Callbackstate;
+    Object.assign(this, defaultModel, model);
+
+    overwriteActionValue(this);
+    overwriteEndValueIfObject(this);
+    overwriteEventDataFilterValue(this);
+    overwriteMetadataValue(this);
+    overwriteOnErrorsValue(this);
+    overwriteStateDataFilterValue(this);
+    overwriteTransitionValueIfObject(this);
   }
 
   /**
