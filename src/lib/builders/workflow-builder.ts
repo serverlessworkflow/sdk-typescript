@@ -28,7 +28,7 @@ function workflowBuildingFn(data: Specification.Workflow): () => Specification.W
   return () => {
     const model = new Specification.Workflow(data);
 
-    //set the value from coming from data
+    //set the value coming from data
     model.expressionLang = data.expressionLang;
 
     validate('Workflow', model);
