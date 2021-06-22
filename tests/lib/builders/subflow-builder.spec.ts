@@ -14,19 +14,20 @@
  * limitations under the License.
  *
  */
-import { functionBuilder } from '../../../src/lib/builders/function-builder';
+import { subflowstateBuilder } from '../../../src/lib/builders/subflowstate-builder';
 
-describe('functionBuilder ', () => {
-  it('should build an object without default type if not set', () => {
-    const fn = functionBuilder().name('function').operation('operation').build();
+describe('subflowstateBuilder ', () => {
+  it('should build an object', () => {
+    const object = subflowstateBuilder().name('StartApplication').workflowId('startApplicationWorkflowId').build();
 
-    expect(fn.type).toBeUndefined();
-  });
-
-  it('should build an object with type= set value ', () => {
-    expect(functionBuilder().name('function').operation('operation').type('expression').build().type).toBe(
-      'expression'
+    expect(object.waitForCompletion).toBeUndefined();
+    expect(JSON.stringify(object)).toBe(
+      JSON.stringify({
+        type: 'subflow',
+        name: 'StartApplication',
+        workflowId: 'startApplicationWorkflowId',
+        end: true,
+      })
     );
-    expect(functionBuilder().name('function').operation('operation').type('rest').build().type).toBe('rest');
   });
 });
