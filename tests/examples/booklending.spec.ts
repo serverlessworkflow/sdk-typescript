@@ -26,6 +26,7 @@ import {
   transitiondataconditionBuilder,
   transitioneventconditionBuilder,
   workflowBuilder,
+  functionrefBuilder,
 } from '../../src';
 
 describe('booklending workflow example', () => {
@@ -45,12 +46,14 @@ describe('booklending workflow example', () => {
           .name('Get Book Status')
           .actions([
             actionBuilder()
-              .functionRef({
-                refName: 'Get status for book',
-                arguments: {
-                  bookid: '${ .book.id }',
-                },
-              })
+              .functionRef(
+                functionrefBuilder()
+                  .refName('Get status for book')
+                  .arguments({
+                    bookid: '${ .book.id }',
+                  })
+                  .build()
+              )
               .build(),
           ])
           .transition('Book Status Decision')
@@ -74,13 +77,15 @@ describe('booklending workflow example', () => {
           .name('Report Status To Lender')
           .actions([
             actionBuilder()
-              .functionRef({
-                refName: 'Send status to lender',
-                arguments: {
-                  bookid: '${ .book.id }',
-                  message: 'Book ${ .book.title } is already on loan',
-                },
-              })
+              .functionRef(
+                functionrefBuilder()
+                  .refName('Send status to lender')
+                  .arguments({
+                    bookid: '${ .book.id }',
+                    message: 'Book ${ .book.title } is already on loan',
+                  })
+                  .build()
+              )
               .build(),
           ])
           .transition('Wait for Lender response')
@@ -104,13 +109,15 @@ describe('booklending workflow example', () => {
           .name('Request Hold')
           .actions([
             actionBuilder()
-              .functionRef({
-                refName: 'Request hold for lender',
-                arguments: {
-                  bookid: '${ .book.id }',
-                  lender: '${ .lender }',
-                },
-              })
+              .functionRef(
+                functionrefBuilder()
+                  .refName('Request hold for lender')
+                  .arguments({
+                    bookid: '${ .book.id }',
+                    lender: '${ .lender }',
+                  })
+                  .build()
+              )
               .build(),
           ])
           .transition('Wait two weeks')
@@ -120,21 +127,25 @@ describe('booklending workflow example', () => {
           .name('Check Out Book')
           .actions([
             actionBuilder()
-              .functionRef({
-                refName: 'Check out book with id',
-                arguments: {
-                  bookid: '${ .book.id }',
-                },
-              })
+              .functionRef(
+                functionrefBuilder()
+                  .refName('Check out book with id')
+                  .arguments({
+                    bookid: '${ .book.id }',
+                  })
+                  .build()
+              )
               .build(),
             actionBuilder()
-              .functionRef({
-                refName: 'Notify Lender for checkout',
-                arguments: {
-                  bookid: '${ .book.id }',
-                  lender: '${ .lender }',
-                },
-              })
+              .functionRef(
+                functionrefBuilder()
+                  .refName('Notify Lender for checkout')
+                  .arguments({
+                    bookid: '${ .book.id }',
+                    lender: '${ .lender }',
+                  })
+                  .build()
+              )
               .build(),
           ])
           .build(),
@@ -144,6 +155,6 @@ describe('booklending workflow example', () => {
       .build();
 
     const expected = JSON.parse(fs.readFileSync('./tests/examples/booklending.json', 'utf8'));
-    expect(JSON.stringify(workflow)).toEqual(JSON.stringify(expected));
+    expect(JSON.stringify(workflow.normalize())).toEqual(JSON.stringify(expected));
   });
 });

@@ -15,6 +15,8 @@
  *
  */
 
+import { normalizeTypeRestProperty } from './utils';
+
 export class Function {
   constructor(model: any) {
     const defaultModel = { type: 'rest' };
@@ -33,4 +35,16 @@ export class Function {
    * Defines the function type. Is either `rest`, `rpc` or `expression`. Default is `rest`
    */
   type?: 'rest' | 'rpc' | 'expression';
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Function} without deleted properties.
+   */
+  normalize(): Function {
+    const clone = new Function(this);
+
+    normalizeTypeRestProperty(clone);
+
+    return clone;
+  }
 }

@@ -17,7 +17,12 @@
 import { Eventdatafilter } from './eventdatafilter';
 import { Metadata } from './metadata';
 import { Transition } from './transition';
-import { overwriteEventDataFilterValue, overwriteMetadataValue, overwriteTransitionValueIfObject } from './utils';
+import {
+  normalizeTransitionProperty,
+  overwriteEventDataFilterValue,
+  overwriteMetadataValue,
+  overwriteTransitionValueIfObject,
+} from './utils';
 
 export class Transitioneventcondition {
   constructor(model: any) {
@@ -45,4 +50,16 @@ export class Transitioneventcondition {
    */
   eventDataFilter?: Eventdatafilter;
   metadata?: /* Metadata information */ Metadata;
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Transitioneventcondition} without deleted properties.
+   */
+  normalize(): Transitioneventcondition {
+    const clone = new Transitioneventcondition(this);
+
+    normalizeTransitionProperty(clone);
+
+    return clone;
+  }
 }

@@ -16,7 +16,13 @@
  */
 import { End } from './end';
 import { Transition } from './transition';
-import { overwriteEndValueIfObject, overwriteTransitionValueIfObject } from './utils';
+import {
+  normalizeEndProperty,
+  normalizeTransitionProperty,
+  overwriteEndValueIfObject,
+  overwriteTransitionValueIfObject,
+  setEndValueIfNoTransition,
+} from './utils';
 
 export class Error {
   constructor(model: any) {
@@ -40,4 +46,19 @@ export class Error {
   retryRef?: string;
   transition: string | Transition;
   end?: boolean | End;
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Error} without deleted properties.
+   */
+  normalize(): Error {
+    const clone = new Error(this);
+
+    normalizeEndProperty(clone);
+    normalizeTransitionProperty(clone);
+
+    setEndValueIfNoTransition(clone);
+
+    return clone;
+  }
 }

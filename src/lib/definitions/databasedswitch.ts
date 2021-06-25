@@ -19,6 +19,9 @@ import { Error } from './error';
 import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import {
+  normalizeDataConditionsProperty,
+  normalizeOnErrorsProperty,
+  normalizeUsedForCompensationProperty,
   overwriteDataConditionsValue,
   overwriteDefaultValue,
   overwriteMetadataValue,
@@ -29,7 +32,7 @@ import { Datacondition } from './types';
 
 export class Databasedswitch {
   constructor(model: any) {
-    const defaultModel = { type: 'switch' };
+    const defaultModel = { type: 'switch', usedForCompensation: false };
     Object.assign(this, defaultModel, model);
 
     overwriteMetadataValue(this);
@@ -76,4 +79,18 @@ export class Databasedswitch {
    */
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Databasedswitch} without deleted properties.
+   */
+  normalize(): Databasedswitch {
+    const clone = new Databasedswitch(this);
+
+    normalizeUsedForCompensationProperty(clone);
+    normalizeOnErrorsProperty(clone);
+    normalizeDataConditionsProperty(clone);
+
+    return clone;
+  }
 }

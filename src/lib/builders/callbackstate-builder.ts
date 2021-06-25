@@ -18,6 +18,7 @@
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { validate } from '../utils';
+import { setEndValueIfNoTransition } from '../definitions/utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
@@ -27,6 +28,8 @@ import { validate } from '../utils';
 function callbackstateBuildingFn(data: Specification.Callbackstate): () => Specification.Callbackstate {
   return () => {
     const model = new Specification.Callbackstate(data);
+
+    setEndValueIfNoTransition(model);
 
     validate('Callbackstate', model);
     return model;

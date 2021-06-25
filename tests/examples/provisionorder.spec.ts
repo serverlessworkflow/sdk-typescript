@@ -24,6 +24,7 @@ import {
   statedatafilterBuilder,
   subflowstateBuilder,
   workflowBuilder,
+  functionrefBuilder,
 } from '../../src';
 
 describe('provisionorder workflow example', () => {
@@ -46,12 +47,14 @@ describe('provisionorder workflow example', () => {
           .actionMode('sequential')
           .actions([
             actionBuilder()
-              .functionRef({
-                refName: 'provisionOrderFunction',
-                arguments: {
-                  order: '${ .order }',
-                },
-              })
+              .functionRef(
+                functionrefBuilder()
+                  .refName('provisionOrderFunction')
+                  .arguments({
+                    order: '${ .order }',
+                  })
+                  .build()
+              )
               .build(),
           ])
           .stateDataFilter(statedatafilterBuilder().output('${ .exceptions }').build())
@@ -70,6 +73,6 @@ describe('provisionorder workflow example', () => {
       .build();
 
     const expected = JSON.parse(fs.readFileSync('./tests/examples/provisionorder.json', 'utf8'));
-    expect(JSON.stringify(workflow)).toEqual(JSON.stringify(expected));
+    expect(JSON.stringify(workflow.normalize())).toEqual(JSON.stringify(expected));
   });
 });

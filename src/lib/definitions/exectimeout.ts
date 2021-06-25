@@ -15,6 +15,8 @@
  *
  */
 
+import { normalizeInterruptProperty } from './utils';
+
 export class Exectimeout {
   constructor(model: any) {
     Object.assign(this, model);
@@ -32,4 +34,16 @@ export class Exectimeout {
    * Name of a workflow state to be executed before workflow instance is terminated
    */
   runBefore?: string;
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Exectimeout} without deleted properties.
+   */
+  normalize(): Exectimeout {
+    const clone = new Exectimeout(this);
+
+    normalizeInterruptProperty(clone);
+
+    return clone;
+  }
 }

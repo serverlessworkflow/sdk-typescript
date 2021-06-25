@@ -24,6 +24,10 @@ import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
+  normalizeEndProperty,
+  normalizeOnErrorsProperty,
+  normalizeTransitionProperty,
+  normalizeUsedForCompensationProperty,
   overwriteActionValue,
   overwriteEndValueIfObject,
   overwriteEventDataFilterValue,
@@ -31,6 +35,7 @@ import {
   overwriteOnErrorsValue,
   overwriteStateDataFilterValue,
   overwriteTransitionValueIfObject,
+  setEndValueIfNoTransition,
 } from './utils';
 
 export class Callbackstate {
@@ -100,4 +105,21 @@ export class Callbackstate {
    */
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Callbackstate} without deleted properties.
+   */
+  normalize(): Callbackstate {
+    const clone = new Callbackstate(this);
+
+    normalizeUsedForCompensationProperty(clone);
+    normalizeEndProperty(clone);
+    normalizeTransitionProperty(clone);
+    normalizeOnErrorsProperty(clone);
+
+    setEndValueIfNoTransition(clone);
+
+    return clone;
+  }
 }

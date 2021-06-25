@@ -16,7 +16,7 @@
  */
 import { Metadata } from './metadata';
 import { Transition } from './transition';
-import { overwriteMetadataValue, overwriteTransitionValueIfObject } from './utils';
+import { normalizeTransitionProperty, overwriteMetadataValue, overwriteTransitionValueIfObject } from './utils';
 
 export class Transitiondatacondition {
   constructor(model: any) {
@@ -39,4 +39,16 @@ export class Transitiondatacondition {
    */
   transition: string | Transition;
   metadata?: /* Metadata information */ Metadata;
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Transitiondatacondition} without deleted properties.
+   */
+  normalize(): Transitiondatacondition {
+    const clone = new Transitiondatacondition(this);
+
+    normalizeTransitionProperty(clone);
+
+    return clone;
+  }
 }

@@ -21,17 +21,27 @@ import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
+  normalizeCompletionTypeProperty,
+  normalizeEndProperty,
+  normalizeOnErrorsProperty,
+  normalizeTransitionProperty,
+  normalizeUsedForCompensationProperty,
   overwriteBranchesValue,
   overwriteEndValueIfObject,
   overwriteMetadataValue,
   overwriteOnErrorsValue,
   overwriteStateDataFilterValue,
   overwriteTransitionValueIfObject,
+  setEndValueIfNoTransition,
 } from './utils';
 
 export class Parallelstate {
   constructor(model: any) {
-    const defaultModel = { type: 'parallel' };
+    const defaultModel = {
+      type: 'parallel',
+      completionType: 'and',
+      usedForCompensation: false,
+    };
     Object.assign(this, defaultModel, model);
 
     overwriteEndValueIfObject(this);
@@ -91,4 +101,22 @@ export class Parallelstate {
    */
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Parallelstate} without deleted properties.
+   */
+  normalize(): Parallelstate {
+    const clone = new Parallelstate(this);
+
+    normalizeCompletionTypeProperty(clone);
+    normalizeOnErrorsProperty(clone);
+    normalizeUsedForCompensationProperty(clone);
+    normalizeEndProperty(clone);
+    normalizeTransitionProperty(clone);
+
+    setEndValueIfNoTransition(clone);
+
+    return clone;
+  }
 }

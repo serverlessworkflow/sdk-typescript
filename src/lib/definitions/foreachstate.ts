@@ -21,17 +21,22 @@ import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
+  normalizeEndProperty,
+  normalizeOnErrorsProperty,
+  normalizeTransitionProperty,
+  normalizeUsedForCompensationProperty,
   overwriteActionsValue,
   overwriteEndValueIfObject,
   overwriteMetadataValue,
   overwriteOnErrorsValue,
   overwriteStateDataFilterValue,
   overwriteTransitionValueIfObject,
+  setEndValueIfNoTransition,
 } from './utils';
 
 export class Foreachstate {
   constructor(model: any) {
-    const defaultModel = { type: 'foreach' };
+    const defaultModel = { type: 'foreach', usedForCompensation: false };
     Object.assign(this, defaultModel, model);
 
     overwriteEndValueIfObject(this);
@@ -103,4 +108,20 @@ export class Foreachstate {
    */
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Foreachstate} without deleted properties.
+   */
+  normalize(): Foreachstate {
+    const clone = new Foreachstate(this);
+
+    normalizeUsedForCompensationProperty(clone);
+    normalizeOnErrorsProperty(clone);
+    normalizeEndProperty(clone);
+    normalizeTransitionProperty(clone);
+    setEndValueIfNoTransition(clone);
+
+    return clone;
+  }
 }

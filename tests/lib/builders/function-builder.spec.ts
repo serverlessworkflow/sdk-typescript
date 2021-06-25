@@ -20,7 +20,7 @@ describe('functionBuilder ', () => {
   it('should build an object without default type if not set', () => {
     const fn = functionBuilder().name('function').operation('operation').build();
 
-    expect(fn.type).toBeUndefined();
+    expect(fn.type).toBe('rest');
   });
 
   it('should build an object with type= set value ', () => {

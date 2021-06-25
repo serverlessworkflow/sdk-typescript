@@ -39,6 +39,7 @@ describe('workflow-validator', () => {
   });
 
   it('should have no errors if the workflow is valid', () => {
+    // @ts-ignore
     const workflow = {
       id: 'helloworld',
       version: '1.0',

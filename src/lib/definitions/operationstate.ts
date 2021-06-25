@@ -21,17 +21,27 @@ import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
+  normalizeActionModeSequentialProperty,
+  normalizeEndProperty,
+  normalizeOnErrorsProperty,
+  normalizeTransitionProperty,
+  normalizeUsedForCompensationProperty,
   overwriteActionsValue,
   overwriteEndValueIfObject,
   overwriteMetadataValue,
   overwriteOnErrorsValue,
   overwriteStateDataFilterValue,
   overwriteTransitionValueIfObject,
+  setEndValueIfNoTransition,
 } from './utils';
 
 export class Operationstate {
   constructor(model: any) {
-    const defaultModel = { type: 'operation' };
+    const defaultModel = {
+      type: 'operation',
+      actionMode: 'sequential',
+      usedForCompensation: false,
+    };
     Object.assign(this, defaultModel, model);
 
     overwriteEndValueIfObject(this);
@@ -87,4 +97,21 @@ export class Operationstate {
    */
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Operationstate} without deleted properties.
+   */
+  normalize(): Operationstate {
+    const clone = new Operationstate(this);
+
+    normalizeActionModeSequentialProperty(clone);
+    normalizeUsedForCompensationProperty(clone);
+    normalizeEndProperty(clone);
+    normalizeTransitionProperty(clone);
+    normalizeOnErrorsProperty(clone);
+    setEndValueIfNoTransition(clone);
+
+    return clone;
+  }
 }

@@ -16,11 +16,12 @@
  */
 import { Action } from './action';
 import { Eventdatafilter } from './eventdatafilter';
-import { overwriteActionsValue, overwriteEventDataFilterValue } from './utils';
+import { normalizeActionModeParallelProperty, overwriteActionsValue, overwriteEventDataFilterValue } from './utils';
 
 export class Onevents {
   constructor(model: any) {
-    Object.assign(this, model);
+    const defaultModel = { actionMode: 'parallel' };
+    Object.assign(this, defaultModel, model);
 
     overwriteEventDataFilterValue(this);
     overwriteActionsValue(this);
@@ -42,4 +43,16 @@ export class Onevents {
    * Event data filter
    */
   eventDataFilter?: Eventdatafilter;
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Onevents} without deleted properties.
+   */
+  normalize(): Onevents {
+    const clone = new Onevents(this);
+
+    normalizeActionModeParallelProperty(clone);
+
+    return clone;
+  }
 }

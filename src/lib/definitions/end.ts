@@ -15,11 +15,15 @@
  *
  */
 import { Produceeventdef } from './produceeventdef';
-import { overwriteProduceEventsValue } from './utils';
+import { normalizeCompensateProperty, normalizeTerminateProperty, overwriteProduceEventsValue } from './utils';
 
 export class End {
   constructor(model: any) {
-    Object.assign(this, model);
+    const defaultModel = {
+      compensate: false,
+      terminate: false,
+    };
+    Object.assign(this, defaultModel, model);
 
     overwriteProduceEventsValue(this);
   }
@@ -36,4 +40,17 @@ export class End {
    * If set to true, triggers workflow compensation. Default is false
    */
   compensate?: boolean;
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.End} without deleted properties.
+   */
+  normalize(): End {
+    const clone = new End(this);
+
+    normalizeCompensateProperty(clone);
+    normalizeTerminateProperty(clone);
+
+    return clone;
+  }
 }

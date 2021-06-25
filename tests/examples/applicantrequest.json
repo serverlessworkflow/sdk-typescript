@@ -37,7 +37,6 @@
     {
       "type": "operation",
       "name": "RejectApplication",
-      "actionMode": "sequential",
       "actions": [
         {
           "functionRef": {

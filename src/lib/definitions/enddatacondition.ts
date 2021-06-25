@@ -16,7 +16,7 @@
  */
 import { End } from './end';
 import { Metadata } from './metadata';
-import { overwriteEndValueIfObject, overwriteMetadataValue } from './utils';
+import { normalizeEndProperty, overwriteEndValueIfObject, overwriteMetadataValue } from './utils';
 
 export class Enddatacondition {
   constructor(model: any) {
@@ -39,4 +39,16 @@ export class Enddatacondition {
    */
   end: boolean | End;
   metadata?: /* Metadata information */ Metadata;
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Enddatacondition} without deleted properties.
+   */
+  normalize(): Enddatacondition {
+    const clone = new Enddatacondition(this);
+
+    normalizeEndProperty(clone);
+
+    return clone;
+  }
 }

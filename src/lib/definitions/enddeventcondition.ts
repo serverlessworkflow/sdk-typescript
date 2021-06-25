@@ -17,7 +17,12 @@
 import { End } from './end';
 import { Eventdatafilter } from './eventdatafilter';
 import { Metadata } from './metadata';
-import { overwriteEndValueIfObject, overwriteEventDataFilterValue, overwriteMetadataValue } from './utils';
+import {
+  normalizeEndProperty,
+  overwriteEndValueIfObject,
+  overwriteEventDataFilterValue,
+  overwriteMetadataValue,
+} from './utils';
 
 export class Enddeventcondition {
   constructor(model: any) {
@@ -46,4 +51,16 @@ export class Enddeventcondition {
    */
   eventDataFilter?: Eventdatafilter;
   metadata?: /* Metadata information */ Metadata;
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Enddeventcondition} without deleted properties.
+   */
+  normalize(): Enddeventcondition {
+    const clone = new Enddeventcondition(this);
+
+    normalizeEndProperty(clone);
+
+    return clone;
+  }
 }

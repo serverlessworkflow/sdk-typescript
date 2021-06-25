@@ -18,6 +18,7 @@
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { validate } from '../utils';
+import { setEndValueIfNoTransition } from '../definitions/utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
@@ -28,9 +29,7 @@ function operationstateBuildingFn(data: Specification.Operationstate): () => Spe
   return () => {
     const model = new Specification.Operationstate(data);
 
-    if (!data.end && !data.transition) {
-      model.end = true;
-    }
+    setEndValueIfNoTransition(model);
 
     validate('Operationstate', model);
     return model;

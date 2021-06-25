@@ -17,7 +17,6 @@
       "inputCollection": "${ .expressions }",
       "iterationParam": "singleexpression",
       "outputCollection": "${ .results }",
-      "usedForCompensation": false,
       "actions": [
         {
           "functionRef": {

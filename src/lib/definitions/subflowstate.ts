@@ -21,18 +21,25 @@ import { Repeat } from './repeat';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
+  normalizeEndProperty,
+  normalizeRepeatProperty,
+  normalizeTransitionProperty,
+  normalizeUsedForCompensationProperty,
   overwriteEndValueIfObject,
   overwriteMetadataValue,
   overwriteOnErrorsValue,
   overwriteRepeatValue,
   overwriteStateDataFilterValue,
   overwriteTransitionValueIfObject,
+  setEndValueIfNoTransition,
 } from './utils';
 
 export class Subflowstate {
   constructor(model: any) {
     const defaultModel = {
       type: 'subflow',
+      usedForCompensation: false,
+      waitForCompletion: false,
     };
     Object.assign(this, defaultModel, model);
 
@@ -93,4 +100,25 @@ export class Subflowstate {
    */
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Subflowstate} without deleted properties.
+   */
+  normalize(): Subflowstate {
+    const clone = new Subflowstate(this);
+
+    normalizeUsedForCompensationProperty(clone);
+
+    if (!clone.waitForCompletion) {
+      delete clone.waitForCompletion;
+    }
+
+    normalizeEndProperty(clone);
+    normalizeTransitionProperty(clone);
+    normalizeRepeatProperty(clone);
+    setEndValueIfNoTransition(clone);
+
+    return clone;
+  }
 }

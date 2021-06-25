@@ -18,6 +18,7 @@
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { validate } from '../utils';
+import { setEndValueIfNoTransition } from '../definitions/utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
@@ -27,6 +28,8 @@ import { validate } from '../utils';
 function delaystateBuildingFn(data: Specification.Delaystate): () => Specification.Delaystate {
   return () => {
     const model = new Specification.Delaystate(data);
+
+    setEndValueIfNoTransition(model);
 
     validate('Delaystate', model);
     return model;

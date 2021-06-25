@@ -18,6 +18,7 @@
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { validate } from '../utils';
+import { setEndValueIfNoTransition } from '../definitions/utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
@@ -26,14 +27,12 @@ import { validate } from '../utils';
  */
 function injectstateBuildingFn(data: Specification.Injectstate): () => Specification.Injectstate {
   return () => {
-    const result = new Specification.Injectstate(data);
+    const model = new Specification.Injectstate(data);
 
-    if (!data.end && !data.transition) {
-      result.end = true;
-    }
+    setEndValueIfNoTransition(model);
 
-    validate('Injectstate', result);
-    return result;
+    validate('Injectstate', model);
+    return model;
   };
 }
 

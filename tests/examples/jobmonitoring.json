@@ -26,7 +26,6 @@
     {
       "type": "operation",
       "name": "SubmitJob",
-      "actionMode": "sequential",
       "actions": [
         {
           "functionRef": {
@@ -66,7 +65,6 @@
     {
       "type": "operation",
       "name": "GetJobStatus",
-      "actionMode": "sequential",
       "actions": [
         {
           "functionRef": {
@@ -105,7 +103,6 @@
     {
       "type": "operation",
       "name": "JobSucceeded",
-      "actionMode": "sequential",
       "actions": [
         {
           "functionRef": {
@@ -121,7 +118,6 @@
     {
       "type": "operation",
       "name": "JobFailed",
-      "actionMode": "sequential",
       "actions": [
         {
           "functionRef": {

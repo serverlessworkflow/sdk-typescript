@@ -21,17 +21,23 @@ import { Onevents } from './onevents';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
+  setEndValueIfNoTransition,
   overwriteEndValueIfObject,
   overwriteMetadataValue,
   overwriteOnErrorsValue,
   overwriteOnEventsValue,
   overwriteStateDataFilterValue,
   overwriteTransitionValueIfObject,
+  normalizeEndProperty,
+  normalizeTransitionProperty,
+  normalizeOnEventsProperty,
+  normalizeOnErrorsProperty,
+  normalizeExclusiveProperty,
 } from './utils';
 
 export class Eventstate /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ {
   constructor(model: any) {
-    const defaultModel = { type: 'event' };
+    const defaultModel = { type: 'event', exclusive: true };
     Object.assign(this, defaultModel, model);
 
     overwriteOnEventsValue(this);
@@ -78,4 +84,21 @@ export class Eventstate /* This state is used to wait for events from event sour
    */
   compensatedBy?: string;
   metadata?: /* Metadata information */ Metadata;
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Eventstate} without deleted properties.
+   */
+  normalize(): Eventstate {
+    const clone = new Eventstate(this);
+
+    normalizeExclusiveProperty(clone);
+    normalizeOnEventsProperty(clone);
+    normalizeOnErrorsProperty(clone);
+    normalizeEndProperty(clone);
+    normalizeTransitionProperty(clone);
+    setEndValueIfNoTransition(clone);
+
+    return clone;
+  }
 }

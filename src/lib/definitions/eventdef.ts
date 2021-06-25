@@ -15,12 +15,15 @@
  *
  */
 import { Metadata } from './metadata';
-import { overwriteCorrelationValue, overwriteMetadataValue } from './utils';
+import { normalizeKindProperty, overwriteCorrelationValue, overwriteMetadataValue } from './utils';
 import { CorrelationDefs } from './types';
 
 export class Eventdef {
   constructor(model: any) {
-    Object.assign(this, model);
+    const defaultModel = {
+      kind: 'consumed',
+    };
+    Object.assign(this, defaultModel, model);
 
     overwriteMetadataValue(this);
     overwriteCorrelationValue(this);
@@ -50,4 +53,16 @@ export class Eventdef {
    * Metadata information
    */
   metadata?: /* Metadata information */ Metadata;
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Eventdef} without deleted properties.
+   */
+  normalize(): Eventdef {
+    const clone = new Eventdef(this);
+
+    normalizeKindProperty(clone);
+
+    return clone;
+  }
 }

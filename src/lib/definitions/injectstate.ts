@@ -19,15 +19,19 @@ import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
+  normalizeEndProperty,
+  normalizeTransitionProperty,
+  normalizeUsedForCompensationProperty,
   overwriteEndValueIfObject,
   overwriteMetadataValue,
   overwriteStateDataFilterValue,
   overwriteTransitionValueIfObject,
+  setEndValueIfNoTransition,
 } from './utils';
 
 export class Injectstate {
   constructor(model: any) {
-    const defaultModel = { type: 'inject' };
+    const defaultModel = { type: 'inject', usedForCompensation: false };
     Object.assign(this, defaultModel, model);
 
     overwriteEndValueIfObject(this);
@@ -75,4 +79,20 @@ export class Injectstate {
    */
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Injectstate} without deleted properties.
+   */
+  normalize(): Injectstate {
+    const clone = new Injectstate(this);
+
+    normalizeUsedForCompensationProperty(clone);
+    normalizeEndProperty(clone);
+    normalizeTransitionProperty(clone);
+
+    setEndValueIfNoTransition(clone);
+
+    return clone;
+  }
 }

@@ -17,7 +17,7 @@
 import { eventstateBuilder } from '../../../src/lib/builders/eventstate-builder';
 import { oneventsBuilder } from '../../../src/lib/builders/onevents-builder';
 
-describe('subflowstateBuilder ', () => {
+describe('eventstateBuilder ', () => {
   it('should build an object', () => {
     const object = eventstateBuilder()
       .name('Book Lending Request')
@@ -25,9 +25,10 @@ describe('subflowstateBuilder ', () => {
       .transition('Get Book Status')
       .build();
 
-    expect(object.exclusive).toBeUndefined();
+    expect(object.exclusive).toBeTrue();
 
-    expect(JSON.stringify(object)).toBe(
+    const serializedObject = object.normalize();
+    expect(JSON.stringify(serializedObject)).toBe(
       JSON.stringify({
         type: 'event',
         name: 'Book Lending Request',
@@ -39,5 +40,18 @@ describe('subflowstateBuilder ', () => {
         transition: 'Get Book Status',
       })
     );
+
+    //    const deserializedObject = object.deserialize(serializedObject);
+    //    expect(deserializedObject.exclusive).toBeTrue();
+
+    //Having serialize/ deserialize de following signature
+
+    //  deserialize(value: string): Eventstate {
+
+    //   }
+    //   normalize(): string {
+
+    //   }
+    //
   });
 });

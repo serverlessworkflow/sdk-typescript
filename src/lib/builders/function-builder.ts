@@ -28,9 +28,6 @@ function functionBuildingFn(data: Specification.Function): () => Specification.F
   return () => {
     const model = new Specification.Function(data);
 
-    //set the value coming from data
-    model.type = data.type;
-
     validate('Function', model);
     return model;
   };

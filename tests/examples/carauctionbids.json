@@ -24,7 +24,6 @@
     {
       "type": "event",
       "name": "StoreCarAuctionBid",
-      "exclusive": true,
       "onEvents": [
         {
           "eventRefs": [

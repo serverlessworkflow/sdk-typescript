@@ -19,9 +19,10 @@ import { subflowstateBuilder } from '../../../src/lib/builders/subflowstate-buil
 describe('subflowstateBuilder ', () => {
   it('should build an object', () => {
     const object = subflowstateBuilder().name('StartApplication').workflowId('startApplicationWorkflowId').build();
+    expect(object.waitForCompletion).toBeFalse();
 
-    expect(object.waitForCompletion).toBeUndefined();
-    expect(JSON.stringify(object)).toBe(
+    const serializedObject = object.normalize();
+    expect(JSON.stringify(serializedObject)).toBe(
       JSON.stringify({
         type: 'subflow',
         name: 'StartApplication',
@@ -29,5 +30,6 @@ describe('subflowstateBuilder ', () => {
         end: true,
       })
     );
+    expect(serializedObject.waitForCompletion).toBeUndefined();
   });
 });

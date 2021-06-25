@@ -165,3 +165,36 @@ describe('workflow ', () => {
     );
   });
 });
+
+// describe('Workflow serialize / deserialize ', () => {
+//   it('should serialize whiout default values, / deserialize with default values', () => {
+//     const workflow = new Workflow({
+//       id: 'helloworld',
+//       version: '1.0',
+//       name: 'Hello World Workflow',
+//       description: 'Inject Hello World',
+//       start: 'Hello State',
+//       keepActive: true,
+//       states: [
+//         {
+//           type: 'inject',
+//           name: 'Hello State',
+//           data: {
+//             result: 'Hello World!',
+//           },
+//           end: true,
+//         },
+//       ],
+//     });
+//
+//     const serializedWF = workflow.normalize();
+//
+//     expect(JSON.parse(serializedWF).keepActive).toBeUndefined();
+//     expect(JSON.parse(serializedWF).expressionLang).toBeUndefined();
+//
+//     const deserializedWF = Workflow.fromSource(serializedWF);
+//
+//     expect(deserializedWF.keepActive).toBeTrue();
+//     expect(deserializedWF.expressionLang).toBe('jq');
+//   });
+// });

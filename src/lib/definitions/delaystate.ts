@@ -20,26 +20,30 @@ import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
+  normalizeEndProperty,
+  normalizeOnErrorsProperty,
+  normalizeTransitionProperty,
+  normalizeUsedForCompensationProperty,
   overwriteEndValueIfObject,
   overwriteMetadataValue,
   overwriteOnErrorsValue,
   overwriteStateDataFilterValue,
   overwriteTransitionValueIfObject,
+  setEndValueIfNoTransition,
 } from './utils';
 
 export class Delaystate {
   constructor(model: any) {
-    const defaultModel = { type: 'delay' };
+    const defaultModel = {
+      type: 'delay',
+      usedForCompensation: false,
+    };
     Object.assign(this, defaultModel, model);
 
     overwriteMetadataValue(this);
-
     overwriteOnErrorsValue(this);
-
     overwriteEndValueIfObject(this);
-
     overwriteTransitionValueIfObject(this);
-
     overwriteStateDataFilterValue(this);
   }
 
@@ -84,4 +88,19 @@ export class Delaystate {
    */
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Delaystate} without deleted properties.
+   */
+  normalize(): Delaystate {
+    const clone = new Delaystate(this);
+
+    normalizeUsedForCompensationProperty(clone);
+    normalizeEndProperty(clone);
+    normalizeOnErrorsProperty(clone);
+    normalizeTransitionProperty(clone);
+    setEndValueIfNoTransition(clone);
+    return clone;
+  }
 }

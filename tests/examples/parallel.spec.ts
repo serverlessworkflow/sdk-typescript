@@ -38,6 +38,6 @@ describe('parallel workflow example', () => {
       .build();
 
     const expected = JSON.parse(fs.readFileSync('./tests/examples/parallel.json', 'utf8'));
-    expect(JSON.stringify(workflow)).toEqual(JSON.stringify(expected));
+    expect(JSON.stringify(workflow.normalize())).toEqual(JSON.stringify(expected));
   });
 });

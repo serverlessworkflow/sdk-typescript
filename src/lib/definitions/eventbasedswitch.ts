@@ -19,6 +19,9 @@ import { Error } from './error';
 import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import {
+  normalizeEventConditionsProperty,
+  normalizeOnErrorsProperty,
+  normalizeUsedForCompensationProperty,
   overwriteDefaultValue,
   overwriteEventConditionsValue,
   overwriteMetadataValue,
@@ -31,6 +34,7 @@ export class Eventbasedswitch {
   constructor(model: any) {
     const defaultModel = {
       type: 'switch',
+      usedForCompensation: false,
     };
     Object.assign(this, defaultModel, model);
 
@@ -82,4 +86,18 @@ export class Eventbasedswitch {
    */
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Eventbasedswitch} without deleted properties.
+   */
+  normalize(): Eventbasedswitch {
+    const clone = new Eventbasedswitch(this);
+
+    normalizeUsedForCompensationProperty(clone);
+    normalizeOnErrorsProperty(clone);
+    normalizeEventConditionsProperty(clone);
+
+    return clone;
+  }
 }

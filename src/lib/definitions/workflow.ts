@@ -24,6 +24,12 @@ import { Metadata } from './metadata';
 import { Startdef } from './startdef';
 import { Functions, Retries, States } from './types';
 import {
+  normalizeEvents,
+  normalizeExecTimeout,
+  normalizeExpressionLangProperty,
+  normalizeFunctions,
+  normalizeKeepActiveProperty,
+  normalizeStates,
   overwriteEventsValue,
   overwriteExecTimeoutValue,
   overwriteFunctionsValue,
@@ -36,6 +42,7 @@ export class Workflow {
   constructor(model: any) {
     const defaultModel = {
       expressionLang: 'jq',
+      keepActive: true,
     } as Specification.Workflow;
 
     Object.assign(this, defaultModel, model);
@@ -88,6 +95,25 @@ export class Workflow {
   states: States;
 
   /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Workflow} without deleted properties.
+   */
+  normalize(): Workflow {
+    const clone = new Workflow(this);
+    normalizeKeepActiveProperty(clone);
+
+    normalizeExpressionLangProperty(clone);
+
+    normalizeStates(clone);
+    normalizeFunctions(clone);
+
+    normalizeEvents(clone);
+
+    normalizeExecTimeout(clone);
+    return clone;
+  }
+
+  /**
    * Parses the provided string as Workflow
    * @param {string} data The JSON or YAML workflow to parse
    * @returns {Workflow} The parse Workflow
@@ -108,7 +134,7 @@ export class Workflow {
    */
   static toJson(workflow: Workflow): string {
     validate('Workflow', workflow);
-    return JSON.stringify(workflow);
+    return JSON.stringify(workflow.normalize());
   }
 
   /**
@@ -118,6 +144,6 @@ export class Workflow {
    */
   static toYaml(workflow: Workflow): string {
     validate('Workflow', workflow);
-    return yaml.dump(workflow);
+    return yaml.dump(workflow.normalize());
   }
 }
