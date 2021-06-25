@@ -37,48 +37,53 @@ if (!String.prototype.matchAll) {
   };
 }
 
+const types = ['Datacondition', 'Eventcondition', 'Events', 'Functions', 'Retries', 'Switchstate'];
+
 interface BuilderExtension {
+  import?: string;
   preValidate: string;
 }
 /** Stores additional code that needs to be added to builders depending on their type */
 const buildersExtensions: { [key: string]: BuilderExtension } = {
   Callbackstate: {
-    preValidate: `\r\n    data.type = 'callback';`,
-  },
-  Databasedswitch: {
-    preValidate: `\r\n    data.type = 'switch';`,
+    import: `import { setEndValueIfNoTransition } from '../definitions/utils';`,
+    preValidate: `\r\n    setEndValueIfNoTransition(model);`,
   },
   Delaystate: {
-    preValidate: `\r\n    data.type = 'delay';`,
-  },
-  Eventbasedswitch: {
-    preValidate: `\r\n    data.type = 'switch';`,
+    import: `import { setEndValueIfNoTransition } from '../definitions/utils';`,
+    preValidate: `\r\n    setEndValueIfNoTransition(model);`,
   },
   Eventstate: {
-    preValidate: `\r\n    data.type = 'event';`,
+    import: `import { setEndValueIfNoTransition } from '../definitions/utils';`,
+    preValidate: `\r\n    setEndValueIfNoTransition(model);`,
   },
   Foreachstate: {
-    preValidate: `\r\n    data.type = 'foreach';
-                  \r\n    //FIXME https://github.com/serverlessworkflow/sdk-typescript/issues/95
-                  \r\n    data.usedForCompensation = data.usedForCompensation || false;`,
+    import: `import { setEndValueIfNoTransition } from '../definitions/utils';`,
+    preValidate: `\r\n    setEndValueIfNoTransition(model);`,
   },
   Injectstate: {
-    preValidate: `\r\n    data.type = 'inject';`,
+    import: `import { setEndValueIfNoTransition } from '../definitions/utils';`,
+    preValidate: `\r\n    setEndValueIfNoTransition(model);`,
   },
   Operationstate: {
-    preValidate: `\r\n    data.type = 'operation';`,
+    import: `import { setEndValueIfNoTransition } from '../definitions/utils';`,
+    preValidate: `\r\n    setEndValueIfNoTransition(model);`,
   },
   Parallelstate: {
-    preValidate: `\r\n    data.type = 'parallel';`,
+    import: `import { setEndValueIfNoTransition } from '../definitions/utils';`,
+    preValidate: `\r\n    setEndValueIfNoTransition(model);`,
   },
   Subflowstate: {
-    preValidate: `\r\n    data.type = 'subflow';`,
+    import: `import { setEndValueIfNoTransition } from '../definitions/utils';`,
+    preValidate: `\r\n    setEndValueIfNoTransition(model);`,
   },
-  Function: {
-    preValidate: `\r\n    data.type =  data.type || 'rest';`,
+  Defaultdef: {
+    import: `import { setEndValueIfNoTransition } from '../definitions/utils';`,
+    preValidate: `\r\n    setEndValueIfNoTransition(model);`,
   },
-  Eventdef: {
-    preValidate: `\r\n    data.kind =  data.kind || 'consumed';`,
+  Error: {
+    import: `import { setEndValueIfNoTransition } from '../definitions/utils';`,
+    preValidate: `\r\n    setEndValueIfNoTransition(model);`,
   },
 };
 
@@ -125,6 +130,7 @@ const createBuilder = async (destDir: string, dataType: string): Promise<void> =
       `import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { validate } from '../utils';
+${extension?.import ? extension.import : ''}
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
@@ -132,9 +138,13 @@ import { validate } from '../utils';
  * @returns {Specification.${dataType}} The validated underlying object
  */
 function ${camelType}BuildingFn(data: Specification.${dataType}): (() => Specification.${dataType}) {
-  return () => {${extension?.preValidate ? extension.preValidate : ''}
-    validate('${dataType}', data);
-    return data;
+  return () => {
+    const model = new Specification.${dataType}(data);
+
+    ${extension?.preValidate ? extension.preValidate : ''}
+    
+    validate('${dataType}', model);
+    return model;
   };
 }
 
@@ -159,11 +169,11 @@ export function ${camelType}Builder(): Builder<Specification.${dataType}> {
  * @param {string} dataType The type to create the builders index for
  * @returns {void}
  */
-const createIndex = async (destDir: string, types: string[]): Promise<void> => {
+const createIndex = async (destDir: string, classes: string[]): Promise<void> => {
   try {
     const indexCode: string =
       fileHeader +
-      types.reduce((acc, t) => acc + `export * from './${toKebabCase(toCamelCase(t)) + '-builder'}';\n`, '');
+      classes.reduce((acc, t) => acc + `export * from './${toKebabCase(toCamelCase(t)) + '-builder'}';\n`, '');
     const indexFile = path.resolve(destDir, 'index.ts');
     await writeFile(indexFile, indexCode);
     return Promise.resolve();
@@ -183,9 +193,11 @@ const generate = async (source: string, destDir: string): Promise<void> => {
     await reset(destDir);
     const extractor: RegExp = /export \w* (\w*)/g;
     const definition: string = await readFile(source, 'utf-8');
-    const types: string[] = [...definition.matchAll(extractor)].map(([, type]) => type);
-    await Promise.all(types.map(createBuilder.bind(null, destDir)));
-    createIndex(destDir, types);
+    const classes: string[] = [...definition.matchAll(extractor)]
+      .map(([, type]) => type)
+      .filter((cl) => !types.includes(cl));
+    await Promise.all(classes.map(createBuilder.bind(null, destDir)));
+    createIndex(destDir, classes);
     return Promise.resolve();
   } catch (ex) {
     return Promise.reject(ex);
