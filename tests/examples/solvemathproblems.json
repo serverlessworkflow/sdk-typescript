@@ -7,18 +7,16 @@
   "functions": [
     {
       "name": "solveMathExpressionFunction",
-      "type": "rest",
       "operation": "http://myapis.org/mapthapis.json#solveExpression"
     }
   ],
   "states": [
     {
-      "name": "Solve",
       "type": "foreach",
+      "name": "Solve",
       "inputCollection": "${ .expressions }",
       "iterationParam": "singleexpression",
       "outputCollection": "${ .results }",
-      "usedForCompensation": false,
       "actions": [
         {
           "functionRef": {

@@ -26,8 +26,10 @@ import { validate } from '../utils';
  */
 function eventrefBuildingFn(data: Specification.Eventref): () => Specification.Eventref {
   return () => {
-    validate('Eventref', data);
-    return data;
+    const model = new Specification.Eventref(data);
+
+    validate('Eventref', model);
+    return model;
   };
 }
 

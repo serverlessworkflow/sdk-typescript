@@ -14,62 +14,85 @@
  * limitations under the License.
  *
  */
-import { workflowBuilder, injectstateBuilder, WorkflowConverter, Specification } from '../src/';
+import { injectstateBuilder, Specification, workflowBuilder } from '../../../src';
 import { readFileSync } from 'fs';
+import { Workflow } from '../../../src/lib/definitions/workflow';
 
-describe('workflow-converter fromSource', () => {
+describe('workflow fromSource', () => {
   const testCases = [
     {
       description: 'should generate workflow object from JSON file',
-      file: './tests/workflow-converter-hello-world.json',
+      file: './tests/lib/definitions/workflow-converter-hello-world.json',
     },
     {
       description: 'should generate workflow object from YAML file',
-      file: './tests/workflow-converter-hello-world.yaml',
+      file: './tests/lib/definitions/workflow-converter-hello-world.yaml',
     },
     {
       description: 'should generate workflow object from YML file',
-      file: './tests/workflow-converter-hello-world.yml',
+      file: './tests/lib/definitions/workflow-converter-hello-world.yml',
     },
   ];
   testCases.forEach((test) => {
     it(test.description, function () {
-      const workflow: Specification.Workflow = WorkflowConverter.fromString(readFileSync(test.file, 'utf-8'));
+      const workflow: Specification.Workflow = Workflow.fromSource(readFileSync(test.file, 'utf-8'));
       expect(workflow.id).toBe('helloworld');
       expect(workflow.version).toBe('1.0');
       expect(workflow.name).toBe('Hello World Workflow');
       expect(workflow.description).toBe('Inject Hello World');
       expect(workflow.start).toBe('Hello State');
-      expect(workflow).toEqual({
-        id: 'helloworld',
-        version: '1.0',
-        name: 'Hello World Workflow',
-        description: 'Inject Hello World',
-        start: 'Hello State',
-        states: [
-          {
-            name: 'Hello State',
-            type: 'inject',
-            data: {
-              result: 'Hello World!',
-            },
-            end: true,
-          },
-        ],
-      });
     });
   });
 
   it('should throws error if format is not json or yaml', () => {
     expect(() => {
-      WorkflowConverter.fromString(readFileSync('./tests/workflow-converter-hello-world.xxx', 'utf-8'));
+      Workflow.fromSource(readFileSync('./tests/lib/definitions/workflow-converter-hello-world.xxx', 'utf-8'));
     }).toThrow(new Error('Format not supported'));
   });
 });
 
-describe('workflow-converter', () => {
+describe('workflow ', () => {
+  it('should convert non-primitive properties to the desired class', () => {
+    const data = {
+      functions: [
+        {
+          name: 'Function',
+          operation: 'operationFunction',
+        },
+      ],
+      events: [
+        {
+          name: 'CarBidEvent',
+          type: 'carBidMadeType',
+          source: 'carBidEventSource',
+        },
+      ],
+      retries: [
+        {
+          name: 'retrie',
+          maxAttempts: 4,
+        },
+      ],
+      execTimeout: {
+        duration: 'P30M5S',
+      },
+      metadata: {
+        key: 'value',
+      },
+    };
+
+    const model = new Workflow(data);
+
+    expect(model.functions![0]!.constructor.name).toBe('Function');
+    expect(model.execTimeout!.constructor.name).toBe('Exectimeout');
+    expect(model.metadata!.constructor.name).toBe('Metadata');
+    expect(model.metadata!.constructor.name).toBe('Metadata');
+    expect(model.events![0]!.constructor.name).toBe('Eventdef');
+    expect(model.retries![0]!.constructor.name).toBe('Retrydef');
+  });
+
   it('should generate JSON from workflow object', () => {
-    const jsonWorkflow: string = WorkflowConverter.toJson(
+    const jsonWorkflow: string = Workflow.toJson(
       workflowBuilder()
         .id('helloworld')
         .version('1.0')
@@ -96,12 +119,12 @@ describe('workflow-converter', () => {
         '"start":"Hello State",' +
         '"states":[' +
         '{' +
+        '"type":"inject",' +
         '"name":"Hello State",' +
         '"data":{' +
         '"result":"Hello World!"' +
         '},' +
-        '"end":true,' +
-        '"type":"inject"' +
+        '"end":true' +
         '}' +
         ']' +
         '}'
@@ -109,7 +132,7 @@ describe('workflow-converter', () => {
   });
 
   it('should generate YAML from workflow object', () => {
-    const yamlWorkflow: string = WorkflowConverter.toYaml(
+    const yamlWorkflow: string = Workflow.toYaml(
       workflowBuilder()
         .id('helloworld')
         .version('1.0')
@@ -134,11 +157,44 @@ describe('workflow-converter', () => {
         'description: Inject Hello World\n' +
         'start: Hello State\n' +
         'states:\n' +
-        '  - name: Hello State\n' +
+        '  - type: inject\n' +
+        '    name: Hello State\n' +
         '    data:\n' +
         '      result: Hello World!\n' +
-        '    end: true\n' +
-        '    type: inject\n'
+        '    end: true\n'
     );
   });
 });
+
+// describe('Workflow serialize / deserialize ', () => {
+//   it('should serialize whiout default values, / deserialize with default values', () => {
+//     const workflow = new Workflow({
+//       id: 'helloworld',
+//       version: '1.0',
+//       name: 'Hello World Workflow',
+//       description: 'Inject Hello World',
+//       start: 'Hello State',
+//       keepActive: true,
+//       states: [
+//         {
+//           type: 'inject',
+//           name: 'Hello State',
+//           data: {
+//             result: 'Hello World!',
+//           },
+//           end: true,
+//         },
+//       ],
+//     });
+//
+//     const serializedWF = workflow.normalize();
+//
+//     expect(JSON.parse(serializedWF).keepActive).toBeUndefined();
+//     expect(JSON.parse(serializedWF).expressionLang).toBeUndefined();
+//
+//     const deserializedWF = Workflow.fromSource(serializedWF);
+//
+//     expect(deserializedWF.keepActive).toBeTrue();
+//     expect(deserializedWF.expressionLang).toBe('jq');
+//   });
+// });

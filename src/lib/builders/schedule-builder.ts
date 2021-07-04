@@ -26,8 +26,10 @@ import { validate } from '../utils';
  */
 function scheduleBuildingFn(data: Specification.Schedule): () => Specification.Schedule {
   return () => {
-    validate('Schedule', data);
-    return data;
+    const model = new Specification.Schedule(data);
+
+    validate('Schedule', model);
+    return model;
   };
 }
 

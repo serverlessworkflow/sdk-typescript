@@ -6,8 +6,8 @@
   "start": "Hello State",
   "states":[
     {
-      "name":"Hello State",
       "type":"inject",
+      "name":"Hello State",
       "data": {
         "result": "Hello World!"
       },

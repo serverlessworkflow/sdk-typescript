@@ -22,6 +22,7 @@ import {
   functionBuilder,
   oneventsBuilder,
   workflowBuilder,
+  functionrefBuilder,
 } from '../../src';
 
 describe('carauctionbids workflow example', () => {
@@ -48,22 +49,23 @@ describe('carauctionbids workflow example', () => {
               .eventRefs(['CarBidEvent'])
               .actions([
                 actionBuilder()
-                  .functionRef({
-                    refName: 'StoreBidFunction',
-                    arguments: {
-                      bid: '${ .bid }',
-                    },
-                  })
+                  .functionRef(
+                    functionrefBuilder()
+                      .refName('StoreBidFunction')
+                      .arguments({
+                        bid: '${ .bid }',
+                      })
+                      .build()
+                  )
                   .build(),
               ])
               .build(),
           ])
-          .end(true)
           .build(),
       ])
       .build();
 
     const expected = JSON.parse(fs.readFileSync('./tests/examples/carauctionbids.json', 'utf8'));
-    expect(workflow).toEqual(expected);
+    expect(JSON.stringify(workflow.normalize())).toEqual(JSON.stringify(expected));
   });
 });

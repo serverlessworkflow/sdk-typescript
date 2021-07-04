@@ -26,8 +26,10 @@ import { validate } from '../utils';
  */
 function oneventsBuildingFn(data: Specification.Onevents): () => Specification.Onevents {
   return () => {
-    validate('Onevents', data);
-    return data;
+    const model = new Specification.Onevents(data);
+
+    validate('Onevents', model);
+    return model;
   };
 }
 

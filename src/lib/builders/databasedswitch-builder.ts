@@ -26,9 +26,10 @@ import { validate } from '../utils';
  */
 function databasedswitchBuildingFn(data: Specification.Databasedswitch): () => Specification.Databasedswitch {
   return () => {
-    data.type = 'switch';
-    validate('Databasedswitch', data);
-    return data;
+    const model = new Specification.Databasedswitch(data);
+
+    validate('Databasedswitch', model);
+    return model;
   };
 }
 

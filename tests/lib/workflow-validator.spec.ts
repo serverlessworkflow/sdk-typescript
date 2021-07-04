@@ -14,8 +14,8 @@
  * limitations under the License.
  *
  */
-import { ValidationError, WorkflowValidator } from '../src/';
-import { Workflow } from '../src/lib/definitions/workflow';
+import { ValidationError, WorkflowValidator } from '../../src';
+import { Workflow } from '../../src/lib/definitions/workflow';
 
 describe('workflow-validator', () => {
   it('should return errors instance of ValidationError if the workflow provided is not valid', () => {
@@ -35,11 +35,11 @@ describe('workflow-validator', () => {
     expect(workflowValidator.errors[0].constructor === ValidationError).toBeTruthy(
       'Expected errors to be instance of ValidationError'
     );
-    expect(workflowValidator.errors[0].message).toMatch("states");
-
+    expect(workflowValidator.errors[0].message).toMatch('states');
   });
 
   it('should have no errors if the workflow is valid', () => {
+    // @ts-ignore
     const workflow = {
       id: 'helloworld',
       version: '1.0',

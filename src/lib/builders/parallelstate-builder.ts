@@ -18,6 +18,7 @@
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { validate } from '../utils';
+import { setEndValueIfNoTransition } from '../definitions/utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
@@ -26,9 +27,12 @@ import { validate } from '../utils';
  */
 function parallelstateBuildingFn(data: Specification.Parallelstate): () => Specification.Parallelstate {
   return () => {
-    data.type = 'parallel';
-    validate('Parallelstate', data);
-    return data;
+    const model = new Specification.Parallelstate(data);
+
+    setEndValueIfNoTransition(model);
+
+    validate('Parallelstate', model);
+    return model;
   };
 }
 

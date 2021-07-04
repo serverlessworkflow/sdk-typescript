@@ -22,6 +22,8 @@ import {
   functionBuilder,
   produceeventdefBuilder,
   workflowBuilder,
+  functionrefBuilder,
+  endBuilder,
 } from '../../src';
 
 describe('sendcloudevent workflow example', () => {
@@ -46,26 +48,31 @@ describe('sendcloudevent workflow example', () => {
           .inputCollection('${ .orders }')
           .iterationParam('singleorder')
           .outputCollection('${ .provisionedOrders }')
+          .usedForCompensation(false)
           .actions([
             actionBuilder()
-              .functionRef({
-                refName: 'provisionOrderFunction',
-                arguments: {
-                  order: '${ .singleorder }',
-                },
-              })
+              .functionRef(
+                functionrefBuilder()
+                  .refName('provisionOrderFunction')
+                  .arguments({
+                    order: '${ .singleorder }',
+                  })
+                  .build()
+              )
               .build(),
           ])
-          .end({
-            produceEvents: [
-              produceeventdefBuilder().eventRef('provisioningCompleteEvent').data('${ .provisionedOrders }').build(),
-            ],
-          })
+          .end(
+            endBuilder()
+              .produceEvents([
+                produceeventdefBuilder().eventRef('provisioningCompleteEvent').data('${ .provisionedOrders }').build(),
+              ])
+              .build()
+          )
           .build(),
       ])
       .build();
 
     const expected = JSON.parse(fs.readFileSync('./tests/examples/sendcloudevent.json', 'utf8'));
-    expect(workflow).toEqual(expected);
+    expect(JSON.stringify(workflow.normalize())).toEqual(JSON.stringify(expected));
   });
 });

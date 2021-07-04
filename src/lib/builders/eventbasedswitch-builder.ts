@@ -26,9 +26,10 @@ import { validate } from '../utils';
  */
 function eventbasedswitchBuildingFn(data: Specification.Eventbasedswitch): () => Specification.Eventbasedswitch {
   return () => {
-    data.type = 'switch';
-    validate('Eventbasedswitch', data);
-    return data;
+    const model = new Specification.Eventbasedswitch(data);
+
+    validate('Eventbasedswitch', model);
+    return model;
   };
 }
 

@@ -26,8 +26,10 @@ import { validate } from '../utils';
  */
 function retrydefBuildingFn(data: Specification.Retrydef): () => Specification.Retrydef {
   return () => {
-    validate('Retrydef', data);
-    return data;
+    const model = new Specification.Retrydef(data);
+
+    validate('Retrydef', model);
+    return model;
   };
 }
 

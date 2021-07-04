@@ -18,6 +18,7 @@
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { validate } from '../utils';
+import { setEndValueIfNoTransition } from '../definitions/utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
@@ -26,8 +27,12 @@ import { validate } from '../utils';
  */
 function defaultdefBuildingFn(data: Specification.Defaultdef): () => Specification.Defaultdef {
   return () => {
-    validate('Defaultdef', data);
-    return data;
+    const model = new Specification.Defaultdef(data);
+
+    setEndValueIfNoTransition(model);
+
+    validate('Defaultdef', model);
+    return model;
   };
 }
 

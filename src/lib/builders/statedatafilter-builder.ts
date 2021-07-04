@@ -26,8 +26,10 @@ import { validate } from '../utils';
  */
 function statedatafilterBuildingFn(data: Specification.Statedatafilter): () => Specification.Statedatafilter {
   return () => {
-    validate('Statedatafilter', data);
-    return data;
+    const model = new Specification.Statedatafilter(data);
+
+    validate('Statedatafilter', model);
+    return model;
   };
 }
 

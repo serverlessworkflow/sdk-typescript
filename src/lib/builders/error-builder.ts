@@ -18,6 +18,7 @@
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { validate } from '../utils';
+import { setEndValueIfNoTransition } from '../definitions/utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
@@ -26,8 +27,12 @@ import { validate } from '../utils';
  */
 function errorBuildingFn(data: Specification.Error): () => Specification.Error {
   return () => {
-    validate('Error', data);
-    return data;
+    const model = new Specification.Error(data);
+
+    setEndValueIfNoTransition(model);
+
+    validate('Error', model);
+    return model;
   };
 }
 

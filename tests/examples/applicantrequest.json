@@ -7,14 +7,13 @@
   "functions": [
     {
       "name": "sendRejectionEmailFunction",
-      "operation": "http://myapis.org/applicationapi.json#emailRejection",
-      "type": "rest"
+      "operation": "http://myapis.org/applicationapi.json#emailRejection"
     }
   ],
-  "states":[
+  "states": [
     {
-      "name":"CheckApplication",
-      "type":"switch",
+      "type": "switch",
+      "name": "CheckApplication",
       "dataConditions": [
         {
           "condition": "${ .applicants | .age >= 18 }",
@@ -30,16 +29,15 @@
       }
     },
     {
-      "name": "StartApplication",
       "type": "subflow",
+      "name": "StartApplication",
       "workflowId": "startApplicationWorkflowId",
       "end": true
     },
     {
-      "name":"RejectApplication",
-      "type":"operation",
-      "actionMode":"sequential",
-      "actions":[
+      "type": "operation",
+      "name": "RejectApplication",
+      "actions": [
         {
           "functionRef": {
             "refName": "sendRejectionEmailFunction",

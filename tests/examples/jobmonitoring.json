@@ -7,30 +7,25 @@
   "functions": [
     {
       "name": "submitJob",
-      "operation": "http://myapis.org/monitorapi.json#doSubmit",
-      "type": "rest"
+      "operation": "http://myapis.org/monitorapi.json#doSubmit"
     },
     {
       "name": "checkJobStatus",
-      "operation": "http://myapis.org/monitorapi.json#checkStatus",
-      "type": "rest"
+      "operation": "http://myapis.org/monitorapi.json#checkStatus"
     },
     {
       "name": "reportJobSuceeded",
-      "operation": "http://myapis.org/monitorapi.json#reportSucceeded",
-      "type": "rest"
+      "operation": "http://myapis.org/monitorapi.json#reportSucceeded"
     },
     {
       "name": "reportJobFailed",
-      "operation": "http://myapis.org/monitorapi.json#reportFailure",
-      "type": "rest"
+      "operation": "http://myapis.org/monitorapi.json#reportFailure"
     }
   ],
   "states": [
     {
-      "name": "SubmitJob",
       "type": "operation",
-      "actionMode": "sequential",
+      "name": "SubmitJob",
       "actions": [
         {
           "functionRef": {
@@ -56,21 +51,20 @@
       "transition": "WaitForCompletion"
     },
     {
-      "name": "SubmitError",
       "type": "subflow",
+      "name": "SubmitError",
       "workflowId": "handleJobSubmissionErrorWorkflow",
       "end": true
     },
     {
-      "name": "WaitForCompletion",
       "type": "delay",
+      "name": "WaitForCompletion",
       "timeDelay": "PT5S",
       "transition": "GetJobStatus"
     },
     {
-      "name": "GetJobStatus",
       "type": "operation",
-      "actionMode": "sequential",
+      "name": "GetJobStatus",
       "actions": [
         {
           "functionRef": {
@@ -90,8 +84,8 @@
       "transition": "DetermineCompletion"
     },
     {
-      "name": "DetermineCompletion",
       "type": "switch",
+      "name": "DetermineCompletion",
       "dataConditions": [
         {
           "condition": "${ .jobStatus == \"SUCCEEDED\" }",
@@ -107,9 +101,8 @@
       }
     },
     {
-      "name": "JobSucceeded",
       "type": "operation",
-      "actionMode": "sequential",
+      "name": "JobSucceeded",
       "actions": [
         {
           "functionRef": {
@@ -123,9 +116,8 @@
       "end": true
     },
     {
-      "name": "JobFailed",
       "type": "operation",
-      "actionMode": "sequential",
+      "name": "JobFailed",
       "actions": [
         {
           "functionRef": {

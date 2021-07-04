@@ -18,6 +18,7 @@
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { validate } from '../utils';
+import { setEndValueIfNoTransition } from '../definitions/utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
@@ -26,13 +27,12 @@ import { validate } from '../utils';
  */
 function foreachstateBuildingFn(data: Specification.Foreachstate): () => Specification.Foreachstate {
   return () => {
-    data.type = 'foreach';
+    const model = new Specification.Foreachstate(data);
 
-    //FIXME https://github.com/serverlessworkflow/sdk-typescript/issues/95
+    setEndValueIfNoTransition(model);
 
-    data.usedForCompensation = data.usedForCompensation || false;
-    validate('Foreachstate', data);
-    return data;
+    validate('Foreachstate', model);
+    return model;
   };
 }
 

@@ -19,7 +19,7 @@ To build the project and run tests locally:
 ```sh
 git clone https://github.com/serverlessworkflow/sdk-typescript.git
 cd sdk-typescript
-npm install && npm run update-code-base && npm run test
+npm install && npm run test
 ```
 
 
@@ -66,7 +66,6 @@ const workflow: Specification.Workflow = workflowBuilder()
       .data({
           "result": "Hello World!"
       })
-      .end(true)
       .build()
   ])
   .build();
@@ -76,9 +75,9 @@ const workflow: Specification.Workflow = workflowBuilder()
 #### Load a file JSON/YAML to a Workflow instance
 
 ```typescript
-import { Specification, WorkflowConverter } from '@severlessworkflow/sdk-typescript';
+import { Specification, Workflow } from '@severlessworkflow/sdk-typescript';
 
-const workflow: Specification.Workflow = WorkflowConverter.fromString(source);
+const workflow: Specification.Workflow = Workflow.fromSource(source);
 ```
 Where `source` is a JSON or a YAML string.
 
@@ -109,18 +108,18 @@ const workflow: Specification.Workflow = workflowBuilder()
 ```
 
 You can convert it to its string representation in JSON or YAML format 
-by using the static methods `toJson` or `toYaml` respectively:
+by using the static methods `Workflow.toJson` or `Workflow.toYaml` respectively:
 
 ```typescript
-import { WorkflowConverter } from '@severlessworkflow/sdk-typescript';
+import { Workflow } from '../src/lib/definitions/workflow';
 
-const workflowAsJson: string = WorkflowConverter.toJson(workflow);
+const workflowAsJson: string = Workflow.toJson(workflow);
 ```
 
 ```typescript
-import { WorkflowConverter } from '@severlessworkflow/sdk-typescript';
+import { Workflow } from '../src/lib/definitions/workflow';
 
-const workflowAsYaml: string = WorkflowConverter.toYaml(workflow);
+const workflowAsYaml: string = Workflow.toYaml(workflow);
 ```
 
 

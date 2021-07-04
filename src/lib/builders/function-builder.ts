@@ -26,9 +26,10 @@ import { validate } from '../utils';
  */
 function functionBuildingFn(data: Specification.Function): () => Specification.Function {
   return () => {
-    data.type = data.type || 'rest';
-    validate('Function', data);
-    return data;
+    const model = new Specification.Function(data);
+
+    validate('Function', model);
+    return model;
   };
 }
 

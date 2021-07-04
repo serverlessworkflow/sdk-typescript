@@ -21,6 +21,7 @@ import {
   functionBuilder,
   statedatafilterBuilder,
   workflowBuilder,
+  functionrefBuilder,
 } from '../../src';
 
 describe('solvemathproblems workflow example', () => {
@@ -43,23 +44,25 @@ describe('solvemathproblems workflow example', () => {
           .inputCollection('${ .expressions }')
           .iterationParam('singleexpression')
           .outputCollection('${ .results }')
+          .usedForCompensation(false)
           .actions([
             actionBuilder()
-              .functionRef({
-                refName: 'solveMathExpressionFunction',
-                arguments: {
-                  expression: '${ .singleexpression }',
-                },
-              })
+              .functionRef(
+                functionrefBuilder()
+                  .refName('solveMathExpressionFunction')
+                  .arguments({
+                    expression: '${ .singleexpression }',
+                  })
+                  .build()
+              )
               .build(),
           ])
           .stateDataFilter(statedatafilterBuilder().output('${ .results }').build())
-          .end(true)
           .build(),
       ])
       .build();
 
     const expected = JSON.parse(fs.readFileSync('./tests/examples/solvemathproblems.json', 'utf8'));
-    expect(workflow).toEqual(expected);
+    expect(JSON.stringify(workflow.normalize())).toEqual(JSON.stringify(expected));
   });
 });

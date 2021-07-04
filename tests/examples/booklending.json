@@ -5,8 +5,8 @@
   "start": "Book Lending Request",
   "states": [
     {
-      "name": "Book Lending Request",
       "type": "event",
+      "name": "Book Lending Request",
       "onEvents": [
         {
           "eventRefs": [
@@ -17,8 +17,8 @@
       "transition": "Get Book Status"
     },
     {
-      "name": "Get Book Status",
       "type": "operation",
+      "name": "Get Book Status",
       "actions": [
         {
           "functionRef": {
@@ -32,8 +32,8 @@
       "transition": "Book Status Decision"
     },
     {
-      "name": "Book Status Decision",
       "type": "switch",
+      "name": "Book Status Decision",
       "dataConditions": [
         {
           "name": "Book is on loan",
@@ -48,8 +48,8 @@
       ]
     },
     {
-      "name": "Report Status To Lender",
       "type": "operation",
+      "name": "Report Status To Lender",
       "actions": [
         {
           "functionRef": {
@@ -64,8 +64,8 @@
       "transition": "Wait for Lender response"
     },
     {
-      "name": "Wait for Lender response",
       "type": "switch",
+      "name": "Wait for Lender response",
       "eventConditions": [
         {
           "name": "Hold Book",
@@ -80,8 +80,8 @@
       ]
     },
     {
-      "name": "Request Hold",
       "type": "operation",
+      "name": "Request Hold",
       "actions": [
         {
           "functionRef": {
@@ -96,14 +96,14 @@
       "transition": "Wait two weeks"
     },
     {
-      "name": "Wait two weeks",
       "type": "delay",
+      "name": "Wait two weeks",
       "timeDelay": "PT2W",
       "transition": "Get Book Status"
     },
     {
-      "name": "Check Out Book",
       "type": "operation",
+      "name": "Check Out Book",
       "actions": [
         {
           "functionRef": {

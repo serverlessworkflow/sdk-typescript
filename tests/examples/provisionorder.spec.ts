@@ -24,6 +24,7 @@ import {
   statedatafilterBuilder,
   subflowstateBuilder,
   workflowBuilder,
+  functionrefBuilder,
 } from '../../src';
 
 describe('provisionorder workflow example', () => {
@@ -46,12 +47,14 @@ describe('provisionorder workflow example', () => {
           .actionMode('sequential')
           .actions([
             actionBuilder()
-              .functionRef({
-                refName: 'provisionOrderFunction',
-                arguments: {
-                  order: '${ .order }',
-                },
-              })
+              .functionRef(
+                functionrefBuilder()
+                  .refName('provisionOrderFunction')
+                  .arguments({
+                    order: '${ .order }',
+                  })
+                  .build()
+              )
               .build(),
           ])
           .stateDataFilter(statedatafilterBuilder().output('${ .exceptions }').build())
@@ -62,18 +65,14 @@ describe('provisionorder workflow example', () => {
             errorBuilder().error('Missing order quantity').transition('MissingQuantity').build(),
           ])
           .build(),
-        subflowstateBuilder().name('MissingId').workflowId('handleMissingIdExceptionWorkflow').end(true).build(),
-        subflowstateBuilder().name('MissingItem').workflowId('handleMissingItemExceptionWorkflow').end(true).build(),
-        subflowstateBuilder()
-          .name('MissingQuantity')
-          .workflowId('handleMissingQuantityExceptionWorkflow')
-          .end(true)
-          .build(),
-        subflowstateBuilder().name('ApplyOrder').workflowId('applyOrderWorkflowId').end(true).build(),
+        subflowstateBuilder().name('MissingId').workflowId('handleMissingIdExceptionWorkflow').build(),
+        subflowstateBuilder().name('MissingItem').workflowId('handleMissingItemExceptionWorkflow').build(),
+        subflowstateBuilder().name('MissingQuantity').workflowId('handleMissingQuantityExceptionWorkflow').build(),
+        subflowstateBuilder().name('ApplyOrder').workflowId('applyOrderWorkflowId').build(),
       ])
       .build();
 
     const expected = JSON.parse(fs.readFileSync('./tests/examples/provisionorder.json', 'utf8'));
-    expect(workflow).toEqual(expected);
+    expect(JSON.stringify(workflow.normalize())).toEqual(JSON.stringify(expected));
   });
 });

@@ -24,6 +24,7 @@ import {
   delaystateBuilder,
   errorBuilder,
   functionBuilder,
+  functionrefBuilder,
   operationstateBuilder,
   statedatafilterBuilder,
   subflowstateBuilder,
@@ -54,12 +55,14 @@ describe('jobmonitoring workflow example', () => {
           .actionMode('sequential')
           .actions([
             actionBuilder()
-              .functionRef({
-                refName: 'submitJob',
-                arguments: {
-                  name: '${ .job.name }',
-                },
-              })
+              .functionRef(
+                functionrefBuilder()
+                  .refName('submitJob')
+                  .arguments({
+                    name: '${ .job.name }',
+                  })
+                  .build()
+              )
               .actionDataFilter(actiondatafilterBuilder().results('${ .jobuid }').build())
               .build(),
           ])
@@ -67,19 +70,21 @@ describe('jobmonitoring workflow example', () => {
           .stateDataFilter(statedatafilterBuilder().output('${ .jobuid }').build())
           .transition('WaitForCompletion')
           .build(),
-        subflowstateBuilder().name('SubmitError').workflowId('handleJobSubmissionErrorWorkflow').end(true).build(),
+        subflowstateBuilder().name('SubmitError').workflowId('handleJobSubmissionErrorWorkflow').build(),
         delaystateBuilder().name('WaitForCompletion').timeDelay('PT5S').transition('GetJobStatus').build(),
         operationstateBuilder()
           .name('GetJobStatus')
           .actionMode('sequential')
           .actions([
             actionBuilder()
-              .functionRef({
-                refName: 'checkJobStatus',
-                arguments: {
-                  name: '${ .jobuid }',
-                },
-              })
+              .functionRef(
+                functionrefBuilder()
+                  .refName('checkJobStatus')
+                  .arguments({
+                    name: '${ .jobuid }',
+                  })
+                  .build()
+              )
               .actionDataFilter(actiondatafilterBuilder().results('${ .jobstatus }').build())
               .build(),
           ])
@@ -102,35 +107,38 @@ describe('jobmonitoring workflow example', () => {
           .actionMode('sequential')
           .actions([
             actionBuilder()
-              .functionRef({
-                refName: 'reportJobSuceeded',
-                arguments: {
-                  name: '${ .jobuid }',
-                },
-              })
+              .functionRef(
+                functionrefBuilder()
+                  .refName('reportJobSuceeded')
+                  .arguments({
+                    name: '${ .jobuid }',
+                  })
+                  .build()
+              )
               .build(),
           ])
-          .end(true)
+
           .build(),
         operationstateBuilder()
           .name('JobFailed')
           .actionMode('sequential')
           .actions([
             actionBuilder()
-              .functionRef({
-                refName: 'reportJobFailed',
-                arguments: {
-                  name: '${ .jobuid }',
-                },
-              })
+              .functionRef(
+                functionrefBuilder()
+                  .refName('reportJobFailed')
+                  .arguments({
+                    name: '${ .jobuid }',
+                  })
+                  .build()
+              )
               .build(),
           ])
-          .end(true)
           .build(),
       ])
       .build();
 
     const expected = JSON.parse(fs.readFileSync('./tests/examples/jobmonitoring.json', 'utf8'));
-    expect(workflow).toEqual(expected);
+    expect(JSON.stringify(workflow.normalize())).toEqual(JSON.stringify(expected));
   });
 });

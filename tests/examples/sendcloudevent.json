@@ -5,26 +5,24 @@
   "start": "ProvisionOrdersState",
   "events": [
     {
+      "kind": "produced",
       "name": "provisioningCompleteEvent",
-      "type": "provisionCompleteType",
-      "kind": "produced"
+      "type": "provisionCompleteType"
     }
   ],
   "functions": [
     {
       "name": "provisionOrderFunction",
-      "operation": "http://myapis.org/provisioning.json#doProvision",
-      "type": "rest"
+      "operation": "http://myapis.org/provisioning.json#doProvision"
     }
   ],
   "states": [
     {
-      "name": "ProvisionOrdersState",
       "type": "foreach",
+      "name": "ProvisionOrdersState",
       "inputCollection": "${ .orders }",
       "iterationParam": "singleorder",
       "outputCollection": "${ .provisionedOrders }",
-      "usedForCompensation": false,
       "actions": [
         {
           "functionRef": {

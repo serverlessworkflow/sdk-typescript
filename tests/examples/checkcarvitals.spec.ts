@@ -42,7 +42,6 @@ describe('checkcarvitals workflow example', () => {
           .name('DoCarVitalsChecks')
           .workflowId('vitalscheck')
           .repeat(repeatBuilder().stopOnEvents(['CarTurnedOffEvent']).build())
-          .end(true)
           .build(),
       ])
       .events([
@@ -52,6 +51,6 @@ describe('checkcarvitals workflow example', () => {
       .build();
 
     const expected = JSON.parse(fs.readFileSync('./tests/examples/checkcarvitals.json', 'utf8'));
-    expect(workflow).toEqual(expected);
+    expect(JSON.stringify(workflow.normalize())).toEqual(JSON.stringify(expected));
   });
 });

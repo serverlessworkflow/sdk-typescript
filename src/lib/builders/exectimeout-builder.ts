@@ -26,8 +26,10 @@ import { validate } from '../utils';
  */
 function exectimeoutBuildingFn(data: Specification.Exectimeout): () => Specification.Exectimeout {
   return () => {
-    validate('Exectimeout', data);
-    return data;
+    const model = new Specification.Exectimeout(data);
+
+    validate('Exectimeout', model);
+    return model;
   };
 }
 

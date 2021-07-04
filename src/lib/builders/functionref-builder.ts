@@ -26,8 +26,10 @@ import { validate } from '../utils';
  */
 function functionrefBuildingFn(data: Specification.Functionref): () => Specification.Functionref {
   return () => {
-    validate('Functionref', data);
-    return data;
+    const model = new Specification.Functionref(data);
+
+    validate('Functionref', model);
+    return model;
   };
 }
 

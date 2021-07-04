@@ -33,12 +33,11 @@ describe('parallel workflow example', () => {
             branchBuilder().name('ShortDelayBranch').workflowId('shortdelayworkflowid').build(),
             branchBuilder().name('LongDelayBranch').workflowId('longdelayworkflowid').build(),
           ])
-          .end(true)
           .build(),
       ])
       .build();
 
     const expected = JSON.parse(fs.readFileSync('./tests/examples/parallel.json', 'utf8'));
-    expect(workflow).toEqual(expected);
+    expect(JSON.stringify(workflow.normalize())).toEqual(JSON.stringify(expected));
   });
 });
