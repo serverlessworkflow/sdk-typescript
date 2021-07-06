@@ -71,16 +71,26 @@ const workflow: Specification.Workflow = workflowBuilder()
   .build();
 ```
 
-
-#### Load a file JSON/YAML to a Workflow instance
+#### Create Workflow from JSON/YAML source
 
 ```typescript
 import { Specification, Workflow } from '@severlessworkflow/sdk-typescript';
 
+const source = `id: helloworld
+version: '1.0'
+name: Hello World Workflow
+description: Inject Hello World
+start: Hello State
+states:
+  - type: inject
+    name: Hello State
+    data:
+      result: Hello World!
+    end: true`
+
 const workflow: Specification.Workflow = Workflow.fromSource(source);
 ```
-Where `source` is a JSON or a YAML string.
-
+Where `source` can be in both JSON or YAML format. 
 
 #### Parse a Workflow instance to JSON/YAML
 
