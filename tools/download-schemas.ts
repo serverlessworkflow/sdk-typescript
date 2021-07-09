@@ -3,7 +3,7 @@ import { promises as fsPromises } from 'fs';
 import * as path from 'path';
 import { URL } from 'url';
 import yargs from 'yargs';
-import { version } from '../package.json';
+import { schemaVersion } from '../package.json';
 import { mergeDefinitions, mergeSchemas, reset } from './utils';
 const { writeFile, mkdir } = fsPromises;
 
@@ -44,7 +44,6 @@ const download = async (schemaUrl: URL, destDir: string): Promise<void> => {
 };
 
 const argv = yargs(process.argv.slice(2)).argv;
-const schemaVersion = `${version.split('.').slice(0, -1).join('.')}`;
 const schemaUrl: URL = new URL(
   (argv.url as string) || `https://serverlessworkflow.io/schemas/${schemaVersion}/workflow.json`
 );
