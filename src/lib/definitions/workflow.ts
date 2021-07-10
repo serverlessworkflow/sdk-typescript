@@ -98,7 +98,7 @@ export class Workflow {
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Workflow} without deleted properties.
    */
-  normalize(): Workflow {
+  normalize = (): Workflow => {
     const clone = new Workflow(this);
     normalizeKeepActiveProperty(clone);
 
@@ -111,7 +111,7 @@ export class Workflow {
 
     normalizeExecTimeout(clone);
     return clone;
-  }
+  };
 
   /**
    * Parses the provided string as Workflow
@@ -144,6 +144,6 @@ export class Workflow {
    */
   static toYaml(workflow: Workflow): string {
     validate('Workflow', workflow);
-    return yaml.dump(workflow.normalize());
+    return yaml.dump(JSON.parse(JSON.stringify(workflow.normalize())));
   }
 }

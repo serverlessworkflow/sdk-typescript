@@ -51,7 +51,7 @@ export class Error {
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Error} without deleted properties.
    */
-  normalize(): Error {
+  normalize = (): Error => {
     const clone = new Error(this);
 
     normalizeEndProperty(clone);
@@ -60,5 +60,5 @@ export class Error {
     setEndValueIfNoTransition(clone);
 
     return clone;
-  }
+  };
 }

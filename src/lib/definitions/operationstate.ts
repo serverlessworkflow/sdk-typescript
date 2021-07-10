@@ -102,7 +102,7 @@ export class Operationstate {
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Operationstate} without deleted properties.
    */
-  normalize(): Operationstate {
+  normalize = (): Operationstate => {
     const clone = new Operationstate(this);
 
     normalizeActionModeSequentialProperty(clone);
@@ -113,5 +113,5 @@ export class Operationstate {
     setEndValueIfNoTransition(clone);
 
     return clone;
-  }
+  };
 }

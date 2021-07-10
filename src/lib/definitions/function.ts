@@ -40,11 +40,12 @@ export class Function {
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Function} without deleted properties.
    */
-  normalize(): Function {
+
+  normalize = (): Function => {
     const clone = new Function(this);
 
     normalizeTypeRestProperty(clone);
 
     return clone;
-  }
+  };
 }

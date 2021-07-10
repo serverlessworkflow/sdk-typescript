@@ -110,7 +110,7 @@ export class Callbackstate {
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Callbackstate} without deleted properties.
    */
-  normalize(): Callbackstate {
+  normalize = (): Callbackstate => {
     const clone = new Callbackstate(this);
 
     normalizeUsedForCompensationProperty(clone);
@@ -121,5 +121,5 @@ export class Callbackstate {
     setEndValueIfNoTransition(clone);
 
     return clone;
-  }
+  };
 }

@@ -44,11 +44,11 @@ export class Transitiondatacondition {
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Transitiondatacondition} without deleted properties.
    */
-  normalize(): Transitiondatacondition {
+  normalize = (): Transitiondatacondition => {
     const clone = new Transitiondatacondition(this);
 
     normalizeTransitionProperty(clone);
 
     return clone;
-  }
+  };
 }

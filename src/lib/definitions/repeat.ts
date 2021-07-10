@@ -51,12 +51,12 @@ export class Repeat {
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Repeat} without deleted properties.
    */
-  normalize(): Repeat {
+  normalize = (): Repeat => {
     const clone = new Repeat(this);
 
     normalizeContinueOnErrorProperty(clone);
     normalizeCheckBeforeProperty(clone);
 
     return clone;
-  }
+  };
 }

@@ -11,7 +11,7 @@ export const validate = (typeName: string, data: any): boolean => {
   const validateFn: ValidateFunction | undefined = validators.get(typeName);
   // TODO: ignore validation if no validator or throw ?
   if (!validateFn) return data;
-  if (!validateFn(data)) {
+  if (!validateFn(JSON.parse(JSON.stringify(data)))) {
     console.warn(validateFn.errors);
     const firstError: DefinedError = (validateFn.errors as DefinedError[])[0];
     throw new Error(

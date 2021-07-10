@@ -58,11 +58,11 @@ export class Eventdef {
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Eventdef} without deleted properties.
    */
-  normalize(): Eventdef {
+  normalize = (): Eventdef => {
     const clone = new Eventdef(this);
 
     normalizeKindProperty(clone);
 
     return clone;
-  }
+  };
 }

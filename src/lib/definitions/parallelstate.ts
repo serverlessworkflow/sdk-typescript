@@ -106,7 +106,7 @@ export class Parallelstate {
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Parallelstate} without deleted properties.
    */
-  normalize(): Parallelstate {
+  normalize = (): Parallelstate => {
     const clone = new Parallelstate(this);
 
     normalizeCompletionTypeProperty(clone);
@@ -118,5 +118,5 @@ export class Parallelstate {
     setEndValueIfNoTransition(clone);
 
     return clone;
-  }
+  };
 }

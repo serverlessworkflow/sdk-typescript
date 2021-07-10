@@ -93,7 +93,7 @@ export class Delaystate {
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Delaystate} without deleted properties.
    */
-  normalize(): Delaystate {
+  normalize = (): Delaystate => {
     const clone = new Delaystate(this);
 
     normalizeUsedForCompensationProperty(clone);
@@ -102,5 +102,5 @@ export class Delaystate {
     normalizeTransitionProperty(clone);
     setEndValueIfNoTransition(clone);
     return clone;
-  }
+  };
 }

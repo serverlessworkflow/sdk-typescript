@@ -39,7 +39,7 @@ export class Defaultdef /* Default definition. Can be either a transition or end
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Defaultdef} without deleted properties.
    */
-  normalize(): Defaultdef {
+  normalize = (): Defaultdef => {
     const clone = new Defaultdef(this);
 
     normalizeEndProperty(clone);
@@ -47,5 +47,5 @@ export class Defaultdef /* Default definition. Can be either a transition or end
     setEndValueIfNoTransition(clone);
 
     return clone;
-  }
+  };
 }
