@@ -10,7 +10,6 @@ describe('validate', () => {
   });
 
   it('should throws an error if validator not found', () => {
-    expect( () => validate('ValidatorNotDefined',  {} )).toThrowError();
+    expect(() => validate('ValidatorNotDefined', {})).toThrowError();
   });
-
 });

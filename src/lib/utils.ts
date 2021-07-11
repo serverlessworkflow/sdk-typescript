@@ -12,8 +12,7 @@ export const validate = (typeName: string, data: any): boolean => {
 
   if (!validateFn) {
     throw Error(`Validate function not defined for type [${typeName}]`);
-  };
-
+  }
 
   if (!validateFn(data)) {
     console.warn(validateFn.errors);
