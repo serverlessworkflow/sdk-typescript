@@ -26,7 +26,7 @@ export const validate = (typeName: string, data: any): boolean => {
   const validateFn: ValidateFunction | undefined = validators.get(typeName);
 
   if (!validateFn) {
-    throw Error(`Validate function not defined for type [${typeName}]`);
+    throw Error(`Validate function not defined for type '${typeName}'`);
   }
 
   if (!validateFn(data)) {
