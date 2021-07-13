@@ -24,4 +24,8 @@ describe('validate', () => {
   it('should return true for valid objects', () => {
     expect(validate('End', false)).toBeTruthy('Expected function validate to return true for valid objects');
   });
+
+  it('should throws an error if validator not found', () => {
+    expect(() => validate('ValidatorNotDefined', {})).toThrowError();
+  });
 });
