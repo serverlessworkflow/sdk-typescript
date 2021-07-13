@@ -27,35 +27,19 @@ To build the project and run tests locally:
 ```sh
 git clone https://github.com/serverlessworkflow/sdk-typescript.git
 cd sdk-typescript
-npm install && npm run test
+npm install && npm run build && npm run test
 ```
-
-
-### Add as dependency to your project
-You can use [npm link](https://docs.npmjs.com/cli/v7/commands/npm-link) to add the `@severlessworkflow/sdk-typescript` 
-as dependency in your project.
-
-- Clone the `sdk-typescript` project and build it:
-```sh
-git clone https://github.com/serverlessworkflow/sdk-typescript.git
-cd sdk-typescript
-npm install && npm run build
-```
-
-- Make the package visible globally to npm. Inside the `sdk-typescript\dist` project folder run: 
-```sh
-npm link
-```
-
-- Navigate to the folder/project in which you want to use the sdk, and run the following command: 
-```sh
-npm link @severlessworkflow/sdk-typescript
-```
-
-It will create a symbolic link from globally-installed `@severlessworkflow/sdk-typescript` to `node_modules/` of the current folder.
 
 
 ### How to use
+
+#### Install
+
+For the latest stable version:
+
+```sh
+npm i @severlessworkflow/sdk-typescript
+```
 
 #### Create Workflow using builder API
 
