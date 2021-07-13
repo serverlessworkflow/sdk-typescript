@@ -10,6 +10,14 @@ With the SDK you can:
 * Validate workflow definitions
 
 
+### Status
+
+| Latest Releases | Conformance to spec version |
+| :---: | :---: |
+| [v1.0.0](https://github.com/serverlessworkflow/sdk-typescript/releases/) | [v0.6](https://github.com/serverlessworkflow/specification/tree/0.6.x) |
+
+
+
 ## Getting Started
 
 ### Building locally
