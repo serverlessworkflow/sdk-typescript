@@ -38,11 +38,11 @@ export class Exectimeout {
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Exectimeout} without deleted properties.
    */
-  normalize(): Exectimeout {
+  normalize = (): Exectimeout => {
     const clone = new Exectimeout(this);
 
     normalizeInterruptProperty(clone);
 
     return clone;
-  }
+  };
 }

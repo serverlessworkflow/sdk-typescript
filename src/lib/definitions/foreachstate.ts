@@ -112,7 +112,7 @@ export class Foreachstate {
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Foreachstate} without deleted properties.
    */
-  normalize(): Foreachstate {
+  normalize = (): Foreachstate => {
     const clone = new Foreachstate(this);
 
     normalizeUsedForCompensationProperty(clone);
@@ -122,5 +122,5 @@ export class Foreachstate {
     setEndValueIfNoTransition(clone);
 
     return clone;
-  }
+  };
 }

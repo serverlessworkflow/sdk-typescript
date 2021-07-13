@@ -44,12 +44,12 @@ export class End {
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.End} without deleted properties.
    */
-  normalize(): End {
+  normalize = (): End => {
     const clone = new End(this);
 
     normalizeCompensateProperty(clone);
     normalizeTerminateProperty(clone);
 
     return clone;
-  }
+  };
 }

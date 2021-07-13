@@ -83,7 +83,7 @@ export class Databasedswitch {
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Databasedswitch} without deleted properties.
    */
-  normalize(): Databasedswitch {
+  normalize = (): Databasedswitch => {
     const clone = new Databasedswitch(this);
 
     normalizeUsedForCompensationProperty(clone);
@@ -91,5 +91,5 @@ export class Databasedswitch {
     normalizeDataConditionsProperty(clone);
 
     return clone;
-  }
+  };
 }

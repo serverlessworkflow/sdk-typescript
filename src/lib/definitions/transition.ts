@@ -43,11 +43,11 @@ export class Transition {
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Transition} without deleted properties.
    */
-  normalize(): Transition {
+  normalize = (): Transition => {
     const clone = new Transition(this);
 
     normalizeCompensateProperty(clone);
 
     return clone;
-  }
+  };
 }

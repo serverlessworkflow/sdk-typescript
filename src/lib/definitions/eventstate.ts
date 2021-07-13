@@ -88,7 +88,7 @@ export class Eventstate /* This state is used to wait for events from event sour
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Eventstate} without deleted properties.
    */
-  normalize(): Eventstate {
+  normalize = (): Eventstate => {
     const clone = new Eventstate(this);
 
     normalizeExclusiveProperty(clone);
@@ -99,5 +99,5 @@ export class Eventstate /* This state is used to wait for events from event sour
     setEndValueIfNoTransition(clone);
 
     return clone;
-  }
+  };
 }
