@@ -13,36 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { WorkflowExecTimeout } from './workflowExecTimeout';
+import { ActionExecTimeout, BranchExecTimeout, EventTimeout, StateExecTimeout } from './types';
+import { normalizeWorkflowExecTimeout, overwriteWorkflowExecTimeout } from './utils';
 
-import { normalizeInterruptProperty } from './utils';
-
-export class Exectimeout {
+export class Timeouts {
   constructor(model: any) {
     Object.assign(this, model);
+    overwriteWorkflowExecTimeout(this);
   }
 
-  /**
-   * Timeout duration (ISO 8601 duration format)
-   */
-  duration: string;
-  /**
-   * If `false`, workflow instance is allowed to finish current execution. If `true`, current workflow execution is abrupted.
-   */
-  interrupt?: boolean;
-  /**
-   * Name of a workflow state to be executed before workflow instance is terminated
-   */
-  runBefore?: string;
+  workflowExecTimeout?: WorkflowExecTimeout;
+  stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+  actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+  branchExecTimeout?: /* Single branch execution timeout duration (ISO 8601 duration format) */ BranchExecTimeout;
+  eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Exectimeout} without deleted properties.
    */
-  normalize = (): Exectimeout => {
-    const clone = new Exectimeout(this);
-
-    normalizeInterruptProperty(clone);
-
+  normalize = (): Timeouts => {
+    const clone = new Timeouts(this);
+    normalizeWorkflowExecTimeout(clone);
     return clone;
   };
 }

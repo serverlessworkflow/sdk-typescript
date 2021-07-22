@@ -1,6 +1,7 @@
 {
   "id": "applicantrequest",
   "version": "1.0",
+  "specVersion": "0.7",
   "name": "Applicant Request Decision Workflow",
   "description": "Determine if applicant request is valid",
   "start": "CheckApplication",
@@ -10,10 +11,10 @@
       "operation": "http://myapis.org/applicationapi.json#emailRejection"
     }
   ],
-  "states": [
+  "states":[
     {
-      "type": "switch",
-      "name": "CheckApplication",
+      "type":"switch",
+      "name":"CheckApplication",
       "dataConditions": [
         {
           "condition": "${ .applicants | .age >= 18 }",
@@ -24,20 +25,24 @@
           "transition": "RejectApplication"
         }
       ],
-      "default": {
+      "defaultCondition": {
         "transition": "RejectApplication"
       }
     },
     {
-      "type": "subflow",
+      "type": "operation",
       "name": "StartApplication",
-      "workflowId": "startApplicationWorkflowId",
+      "actions": [
+        {
+          "subFlowRef": "startApplicationWorkflowId"
+        }
+      ],
       "end": true
     },
     {
-      "type": "operation",
-      "name": "RejectApplication",
-      "actions": [
+      "type":"operation",
+      "name":"RejectApplication",
+      "actions":[
         {
           "functionRef": {
             "refName": "sendRejectionEmailFunction",

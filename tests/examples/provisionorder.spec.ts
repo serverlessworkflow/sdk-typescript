@@ -21,7 +21,6 @@ import {
   functionBuilder,
   operationstateBuilder,
   statedatafilterBuilder,
-  subflowstateBuilder,
   workflowBuilder,
   functionrefBuilder,
 } from '../../src';
@@ -31,6 +30,7 @@ describe('provisionorder workflow example', () => {
     const workflow = workflowBuilder()
       .id('provisionorders')
       .version('1.0')
+      .specVersion('0.7')
       .name('Provision Orders')
       .description('Provision Orders and handle errors thrown')
       .start('ProvisionOrder')
@@ -64,10 +64,22 @@ describe('provisionorder workflow example', () => {
             errorBuilder().error('Missing order quantity').transition('MissingQuantity').build(),
           ])
           .build(),
-        subflowstateBuilder().name('MissingId').workflowId('handleMissingIdExceptionWorkflow').build(),
-        subflowstateBuilder().name('MissingItem').workflowId('handleMissingItemExceptionWorkflow').build(),
-        subflowstateBuilder().name('MissingQuantity').workflowId('handleMissingQuantityExceptionWorkflow').build(),
-        subflowstateBuilder().name('ApplyOrder').workflowId('applyOrderWorkflowId').build(),
+        operationstateBuilder()
+          .name('MissingId')
+          .actions([actionBuilder().subFlowRef('handleMissingIdExceptionWorkflow').build()])
+          .build(),
+        operationstateBuilder()
+          .name('MissingItem')
+          .actions([actionBuilder().subFlowRef('handleMissingItemExceptionWorkflow').build()])
+          .build(),
+        operationstateBuilder()
+          .name('MissingQuantity')
+          .actions([actionBuilder().subFlowRef('handleMissingQuantityExceptionWorkflow').build()])
+          .build(),
+        operationstateBuilder()
+          .name('ApplyOrder')
+          .actions([actionBuilder().subFlowRef('applyOrderWorkflowId').build()])
+          .build(),
       ])
       .build();
 

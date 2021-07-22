@@ -13,21 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Defaultdef } from './defaultdef';
+
+import { Defaultconditiondef } from './defaultconditiondef';
 import { Error } from './error';
 import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import {
-  normalizeEventConditionsProperty,
-  normalizeOnErrorsProperty,
-  normalizeUsedForCompensationProperty,
-  overwriteDefaultValue,
-  overwriteEventConditionsValue,
-  overwriteMetadataValue,
-  overwriteOnErrorsValue,
-  overwriteStateDataFilterValue,
+  normalizeDefaultCondition,
+  normalizeEventConditions,
+  normalizeOnErrors,
+  normalizeUsedForCompensation,
+  overwriteDefaultCondition,
+  overwriteEventConditions,
+  overwriteMetadata,
+  overwriteOnErrors,
+  overwriteStateDataFilter,
+  overwritePropertyAsPlainType,
 } from './utils';
-import { Eventcondition } from './types';
+import { Eventcondition, EventTimeout, StateExecTimeout } from './types';
 
 export class Eventbasedswitch {
   constructor(model: any) {
@@ -37,11 +40,12 @@ export class Eventbasedswitch {
     };
     Object.assign(this, defaultModel, model);
 
-    overwriteMetadataValue(this);
-    overwriteOnErrorsValue(this);
-    overwriteEventConditionsValue(this);
-    overwriteDefaultValue(this);
-    overwriteStateDataFilterValue(this);
+    overwriteStateDataFilter(this);
+    overwritePropertyAsPlainType('timeouts', this);
+    overwriteEventConditions(this);
+    overwriteOnErrors(this);
+    overwriteDefaultCondition(this);
+    overwriteMetadata(this);
   }
 
   /**
@@ -61,6 +65,13 @@ export class Eventbasedswitch {
    */
   stateDataFilter?: Statedatafilter;
   /**
+   * State specific timeouts
+   */
+  timeouts?: {
+    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
+  };
+  /**
    * Defines conditions evaluated against events
    */
   eventConditions: Eventcondition[];
@@ -69,13 +80,9 @@ export class Eventbasedswitch {
    */
   onErrors?: Error[];
   /**
-   * If eventConditions is used, defines the time period to wait for events (ISO 8601 format)
-   */
-  eventTimeout?: string;
-  /**
    * Default transition of the workflow if there is no matching data conditions. Can include a transition or end definition
    */
-  default?: /* Default definition. Can be either a transition or end definition */ Defaultdef;
+  defaultCondition?: /* DefaultCondition definition. Can be either a transition or end definition */ Defaultconditiondef;
   /**
    * Unique Name of a workflow state which is responsible for compensation of this state
    */
@@ -93,9 +100,10 @@ export class Eventbasedswitch {
   normalize = (): Eventbasedswitch => {
     const clone = new Eventbasedswitch(this);
 
-    normalizeUsedForCompensationProperty(clone);
-    normalizeOnErrorsProperty(clone);
-    normalizeEventConditionsProperty(clone);
+    normalizeEventConditions(clone);
+    normalizeOnErrors(clone);
+    normalizeDefaultCondition(clone);
+    normalizeUsedForCompensation(clone);
 
     return clone;
   };

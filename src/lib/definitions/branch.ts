@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { Action } from './action';
-import { overwriteActionsValue } from './utils';
+import { normalizeActions, overwriteActions, overwritePropertyAsPlainType } from './utils';
+import { ActionExecTimeout, BranchExecTimeout } from './types';
 
 export class Branch /* Branch Definition */ {
   constructor(model: any) {
     Object.assign(this, model);
-
-    overwriteActionsValue(this);
+    overwriteActions(this);
+    overwritePropertyAsPlainType('timeouts', this);
   }
 
   /**
@@ -28,11 +30,25 @@ export class Branch /* Branch Definition */ {
    */
   name: string;
   /**
+   * State specific timeouts
+   */
+  timeouts?: {
+    actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+    branchExecTimeout?: /* Single branch execution timeout duration (ISO 8601 duration format) */ BranchExecTimeout;
+  };
+  /**
    * Actions to be executed in this branch
    */
-  actions?: Action[];
+  actions: Action[];
+
   /**
-   * Unique Id of a workflow to be executed in this branch
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Action} without deleted properties.
    */
-  workflowId: string;
+  normalize = (): Branch => {
+    const clone = new Branch(this);
+    normalizeActions(clone);
+
+    return clone;
+  };
 }

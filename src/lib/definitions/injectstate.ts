@@ -13,30 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { End } from './end';
 import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
-  normalizeEndProperty,
-  normalizeTransitionProperty,
-  normalizeUsedForCompensationProperty,
-  overwriteEndValueIfObject,
-  overwriteMetadataValue,
-  overwriteStateDataFilterValue,
-  overwriteTransitionValueIfObject,
+  normalizeEndIfObject,
+  normalizeTransitionIfObject,
+  normalizeUsedForCompensation,
+  overwriteEndIfObject,
+  overwriteMetadata,
+  overwritePropertyAsPlainType,
+  overwriteStateDataFilter,
+  overwriteTransitionIfObject,
   setEndValueIfNoTransition,
 } from './utils';
+import { StateExecTimeout } from './types';
 
 export class Injectstate {
   constructor(model: any) {
     const defaultModel = { type: 'inject', usedForCompensation: false };
     Object.assign(this, defaultModel, model);
 
-    overwriteEndValueIfObject(this);
-    overwriteStateDataFilterValue(this);
-    overwriteTransitionValueIfObject(this);
-    overwriteMetadataValue(this);
+    overwriteEndIfObject(this);
+    overwritePropertyAsPlainType('data', this);
+    overwritePropertyAsPlainType('timeouts', this);
+    overwriteStateDataFilter(this);
+    overwriteTransitionIfObject(this);
+    overwriteMetadata(this);
   }
 
   /**
@@ -62,11 +67,17 @@ export class Injectstate {
     [key: string]: any;
   };
   /**
+   * State specific timeouts
+   */
+  timeouts?: {
+    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+  };
+  /**
    * State data filter
    */
   stateDataFilter?: Statedatafilter;
   /**
-   * Next transition of the workflow after subflow has completed
+   * Next transition of the workflow after injection has completed
    */
   transition?: string | Transition;
   /**
@@ -86,10 +97,9 @@ export class Injectstate {
   normalize = (): Injectstate => {
     const clone = new Injectstate(this);
 
-    normalizeUsedForCompensationProperty(clone);
-    normalizeEndProperty(clone);
-    normalizeTransitionProperty(clone);
-
+    normalizeEndIfObject(clone);
+    normalizeTransitionIfObject(clone);
+    normalizeUsedForCompensation(clone);
     setEndValueIfNoTransition(clone);
 
     return clone;

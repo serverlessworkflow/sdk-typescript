@@ -20,22 +20,22 @@ import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Exectimeout} data The underlying object
- * @returns {Specification.Exectimeout} The validated underlying object
+ * @param {Specification.Subflowref} data The underlying object
+ * @returns {Specification.Subflowref} The validated underlying object
  */
-function exectimeoutBuildingFn(data: Specification.Exectimeout): () => Specification.Exectimeout {
+function subflowrefBuildingFn(data: Specification.Subflowref): () => Specification.Subflowref {
   return () => {
-    const model = new Specification.Exectimeout(data);
+    const model = new Specification.Subflowref(data);
 
-    validate('Exectimeout', model);
+    validate('Subflowref', model);
     return model;
   };
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.Exectimeout`
- * @returns {Specification.Exectimeout} A builder for `Specification.Exectimeout`
+ * A factory to create a builder proxy for the type `Specification.Subflowref`
+ * @returns {Specification.Subflowref} A builder for `Specification.Subflowref`
  */
-export function exectimeoutBuilder(): Builder<Specification.Exectimeout> {
-  return builder<Specification.Exectimeout>(exectimeoutBuildingFn);
+export function subflowrefBuilder(): Builder<Specification.Subflowref> {
+  return builder<Specification.Subflowref>(subflowrefBuildingFn);
 }

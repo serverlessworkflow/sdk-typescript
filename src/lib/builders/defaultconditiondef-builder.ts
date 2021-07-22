@@ -17,28 +17,27 @@
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { validate } from '../utils';
-import { setEndValueIfNoTransition } from '../definitions/utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Defaultdef} data The underlying object
- * @returns {Specification.Defaultdef} The validated underlying object
+ * @param {Specification.Defaultconditiondef} data The underlying object
+ * @returns {Specification.Defaultconditiondef} The validated underlying object
  */
-function defaultdefBuildingFn(data: Specification.Defaultdef): () => Specification.Defaultdef {
+function defaultconditiondefBuildingFn(
+  data: Specification.Defaultconditiondef
+): () => Specification.Defaultconditiondef {
   return () => {
-    const model = new Specification.Defaultdef(data);
+    const model = new Specification.Defaultconditiondef(data);
 
-    setEndValueIfNoTransition(model);
-
-    validate('Defaultdef', model);
+    validate('Defaultconditiondef', model);
     return model;
   };
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.Defaultdef`
- * @returns {Specification.Defaultdef} A builder for `Specification.Defaultdef`
+ * A factory to create a builder proxy for the type `Specification.Defaultconditiondef`
+ * @returns {Specification.Defaultconditiondef} A builder for `Specification.Defaultconditiondef`
  */
-export function defaultdefBuilder(): Builder<Specification.Defaultdef> {
-  return builder<Specification.Defaultdef>(defaultdefBuildingFn);
+export function defaultconditiondefBuilder(): Builder<Specification.Defaultconditiondef> {
+  return builder<Specification.Defaultconditiondef>(defaultconditiondefBuildingFn);
 }

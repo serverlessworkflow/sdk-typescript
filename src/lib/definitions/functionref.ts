@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
+import { overwritePropertyAsPlainType } from './utils';
+
 export class Functionref {
   constructor(model: any) {
     Object.assign(this, model);
+    overwritePropertyAsPlainType('arguments', this);
   }
 
   /**
@@ -29,4 +32,8 @@ export class Functionref {
   arguments?: {
     [key: string]: any;
   };
+  /**
+   * Only used if function type is 'graphql'. A string containing a valid GraphQL selection set
+   */
+  selectionSet?: string;
 }

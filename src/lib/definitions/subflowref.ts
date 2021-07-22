@@ -13,37 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { End } from './end';
-import { Transition } from './transition';
-import {
-  normalizeEndProperty,
-  normalizeTransitionProperty,
-  overwriteEndValueIfObject,
-  overwriteTransitionValueIfObject,
-  setEndValueIfNoTransition,
-} from './utils';
 
-export class Defaultdef /* Default definition. Can be either a transition or end definition */ {
+import { Specification } from './index';
+import { normalizeWaitForCompletion } from './utils';
+
+export class Subflowref {
   constructor(model: any) {
-    Object.assign(this, model);
+    const defaultModel = { waitForCompletion: true } as Specification.Subflowref;
 
-    overwriteTransitionValueIfObject(this);
-    overwriteEndValueIfObject(this);
+    Object.assign(this, defaultModel, model);
   }
 
-  transition: string | Transition;
-  end?: boolean | End;
+  /**
+   * Workflow execution must wait for sub-workflow to finish before continuing
+   */
+  waitForCompletion?: boolean;
+  /**
+   * Unique id of the sub-workflow to be invoked
+   */
+  workflowId: string;
+  /**
+   * Version of the sub-workflow to be invoked
+   */
+  version?: string;
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Defaultdef} without deleted properties.
+   * @returns {Specification.Subflowref} without deleted properties.
    */
-  normalize = (): Defaultdef => {
-    const clone = new Defaultdef(this);
+  normalize = (): Subflowref => {
+    const clone = new Subflowref(this);
 
-    normalizeEndProperty(clone);
-    normalizeTransitionProperty(clone);
-    setEndValueIfNoTransition(clone);
+    normalizeWaitForCompletion(clone);
 
     return clone;
   };

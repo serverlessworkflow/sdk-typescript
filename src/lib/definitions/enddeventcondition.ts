@@ -16,21 +16,15 @@
 import { End } from './end';
 import { Eventdatafilter } from './eventdatafilter';
 import { Metadata } from './metadata';
-import {
-  normalizeEndProperty,
-  overwriteEndValueIfObject,
-  overwriteEventDataFilterValue,
-  overwriteMetadataValue,
-} from './utils';
+import { normalizeEndIfObject, overwriteEndIfObject, overwriteEventDataFilter, overwriteMetadata } from './utils';
 
 export class Enddeventcondition {
   constructor(model: any) {
     Object.assign(this, model);
 
-    overwriteMetadataValue(this);
-    overwriteEndValueIfObject(this);
-
-    overwriteEventDataFilterValue(this);
+    overwriteEndIfObject(this);
+    overwriteEventDataFilter(this);
+    overwriteMetadata(this);
   }
 
   /**
@@ -58,7 +52,7 @@ export class Enddeventcondition {
   normalize = (): Enddeventcondition => {
     const clone = new Enddeventcondition(this);
 
-    normalizeEndProperty(clone);
+    normalizeEndIfObject(clone);
 
     return clone;
   };

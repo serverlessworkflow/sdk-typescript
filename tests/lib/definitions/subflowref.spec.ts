@@ -12,7 +12,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
-import { Eventdef } from './eventdef';
+import { Subflowref } from '../../../src/lib/definitions/subflowref';
 
-export type Events = string /* uri */ | [Eventdef, ...Eventdef[]];
+describe('Subflowref ', () => {
+  it('normalize should unset properties whose value is equal to its default value', () => {
+    const object = new Subflowref({ workflowId: 'startApplicationWorkflowId' });
+    expect(object.waitForCompletion).toBeTrue();
+    const serializedObject = object.normalize();
+
+    expect(JSON.stringify(serializedObject)).toBe(
+      JSON.stringify({
+        workflowId: 'startApplicationWorkflowId',
+      })
+    );
+
+    expect(serializedObject.waitForCompletion).toBeUndefined();
+  });
+});

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { Produceeventdef } from './produceeventdef';
-import { normalizeCompensateProperty, normalizeTerminateProperty, overwriteProduceEventsValue } from './utils';
+import { normalizeCompensate, normalizeTerminate, overwriteProduceEvents } from './utils';
 
 export class End {
   constructor(model: any) {
@@ -24,7 +24,7 @@ export class End {
     };
     Object.assign(this, defaultModel, model);
 
-    overwriteProduceEventsValue(this);
+    overwriteProduceEvents(this);
   }
 
   /**
@@ -47,8 +47,8 @@ export class End {
   normalize = (): End => {
     const clone = new End(this);
 
-    normalizeCompensateProperty(clone);
-    normalizeTerminateProperty(clone);
+    normalizeCompensate(clone);
+    normalizeTerminate(clone);
 
     return clone;
   };

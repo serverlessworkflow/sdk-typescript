@@ -19,10 +19,20 @@ import commonSchema from './schema/common.json';
 import eventsChema from './schema/events.json';
 import functionsSchema from './schema/functions.json';
 import retriesSchema from './schema/retries.json';
+import secretsSchema from './schema/secrets.json';
+import timeoutsSchema from './schema/timeouts.json';
 import workflowSchema from './schema/workflow.json';
 import { validatorsPaths } from './validation/validators-paths';
 
-const schemas: any[] = [commonSchema, eventsChema, functionsSchema, retriesSchema, workflowSchema];
+const schemas: any[] = [
+  commonSchema,
+  eventsChema,
+  functionsSchema,
+  retriesSchema,
+  secretsSchema,
+  timeoutsSchema,
+  workflowSchema,
+];
 const strict: boolean = false;
 const ajv = new Ajv({ schemas, strict });
 ajv.addFormat('uri', (uri: string): boolean => true);

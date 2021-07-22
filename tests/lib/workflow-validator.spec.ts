@@ -24,6 +24,7 @@ describe('workflow-validator', () => {
       id: 'helloworld',
       name: 'Hello World Workflow',
       version: '1.0',
+      specVersion: '0.7',
       description: 'Inject Hello World',
       start: 'Hello State',
       states: [],
@@ -43,6 +44,7 @@ describe('workflow-validator', () => {
     const workflow = {
       id: 'helloworld',
       version: '1.0',
+      specVersion: '0.7',
       name: 'Hello World Workflow',
       description: 'Inject Hello World',
       start: 'Hello State',

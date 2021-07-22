@@ -13,40 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { End } from './end';
-import { Metadata } from './metadata';
-import { normalizeEndIfObject, overwriteEndIfObject, overwriteMetadata } from './utils';
 
-export class Enddatacondition {
+import { normalizeInterrupt } from './utils';
+
+export class WorkflowExecTimeout {
   constructor(model: any) {
-    Object.assign(this, model);
-
-    overwriteEndIfObject(this);
-    overwriteMetadata(this);
+    const defaultModel = { interrupt: true };
+    Object.assign(this, defaultModel, model);
   }
 
   /**
-   * Data condition name
+   * Workflow execution timeout duration (ISO 8601 duration format). If not specified should be 'unlimited'
    */
-  name?: string;
+  duration: string;
   /**
-   * Workflow expression evaluated against state data. Must evaluate to true or false
+   * If `false`, workflow instance is allowed to finish current execution. If `true`, current workflow execution is abrupted.
    */
-  condition: string;
+  interrupt?: boolean;
   /**
-   * Workflow end definition
+   * Name of a workflow state to be executed before workflow instance is terminated
    */
-  end: boolean | End;
-  metadata?: /* Metadata information */ Metadata;
+  runBefore?: string;
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Enddatacondition} without deleted properties.
+   * @returns {Specification.WorkflowExecTimeout} without deleted properties.
    */
-  normalize = (): Enddatacondition => {
-    const clone = new Enddatacondition(this);
 
-    normalizeEndIfObject(clone);
+  normalize = (): WorkflowExecTimeout => {
+    const clone = new WorkflowExecTimeout(this);
+
+    normalizeInterrupt(clone);
 
     return clone;
   };

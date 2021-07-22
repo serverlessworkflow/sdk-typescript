@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
+import { overwritePropertyAsPlainType } from './utils';
+
 export class Eventref {
   constructor(model: any) {
     Object.assign(this, model);
+    overwritePropertyAsPlainType('data', this);
+    overwritePropertyAsPlainType('contextAttributes', this);
   }
 
   /**

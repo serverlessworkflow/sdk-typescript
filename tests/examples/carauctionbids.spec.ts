@@ -29,11 +29,12 @@ describe('carauctionbids workflow example', () => {
     const workflow = workflowBuilder()
       .id('handleCarAuctionBid')
       .version('1.0')
+      .specVersion('0.7')
       .name('Car Auction Bidding Workflow')
       .description('Store a single bid whole the car auction is active')
       .start({
         stateName: 'StoreCarAuctionBid',
-        schedule: '2020-03-20T09:00:00Z/2020-03-20T15:00:00Z',
+        schedule: 'R/PT2H',
       })
       .functions([
         functionBuilder().name('StoreBidFunction').operation('http://myapis.org/carauctionapi.json#storeBid').build(),

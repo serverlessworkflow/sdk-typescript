@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { normalizeTypeRestProperty } from './utils';
+import { normalizeType } from './utils';
 
 export class Function {
   constructor(model: any) {
@@ -27,11 +27,11 @@ export class Function {
    */
   name: string;
   /**
-   * If type is `rest`, <path_to_openapi_definition>#<operation_id>. If type is `rpc`, <path_to_grpc_proto_file>#<service_name>#<service_method>. If type is `expression`, defines the workflow expression.
+   * If type is `rest`, <path_to_openapi_definition>#<operation_id>. If type is `rpc`, <path_to_grpc_proto_file>#<service_name>#<service_method>. If type is `graphql`, <url_to_graphql_endpoint>#<literal "mutation" or "query">#<query_or_mutation_name>. If type is `expression`, defines the workflow expression.
    */
   operation: string;
   /**
-   * Defines the function type. Is either `rest`, `rpc` or `expression`. Default is `rest`
+   * Defines the function type. Is either `rest`, `rpc`, `graphql` or `expression`. Default is `rest`
    */
   type?: 'rest' | 'rpc' | 'expression';
 
@@ -43,7 +43,7 @@ export class Function {
   normalize = (): Function => {
     const clone = new Function(this);
 
-    normalizeTypeRestProperty(clone);
+    normalizeType(clone);
 
     return clone;
   };
