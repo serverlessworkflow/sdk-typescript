@@ -18,13 +18,12 @@ import * as fs from 'fs';
 import {
   actionBuilder,
   databasedswitchBuilder,
-  defaultdefBuilder,
   functionBuilder,
   functionrefBuilder,
   operationstateBuilder,
-  subflowstateBuilder,
   transitiondataconditionBuilder,
   workflowBuilder,
+  defaultconditiondefBuilder,
 } from '../../src';
 
 describe('applicationrequest workflow example', () => {
@@ -32,6 +31,7 @@ describe('applicationrequest workflow example', () => {
     const workflow = workflowBuilder()
       .id('applicantrequest')
       .version('1.0')
+      .specVersion('0.7')
       .name('Applicant Request Decision Workflow')
       .description('Determine if applicant request is valid')
       .start('CheckApplication')
@@ -54,9 +54,13 @@ describe('applicationrequest workflow example', () => {
               .transition('RejectApplication')
               .build(),
           ])
-          .default(defaultdefBuilder().transition('RejectApplication').build())
+          .defaultCondition(defaultconditiondefBuilder().transition('RejectApplication').build())
           .build(),
-        subflowstateBuilder().name('StartApplication').workflowId('startApplicationWorkflowId').build(),
+        operationstateBuilder()
+          .name('StartApplication')
+          .actionMode('sequential')
+          .actions([actionBuilder().subFlowRef('startApplicationWorkflowId').build()])
+          .build(),
         operationstateBuilder()
           .name('RejectApplication')
           .actionMode('sequential')

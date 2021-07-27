@@ -16,10 +16,10 @@
 import { End } from './end';
 import { Transition } from './transition';
 import {
-  normalizeEndProperty,
-  normalizeTransitionProperty,
-  overwriteEndValueIfObject,
-  overwriteTransitionValueIfObject,
+  normalizeEndIfObject,
+  normalizeTransitionIfObject,
+  overwriteEndIfObject,
+  overwriteTransitionIfObject,
   setEndValueIfNoTransition,
 } from './utils';
 
@@ -27,8 +27,8 @@ export class Error {
   constructor(model: any) {
     Object.assign(this, model);
 
-    overwriteTransitionValueIfObject(this);
-    overwriteEndValueIfObject(this);
+    overwriteTransitionIfObject(this);
+    overwriteEndIfObject(this);
   }
 
   /**
@@ -53,8 +53,8 @@ export class Error {
   normalize = (): Error => {
     const clone = new Error(this);
 
-    normalizeEndProperty(clone);
-    normalizeTransitionProperty(clone);
+    normalizeEndIfObject(clone);
+    normalizeTransitionIfObject(clone);
 
     setEndValueIfNoTransition(clone);
 

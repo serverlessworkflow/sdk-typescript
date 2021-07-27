@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { Branch } from './branch';
 import { End } from './end';
 import { Error } from './error';
@@ -20,35 +21,39 @@ import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
-  normalizeCompletionTypeProperty,
-  normalizeEndProperty,
-  normalizeOnErrorsProperty,
-  normalizeTransitionProperty,
-  normalizeUsedForCompensationProperty,
-  overwriteBranchesValue,
-  overwriteEndValueIfObject,
-  overwriteMetadataValue,
-  overwriteOnErrorsValue,
-  overwriteStateDataFilterValue,
-  overwriteTransitionValueIfObject,
+  normalizeBranches,
+  normalizeCompletionType,
+  normalizeEndIfObject,
+  normalizeOnErrors,
+  normalizeTransitionIfObject,
+  normalizeUsedForCompensation,
+  overwriteBranches,
+  overwriteEndIfObject,
+  overwriteMetadata,
+  overwriteOnErrors,
+  overwriteStateDataFilter,
+  overwritePropertyAsPlainType,
+  overwriteTransitionIfObject,
   setEndValueIfNoTransition,
 } from './utils';
+import { BranchExecTimeout, StateExecTimeout } from './types';
 
 export class Parallelstate {
   constructor(model: any) {
     const defaultModel = {
       type: 'parallel',
-      completionType: 'and',
+      completionType: 'allOf',
       usedForCompensation: false,
     };
     Object.assign(this, defaultModel, model);
 
-    overwriteEndValueIfObject(this);
-    overwriteStateDataFilterValue(this);
-    overwriteBranchesValue(this);
-    overwriteOnErrorsValue(this);
-    overwriteTransitionValueIfObject(this);
-    overwriteMetadataValue(this);
+    overwriteEndIfObject(this);
+    overwriteStateDataFilter(this);
+    overwritePropertyAsPlainType('timeouts', this);
+    overwriteBranches(this);
+    overwriteOnErrors(this);
+    overwriteTransitionIfObject(this);
+    overwriteMetadata(this);
   }
 
   /**
@@ -72,17 +77,24 @@ export class Parallelstate {
    */
   stateDataFilter?: Statedatafilter;
   /**
+   * State specific timeouts
+   */
+  timeouts?: {
+    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    branchExecTimeout?: /* Single branch execution timeout duration (ISO 8601 duration format) */ BranchExecTimeout;
+  };
+  /**
    * Branch Definitions
    */
   branches?: /* Branch Definition */ Branch[];
   /**
    * Option types on how to complete branch execution.
    */
-  completionType?: 'and' | 'xor' | 'n_of_m';
+  completionType?: 'allOf' | 'atLeast';
   /**
-   * Used when completionType is set to 'n_of_m' to specify the 'N' value
+   * Used when completionType is set to 'atLeast' to specify the minimum number of branches that must complete before the state will transition.
    */
-  n?: number | string;
+  numCompleted?: number | string;
   /**
    * States error handling and retries definitions
    */
@@ -108,12 +120,12 @@ export class Parallelstate {
   normalize = (): Parallelstate => {
     const clone = new Parallelstate(this);
 
-    normalizeCompletionTypeProperty(clone);
-    normalizeOnErrorsProperty(clone);
-    normalizeUsedForCompensationProperty(clone);
-    normalizeEndProperty(clone);
-    normalizeTransitionProperty(clone);
-
+    normalizeEndIfObject(clone);
+    normalizeBranches(clone);
+    normalizeCompletionType(clone);
+    normalizeOnErrors(clone);
+    normalizeTransitionIfObject(clone);
+    normalizeUsedForCompensation(clone);
     setEndValueIfNoTransition(clone);
 
     return clone;

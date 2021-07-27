@@ -20,19 +20,22 @@ import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
-  normalizeActionModeSequentialProperty,
-  normalizeEndProperty,
-  normalizeOnErrorsProperty,
-  normalizeTransitionProperty,
-  normalizeUsedForCompensationProperty,
-  overwriteActionsValue,
-  overwriteEndValueIfObject,
-  overwriteMetadataValue,
-  overwriteOnErrorsValue,
-  overwriteStateDataFilterValue,
-  overwriteTransitionValueIfObject,
+  normalizeActionMode,
+  normalizeActions,
+  normalizeEndIfObject,
+  normalizeOnErrors,
+  normalizeTransitionIfObject,
+  normalizeUsedForCompensation,
+  overwriteActions,
+  overwriteEndIfObject,
+  overwriteMetadata,
+  overwriteOnErrors,
+  overwriteStateDataFilter,
+  overwritePropertyAsPlainType,
+  overwriteTransitionIfObject,
   setEndValueIfNoTransition,
 } from './utils';
+import { ActionExecTimeout, StateExecTimeout } from './types';
 
 export class Operationstate {
   constructor(model: any) {
@@ -43,12 +46,13 @@ export class Operationstate {
     };
     Object.assign(this, defaultModel, model);
 
-    overwriteEndValueIfObject(this);
-    overwriteActionsValue(this);
-    overwriteStateDataFilterValue(this);
-    overwriteOnErrorsValue(this);
-    overwriteTransitionValueIfObject(this);
-    overwriteMetadataValue(this);
+    overwriteEndIfObject(this);
+    overwriteStateDataFilter(this);
+    overwriteActions(this);
+    overwritePropertyAsPlainType('timeouts', this);
+    overwriteOnErrors(this);
+    overwriteTransitionIfObject(this);
+    overwriteMetadata(this);
   }
 
   /**
@@ -80,6 +84,13 @@ export class Operationstate {
    */
   actions?: Action[];
   /**
+   * State specific timeouts
+   */
+  timeouts?: {
+    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+  };
+  /**
    * States error handling and retries definitions
    */
   onErrors?: Error[];
@@ -104,11 +115,12 @@ export class Operationstate {
   normalize = (): Operationstate => {
     const clone = new Operationstate(this);
 
-    normalizeActionModeSequentialProperty(clone);
-    normalizeUsedForCompensationProperty(clone);
-    normalizeEndProperty(clone);
-    normalizeTransitionProperty(clone);
-    normalizeOnErrorsProperty(clone);
+    normalizeEndIfObject(clone);
+    normalizeActionMode(clone);
+    normalizeActions(clone);
+    normalizeOnErrors(clone);
+    normalizeTransitionIfObject(clone);
+    normalizeUsedForCompensation(clone);
     setEndValueIfNoTransition(clone);
 
     return clone;

@@ -15,23 +15,30 @@
  *
  */
 import * as fs from 'fs';
-import { branchBuilder, parallelstateBuilder, workflowBuilder } from '../../src';
+import { actionBuilder, branchBuilder, parallelstateBuilder, workflowBuilder } from '../../src';
 
 describe('parallel workflow example', () => {
   it('should generate Workflow object', function () {
     const workflow = workflowBuilder()
       .id('parallelexec')
       .version('1.0')
+      .specVersion('0.7')
       .name('Parallel Execution Workflow')
       .description('Executes two branches in parallel')
       .start('ParallelExec')
       .states([
         parallelstateBuilder()
           .name('ParallelExec')
-          .completionType('and')
+          .completionType('allOf')
           .branches([
-            branchBuilder().name('ShortDelayBranch').workflowId('shortdelayworkflowid').build(),
-            branchBuilder().name('LongDelayBranch').workflowId('longdelayworkflowid').build(),
+            branchBuilder()
+              .name('ShortDelayBranch')
+              .actions([actionBuilder().subFlowRef('shortdelayworkflowid').build()])
+              .build(),
+            branchBuilder()
+              .name('LongDelayBranch')
+              .actions([actionBuilder().subFlowRef('longdelayworkflowid').build()])
+              .build(),
           ])
           .build(),
       ])

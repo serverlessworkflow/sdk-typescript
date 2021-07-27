@@ -20,30 +20,34 @@ import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
-  normalizeEndProperty,
-  normalizeOnErrorsProperty,
-  normalizeTransitionProperty,
-  normalizeUsedForCompensationProperty,
-  overwriteActionsValue,
-  overwriteEndValueIfObject,
-  overwriteMetadataValue,
-  overwriteOnErrorsValue,
-  overwriteStateDataFilterValue,
-  overwriteTransitionValueIfObject,
+  normalizeActions,
+  normalizeEndIfObject,
+  normalizeOnErrors,
+  normalizeTransitionIfObject,
+  normalizeUsedForCompensation,
+  overwriteActions,
+  overwriteEndIfObject,
+  overwriteMetadata,
+  overwriteOnErrors,
+  overwriteStateDataFilter,
+  overwritePropertyAsPlainType,
+  overwriteTransitionIfObject,
   setEndValueIfNoTransition,
 } from './utils';
+import { ActionExecTimeout, StateExecTimeout } from './types';
 
 export class Foreachstate {
   constructor(model: any) {
     const defaultModel = { type: 'foreach', usedForCompensation: false };
     Object.assign(this, defaultModel, model);
 
-    overwriteEndValueIfObject(this);
-    overwriteActionsValue(this);
-    overwriteStateDataFilterValue(this);
-    overwriteOnErrorsValue(this);
-    overwriteTransitionValueIfObject(this);
-    overwriteMetadataValue(this);
+    overwriteEndIfObject(this);
+    overwriteActions(this);
+    overwritePropertyAsPlainType('timeouts', this);
+    overwriteStateDataFilter(this);
+    overwriteOnErrors(this);
+    overwriteTransitionIfObject(this);
+    overwriteMetadata(this);
   }
 
   /**
@@ -83,9 +87,12 @@ export class Foreachstate {
    */
   actions?: Action[];
   /**
-   * Unique Id of a workflow to be executed for each of the elements of inputCollection
+   * State specific timeouts
    */
-  workflowId?: string;
+  timeouts?: {
+    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+  };
   /**
    * State data filter
    */
@@ -115,10 +122,11 @@ export class Foreachstate {
   normalize = (): Foreachstate => {
     const clone = new Foreachstate(this);
 
-    normalizeUsedForCompensationProperty(clone);
-    normalizeOnErrorsProperty(clone);
-    normalizeEndProperty(clone);
-    normalizeTransitionProperty(clone);
+    normalizeEndIfObject(clone);
+    normalizeActions(clone);
+    normalizeOnErrors(clone);
+    normalizeTransitionIfObject(clone);
+    normalizeUsedForCompensation(clone);
     setEndValueIfNoTransition(clone);
 
     return clone;

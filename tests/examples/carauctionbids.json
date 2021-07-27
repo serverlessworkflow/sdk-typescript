@@ -1,11 +1,12 @@
 {
   "id": "handleCarAuctionBid",
   "version": "1.0",
+  "specVersion": "0.7",
   "name": "Car Auction Bidding Workflow",
   "description": "Store a single bid whole the car auction is active",
   "start": {
     "stateName": "StoreCarAuctionBid",
-    "schedule": "2020-03-20T09:00:00Z/2020-03-20T15:00:00Z"
+    "schedule": "R/PT2H"
   },
   "functions": [
     {
@@ -26,19 +27,15 @@
       "name": "StoreCarAuctionBid",
       "onEvents": [
         {
-          "eventRefs": [
-            "CarBidEvent"
-          ],
-          "actions": [
-            {
-              "functionRef": {
-                "refName": "StoreBidFunction",
-                "arguments": {
-                  "bid": "${ .bid }"
-                }
+          "eventRefs": ["CarBidEvent"],
+          "actions": [{
+            "functionRef": {
+              "refName": "StoreBidFunction",
+              "arguments": {
+                "bid": "${ .bid }"
               }
             }
-          ]
+          }]
         }
       ],
       "end": true

@@ -17,25 +17,26 @@ import { Specification } from '.';
 import * as yaml from 'js-yaml';
 
 import { validate } from '../utils';
-import { Events } from './events';
-import { Exectimeout } from './exectimeout';
 import { Metadata } from './metadata';
 import { Startdef } from './startdef';
-import { Functions, Retries, States } from './types';
+import { Events, Functions, Retries, Secrets, States } from './types';
 import {
   normalizeEvents,
-  normalizeExecTimeout,
-  normalizeExpressionLangProperty,
+  normalizeExpressionLang,
   normalizeFunctions,
-  normalizeKeepActiveProperty,
+  normalizeKeepActive,
   normalizeStates,
-  overwriteEventsValue,
-  overwriteExecTimeoutValue,
-  overwriteFunctionsValue,
-  overwriteMetadataValue,
-  overwriteRetriesValue,
-  overwriteStatesValue,
+  normalizeTimeoutsIfObject,
+  overwriteEvents,
+  overwriteFunctions,
+  overwriteMetadata,
+  overwritePropertyAsPlainType,
+  overwriteRetries,
+  overwriteStartIfObject,
+  overwriteStates,
+  overwriteTimeoutsIfObject,
 } from './utils';
+import { Timeouts } from './timeouts';
 
 export class Workflow {
   constructor(model: any) {
@@ -46,18 +47,25 @@ export class Workflow {
 
     Object.assign(this, defaultModel, model);
 
-    overwriteFunctionsValue(this);
-    overwriteStatesValue(this);
-    overwriteEventsValue(this);
-    overwriteRetriesValue(this);
-    overwriteExecTimeoutValue(this);
-    overwriteMetadataValue(this);
+    overwritePropertyAsPlainType('dataInputSchema', this);
+    overwritePropertyAsPlainType('constants', this);
+    overwriteStartIfObject(this);
+    overwriteTimeoutsIfObject(this);
+    overwriteMetadata(this);
+    overwriteEvents(this);
+    overwriteFunctions(this);
+    overwriteRetries(this);
+    overwriteStates(this);
   }
 
   /**
    * Workflow unique identifier
    */
   id: string;
+  /**
+   * Domain-specific workflow identifier
+   */
+  key?: string;
   /**
    * Workflow name
    */
@@ -69,19 +77,41 @@ export class Workflow {
   /**
    * Workflow version
    */
-  version: string;
+  version?: string;
+  /**
+   * List of helpful terms describing the workflows intended purpose, subject areas, or other important qualities
+   */
+  annotations?: [string, ...string[]];
+  dataInputSchema?:
+    | string
+    | {
+        /**
+         * URI of the JSON Schema used to validate the workflow data input
+         */
+        schema: string;
+        /**
+         * Determines if workflow execution should continue if there are validation errors
+         */
+        failOnValidationErrors: boolean;
+      };
+  secrets?: Secrets;
+  constants?:
+    | string /* uri */
+    | {
+        [key: string]: any;
+      };
   start: string | Startdef;
   /**
    * Serverless Workflow schema version
    */
-  schemaVersion?: string;
+  specVersion: string;
   /**
    * Identifies the expression language used for workflow expressions. Default is 'jq'
    */
   expressionLang?: string;
-  execTimeout?: Exectimeout;
+  timeouts?: string /* uri */ | Timeouts;
   /**
-   * If 'true', workflow instances is not terminated when there are no active execution paths. Instance can be terminated via 'terminate end definition' or reaching defined 'execTimeout'
+   * If 'true', workflow instances is not terminated when there are no active execution paths. Instance can be terminated via 'terminate end definition' or reaching defined 'workflowExecTimeout'
    */
   keepActive?: boolean;
   metadata?: /* Metadata information */ Metadata;
@@ -92,23 +122,20 @@ export class Workflow {
    * State definitions
    */
   states: States;
-
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Workflow} without deleted properties.
    */
   normalize = (): Workflow => {
     const clone = new Workflow(this);
-    normalizeKeepActiveProperty(clone);
 
-    normalizeExpressionLangProperty(clone);
-
-    normalizeStates(clone);
-    normalizeFunctions(clone);
-
+    normalizeExpressionLang(clone);
+    normalizeTimeoutsIfObject(clone);
+    normalizeKeepActive(clone);
     normalizeEvents(clone);
+    normalizeFunctions(clone);
+    normalizeStates(clone);
 
-    normalizeExecTimeout(clone);
     return clone;
   };
 

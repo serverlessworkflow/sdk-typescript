@@ -20,22 +20,24 @@ import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Repeat} data The underlying object
- * @returns {Specification.Repeat} The validated underlying object
+ * @param {Specification.WorkflowExecTimeout} data The underlying object
+ * @returns {Specification.WorkflowExecTimeout} The validated underlying object
  */
-function repeatBuildingFn(data: Specification.Repeat): () => Specification.Repeat {
+function workflowExecTimeoutBuildingFn(
+  data: Specification.WorkflowExecTimeout
+): () => Specification.WorkflowExecTimeout {
   return () => {
-    const model = new Specification.Repeat(data);
+    const model = new Specification.WorkflowExecTimeout(data);
 
-    validate('Repeat', model);
+    validate('WorkflowExecTimeout', model);
     return model;
   };
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.Repeat`
- * @returns {Specification.Repeat} A builder for `Specification.Repeat`
+ * A factory to create a builder proxy for the type `Specification.WorkflowExecTimeout`
+ * @returns {Specification.WorkflowExecTimeout} A builder for `Specification.WorkflowExecTimeout`
  */
-export function repeatBuilder(): Builder<Specification.Repeat> {
-  return builder<Specification.Repeat>(repeatBuildingFn);
+export function workflowExecTimeoutBuilder(): Builder<Specification.WorkflowExecTimeout> {
+  return builder<Specification.WorkflowExecTimeout>(workflowExecTimeoutBuildingFn);
 }

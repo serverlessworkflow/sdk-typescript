@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 import { Metadata } from './metadata';
-import { normalizeKindProperty, overwriteCorrelationValue, overwriteMetadataValue } from './utils';
+import { normalizeDataOnly, normalizeKind, overwriteCorrelation, overwriteMetadata } from './utils';
 import { CorrelationDefs } from './types';
 
 export class Eventdef {
   constructor(model: any) {
     const defaultModel = {
       kind: 'consumed',
+      dataOnly: true,
     };
     Object.assign(this, defaultModel, model);
 
-    overwriteMetadataValue(this);
-    overwriteCorrelationValue(this);
+    overwriteCorrelation(this);
+    overwriteMetadata(this);
   }
 
   /**
@@ -48,6 +49,11 @@ export class Eventdef {
    * CloudEvent correlation definitions
    */
   correlation?: CorrelationDefs;
+
+  /**
+   * If `true`, only the Event payload is accessible to consuming Workflow states. If `false`, both event payload and context attributes should be accessible
+   */
+  dataOnly?: boolean;
   /**
    * Metadata information
    */
@@ -60,7 +66,8 @@ export class Eventdef {
   normalize = (): Eventdef => {
     const clone = new Eventdef(this);
 
-    normalizeKindProperty(clone);
+    normalizeKind(clone);
+    normalizeDataOnly(clone);
 
     return clone;
   };

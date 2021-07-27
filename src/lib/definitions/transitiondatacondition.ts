@@ -15,14 +15,14 @@
  */
 import { Metadata } from './metadata';
 import { Transition } from './transition';
-import { normalizeTransitionProperty, overwriteMetadataValue, overwriteTransitionValueIfObject } from './utils';
+import { normalizeTransitionIfObject, overwriteMetadata, overwriteTransitionIfObject } from './utils';
 
 export class Transitiondatacondition {
   constructor(model: any) {
     Object.assign(this, model);
 
-    overwriteTransitionValueIfObject(this);
-    overwriteMetadataValue(this);
+    overwriteTransitionIfObject(this);
+    overwriteMetadata(this);
   }
 
   /**
@@ -46,7 +46,7 @@ export class Transitiondatacondition {
   normalize = (): Transitiondatacondition => {
     const clone = new Transitiondatacondition(this);
 
-    normalizeTransitionProperty(clone);
+    normalizeTransitionIfObject(clone);
 
     return clone;
   };

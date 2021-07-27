@@ -17,69 +17,181 @@
 /**
  * Serverless Workflow specification - workflow schema
  */
-export interface Workflow {
-  /**
-   * Workflow unique identifier
-   */
-  id: string;
-  /**
-   * Workflow name
-   */
-  name: string;
-  /**
-   * Workflow description
-   */
-  description?: string;
-  /**
-   * Workflow version
-   */
-  version: string;
-  start: Startdef;
-  /**
-   * Serverless Workflow schema version
-   */
-  schemaVersion?: string;
-  /**
-   * Identifies the expression language used for workflow expressions. Default is 'jq'
-   */
-  expressionLang?: string;
-  execTimeout?: Exectimeout;
-  /**
-   * If 'true', workflow instances is not terminated when there are no active execution paths. Instance can be terminated via 'terminate end definition' or reaching defined 'execTimeout'
-   */
-  keepActive?: boolean;
-  metadata?: /* Metadata information */ Metadata;
-  events?: Events;
-  functions?: Functions;
-  retries?: Retries;
-  /**
-   * State definitions
-   */
-  states: [
-    (
-      | /* Causes the workflow execution to delay for a specified duration */ Delaystate
-      | /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ Eventstate
-      | /* Defines actions be performed. Does not wait for incoming events */ Operationstate
-      | /* Consists of a number of states that are executed in parallel */ Parallelstate
-      | Switchstate
-      | /* Defines a sub-workflow to be executed */ Subflowstate
-      | /* Inject static data into state data. Does not perform any actions */ Injectstate
-      | /* Execute a set of defined actions or workflows for each element of a data array */ Foreachstate
-      | /* This state performs an action, then waits for the callback event that denotes completion of the action */ Callbackstate
-    ),
-    ...(
-      | /* Causes the workflow execution to delay for a specified duration */ Delaystate
-      | /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ Eventstate
-      | /* Defines actions be performed. Does not wait for incoming events */ Operationstate
-      | /* Consists of a number of states that are executed in parallel */ Parallelstate
-      | Switchstate
-      | /* Defines a sub-workflow to be executed */ Subflowstate
-      | /* Inject static data into state data. Does not perform any actions */ Injectstate
-      | /* Execute a set of defined actions or workflows for each element of a data array */ Foreachstate
-      | /* This state performs an action, then waits for the callback event that denotes completion of the action */ Callbackstate
-    )[]
-  ];
-}
+export type Workflow /* Serverless Workflow specification - workflow schema */ =
+  | {
+      /**
+       * Workflow unique identifier
+       */
+      id: string;
+      /**
+       * Domain-specific workflow identifier
+       */
+      key?: string;
+      /**
+       * Workflow name
+       */
+      name: string;
+      /**
+       * Workflow description
+       */
+      description?: string;
+      /**
+       * Workflow version
+       */
+      version?: string;
+      /**
+       * List of helpful terms describing the workflows intended purpose, subject areas, or other important qualities
+       */
+      annotations?: [string, ...string[]];
+      dataInputSchema?:
+        | string
+        | {
+            /**
+             * URI of the JSON Schema used to validate the workflow data input
+             */
+            schema: string;
+            /**
+             * Determines if workflow execution should continue if there are validation errors
+             */
+            failOnValidationErrors: boolean;
+          };
+      secrets?: Secrets;
+      constants?:
+        | string /* uri */
+        | {
+            [key: string]: any;
+          };
+      start: Startdef;
+      /**
+       * Serverless Workflow schema version
+       */
+      specVersion: string;
+      /**
+       * Identifies the expression language used for workflow expressions. Default is 'jq'
+       */
+      expressionLang?: string;
+      timeouts?: Timeouts;
+      /**
+       * If 'true', workflow instances is not terminated when there are no active execution paths. Instance can be terminated via 'terminate end definition' or reaching defined 'workflowExecTimeout'
+       */
+      keepActive?: boolean;
+      metadata?: /* Metadata information */ Metadata;
+      events?: Events;
+      functions?: Functions;
+      retries?: Retries;
+      /**
+       * State definitions
+       */
+      states: [
+        (
+          | /* Causes the workflow execution to delay for a specified duration */ Delaystate
+          | /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ Eventstate
+          | /* Defines actions be performed. Does not wait for incoming events */ Operationstate
+          | /* Consists of a number of states that are executed in parallel */ Parallelstate
+          | Switchstate
+          | /* Inject static data into state data. Does not perform any actions */ Injectstate
+          | /* Execute a set of defined actions or workflows for each element of a data array */ Foreachstate
+          | /* This state performs an action, then waits for the callback event that denotes completion of the action */ Callbackstate
+        ),
+        ...(
+          | /* Causes the workflow execution to delay for a specified duration */ Delaystate
+          | /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ Eventstate
+          | /* Defines actions be performed. Does not wait for incoming events */ Operationstate
+          | /* Consists of a number of states that are executed in parallel */ Parallelstate
+          | Switchstate
+          | /* Inject static data into state data. Does not perform any actions */ Injectstate
+          | /* Execute a set of defined actions or workflows for each element of a data array */ Foreachstate
+          | /* This state performs an action, then waits for the callback event that denotes completion of the action */ Callbackstate
+        )[]
+      ];
+    }
+  | {
+      /**
+       * Workflow unique identifier
+       */
+      id?: string;
+      /**
+       * Domain-specific workflow identifier
+       */
+      key: string;
+      /**
+       * Workflow name
+       */
+      name: string;
+      /**
+       * Workflow description
+       */
+      description?: string;
+      /**
+       * Workflow version
+       */
+      version?: string;
+      /**
+       * List of helpful terms describing the workflows intended purpose, subject areas, or other important qualities
+       */
+      annotations?: [string, ...string[]];
+      dataInputSchema?:
+        | string
+        | {
+            /**
+             * URI of the JSON Schema used to validate the workflow data input
+             */
+            schema: string;
+            /**
+             * Determines if workflow execution should continue if there are validation errors
+             */
+            failOnValidationErrors: boolean;
+          };
+      secrets?: Secrets;
+      constants?:
+        | string /* uri */
+        | {
+            [key: string]: any;
+          };
+      start: Startdef;
+      /**
+       * Serverless Workflow schema version
+       */
+      specVersion: string;
+      /**
+       * Identifies the expression language used for workflow expressions. Default is 'jq'
+       */
+      expressionLang?: string;
+      timeouts?: Timeouts;
+      /**
+       * If 'true', workflow instances is not terminated when there are no active execution paths. Instance can be terminated via 'terminate end definition' or reaching defined 'workflowExecTimeout'
+       */
+      keepActive?: boolean;
+      metadata?: /* Metadata information */ Metadata;
+      events?: Events;
+      functions?: Functions;
+      retries?: Retries;
+      /**
+       * State definitions
+       */
+      states: [
+        (
+          | /* Causes the workflow execution to delay for a specified duration */ Delaystate
+          | /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ Eventstate
+          | /* Defines actions be performed. Does not wait for incoming events */ Operationstate
+          | /* Consists of a number of states that are executed in parallel */ Parallelstate
+          | Switchstate
+          | /* Inject static data into state data. Does not perform any actions */ Injectstate
+          | /* Execute a set of defined actions or workflows for each element of a data array */ Foreachstate
+          | /* This state performs an action, then waits for the callback event that denotes completion of the action */ Callbackstate
+        ),
+        ...(
+          | /* Causes the workflow execution to delay for a specified duration */ Delaystate
+          | /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ Eventstate
+          | /* Defines actions be performed. Does not wait for incoming events */ Operationstate
+          | /* Consists of a number of states that are executed in parallel */ Parallelstate
+          | Switchstate
+          | /* Inject static data into state data. Does not perform any actions */ Injectstate
+          | /* Execute a set of defined actions or workflows for each element of a data array */ Foreachstate
+          | /* This state performs an action, then waits for the callback event that denotes completion of the action */ Callbackstate
+        )[]
+      ];
+    };
 export type Action =
   | {
       /**
@@ -88,10 +200,7 @@ export type Action =
       name?: string;
       functionRef: Functionref;
       eventRef?: /* Event References */ Eventref;
-      /**
-       * Time period to wait for function execution to complete
-       */
-      timeout?: string;
+      subFlowRef?: Subflowref;
       actionDataFilter?: Actiondatafilter;
     }
   | {
@@ -101,12 +210,23 @@ export type Action =
       name?: string;
       functionRef?: Functionref;
       eventRef: /* Event References */ Eventref;
+      subFlowRef?: Subflowref;
+      actionDataFilter?: Actiondatafilter;
+    }
+  | {
       /**
-       * Time period to wait for function execution to complete
+       * Unique action definition name
        */
-      timeout?: string;
+      name?: string;
+      functionRef?: Functionref;
+      eventRef?: /* Event References */ Eventref;
+      subFlowRef: Subflowref;
       actionDataFilter?: Actiondatafilter;
     };
+/**
+ * Single actions definition execution timeout duration (ISO 8601 duration format)
+ */
+export type ActionExecTimeout = string;
 export interface Actiondatafilter {
   /**
    * Workflow expression that selects state data that the state action can use
@@ -124,35 +244,27 @@ export interface Actiondatafilter {
 /**
  * Branch Definition
  */
-export type Branch /* Branch Definition */ =
-  | {
-      /**
-       * Branch name
-       */
-      name: string;
-      /**
-       * Actions to be executed in this branch
-       */
-      actions?: Action[];
-      /**
-       * Unique Id of a workflow to be executed in this branch
-       */
-      workflowId: string;
-    }
-  | {
-      /**
-       * Branch name
-       */
-      name: string;
-      /**
-       * Actions to be executed in this branch
-       */
-      actions: Action[];
-      /**
-       * Unique Id of a workflow to be executed in this branch
-       */
-      workflowId?: string;
-    };
+export interface Branch {
+  /**
+   * Branch name
+   */
+  name: string;
+  /**
+   * State specific timeouts
+   */
+  timeouts?: {
+    actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+    branchExecTimeout?: /* Single branch execution timeout duration (ISO 8601 duration format) */ BranchExecTimeout;
+  };
+  /**
+   * Actions to be executed in this branch
+   */
+  actions: Action[];
+}
+/**
+ * Single branch execution timeout duration (ISO 8601 duration format)
+ */
+export type BranchExecTimeout = string;
 /**
  * This state performs an action, then waits for the callback event that denotes completion of the action
  */
@@ -178,9 +290,13 @@ export interface Callbackstate {
    */
   eventRef?: string;
   /**
-   * Time period to wait for incoming events (ISO 8601 format)
+   * State specific timeouts
    */
-  timeout?: string;
+  timeouts?: {
+    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+    eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
+  };
   /**
    * Event data filter
    */
@@ -257,6 +373,12 @@ export interface Databasedswitch {
    */
   stateDataFilter?: Statedatafilter;
   /**
+   * State specific timeouts
+   */
+  timeouts?: {
+    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+  };
+  /**
    * Defines conditions evaluated against state data
    */
   dataConditions: Datacondition[];
@@ -267,7 +389,7 @@ export interface Databasedswitch {
   /**
    * Default transition of the workflow if there is no matching data conditions. Can include a transition or end definition
    */
-  default?: /* Default definition. Can be either a transition or end definition */ Defaultdef;
+  defaultCondition?: /* DefaultCondition definition. Can be either a transition or end definition */ Defaultconditiondef;
   /**
    * Unique Name of a workflow state which is responsible for compensation of this state
    */
@@ -282,9 +404,9 @@ export type Datacondition /* Switch state data based condition */ =
   | Transitiondatacondition
   | /* Switch state data based condition */ Enddatacondition;
 /**
- * Default definition. Can be either a transition or end definition
+ * DefaultCondition definition. Can be either a transition or end definition
  */
-export type Defaultdef /* Default definition. Can be either a transition or end definition */ =
+export type Defaultconditiondef /* DefaultCondition definition. Can be either a transition or end definition */ =
   | {
       transition: Transition;
       end?: End;
@@ -321,6 +443,12 @@ export interface Delaystate {
    * Amount of time (ISO 8601 format) to delay
    */
   timeDelay?: string;
+  /**
+   * State specific timeouts
+   */
+  timeouts?: {
+    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+  };
   /**
    * States error handling and retries definitions
    */
@@ -429,6 +557,10 @@ export type Error =
       end: End;
     };
 /**
+ * Timeout duration to wait for consuming defined events (ISO 8601 duration format)
+ */
+export type EventTimeout = string;
+/**
  * Permits transitions to other states based on events
  */
 export interface Eventbasedswitch {
@@ -449,6 +581,13 @@ export interface Eventbasedswitch {
    */
   stateDataFilter?: Statedatafilter;
   /**
+   * State specific timeouts
+   */
+  timeouts?: {
+    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
+  };
+  /**
    * Defines conditions evaluated against events
    */
   eventConditions: Eventcondition[];
@@ -457,13 +596,9 @@ export interface Eventbasedswitch {
    */
   onErrors?: Error[];
   /**
-   * If eventConditions is used, defines the time period to wait for events (ISO 8601 format)
-   */
-  eventTimeout?: string;
-  /**
    * Default transition of the workflow if there is no matching data conditions. Can include a transition or end definition
    */
-  default?: /* Default definition. Can be either a transition or end definition */ Defaultdef;
+  defaultCondition?: /* DefaultCondition definition. Can be either a transition or end definition */ Defaultconditiondef;
   /**
    * Unique Name of a workflow state which is responsible for compensation of this state
    */
@@ -479,11 +614,11 @@ export type Eventcondition /* Switch state data event condition */ =
   | /* Switch state data event condition */ Enddeventcondition;
 export interface Eventdatafilter {
   /**
-   * Workflow expression that filters of the event data (payload)
+   * Workflow expression that filters the received event/payload (default: '${ . }')
    */
   data?: string;
   /**
-   *  Workflow expression that selects a state data element to which the event payload should be added/merged into. If not specified, denotes, the top-level state data element.
+   *  Workflow expression that selects a state data element to which the filtered event should be added/merged into. If not specified, denotes, the top-level state data element.
    */
   toStateData?: string;
 }
@@ -511,6 +646,10 @@ export interface Eventdef {
     /* CloudEvent correlation definition */ CorrelationDef,
     .../* CloudEvent correlation definition */ CorrelationDef[]
   ];
+  /**
+   * If `true`, only the Event payload is accessible to consuming Workflow states. If `false`, both event payload and context attributes should be accessible
+   */
+  dataOnly?: boolean;
   /**
    * Metadata information
    */
@@ -571,9 +710,13 @@ export type Eventstate =
        */
       onEvents: Onevents[];
       /**
-       * Time period to wait for incoming events (ISO 8601 format)
+       * State specific timeouts
        */
-      timeout?: string;
+      timeouts?: {
+        stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+        actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+        eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
+      };
       stateDataFilter?: Statedatafilter;
       /**
        * States error handling and retries definitions
@@ -609,9 +752,13 @@ export type Eventstate =
        */
       onEvents: Onevents[];
       /**
-       * Time period to wait for incoming events (ISO 8601 format)
+       * State specific timeouts
        */
-      timeout?: string;
+      timeouts?: {
+        stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+        actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+        eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
+      };
       stateDataFilter?: Statedatafilter;
       /**
        * States error handling and retries definitions
@@ -625,20 +772,6 @@ export type Eventstate =
       compensatedBy?: string;
       metadata?: /* Metadata information */ Metadata;
     };
-export interface Exectimeout {
-  /**
-   * Timeout duration (ISO 8601 duration format)
-   */
-  duration: string;
-  /**
-   * If `false`, workflow instance is allowed to finish current execution. If `true`, current workflow execution is abrupted.
-   */
-  interrupt?: boolean;
-  /**
-   * Name of a workflow state to be executed before workflow instance is terminated
-   */
-  runBefore?: string;
-}
 /**
  * Execute a set of defined actions or workflows for each element of a data array
  */
@@ -680,9 +813,12 @@ export interface Foreachstate {
    */
   actions?: Action[];
   /**
-   * Unique Id of a workflow to be executed for each of the elements of inputCollection
+   * State specific timeouts
    */
-  workflowId?: string;
+  timeouts?: {
+    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+  };
   /**
    * State data filter
    */
@@ -711,13 +847,13 @@ export interface Function {
    */
   name: string;
   /**
-   * If type is `rest`, <path_to_openapi_definition>#<operation_id>. If type is `rpc`, <path_to_grpc_proto_file>#<service_name>#<service_method>. If type is `expression`, defines the workflow expression.
+   * If type is `rest`, <path_to_openapi_definition>#<operation_id>. If type is `rpc`, <path_to_grpc_proto_file>#<service_name>#<service_method>. If type is `graphql`, <url_to_graphql_endpoint>#<literal "mutation" or "query">#<query_or_mutation_name>. If type is `expression`, defines the workflow expression.
    */
   operation: string;
   /**
-   * Defines the function type. Is either `rest`, `rpc` or `expression`. Default is `rest`
+   * Defines the function type. Is either `rest`, `rpc`, `graphql` or `expression`. Default is `rest`
    */
-  type?: 'rest' | 'rpc' | 'expression';
+  type?: 'rest' | 'rpc' | 'graphql' | 'expression';
 }
 export type Functionref =
   | string
@@ -732,6 +868,10 @@ export type Functionref =
       arguments?: {
         [key: string]: any;
       };
+      /**
+       * Only used if function type is 'graphql'. A string containing a valid GraphQL selection set
+       */
+      selectionSet?: string;
     };
 export type Functions = string /* uri */ | [Function, ...Function[]];
 /**
@@ -761,11 +901,17 @@ export interface Injectstate {
     [key: string]: any;
   };
   /**
+   * State specific timeouts
+   */
+  timeouts?: {
+    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+  };
+  /**
    * State data filter
    */
   stateDataFilter?: Statedatafilter;
   /**
-   * Next transition of the workflow after subflow has completed
+   * Next transition of the workflow after injection has completed
    */
   transition?: Transition;
   /**
@@ -790,7 +936,7 @@ export interface Onevents {
    */
   eventRefs: [string, ...string[]];
   /**
-   * Specifies how actions are to be performed (in sequence of parallel)
+   * Specifies how actions are to be performed (in sequence or in parallel)
    */
   actionMode?: 'sequential' | 'parallel';
   /**
@@ -835,6 +981,13 @@ export interface Operationstate {
    */
   actions?: Action[];
   /**
+   * State specific timeouts
+   */
+  timeouts?: {
+    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+  };
+  /**
    * States error handling and retries definitions
    */
   onErrors?: Error[];
@@ -877,17 +1030,24 @@ export interface Parallelstate {
    */
   stateDataFilter?: Statedatafilter;
   /**
+   * State specific timeouts
+   */
+  timeouts?: {
+    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    branchExecTimeout?: /* Single branch execution timeout duration (ISO 8601 duration format) */ BranchExecTimeout;
+  };
+  /**
    * Branch Definitions
    */
   branches?: /* Branch Definition */ Branch[];
   /**
    * Option types on how to complete branch execution.
    */
-  completionType?: 'and' | 'xor' | 'n_of_m';
+  completionType?: 'allOf' | 'atLeast';
   /**
-   * Used when completionType is set to 'n_of_m' to specify the 'N' value
+   * Used when completionType is set to 'atLeast' to specify the minimum number of branches that must complete before the state will transition.
    */
-  n?: number | string;
+  numCompleted?: number | string;
   /**
    * States error handling and retries definitions
    */
@@ -928,28 +1088,6 @@ export interface Produceeventdef {
   contextAttributes?: {
     [name: string]: string;
   };
-}
-export interface Repeat {
-  /**
-   * Expression evaluated against SubFlow state data. SubFlow will repeat execution as long as this expression is true or until the max property count is reached
-   */
-  expression?: string;
-  /**
-   * If true, the expression is evaluated before each repeat execution, if false the expression is evaluated after each repeat execution
-   */
-  checkBefore?: boolean;
-  /**
-   * Sets the maximum amount of repeat executions
-   */
-  max?: number;
-  /**
-   * If true, repeats executions in a case unhandled errors propagate from the sub-workflow to this state
-   */
-  continueOnError?: boolean;
-  /**
-   * List referencing defined consumed workflow events. SubFlow will repeat execution until one of the defined events is consumed, or until the max property count is reached
-   */
-  stopOnEvents?: [string, ...string[]];
 }
 export type Retries = string /* uri */ | [Retrydef, ...Retrydef[]];
 export interface Retrydef {
@@ -1008,6 +1146,7 @@ export type Schedule =
           timezone?: string;
         }
     );
+export type Secrets = string /* uri */ | [string, ...string[]];
 export type Startdef =
   | string
   | {
@@ -1020,6 +1159,10 @@ export type Startdef =
        */
       schedule: Schedule;
     };
+/**
+ * State execution timeout duration (ISO 8601 duration format)
+ */
+export type StateExecTimeout = string;
 export interface Statedatafilter {
   /**
    * Workflow expression to filter the state data input
@@ -1030,63 +1173,34 @@ export interface Statedatafilter {
    */
   output?: string;
 }
-/**
- * Defines a sub-workflow to be executed
- */
-export interface Subflowstate {
-  /**
-   * Unique state id
-   */
-  id?: string;
-  /**
-   * State name
-   */
-  name?: string;
-  /**
-   * State type
-   */
-  type?: 'subflow';
-  /**
-   * State end definition
-   */
-  end?: End;
-  /**
-   * Workflow execution must wait for sub-workflow to finish before continuing
-   */
-  waitForCompletion?: boolean;
-  /**
-   * Sub-workflow unique id
-   */
-  workflowId?: string;
-  /**
-   * SubFlow state repeat exec definition
-   */
-  repeat?: Repeat;
-  /**
-   * State data filter
-   */
-  stateDataFilter?: Statedatafilter;
-  /**
-   * States error handling and retries definitions
-   */
-  onErrors?: Error[];
-  /**
-   * Next transition of the workflow after SubFlow has completed execution
-   */
-  transition?: Transition;
-  /**
-   * Unique Name of a workflow state which is responsible for compensation of this state
-   */
-  compensatedBy?: string;
-  /**
-   * If true, this state is used to compensate another state. Default is false
-   */
-  usedForCompensation?: boolean;
-  metadata?: /* Metadata information */ Metadata;
-}
+export type Subflowref =
+  | string
+  | {
+      /**
+       * Workflow execution must wait for sub-workflow to finish before continuing
+       */
+      waitForCompletion?: boolean;
+      /**
+       * Unique id of the sub-workflow to be invoked
+       */
+      workflowId: string;
+      /**
+       * Version of the sub-workflow to be invoked
+       */
+      version?: string;
+    };
 export type Switchstate /* Permits transitions to other states based on data conditions */ =
   | Databasedswitch
   | /* Permits transitions to other states based on events */ Eventbasedswitch;
+export type Timeouts =
+  | string /* uri */
+  | {
+      workflowExecTimeout?: WorkflowExecTimeout;
+      stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+      actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+      branchExecTimeout?: /* Single branch execution timeout duration (ISO 8601 duration format) */ BranchExecTimeout;
+      eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
+    };
 export type Transition =
   | string
   | {
@@ -1143,3 +1257,19 @@ export interface Transitioneventcondition {
   eventDataFilter?: Eventdatafilter;
   metadata?: /* Metadata information */ Metadata;
 }
+export type WorkflowExecTimeout =
+  | string
+  | {
+      /**
+       * Workflow execution timeout duration (ISO 8601 duration format). If not specified should be 'unlimited'
+       */
+      duration: string;
+      /**
+       * If `false`, workflow instance is allowed to finish current execution. If `true`, current workflow execution is abrupted.
+       */
+      interrupt?: boolean;
+      /**
+       * Name of a workflow state to be executed before workflow instance is terminated
+       */
+      runBefore?: string;
+    };

@@ -40,18 +40,5 @@ describe('eventstateBuilder ', () => {
         transition: 'Get Book Status',
       })
     );
-
-    //    const deserializedObject = object.deserialize(serializedObject);
-    //    expect(deserializedObject.exclusive).toBeTrue();
-
-    //Having serialize/ deserialize de following signature
-
-    //  deserialize(value: string): Eventstate {
-
-    //   }
-    //   normalize(): string {
-
-    //   }
-    //
   });
 });

@@ -17,28 +17,25 @@
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { validate } from '../utils';
-import { setEndValueIfNoTransition } from '../definitions/utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Subflowstate} data The underlying object
- * @returns {Specification.Subflowstate} The validated underlying object
+ * @param {Specification.Timeouts} data The underlying object
+ * @returns {Specification.Timeouts} The validated underlying object
  */
-function subflowstateBuildingFn(data: Specification.Subflowstate): () => Specification.Subflowstate {
+function timeoutsBuildingFn(data: Specification.Timeouts): () => Specification.Timeouts {
   return () => {
-    const model = new Specification.Subflowstate(data);
+    const model = new Specification.Timeouts(data);
 
-    setEndValueIfNoTransition(model);
-
-    validate('Subflowstate', model);
+    validate('Timeouts', model);
     return model;
   };
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.Subflowstate`
- * @returns {Specification.Subflowstate} A builder for `Specification.Subflowstate`
+ * A factory to create a builder proxy for the type `Specification.Timeouts`
+ * @returns {Specification.Timeouts} A builder for `Specification.Timeouts`
  */
-export function subflowstateBuilder(): Builder<Specification.Subflowstate> {
-  return builder<Specification.Subflowstate>(subflowstateBuildingFn);
+export function timeoutsBuilder(): Builder<Specification.Timeouts> {
+  return builder<Specification.Timeouts>(timeoutsBuildingFn);
 }

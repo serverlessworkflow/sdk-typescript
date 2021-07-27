@@ -20,31 +20,34 @@ import { Onevents } from './onevents';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
+  normalizeEndIfObject,
+  normalizeExclusive,
+  normalizeOnErrors,
+  normalizeOnEvents,
+  normalizeTransitionIfObject,
+  overwriteEndIfObject,
+  overwriteMetadata,
+  overwriteOnErrors,
+  overwriteOnEvents,
+  overwriteStateDataFilter,
+  overwritePropertyAsPlainType,
+  overwriteTransitionIfObject,
   setEndValueIfNoTransition,
-  overwriteEndValueIfObject,
-  overwriteMetadataValue,
-  overwriteOnErrorsValue,
-  overwriteOnEventsValue,
-  overwriteStateDataFilterValue,
-  overwriteTransitionValueIfObject,
-  normalizeEndProperty,
-  normalizeTransitionProperty,
-  normalizeOnEventsProperty,
-  normalizeOnErrorsProperty,
-  normalizeExclusiveProperty,
 } from './utils';
+import { ActionExecTimeout, EventTimeout, StateExecTimeout } from './types';
 
 export class Eventstate /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ {
   constructor(model: any) {
     const defaultModel = { type: 'event', exclusive: true };
     Object.assign(this, defaultModel, model);
 
-    overwriteOnEventsValue(this);
-    overwriteStateDataFilterValue(this);
-    overwriteOnErrorsValue(this);
-    overwriteTransitionValueIfObject(this);
-    overwriteEndValueIfObject(this);
-    overwriteMetadataValue(this);
+    overwriteOnEvents(this);
+    overwritePropertyAsPlainType('timeouts', this);
+    overwriteStateDataFilter(this);
+    overwriteOnErrors(this);
+    overwriteTransitionIfObject(this);
+    overwriteEndIfObject(this);
+    overwriteMetadata(this);
   }
 
   /**
@@ -68,9 +71,13 @@ export class Eventstate /* This state is used to wait for events from event sour
    */
   onEvents: Onevents[];
   /**
-   * Time period to wait for incoming events (ISO 8601 format)
+   * State specific timeouts
    */
-  timeout?: string;
+  timeouts?: {
+    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+    eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
+  };
   stateDataFilter?: Statedatafilter;
   /**
    * States error handling and retries definitions
@@ -91,11 +98,11 @@ export class Eventstate /* This state is used to wait for events from event sour
   normalize = (): Eventstate => {
     const clone = new Eventstate(this);
 
-    normalizeExclusiveProperty(clone);
-    normalizeOnEventsProperty(clone);
-    normalizeOnErrorsProperty(clone);
-    normalizeEndProperty(clone);
-    normalizeTransitionProperty(clone);
+    normalizeExclusive(clone);
+    normalizeOnEvents(clone);
+    normalizeOnErrors(clone);
+    normalizeTransitionIfObject(clone);
+    normalizeEndIfObject(clone);
     setEndValueIfNoTransition(clone);
 
     return clone;

@@ -1,6 +1,7 @@
 {
   "id": "provisionorders",
   "version": "1.0",
+  "specVersion": "0.7",
   "name": "Provision Orders",
   "description": "Provision Orders and handle errors thrown",
   "start": "ProvisionOrder",
@@ -10,11 +11,11 @@
       "operation": "http://myapis.org/provisioningapi.json#doProvision"
     }
   ],
-  "states": [
+  "states":[
     {
-      "type": "operation",
-      "name": "ProvisionOrder",
-      "actions": [
+      "type":"operation",
+      "name":"ProvisionOrder",
+      "actions":[
         {
           "functionRef": {
             "refName": "provisionOrderFunction",
@@ -44,27 +45,43 @@
       ]
     },
     {
-      "type": "subflow",
+      "type": "operation",
       "name": "MissingId",
-      "workflowId": "handleMissingIdExceptionWorkflow",
+      "actions": [
+        {
+          "subFlowRef": "handleMissingIdExceptionWorkflow"
+        }
+      ],
       "end": true
     },
     {
-      "type": "subflow",
+      "type": "operation",
       "name": "MissingItem",
-      "workflowId": "handleMissingItemExceptionWorkflow",
+      "actions": [
+        {
+          "subFlowRef": "handleMissingItemExceptionWorkflow"
+        }
+      ],
       "end": true
     },
     {
-      "type": "subflow",
+      "type": "operation",
       "name": "MissingQuantity",
-      "workflowId": "handleMissingQuantityExceptionWorkflow",
+      "actions": [
+        {
+          "subFlowRef": "handleMissingQuantityExceptionWorkflow"
+        }
+      ],
       "end": true
     },
     {
-      "type": "subflow",
+      "type": "operation",
       "name": "ApplyOrder",
-      "workflowId": "applyOrderWorkflowId",
+      "actions": [
+        {
+          "subFlowRef": "applyOrderWorkflowId"
+        }
+      ],
       "end": true
     }
   ]

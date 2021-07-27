@@ -73,7 +73,7 @@ describe('workflow ', () => {
           maxAttempts: 4,
         },
       ],
-      execTimeout: {
+      timeouts: {
         duration: 'P30M5S',
       },
       metadata: {
@@ -84,8 +84,7 @@ describe('workflow ', () => {
     const model = new Workflow(data);
 
     expect(model.functions![0]!.constructor.name).toBe('Function');
-    expect(model.execTimeout!.constructor.name).toBe('Exectimeout');
-    expect(model.metadata!.constructor.name).toBe('Metadata');
+    expect(model.timeouts!.constructor.name).toBe('Timeouts');
     expect(model.metadata!.constructor.name).toBe('Metadata');
     expect(model.events![0]!.constructor.name).toBe('Eventdef');
     expect(model.retries![0]!.constructor.name).toBe('Retrydef');
@@ -96,6 +95,7 @@ describe('workflow ', () => {
       workflowBuilder()
         .id('helloworld')
         .version('1.0')
+        .specVersion('0.7')
         .name('Hello World Workflow')
         .description('Inject Hello World')
         .start('Hello State')
@@ -114,6 +114,7 @@ describe('workflow ', () => {
       '{' +
         '"id":"helloworld",' +
         '"version":"1.0",' +
+        '"specVersion":"0.7",' +
         '"name":"Hello World Workflow",' +
         '"description":"Inject Hello World",' +
         '"start":"Hello State",' +
@@ -136,6 +137,7 @@ describe('workflow ', () => {
       workflowBuilder()
         .id('helloworld')
         .version('1.0')
+        .specVersion('0.7')
         .name('Hello World Workflow')
         .description('Inject Hello World')
         .start('Hello State')
@@ -153,6 +155,7 @@ describe('workflow ', () => {
     expect(yamlWorkflow).toBe(
       'id: helloworld\n' +
         "version: '1.0'\n" +
+        "specVersion: '0.7'\n" +
         'name: Hello World Workflow\n' +
         'description: Inject Hello World\n' +
         'start: Hello State\n' +
@@ -165,36 +168,3 @@ describe('workflow ', () => {
     );
   });
 });
-
-// describe('Workflow serialize / deserialize ', () => {
-//   it('should serialize whiout default values, / deserialize with default values', () => {
-//     const workflow = new Workflow({
-//       id: 'helloworld',
-//       version: '1.0',
-//       name: 'Hello World Workflow',
-//       description: 'Inject Hello World',
-//       start: 'Hello State',
-//       keepActive: true,
-//       states: [
-//         {
-//           type: 'inject',
-//           name: 'Hello State',
-//           data: {
-//             result: 'Hello World!',
-//           },
-//           end: true,
-//         },
-//       ],
-//     });
-//
-//     const serializedWF = workflow.normalize();
-//
-//     expect(JSON.parse(serializedWF).keepActive).toBeUndefined();
-//     expect(JSON.parse(serializedWF).expressionLang).toBeUndefined();
-//
-//     const deserializedWF = Workflow.fromSource(serializedWF);
-//
-//     expect(deserializedWF.keepActive).toBeTrue();
-//     expect(deserializedWF.expressionLang).toBe('jq');
-//   });
-// });

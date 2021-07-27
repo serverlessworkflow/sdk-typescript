@@ -19,16 +19,15 @@ import {
   actionBuilder,
   actiondatafilterBuilder,
   databasedswitchBuilder,
-  defaultdefBuilder,
   delaystateBuilder,
   errorBuilder,
   functionBuilder,
   functionrefBuilder,
   operationstateBuilder,
   statedatafilterBuilder,
-  subflowstateBuilder,
   transitiondataconditionBuilder,
   workflowBuilder,
+  defaultconditiondefBuilder,
 } from '../../src';
 
 describe('jobmonitoring workflow example', () => {
@@ -36,6 +35,7 @@ describe('jobmonitoring workflow example', () => {
     const workflow = workflowBuilder()
       .id('jobmonitoring')
       .version('1.0')
+      .specVersion('0.7')
       .name('Job Monitoring')
       .description('Monitor finished execution of a submitted job')
       .start('SubmitJob')
@@ -69,7 +69,11 @@ describe('jobmonitoring workflow example', () => {
           .stateDataFilter(statedatafilterBuilder().output('${ .jobuid }').build())
           .transition('WaitForCompletion')
           .build(),
-        subflowstateBuilder().name('SubmitError').workflowId('handleJobSubmissionErrorWorkflow').build(),
+
+        operationstateBuilder()
+          .name('SubmitError')
+          .actions([actionBuilder().subFlowRef('handleJobSubmissionErrorWorkflow').build()])
+          .build(),
         delaystateBuilder().name('WaitForCompletion').timeDelay('PT5S').transition('GetJobStatus').build(),
         operationstateBuilder()
           .name('GetJobStatus')
@@ -99,7 +103,7 @@ describe('jobmonitoring workflow example', () => {
               .build(),
             transitiondataconditionBuilder().condition('${ .jobStatus == "FAILED" }').transition('JobFailed').build(),
           ])
-          .default(defaultdefBuilder().transition('WaitForCompletion').build())
+          .defaultCondition(defaultconditiondefBuilder().transition('WaitForCompletion').build())
           .build(),
         operationstateBuilder()
           .name('JobSucceeded')

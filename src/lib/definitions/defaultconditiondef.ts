@@ -13,51 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Eventdatafilter } from './eventdatafilter';
-import { Metadata } from './metadata';
+
+import { End } from './end';
 import { Transition } from './transition';
 import {
+  normalizeEndIfObject,
   normalizeTransitionIfObject,
-  overwriteEventDataFilter,
-  overwriteMetadata,
+  overwriteEndIfObject,
   overwriteTransitionIfObject,
+  setEndValueIfNoTransition,
 } from './utils';
-
-export class Transitioneventcondition {
+export class Defaultconditiondef /* DefaultCondition definition. Can be either a transition or end definition */ {
   constructor(model: any) {
     Object.assign(this, model);
 
     overwriteTransitionIfObject(this);
-    overwriteEventDataFilter(this);
-    overwriteMetadata(this);
+    overwriteEndIfObject(this);
   }
 
-  /**
-   * Event condition name
-   */
-  name?: string;
-  /**
-   * References an unique event name in the defined workflow events
-   */
-  eventRef: string;
-  /**
-   * Next transition of the workflow if there is valid matches
-   */
   transition: string | Transition;
-  /**
-   * Event data filter definition
-   */
-  eventDataFilter?: Eventdatafilter;
-  metadata?: /* Metadata information */ Metadata;
+  end?: boolean | End;
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Transitioneventcondition} without deleted properties.
+   * @returns {Specification.Defaultdef} without deleted properties.
    */
-  normalize = (): Transitioneventcondition => {
-    const clone = new Transitioneventcondition(this);
+  normalize = (): Defaultconditiondef => {
+    const clone = new Defaultconditiondef(this);
 
+    normalizeEndIfObject(clone);
     normalizeTransitionIfObject(clone);
+    setEndValueIfNoTransition(clone);
 
     return clone;
   };

@@ -13,23 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { End } from './end';
 import { Error } from './error';
 import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
-  normalizeEndProperty,
-  normalizeOnErrorsProperty,
-  normalizeTransitionProperty,
-  normalizeUsedForCompensationProperty,
-  overwriteEndValueIfObject,
-  overwriteMetadataValue,
-  overwriteOnErrorsValue,
-  overwriteStateDataFilterValue,
-  overwriteTransitionValueIfObject,
+  normalizeEndIfObject,
+  normalizeOnErrors,
+  normalizeTransitionIfObject,
+  normalizeUsedForCompensation,
+  overwriteEndIfObject,
+  overwriteMetadata,
+  overwriteOnErrors,
+  overwriteStateDataFilter,
+  overwritePropertyAsPlainType,
+  overwriteTransitionIfObject,
   setEndValueIfNoTransition,
 } from './utils';
+import { StateExecTimeout } from './types';
 
 export class Delaystate {
   constructor(model: any) {
@@ -39,11 +42,12 @@ export class Delaystate {
     };
     Object.assign(this, defaultModel, model);
 
-    overwriteMetadataValue(this);
-    overwriteOnErrorsValue(this);
-    overwriteEndValueIfObject(this);
-    overwriteTransitionValueIfObject(this);
-    overwriteStateDataFilterValue(this);
+    overwriteEndIfObject(this);
+    overwriteStateDataFilter(this);
+    overwritePropertyAsPlainType('timeouts', this);
+    overwriteOnErrors(this);
+    overwriteTransitionIfObject(this);
+    overwriteMetadata(this);
   }
 
   /**
@@ -71,6 +75,12 @@ export class Delaystate {
    */
   timeDelay?: string;
   /**
+   * State specific timeouts
+   */
+  timeouts?: {
+    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+  };
+  /**
    * States error handling and retries definitions
    */
   onErrors?: Error[];
@@ -95,10 +105,10 @@ export class Delaystate {
   normalize = (): Delaystate => {
     const clone = new Delaystate(this);
 
-    normalizeUsedForCompensationProperty(clone);
-    normalizeEndProperty(clone);
-    normalizeOnErrorsProperty(clone);
-    normalizeTransitionProperty(clone);
+    normalizeEndIfObject(clone);
+    normalizeOnErrors(clone);
+    normalizeTransitionIfObject(clone);
+    normalizeUsedForCompensation(clone);
     setEndValueIfNoTransition(clone);
     return clone;
   };

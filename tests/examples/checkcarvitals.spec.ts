@@ -17,19 +17,22 @@
 import * as fs from 'fs';
 import {
   eventdefBuilder,
+  subflowrefBuilder,
+  actionBuilder,
+  operationstateBuilder,
   eventstateBuilder,
   oneventsBuilder,
-  repeatBuilder,
-  subflowstateBuilder,
   workflowBuilder,
+  eventrefBuilder,
 } from '../../src';
 
 describe('checkcarvitals workflow example', () => {
   it('should generate Workflow object', function () {
     const workflow = workflowBuilder()
       .id('checkcarvitals')
-      .version('1.0')
       .name('Check Car Vitals Workflow')
+      .version('1.0')
+      .specVersion('0.7')
       .start('WhenCarIsOn')
       .states([
         eventstateBuilder()
@@ -37,15 +40,36 @@ describe('checkcarvitals workflow example', () => {
           .onEvents([oneventsBuilder().eventRefs(['CarTurnedOnEvent']).build()])
           .transition('DoCarVitalsChecks')
           .build(),
-        subflowstateBuilder()
+        operationstateBuilder()
           .name('DoCarVitalsChecks')
-          .workflowId('vitalscheck')
-          .repeat(repeatBuilder().stopOnEvents(['CarTurnedOffEvent']).build())
+          .actions([
+            actionBuilder()
+              .subFlowRef(subflowrefBuilder().workflowId('vitalscheck').waitForCompletion(false).build())
+              .build(),
+          ])
+          .transition('WaitForCarStopped')
+          .build(),
+        eventstateBuilder()
+          .name('WaitForCarStopped')
+          .onEvents([
+            oneventsBuilder()
+              .eventRefs(['CarTurnedOffEvent'])
+              .actions([
+                actionBuilder()
+                  .eventRef(
+                    eventrefBuilder().triggerEventRef('StopVitalsCheck').resultEventRef('VitalsCheckingStopped').build()
+                  )
+                  .build(),
+              ])
+              .build(),
+          ])
           .build(),
       ])
       .events([
-        eventdefBuilder().name('CarTurnedOnEvent').type('car.events').source('my/car/start').build(),
-        eventdefBuilder().name('CarTurnedOffEvent').type('car.events').source('my/car/start').build(),
+        eventdefBuilder().name('CarTurnedOnEvent').type('car.events').source('my/car').build(),
+        eventdefBuilder().name('CarTurnedOffEvent').type('car.events').source('my/car').build(),
+        eventdefBuilder().name('StopVitalsCheck').type('car.events').source('my/car').build(),
+        eventdefBuilder().name('VitalsCheckingStopped').type('car.events').source('my/car').build(),
       ])
       .build();
 
