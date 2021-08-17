@@ -14,27 +14,21 @@
  * limitations under the License.
  */
 
-export class Subflowref {
+export class Errordef {
   constructor(model: any) {
     Object.assign(this, model);
   }
 
   /**
-   * Unique id of the sub-workflow to be invoked
+   * Domain-specific error name
    */
-  workflowId: string;
+  name: string;
   /**
-   * Version of the sub-workflow to be invoked
+   * Error code. Can be used in addition to the name to help runtimes resolve to technical errors/exceptions. Should not be defined if error is set to '*'
    */
-  version?: string;
-
+  code?: string;
   /**
-   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Subflowref} without deleted properties.
+   * Error description
    */
-  normalize = (): Subflowref => {
-    const clone = new Subflowref(this);
-
-    return clone;
-  };
+  description?: string;
 }

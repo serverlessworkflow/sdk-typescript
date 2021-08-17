@@ -14,27 +14,17 @@
  * limitations under the License.
  */
 
-export class Subflowref {
+import { Metadata } from './metadata';
+import { overwriteMetadata } from './utils';
+export class Beareripropsdef {
   constructor(model: any) {
     Object.assign(this, model);
+    overwriteMetadata(this);
   }
 
   /**
-   * Unique id of the sub-workflow to be invoked
+   * String or a workflow expression. Contains the token
    */
-  workflowId: string;
-  /**
-   * Version of the sub-workflow to be invoked
-   */
-  version?: string;
-
-  /**
-   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Subflowref} without deleted properties.
-   */
-  normalize = (): Subflowref => {
-    const clone = new Subflowref(this);
-
-    return clone;
-  };
+  token: string;
+  metadata?: /* Metadata information */ Metadata;
 }

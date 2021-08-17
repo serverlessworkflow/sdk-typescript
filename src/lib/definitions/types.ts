@@ -22,7 +22,6 @@ import { Databasedswitch } from './databasedswitch';
 import { Eventbasedswitch } from './eventbasedswitch';
 import { Transitioneventcondition } from './transitioneventcondition';
 import { Enddeventcondition } from './enddeventcondition';
-import { Delaystate } from './delaystate';
 import { Eventstate } from './eventstate';
 import { Operationstate } from './operationstate';
 import { Parallelstate } from './parallelstate';
@@ -30,6 +29,10 @@ import { Injectstate } from './injectstate';
 import { Foreachstate } from './foreachstate';
 import { Callbackstate } from './callbackstate';
 import { Eventdef } from './eventdef';
+import { Sleepstate } from './sleepstate';
+import { Authdef } from './authdef';
+import { Errordef } from './errordef';
+import { Specification } from './index';
 
 export type CorrelationDefs = [
   /* CloudEvent correlation definition */ CorrelationDef,
@@ -54,7 +57,7 @@ export type Eventcondition /* Switch state data event condition */ =
 
 export type States = [
   (
-    | /* Causes the workflow execution to delay for a specified duration */ Delaystate
+    | /* Causes the workflow execution to sleep for a specified duration */ Sleepstate
     | /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ Eventstate
     | /* Defines actions be performed. Does not wait for incoming events */ Operationstate
     | /* Consists of a number of states that are executed in parallel */ Parallelstate
@@ -64,7 +67,7 @@ export type States = [
     | /* This state performs an action, then waits for the callback event that denotes completion of the action */ Callbackstate
   ),
   ...(
-    | /* Causes the workflow execution to delay for a specified duration */ Delaystate
+    | /* Causes the workflow execution to sleep for a specified duration */ Sleepstate
     | /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ Eventstate
     | /* Defines actions be performed. Does not wait for incoming events */ Operationstate
     | /* Consists of a number of states that are executed in parallel */ Parallelstate
@@ -84,10 +87,6 @@ export type BranchExecTimeout = string;
  * Single actions definition execution timeout duration (ISO 8601 duration format)
  */
 export type ActionExecTimeout = string;
-/**
- * State execution timeout duration (ISO 8601 duration format)
- */
-export type StateExecTimeout = string;
 
 /**
  * Timeout duration to wait for consuming defined events (ISO 8601 duration format)
@@ -97,3 +96,9 @@ export type EventTimeout = string;
 export type Secrets = string /* uri */ | [string, ...string[]];
 
 export type Events = string /* uri */ | [Eventdef, ...Eventdef[]];
+
+export type Auth = string /* uri */ | [Authdef, ...Authdef[]];
+
+export type Errors = string /* uri */ | [Errordef, ...Errordef[]];
+
+export type Properties = Specification.Basicpropsdef | Specification.Beareripropsdef | Specification.Oauth2propsdef;

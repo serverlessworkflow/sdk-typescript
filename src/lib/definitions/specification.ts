@@ -14,19 +14,24 @@
  * limitations under the License.
  */
 
+export * from './workflow';
 export * from './action';
 export * from './actiondatafilter';
+export * from './authdef';
+export * from './basicpropsdef';
+export * from './beareripropsdef';
 export * from './branch';
 export * from './callbackstate';
+export * from './continueasdef';
 export * from './correlationDef';
 export * from './crondef';
 export * from './databasedswitch';
 export * from './defaultconditiondef';
-export * from './delaystate';
 export * from './end';
 export * from './enddatacondition';
 export * from './enddeventcondition';
 export * from './error';
+export * from './errordef';
 export * from './eventbasedswitch';
 export * from './eventdatafilter';
 export * from './eventdef';
@@ -37,13 +42,17 @@ export * from './function';
 export * from './functionref';
 export * from './injectstate';
 export * from './metadata';
+export * from './oauth2propsdef';
 export * from './onevents';
 export * from './operationstate';
 export * from './parallelstate';
 export * from './produceeventdef';
 export * from './retrydef';
 export * from './schedule';
+export * from './sleep';
+export * from './sleepstate';
 export * from './startdef';
+export * from './stateExecTimeout';
 export * from './statedatafilter';
 export * from './subflowref';
 export * from './timeouts';

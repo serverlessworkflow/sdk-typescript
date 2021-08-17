@@ -12,31 +12,46 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
-import { WorkflowExecTimeout } from './workflowExecTimeout';
-import { ActionExecTimeout, BranchExecTimeout, EventTimeout } from './types';
-import { normalizeWorkflowExecTimeout, overwriteStateExecTimeout, overwriteWorkflowExecTimeout } from './utils';
-import { StateExecTimeout } from './stateExecTimeout';
 
-export class Timeouts {
+import { WorkflowExecTimeout } from './workflowExecTimeout';
+import { normalizeWorkflowExecTimeout, overwritePropertyAsPlainType, overwriteWorkflowExecTimeout } from './utils';
+
+export class Continueasdef {
   constructor(model: any) {
     Object.assign(this, model);
     overwriteWorkflowExecTimeout(this);
-    overwriteStateExecTimeout(this);
+    overwritePropertyAsPlainType('data', this);
   }
 
+  /**
+   * Unique id of the workflow to continue execution as
+   */
+  workflowId: string;
+  /**
+   * Version of the workflow to continue execution as
+   */
+  version?: string;
+  /**
+   * If string type, an expression which selects parts of the states data output to become the workflow data input of continued execution. If object type, a custom object to become the workflow data input of the continued execution
+   */
+  data?:
+    | string
+    | {
+        [key: string]: any;
+      };
+  /**
+   * Workflow execution timeout to be used by the workflow continuing execution. Overwrites any specific settings set by that workflow
+   */
   workflowExecTimeout?: WorkflowExecTimeout;
-  stateExecTimeout?: StateExecTimeout;
-  actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
-  branchExecTimeout?: /* Single branch execution timeout duration (ISO 8601 duration format) */ BranchExecTimeout;
-  eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Exectimeout} without deleted properties.
    */
-  normalize = (): Timeouts => {
-    const clone = new Timeouts(this);
+  normalize = (): Continueasdef => {
+    const clone = new Continueasdef(this);
     normalizeWorkflowExecTimeout(clone);
     return clone;
   };

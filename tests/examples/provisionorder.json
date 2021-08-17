@@ -11,6 +11,17 @@
       "operation": "http://myapis.org/provisioningapi.json#doProvision"
     }
   ],
+  "errors": [
+    {
+      "name": "Missing order id"
+    },
+    {
+      "name": "Missing order item"
+    },
+    {
+      "name": "Missing order quantity"
+    }
+  ],
   "states":[
     {
       "type":"operation",
@@ -31,15 +42,15 @@
       "transition": "ApplyOrder",
       "onErrors": [
         {
-          "error": "Missing order id",
+          "errorRef": "Missing order id",
           "transition": "MissingId"
         },
         {
-          "error": "Missing order item",
+          "errorRef": "Missing order item",
           "transition": "MissingItem"
         },
         {
-          "error": "Missing order quantity",
+          "errorRef": "Missing order quantity",
           "transition": "MissingQuantity"
         }
       ]

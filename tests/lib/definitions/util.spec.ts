@@ -15,41 +15,47 @@
  *
  */
 
-import { overwritePropertyAsPlainType } from '../../../src/lib/definitions/utils';
+import {
+  overwritePropertiesIfObject,
+  overwritePropertyAsPlainType,
+  overwriteTimeoutWithStateExecTimeout,
+} from '../../../src/lib/definitions/utils';
+import { Properties } from '../../../src/lib/definitions/types';
+import { StateExecTimeout } from '../../../src/lib/definitions/stateExecTimeout';
 
 describe('Util ', () => {
   describe('overwritePropertyAsPlainType  ', () => {
-    class HasTimeouts {
-      timeouts?: {
-        key: string;
-      };
-    }
+    it('should create a copy of data property', () => {
+      class HasData {
+        data?: {
+          key: string;
+        };
+      }
 
-    it('should create a copy of timeouts property', () => {
       const source = {
-        timeouts: {
+        data: {
           key: 'action',
         },
-      } as HasTimeouts;
+      } as HasData;
 
-      const target = {} as HasTimeouts;
+      const target = {} as HasData;
       Object.assign(target, source);
-      overwritePropertyAsPlainType('timeouts', target);
+      overwritePropertyAsPlainType('data', target);
 
-      expect(target.timeouts!.key).toBe('action');
-      source.timeouts!.key = 'action2';
-      expect(target.timeouts!.key).toBe('action');
+      expect(target.data!.key).toBe('action');
+      source.data!.key = 'action2';
+      expect(target.data!.key).toBe('action');
     });
 
-    class HasData {
-      data?:
-        | string
-        | {
-            [key: string]: any;
-          };
-    }
-
     it('should create a copy of data property', () => {
+      class HasData {
+        data?:
+          | string
+          | {
+              [key: string]: any;
+            };
+      }
+
       const source = {
         data: {
           key1: 'value1',
@@ -66,6 +72,88 @@ describe('Util ', () => {
       source!.data['key1'] = 'value2';
       // @ts-ignore
       expect(target!.data['key1']).toBe('value1');
+    });
+  });
+
+  describe('overwritePropertiesIfObject  ', () => {
+    class HasProperties {
+      properties: string | Properties;
+    }
+
+    it('should create an instance of Basicpropsdef', () => {
+      const source = {
+        properties: {
+          username: 'name',
+          password: 'pwd',
+        },
+      } as HasProperties;
+
+      const target = Object.assign({}, source);
+      overwritePropertiesIfObject(target);
+      expect(target.properties.constructor.name).toBe('Basicpropsdef');
+    });
+
+    it('should create an instance of Beareripropsdef', () => {
+      const source = {
+        properties: {
+          token: 'token',
+        },
+      } as HasProperties;
+
+      const target = Object.assign({}, source);
+      overwritePropertiesIfObject(target);
+      expect(target.properties.constructor.name).toBe('Beareripropsdef');
+    });
+
+    it('should create an instance of Oauth2propsdef', () => {
+      const source = {
+        properties: {
+          grantType: 'password',
+          clientId: 'cid',
+        },
+      } as HasProperties;
+
+      const target = Object.assign({}, source);
+      overwritePropertiesIfObject(target);
+      expect(target.properties.constructor.name).toBe('Oauth2propsdef');
+    });
+
+    it('should not create an instance of Properties type', () => {
+      const source = {
+        properties: 'any value',
+      } as HasProperties;
+
+      const target = Object.assign({}, source);
+      overwritePropertiesIfObject(target);
+      expect(target.properties.constructor.name).toBe('String');
+    });
+  });
+
+  describe('overwriteTimeoutWithStateExecTimeout  ', () => {
+    it('should create an instance of StateExecTimeout only for stateExecTimeout property ', () => {
+      class HasStateExecTimeout {
+        timeouts?: {
+          stateExecTimeout?: StateExecTimeout;
+          eventTimeout?: string;
+        };
+      }
+
+      const source = {
+        timeouts: {
+          stateExecTimeout: {
+            total: 'P3Y6M4DT12H30M5S',
+          },
+          eventTimeout: 'eventTimeoutValue',
+        },
+      } as HasStateExecTimeout;
+
+      const target = Object.assign({}, source);
+      overwriteTimeoutWithStateExecTimeout(target);
+      expect(target.timeouts!.stateExecTimeout!.constructor.name).toBe('StateExecTimeout');
+
+      expect(target.timeouts!.eventTimeout).toBe('eventTimeoutValue');
+      source.timeouts!.eventTimeout = 'eventTimeoutValue2';
+      expect(target.timeouts!.eventTimeout).toBe('eventTimeoutValue');
     });
   });
 });

@@ -14,27 +14,17 @@
  * limitations under the License.
  */
 
-export class Subflowref {
+export class StateExecTimeout {
   constructor(model: any) {
     Object.assign(this, model);
   }
 
   /**
-   * Unique id of the sub-workflow to be invoked
+   * Single state execution timeout, not including retries (ISO 8601 duration format)
    */
-  workflowId: string;
+  single?: string;
   /**
-   * Version of the sub-workflow to be invoked
+   * Total state execution timeout, including retries (ISO 8601 duration format)
    */
-  version?: string;
-
-  /**
-   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Subflowref} without deleted properties.
-   */
-  normalize = (): Subflowref => {
-    const clone = new Subflowref(this);
-
-    return clone;
-  };
+  total: string;
 }

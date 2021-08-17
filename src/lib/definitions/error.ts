@@ -32,17 +32,13 @@ export class Error {
   }
 
   /**
-   * Domain-specific error name, or '*' to indicate all possible errors
+   * Reference to a unique workflow error definition. Used of errorRefs is not used
    */
-  error: string;
+  errorRef: string;
   /**
-   * Error code. Can be used in addition to the name to help runtimes resolve to technical errors/exceptions. Should not be defined if error is set to '*'
+   * References one or more workflow error definitions. Used if errorRef is not used
    */
-  code?: string;
-  /**
-   * References a unique name of a retry definition.
-   */
-  retryRef?: string;
+  errorRefs?: [string, ...string[]];
   transition: string | Transition;
   end?: boolean | End;
 

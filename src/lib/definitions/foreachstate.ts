@@ -30,20 +30,22 @@ import {
   overwriteMetadata,
   overwriteOnErrors,
   overwriteStateDataFilter,
-  overwritePropertyAsPlainType,
   overwriteTransitionIfObject,
   setEndValueIfNoTransition,
+  normalizeMode,
+  overwriteTimeoutWithStateExecTimeout,
 } from './utils';
-import { ActionExecTimeout, StateExecTimeout } from './types';
+import { ActionExecTimeout } from './types';
+import { StateExecTimeout } from './stateExecTimeout';
 
 export class Foreachstate {
   constructor(model: any) {
-    const defaultModel = { type: 'foreach', usedForCompensation: false };
+    const defaultModel = { type: 'foreach', usedForCompensation: false, mode: 'parallel' };
     Object.assign(this, defaultModel, model);
 
     overwriteEndIfObject(this);
     overwriteActions(this);
-    overwritePropertyAsPlainType('timeouts', this);
+    overwriteTimeoutWithStateExecTimeout(this);
     overwriteStateDataFilter(this);
     overwriteOnErrors(this);
     overwriteTransitionIfObject(this);
@@ -79,9 +81,9 @@ export class Foreachstate {
    */
   iterationParam?: string;
   /**
-   * Specifies how upper bound on how many iterations may run in parallel
+   * Specifies how many iterations may run in parallel at the same time. Used if 'mode' property is set to 'parallel' (default)
    */
-  max?: number | string;
+  batchSize?: number | string;
   /**
    * Actions to be executed for each of the elements of inputCollection
    */
@@ -90,7 +92,7 @@ export class Foreachstate {
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    stateExecTimeout?: StateExecTimeout;
     actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
   };
   /**
@@ -98,7 +100,7 @@ export class Foreachstate {
    */
   stateDataFilter?: Statedatafilter;
   /**
-   * States error handling and retries definitions
+   * States error handling definitions
    */
   onErrors?: Error[];
   /**
@@ -113,6 +115,11 @@ export class Foreachstate {
    * If true, this state is used to compensate another state. Default is false
    */
   usedForCompensation?: boolean;
+
+  /**
+   * Specifies how iterations are to be performed (sequentially or in parallel)
+   */
+  mode?: 'sequential' | 'parallel';
   metadata?: /* Metadata information */ Metadata;
 
   /**
@@ -127,6 +134,7 @@ export class Foreachstate {
     normalizeOnErrors(clone);
     normalizeTransitionIfObject(clone);
     normalizeUsedForCompensation(clone);
+    normalizeMode(clone);
     setEndValueIfNoTransition(clone);
 
     return clone;

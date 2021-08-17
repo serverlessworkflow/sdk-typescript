@@ -14,26 +14,34 @@
  * limitations under the License.
  */
 
-export class Subflowref {
-  constructor(model: any) {
-    Object.assign(this, model);
-  }
+import { normalizeScheme, overwritePropertiesIfObject } from './utils';
+import { Properties } from './types';
 
+export class Authdef {
+  constructor(model: any) {
+    const defaultModel = { scheme: 'basic' };
+    Object.assign(this, defaultModel, model);
+
+    overwritePropertiesIfObject(this);
+  }
   /**
-   * Unique id of the sub-workflow to be invoked
+   * Unique auth definition name
    */
-  workflowId: string;
+  name: string;
   /**
-   * Version of the sub-workflow to be invoked
+   * Defines the auth type
    */
-  version?: string;
+  scheme?: 'basic' | 'bearer' | 'oauth2';
+  properties: string | Properties;
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Subflowref} without deleted properties.
+   * @returns {Specification.Authdef} without deleted properties.
    */
-  normalize = (): Subflowref => {
-    const clone = new Subflowref(this);
+  normalize = (): Authdef => {
+    const clone = new Authdef(this);
+
+    normalizeScheme(clone);
 
     return clone;
   };

@@ -100,6 +100,9 @@
     "timeouts": {
       "$ref": "#/definitions/timeouts"
     },
+    "errors": {
+      "$ref": "#/definitions/errors"
+    },
     "keepActive": {
       "type": "boolean",
       "default": false,
@@ -114,8 +117,16 @@
     "functions": {
       "$ref": "#/definitions/functions"
     },
+    "autoRetries": {
+      "type": "boolean",
+      "default": false,
+      "description": "If set to true, actions should automatically be retried on unchecked errors. Default is false"
+    },
     "retries": {
       "$ref": "#/definitions/retries"
+    },
+    "auth": {
+      "$ref": "#/definitions/auth"
     },
     "states": {
       "type": "array",
@@ -123,8 +134,8 @@
       "items": {
         "anyOf": [
           {
-            "title": "Delay State",
-            "$ref": "#/definitions/delaystate"
+            "title": "Sleep State",
+            "$ref": "#/definitions/sleepstate"
           },
           {
             "title": "Event State",
@@ -181,6 +192,37 @@
     }
   ],
   "definitions": {
+    "sleep": {
+      "type": "object",
+      "properties": {
+        "before": {
+          "type": "string",
+          "description": "Amount of time (ISO 8601 duration format) to sleep before function/subflow invocation. Does not apply if 'eventRef' is defined."
+        },
+        "after": {
+          "type": "string",
+          "description": "Amount of time (ISO 8601 duration format) to sleep after function/subflow invocation. Does not apply if 'eventRef' is defined."
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "before"
+          ]
+        },
+        {
+          "required": [
+            "after"
+          ]
+        },
+        {
+          "required": [
+            "before",
+            "after"
+          ]
+        }
+      ]
+    },
     "crondef": {
       "oneOf": [
         {
@@ -204,6 +246,43 @@
           "additionalProperties": false,
           "required": [
             "expression"
+          ]
+        }
+      ]
+    },
+    "continueasdef": {
+      "oneOf": [
+        {
+          "type": "string",
+          "description": "Unique id of the workflow to be continue execution as. Entire state data is passed as data input to next execution",
+          "minLength": 1
+        },
+        {
+          "type": "object",
+          "properties": {
+            "workflowId": {
+              "type": "string",
+              "description": "Unique id of the workflow to continue execution as"
+            },
+            "version": {
+              "type": "string",
+              "description": "Version of the workflow to continue execution as",
+              "minLength": 1
+            },
+            "data": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "If string type, an expression which selects parts of the states data output to become the workflow data input of continued execution. If object type, a custom object to become the workflow data input of the continued execution"
+            },
+            "workflowExecTimeout": {
+              "$ref": "#/definitions/workflowExecTimeout",
+              "description": "Workflow execution timeout to be used by the workflow continuing execution. Overwrites any specific settings set by that workflow"
+            }
+          },
+          "required": [
+            "workflowId"
           ]
         }
       ]
@@ -249,27 +328,26 @@
     "error": {
       "type": "object",
       "properties": {
-        "error": {
+        "errorRef": {
           "type": "string",
-          "description": "Domain-specific error name, or '*' to indicate all possible errors",
+          "description": "Reference to a unique workflow error definition. Used of errorRefs is not used",
           "minLength": 1
         },
-        "code": {
-          "type": "string",
-          "description": "Error code. Can be used in addition to the name to help runtimes resolve to technical errors/exceptions. Should not be defined if error is set to '*'",
-          "minLength": 1
-        },
-        "retryRef": {
-          "type": "string",
-          "description": "References a unique name of a retry definition.",
-          "minLength": 1
+        "errorRefs": {
+          "type": "array",
+          "description": "References one or more workflow error definitions. Used if errorRef is not used",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "additionalItems": false
         },
         "transition": {
-          "description": "Transition to next state to handle the error. If retryRef is defined, this transition is taken only if retries were unsuccessful.",
+          "description": "Transition to next state to handle the error.",
           "$ref": "#/definitions/transition"
         },
         "end": {
-          "description": "End workflow execution in case of this error. If retryRef is defined, this ends workflow only if retries were unsuccessful.",
+          "description": "End workflow execution in case of this error.",
           "$ref": "#/definitions/end"
         }
       },
@@ -277,13 +355,25 @@
       "oneOf": [
         {
           "required": [
-            "error",
+            "errorRef",
             "transition"
           ]
         },
         {
           "required": [
-            "error",
+            "errorRef",
+            "end"
+          ]
+        },
+        {
+          "required": [
+            "errorRefs",
+            "transition"
+          ]
+        },
+        {
+          "required": [
+            "errorRefs",
             "end"
           ]
         }
@@ -347,6 +437,32 @@
         "subFlowRef": {
           "description": "References a sub-workflow to invoke",
           "$ref": "#/definitions/subflowref"
+        },
+        "sleep": {
+          "description": "Defines time periods workflow execution should sleep before / after function execution",
+          "$ref": "#/definitions/sleep"
+        },
+        "retryRef": {
+          "type": "string",
+          "description": "References a defined workflow retry definition. If not defined the default retry policy is assumed"
+        },
+        "nonRetryableErrors": {
+          "type": "array",
+          "description": "List of unique references to defined workflow errors for which the action should not be retried. Used only when `autoRetries` is set to `true`",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "additionalItems": false
+        },
+        "retryableErrors": {
+          "type": "array",
+          "description": "List of unique references to defined workflow errors for which the action should be retried. Used only when `autoRetries` is set to `false`",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "additionalItems": false
         },
         "actionDataFilter": {
           "description": "Action data filter",
@@ -447,11 +563,6 @@
           "type": "object",
           "description": "Specifies a sub-workflow to be invoked",
           "properties": {
-            "waitForCompletion": {
-              "type": "boolean",
-              "default": true,
-              "description": "Workflow execution must wait for sub-workflow to finish before continuing"
-            },
             "workflowId": {
               "type": "string",
               "description": "Unique id of the sub-workflow to be invoked"
@@ -505,9 +616,9 @@
         "actions"
       ]
     },
-    "delaystate": {
+    "sleepstate": {
       "type": "object",
-      "description": "Causes the workflow execution to delay for a specified duration",
+      "description": "Causes the workflow execution to sleep for a specified duration",
       "properties": {
         "id": {
           "type": "string",
@@ -520,7 +631,7 @@
         },
         "type": {
           "type": "string",
-          "const": "delay",
+          "const": "sleep",
           "description": "State type"
         },
         "end": {
@@ -531,9 +642,9 @@
           "description": "State data filter",
           "$ref": "#/definitions/statedatafilter"
         },
-        "timeDelay": {
+        "duration": {
           "type": "string",
-          "description": "Amount of time (ISO 8601 format) to delay"
+          "description": "Duration (ISO 8601 duration format) to sleep"
         },
         "timeouts": {
           "type": "object",
@@ -547,7 +658,7 @@
         },
         "onErrors": {
           "type": "array",
-          "description": "States error handling and retries definitions",
+          "description": "States error handling definitions",
           "items": {
             "type": "object",
             "$ref": "#/definitions/error"
@@ -555,7 +666,7 @@
           "additionalItems": false
         },
         "transition": {
-          "description": "Next transition of the workflow after the time delay",
+          "description": "Next transition of the workflow after the workflow sleep",
           "$ref": "#/definitions/transition"
         },
         "compensatedBy": {
@@ -587,7 +698,7 @@
         "required": [
           "name",
           "type",
-          "timeDelay"
+          "duration"
         ]
       },
       "else": {
@@ -596,7 +707,7 @@
             "required": [
               "name",
               "type",
-              "timeDelay",
+              "duration",
               "end"
             ]
           },
@@ -604,7 +715,7 @@
             "required": [
               "name",
               "type",
-              "timeDelay",
+              "duration",
               "transition"
             ]
           }
@@ -665,7 +776,7 @@
         },
         "onErrors": {
           "type": "array",
-          "description": "States error handling and retries definitions",
+          "description": "States error handling definitions",
           "items": {
             "type": "object",
             "$ref": "#/definitions/error"
@@ -767,7 +878,7 @@
         },
         "onErrors": {
           "type": "array",
-          "description": "States error handling and retries definitions",
+          "description": "States error handling definitions",
           "items": {
             "type": "object",
             "$ref": "#/definitions/error"
@@ -826,14 +937,6 @@
               "type",
               "actions",
               "transition"
-            ]
-          },
-          {
-            "required": [
-              "name",
-              "type",
-              "actions",
-              "end"
             ]
           }
         ]
@@ -907,7 +1010,7 @@
         },
         "onErrors": {
           "type": "array",
-          "description": "States error handling and retries definitions",
+          "description": "States error handling definitions",
           "items": {
             "type": "object",
             "$ref": "#/definitions/error"
@@ -1027,7 +1130,7 @@
         },
         "onErrors": {
           "type": "array",
-          "description": "States error handling and retries definitions",
+          "description": "States error handling definitions",
           "items": {
             "type": "object",
             "$ref": "#/definitions/error"
@@ -1102,7 +1205,7 @@
         },
         "onErrors": {
           "type": "array",
-          "description": "States error handling and retries definitions",
+          "description": "States error handling definitions",
           "items": {
             "type": "object",
             "$ref": "#/definitions/error"
@@ -1422,14 +1525,14 @@
           "type": "string",
           "description": "Name of the iteration parameter that can be referenced in actions/workflow. For each parallel iteration, this param should contain an unique element of the inputCollection array"
         },
-        "max": {
+        "batchSize": {
           "type": [
             "number",
             "string"
           ],
           "minimum": 0,
           "minLength": 0,
-          "description": "Specifies how upper bound on how many iterations may run in parallel"
+          "description": "Specifies how many iterations may run in parallel at the same time. Used if 'mode' property is set to 'parallel' (default)"
         },
         "actions": {
           "type": "array",
@@ -1459,7 +1562,7 @@
         },
         "onErrors": {
           "type": "array",
-          "description": "States error handling and retries definitions",
+          "description": "States error handling definitions",
           "items": {
             "type": "object",
             "$ref": "#/definitions/error"
@@ -1479,6 +1582,15 @@
           "type": "boolean",
           "default": false,
           "description": "If true, this state is used to compensate another state. Default is false"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "sequential",
+            "parallel"
+          ],
+          "description": "Specifies how iterations are to be performed (sequentially or in parallel)",
+          "default": "parallel"
         },
         "metadata": {
           "$ref": "#/definitions/metadata"
@@ -1581,7 +1693,7 @@
         },
         "onErrors": {
           "type": "array",
-          "description": "States error handling and retries definitions",
+          "description": "States error handling definitions",
           "items": {
             "type": "object",
             "$ref": "#/definitions/error"
@@ -1750,6 +1862,9 @@
               "type": "boolean",
               "default": false,
               "description": "If set to true, triggers workflow compensation. Default is false"
+            },
+            "continueAs": {
+              "$ref": "#/definitions/continueasdef"
             }
           },
           "additionalProperties": false,
@@ -1868,9 +1983,33 @@
       ]
     },
     "stateExecTimeout": {
-      "type": "string",
-      "description": "State execution timeout duration (ISO 8601 duration format)",
-      "minLength": 1
+      "oneOf": [
+        {
+          "type": "string",
+          "description": "Total state execution timeout (including retries) (ISO 8601 duration format)",
+          "minLength": 1
+        },
+        {
+          "type": "object",
+          "description": "Workflow default timeouts",
+          "properties": {
+            "single": {
+              "type": "string",
+              "description": "Single state execution timeout, not including retries (ISO 8601 duration format)",
+              "minLength": 1
+            },
+            "total": {
+              "type": "string",
+              "description": "Total state execution timeout, including retries (ISO 8601 duration format)",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "total"
+          ]
+        }
+      ]
     },
     "actionExecTimeout": {
       "type": "string",
@@ -1886,13 +2025,6 @@
       "type": "string",
       "description": "Timeout duration to wait for consuming defined events (ISO 8601 duration format)",
       "minLength": 1
-    },
-    "metadata": {
-      "type": "object",
-      "description": "Metadata information",
-      "additionalProperties": {
-        "type": "string"
-      }
     },
     "eventdef": {
       "type": "object",
@@ -1981,36 +2113,12 @@
         "contextAttributeName"
       ]
     },
-    "function": {
+    "metadata": {
       "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Unique function name",
-          "minLength": 1
-        },
-        "operation": {
-          "type": "string",
-          "description": "If type is `rest`, <path_to_openapi_definition>#<operation_id>. If type is `rpc`, <path_to_grpc_proto_file>#<service_name>#<service_method>. If type is `graphql`, <url_to_graphql_endpoint>#<literal \"mutation\" or \"query\">#<query_or_mutation_name>. If type is `expression`, defines the workflow expression.",
-          "minLength": 1
-        },
-        "type": {
-          "type": "string",
-          "description": "Defines the function type. Is either `rest`, `rpc`, `graphql` or `expression`. Default is `rest`",
-          "enum": [
-            "rest",
-            "rpc",
-            "graphql",
-            "expression"
-          ],
-          "default": "rest"
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "name",
-        "operation"
-      ]
+      "description": "Metadata information",
+      "additionalProperties": {
+        "type": "string"
+      }
     },
     "retrydef": {
       "type": "object",
@@ -2067,6 +2175,261 @@
         "maxAttempts"
       ]
     },
+    "authdef": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique auth definition name",
+          "minLength": 1
+        },
+        "scheme": {
+          "type": "string",
+          "description": "Defines the auth type",
+          "enum": [
+            "basic",
+            "bearer",
+            "oauth2"
+          ],
+          "default": "basic"
+        },
+        "properties": {
+          "oneOf": [
+            {
+              "type": "string",
+              "description": "Expression referencing a workflow secret that contains all needed auth info"
+            },
+            {
+              "title": "Basic Auth Info",
+              "$ref": "#/definitions/basicpropsdef"
+            },
+            {
+              "title": "Bearer Auth Info State",
+              "$ref": "#/definitions/beareripropsdef"
+            },
+            {
+              "title": "OAuth2  Info",
+              "$ref": "#/definitions/oauth2propsdef"
+            }
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "properties"
+      ]
+    },
+    "basicpropsdef": {
+      "oneOf": [
+        {
+          "type": "string",
+          "description": "Expression referencing a workflow secret that contains all needed basic auth info"
+        },
+        {
+          "type": "object",
+          "description": "Basic auth information",
+          "properties": {
+            "username": {
+              "type": "string",
+              "description": "String or a workflow expression. Contains the user name",
+              "minLength": 1
+            },
+            "password": {
+              "type": "string",
+              "description": "String or a workflow expression. Contains the user password",
+              "minLength": 1
+            },
+            "metadata": {
+              "$ref": "#/definitions/metadata"
+            }
+          },
+          "required": [
+            "username",
+            "password"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "beareripropsdef": {
+      "oneOf": [
+        {
+          "type": "string",
+          "description": "Expression referencing a workflow secret that contains all needed bearer auth info"
+        },
+        {
+          "type": "object",
+          "description": "Bearer auth information",
+          "properties": {
+            "token": {
+              "type": "string",
+              "description": "String or a workflow expression. Contains the token",
+              "minLength": 1
+            },
+            "metadata": {
+              "$ref": "#/definitions/metadata"
+            }
+          },
+          "required": [
+            "token"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "oauth2propsdef": {
+      "oneOf": [
+        {
+          "type": "string",
+          "description": "Expression referencing a workflow secret that contains all needed OAuth2 auth info"
+        },
+        {
+          "type": "object",
+          "description": "OAuth2 information",
+          "properties": {
+            "authority": {
+              "type": "string",
+              "description": "String or a workflow expression. Contains the authority information",
+              "minLength": 1
+            },
+            "grantType": {
+              "type": "string",
+              "description": "Defines the grant type",
+              "enum": [
+                "password",
+                "clientCredentials",
+                "tokenExchange"
+              ],
+              "additionalItems": false
+            },
+            "clientId": {
+              "type": "string",
+              "description": "String or a workflow expression. Contains the client identifier",
+              "minLength": 1
+            },
+            "clientSecret": {
+              "type": "string",
+              "description": "Workflow secret or a workflow expression. Contains the client secret",
+              "minLength": 1
+            },
+            "scopes": {
+              "type": "array",
+              "description": "Array containing strings or workflow expressions. Contains the OAuth2 scopes",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "additionalItems": false
+            },
+            "username": {
+              "type": "string",
+              "description": "String or a workflow expression. Contains the user name. Used only if grantType is 'resourceOwner'",
+              "minLength": 1
+            },
+            "password": {
+              "type": "string",
+              "description": "String or a workflow expression. Contains the user password. Used only if grantType is 'resourceOwner'",
+              "minLength": 1
+            },
+            "audiences": {
+              "type": "array",
+              "description": "Array containing strings or workflow expressions. Contains the OAuth2 audiences",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "additionalItems": false
+            },
+            "subjectToken": {
+              "type": "string",
+              "description": "String or a workflow expression. Contains the subject token",
+              "minLength": 1
+            },
+            "requestedSubject": {
+              "type": "string",
+              "description": "String or a workflow expression. Contains the requested subject",
+              "minLength": 1
+            },
+            "requestedIssuer": {
+              "type": "string",
+              "description": "String or a workflow expression. Contains the requested issuer",
+              "minLength": 1
+            },
+            "metadata": {
+              "$ref": "#/definitions/metadata"
+            }
+          },
+          "required": [
+            "grantType",
+            "clientId"
+          ]
+        }
+      ]
+    },
+    "errordef": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Domain-specific error name",
+          "minLength": 1
+        },
+        "code": {
+          "type": "string",
+          "description": "Error code. Can be used in addition to the name to help runtimes resolve to technical errors/exceptions. Should not be defined if error is set to '*'",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "Error description"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ]
+    },
+    "function": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique function name",
+          "minLength": 1
+        },
+        "operation": {
+          "type": "string",
+          "description": "If type is `rest`, <path_to_openapi_definition>#<operation_id>. If type is `asyncapi`, <path_to_asyncapi_definition>#<operation_id>. If type is `rpc`, <path_to_grpc_proto_file>#<service_name>#<service_method>. If type is `graphql`, <url_to_graphql_endpoint>#<literal \\\"mutation\\\" or \\\"query\\\">#<query_or_mutation_name>. If type is `odata`, <URI_to_odata_service>#<Entity_Set_Name>. If type is `expression`, defines the workflow expression.",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "description": "Defines the function type. Is either `rest`, `asyncapi, `rpc`, `graphql`, `odata`, or `expression`. Default is `rest`",
+          "enum": [
+            "rest",
+            "asyncapi",
+            "rpc",
+            "graphql",
+            "odata",
+            "expression"
+          ],
+          "default": "rest"
+        },
+        "authRef": {
+          "type": "string",
+          "description": "References an auth definition name to be used to access to resource defined in the operation parameter",
+          "minLength": 1
+        },
+        "metadata": {
+          "$ref": "#/definitions/metadata"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "operation"
+      ]
+    },
     "secrets": {
       "oneOf": [
         {
@@ -2113,6 +2476,25 @@
           },
           "additionalProperties": false,
           "required": []
+        }
+      ]
+    },
+    "errors": {
+      "oneOf": [
+        {
+          "type": "string",
+          "format": "uri",
+          "description": "URI to a resource containing error definitions (json or yaml)"
+        },
+        {
+          "type": "array",
+          "description": "Workflow Error definitions. Defines checked errors that can be explicitly handled during workflow execution",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/errordef"
+          },
+          "additionalItems": false,
+          "minItems": 1
         }
       ]
     },
@@ -2167,6 +2549,25 @@
           "items": {
             "type": "object",
             "$ref": "#/definitions/retrydef"
+          },
+          "additionalItems": false,
+          "minItems": 1
+        }
+      ]
+    },
+    "auth": {
+      "oneOf": [
+        {
+          "type": "string",
+          "format": "uri",
+          "description": "URI to a resource containing auth definitions (json or yaml)"
+        },
+        {
+          "type": "array",
+          "description": "Workflow auth definitions",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/authdef"
           },
           "additionalItems": false,
           "minItems": 1

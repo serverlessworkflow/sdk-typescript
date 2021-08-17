@@ -32,11 +32,12 @@ import {
   overwriteMetadata,
   overwriteOnErrors,
   overwriteStateDataFilter,
-  overwritePropertyAsPlainType,
   overwriteTransitionIfObject,
   setEndValueIfNoTransition,
+  overwriteTimeoutWithStateExecTimeout,
 } from './utils';
-import { BranchExecTimeout, StateExecTimeout } from './types';
+import { BranchExecTimeout } from './types';
+import { StateExecTimeout } from './stateExecTimeout';
 
 export class Parallelstate {
   constructor(model: any) {
@@ -49,7 +50,7 @@ export class Parallelstate {
 
     overwriteEndIfObject(this);
     overwriteStateDataFilter(this);
-    overwritePropertyAsPlainType('timeouts', this);
+    overwriteTimeoutWithStateExecTimeout(this);
     overwriteBranches(this);
     overwriteOnErrors(this);
     overwriteTransitionIfObject(this);
@@ -80,7 +81,7 @@ export class Parallelstate {
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    stateExecTimeout?: StateExecTimeout;
     branchExecTimeout?: /* Single branch execution timeout duration (ISO 8601 duration format) */ BranchExecTimeout;
   };
   /**
@@ -96,7 +97,7 @@ export class Parallelstate {
    */
   numCompleted?: number | string;
   /**
-   * States error handling and retries definitions
+   * States error handling definitions
    */
   onErrors?: Error[];
   /**

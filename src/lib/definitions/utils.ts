@@ -15,6 +15,7 @@
  */
 import { Specification } from './index';
 import { isObject } from '../utils';
+import { StateExecTimeout } from './stateExecTimeout';
 
 /**
  * Modify the provided object, set the value to 'schedule' property as an instance of Specification.Schedule class, if the provided value is an object
@@ -179,6 +180,30 @@ export function overwriteEvents(object: { events?: Specification.Events }) {
 }
 
 /**
+ * Modify the provided object, set the value to 'errors' property as an instance of Specification.Errors class
+ * @param object to set/overwrite the property
+ */
+export function overwriteErrors(object: { errors?: Specification.Errors }) {
+  if (Array.isArray(object.errors)) {
+    object.errors = (object.errors as Specification.Errordef[]).map(
+      (f) => new Specification.Errordef(f)
+    ) as Specification.Errors;
+  }
+}
+
+/**
+ * Modify the provided object, set the value to 'auth' property as an instance of Specification.Auth class
+ * @param object to set/overwrite the property
+ */
+export function overwriteAuth(object: { auth?: Specification.Auth }) {
+  if (Array.isArray(object.auth)) {
+    object.auth = (object.auth as Specification.Authdef[]).map(
+      (f) => new Specification.Authdef(f)
+    ) as Specification.Auth;
+  }
+}
+
+/**
  * Modify the provided object, set the value to 'functions' property as an instance of Specification.Functions class
  * @param object to set/overwrite the property
  */
@@ -195,15 +220,13 @@ export function overwriteFunctions(object: { functions?: Specification.Functions
  * Throws an error if the value of the property type is not handler
  * @param object to set/overwrite the property
  */
-//
-
 export function overwriteStates(object: { states: Specification.States }) {
   object.states =
     object.states &&
     ((object.states as Specification.States).map((v) => {
       switch (v.type) {
-        case 'delay':
-          return new Specification.Delaystate(v);
+        case 'sleep':
+          return new Specification.Sleep(v);
         case 'event':
           return new Specification.Eventstate(v);
         case 'operation':
@@ -229,6 +252,29 @@ export function overwriteStates(object: { states: Specification.States }) {
           throw new Error(`Unexpected type= ${v.type}; \n state value= ${JSON.stringify(v, null, 4)}`);
       }
     }) as Specification.States);
+}
+
+/**
+ * Modify the provided object, set the value to 'properties' property as an instance of Specification.Properties class, if the provided value is an object
+ * Throws an error if the value of the property type is not handler
+ * @param object to set/overwrite the property
+ */
+export function overwritePropertiesIfObject(object: { properties: string | Specification.Properties }) {
+  if (isObject(object.properties)) {
+    const properties: any = object.properties;
+
+    if (properties.username && properties.password) {
+      object.properties = new Specification.Basicpropsdef(object);
+    }
+
+    if (properties.token) {
+      object.properties = new Specification.Beareripropsdef(object);
+    }
+
+    if (properties.grantType) {
+      object.properties = new Specification.Oauth2propsdef(object);
+    }
+  }
 }
 
 /**
@@ -260,6 +306,14 @@ export function overwriteWorkflowExecTimeout(object: {
 }): void {
   object.workflowExecTimeout =
     object.workflowExecTimeout && new Specification.WorkflowExecTimeout(object.workflowExecTimeout);
+}
+
+/**
+ * Modify the provided object, set the value to 'stateExecTimeout' property as an instance of Specification.StateExecTimeout class
+ * @param object to set/overwrite the property
+ */
+export function overwriteStateExecTimeout(object: { stateExecTimeout?: Specification.StateExecTimeout }): void {
+  object.stateExecTimeout = object.stateExecTimeout && new Specification.StateExecTimeout(object.stateExecTimeout);
 }
 
 /**
@@ -311,6 +365,16 @@ export function overwriteFunctionRefIfObject(object: { functionRef?: string | Sp
 }
 
 /**
+ * Modify the provided object, set the value to 'continueAs' property as an instance of Specification. Continueasdef, if the provided value is an object
+ * @param object to set/overwrite the property
+ */
+export function overwriteContinueAsIfObject(object: { continueAs?: string | Specification.Continueasdef }): void {
+  if (isObject(object.continueAs)) {
+    object.continueAs = new Specification.Continueasdef(object.continueAs);
+  }
+}
+
+/**
  * Modify the provided object, set the value to 'subFlowRef' property as an instance of Specification.Subflowref class, if the provided value is an object
  * @param object to set/overwrite the property
  */
@@ -326,6 +390,14 @@ export function overwriteSubFlowRefIfObject(object: { subFlowRef?: string | Spec
  */
 export function overwriteEventRef(object: { eventRef?: Specification.Eventref }): void {
   object.eventRef = object.eventRef && new Specification.Eventref(object.eventRef);
+}
+
+/**
+ * Modify the provided object, set the value to 'sleep' property as an instance of Specification.Sleep class
+ * @param object to set/overwrite the property
+ */
+export function overwriteSleep(object: { sleep?: Specification.Sleep }): void {
+  object.sleep = object.sleep && new Specification.Sleep(object.sleep);
 }
 
 /**
@@ -371,6 +443,24 @@ export function overwritePropertyAsPlainType(property: string, object: any): voi
 }
 
 /**
+ * Modify the provided object, set the value to 'timeouts.stateExecTimeout' property as an instance of Specification.StateExecTimeout class,
+ * for the rest of the properties the value is cloned
+ * @param object to set/overwrite the property
+ */
+export function overwriteTimeoutWithStateExecTimeout(object: {
+  timeouts?: {
+    stateExecTimeout?: StateExecTimeout;
+  };
+}): void {
+  overwritePropertyAsPlainType('timeouts', object);
+
+  const timeouts = object.timeouts!;
+  if (timeouts && isObject(timeouts.stateExecTimeout)) {
+    timeouts.stateExecTimeout = new Specification.StateExecTimeout(timeouts.stateExecTimeout);
+  }
+}
+
+/**
  * Modify the provided object, set the value to 'timeouts' property as an instance of Specification.Timeouts class
  * @param object to set/overwrite the property
  */
@@ -381,12 +471,22 @@ export function overwriteTimeoutsIfObject(object: { timeouts?: string | Specific
 }
 
 /**
- * Modify the provided object by normalizing the 'end' property.
+ * Modify the provided object by normalizing the 'subFlowRef' property.
  * @param object to be modified
  */
 export function normalizeSubFlowRefIfObject(object: { subFlowRef?: string | Specification.Subflowref }) {
   if (isObject(object.subFlowRef)) {
     object.subFlowRef = (object.subFlowRef as Specification.Subflowref).normalize();
+  }
+}
+
+/**
+ * Modify the provided object by normalizing the 'continueAs' property.
+ * @param object to be modified
+ */
+export function normalizeContinueAsIfObject(object: { continueAs?: string | Specification.Continueasdef }) {
+  if (isObject(object.continueAs)) {
+    object.continueAs = (object.continueAs as Specification.Continueasdef).normalize();
   }
 }
 
@@ -404,16 +504,6 @@ export function normalizeDefaultCondition(object: { defaultCondition?: Specifica
  */
 export function normalizeWorkflowExecTimeout(object: { workflowExecTimeout?: Specification.WorkflowExecTimeout }) {
   object.workflowExecTimeout = object.workflowExecTimeout && object.workflowExecTimeout.normalize();
-}
-
-/**
- * Modify the provided object by normalizing the 'waitForCompletion' property, where the default value is 'true'.
- * @param object to be modified
- */
-export function normalizeWaitForCompletion(object: { waitForCompletion?: boolean }) {
-  if (object.waitForCompletion) {
-    delete object.waitForCompletion;
-  }
 }
 
 /**
@@ -443,6 +533,16 @@ export function normalizeCompletionType(object: { completionType?: string }) {
 export function normalizeUsedForCompensation(object: { usedForCompensation?: boolean }) {
   if (!object.usedForCompensation) {
     delete object.usedForCompensation;
+  }
+}
+
+/**
+ * Modify the provided object by normalizing the 'mode' property, where the default value is 'parallel'.
+ * @param object to be modified
+ */
+export function normalizeMode(object: { mode?: string }) {
+  if (object.mode === 'parallel') {
+    delete object.mode;
   }
 }
 
@@ -529,6 +629,16 @@ export function normalizeTransitionIfObject(object: { transition?: string | Spec
 export function normalizeCompensate(object: { compensate?: boolean }) {
   if (!object.compensate) {
     delete object.compensate;
+  }
+}
+
+/**
+ * Modify the provided object by normalizing the 'scheme' property, where the default value is 'basic'.
+ * @param object to be modified
+ */
+export function normalizeScheme(object: { scheme?: string }) {
+  if (object.scheme === 'basic') {
+    delete object.scheme;
   }
 }
 
@@ -620,6 +730,18 @@ export function normalizeStates(object: { states: Specification.States }) {
   object.states = object.states.map((state) => {
     return state.normalize();
   }) as Specification.States;
+}
+
+/**
+ * Modify the provided object by normalizing the 'auth' property.
+ * @param object to be modified
+ */
+export function normalizeAuth(object: { auth?: Specification.Auth }) {
+  if (Array.isArray(object.auth)) {
+    object.auth = object.auth.map((auth) => {
+      return auth.normalize();
+    }) as Specification.Auth;
+  }
 }
 
 /**

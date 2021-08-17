@@ -12,22 +12,19 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
-import { Subflowref } from '../../../src/lib/definitions/subflowref';
 
-describe('Subflowref ', () => {
-  it('normalize should unset properties whose value is equal to its default value', () => {
-    const object = new Subflowref({ workflowId: 'startApplicationWorkflowId' });
-    expect(object.waitForCompletion).toBeTrue();
-    const serializedObject = object.normalize();
+export class Sleep {
+  constructor(model: any) {
+    Object.assign(this, model);
+  }
 
-    expect(JSON.stringify(serializedObject)).toBe(
-      JSON.stringify({
-        workflowId: 'startApplicationWorkflowId',
-      })
-    );
-
-    expect(serializedObject.waitForCompletion).toBeUndefined();
-  });
-});
+  /**
+   * Amount of time (ISO 8601 duration format) to sleep before function/subflow invocation. Does not apply if 'eventRef' is defined.
+   */
+  before: string;
+  /**
+   * Amount of time (ISO 8601 duration format) to sleep after function/subflow invocation. Does not apply if 'eventRef' is defined.
+   */
+  after?: string;
+}

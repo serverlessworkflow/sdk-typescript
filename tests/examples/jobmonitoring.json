@@ -40,31 +40,15 @@
           }
         }
       ],
-      "onErrors": [
-        {
-          "error": "*",
-          "transition": "SubmitError"
-        }
-      ],
       "stateDataFilter": {
         "output": "${ .jobuid }"
       },
       "transition": "WaitForCompletion"
     },
     {
-      "type": "operation",
-      "name": "SubmitError",
-      "actions": [
-        {
-          "subFlowRef": "handleJobSubmissionErrorWorkflow"
-        }
-      ],
-      "end": true
-    },
-    {
-      "type": "delay",
+      "type": "sleep",
       "name": "WaitForCompletion",
-      "timeDelay": "PT5S",
+      "duration": "PT5S",
       "transition": "GetJobStatus"
     },
     {

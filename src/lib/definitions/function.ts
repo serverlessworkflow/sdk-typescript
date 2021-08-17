@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { normalizeType, overwriteMetadata } from './utils';
 
-import { normalizeType } from './utils';
-
+import { Metadata } from './metadata';
 export class Function {
   constructor(model: any) {
     const defaultModel = { type: 'rest' };
     Object.assign(this, defaultModel, model);
+    overwriteMetadata(this);
   }
 
   /**
@@ -27,13 +28,18 @@ export class Function {
    */
   name: string;
   /**
-   * If type is `rest`, <path_to_openapi_definition>#<operation_id>. If type is `rpc`, <path_to_grpc_proto_file>#<service_name>#<service_method>. If type is `graphql`, <url_to_graphql_endpoint>#<literal "mutation" or "query">#<query_or_mutation_name>. If type is `expression`, defines the workflow expression.
+   * If type is `rest`, <path_to_openapi_definition>#<operation_id>. If type is `asyncapi`, <path_to_asyncapi_definition>#<operation_id>. If type is `rpc`, <path_to_grpc_proto_file>#<service_name>#<service_method>. If type is `graphql`, <url_to_graphql_endpoint>#<literal \"mutation\" or \"query\">#<query_or_mutation_name>. If type is `odata`, <URI_to_odata_service>#<Entity_Set_Name>. If type is `expression`, defines the workflow expression.
    */
   operation: string;
   /**
-   * Defines the function type. Is either `rest`, `rpc`, `graphql` or `expression`. Default is `rest`
+   * Defines the function type. Is either `rest`, `asyncapi, `rpc`, `graphql`, `odata`, or `expression`. Default is `rest`
    */
-  type?: 'rest' | 'rpc' | 'expression';
+  type?: 'rest' | 'asyncapi' | 'rpc' | 'graphql' | 'odata' | 'expression';
+  /**
+   * References an auth definition name to be used to access to resource defined in the operation parameter
+   */
+  authRef?: string;
+  metadata?: /* Metadata information */ Metadata;
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.

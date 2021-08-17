@@ -17,28 +17,25 @@
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { validate } from '../utils';
-import { setEndValueIfNoTransition } from '../definitions/utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Delaystate} data The underlying object
- * @returns {Specification.Delaystate} The validated underlying object
+ * @param {Specification.Authdef} data The underlying object
+ * @returns {Specification.Authdef} The validated underlying object
  */
-function delaystateBuildingFn(data: Specification.Delaystate): () => Specification.Delaystate {
+function authdefBuildingFn(data: Specification.Authdef): () => Specification.Authdef {
   return () => {
-    const model = new Specification.Delaystate(data);
+    const model = new Specification.Authdef(data);
 
-    setEndValueIfNoTransition(model);
-
-    validate('Delaystate', model);
+    validate('Authdef', model);
     return model;
   };
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.Delaystate`
- * @returns {Specification.Delaystate} A builder for `Specification.Delaystate`
+ * A factory to create a builder proxy for the type `Specification.Authdef`
+ * @returns {Specification.Authdef} A builder for `Specification.Authdef`
  */
-export function delaystateBuilder(): Builder<Specification.Delaystate> {
-  return builder<Specification.Delaystate>(delaystateBuildingFn);
+export function authdefBuilder(): Builder<Specification.Authdef> {
+  return builder<Specification.Authdef>(authdefBuildingFn);
 }

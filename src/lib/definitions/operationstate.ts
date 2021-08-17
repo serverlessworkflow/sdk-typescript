@@ -31,11 +31,12 @@ import {
   overwriteMetadata,
   overwriteOnErrors,
   overwriteStateDataFilter,
-  overwritePropertyAsPlainType,
   overwriteTransitionIfObject,
   setEndValueIfNoTransition,
+  overwriteTimeoutWithStateExecTimeout,
 } from './utils';
-import { ActionExecTimeout, StateExecTimeout } from './types';
+import { ActionExecTimeout } from './types';
+import { StateExecTimeout } from './stateExecTimeout';
 
 export class Operationstate {
   constructor(model: any) {
@@ -49,7 +50,7 @@ export class Operationstate {
     overwriteEndIfObject(this);
     overwriteStateDataFilter(this);
     overwriteActions(this);
-    overwritePropertyAsPlainType('timeouts', this);
+    overwriteTimeoutWithStateExecTimeout(this);
     overwriteOnErrors(this);
     overwriteTransitionIfObject(this);
     overwriteMetadata(this);
@@ -87,11 +88,11 @@ export class Operationstate {
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    stateExecTimeout?: StateExecTimeout;
     actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
   };
   /**
-   * States error handling and retries definitions
+   * States error handling definitions
    */
   onErrors?: Error[];
   /**

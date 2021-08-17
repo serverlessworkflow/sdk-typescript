@@ -13,38 +13,34 @@
           "eventRefs": ["CarTurnedOnEvent"]
         }
       ],
-      "transition": "DoCarVitalsChecks"
+      "transition": "DoCarVitalChecks"
     },
     {
       "type": "operation",
-      "name": "DoCarVitalsChecks",
+      "name": "DoCarVitalChecks",
       "actions": [
         {
-          "subFlowRef": {
-            "waitForCompletion": false,
-            "workflowId": "vitalscheck"
+          "subFlowRef": "vitalscheck",
+          "sleep": {
+            "after": "PT1S"
           }
         }
       ],
-      "transition": "WaitForCarStopped"
+      "transition": "CheckContinueVitalChecks"
     },
     {
-      "type": "event",
-      "name": "WaitForCarStopped",
-      "onEvents": [
+      "type": "switch",
+      "name": "CheckContinueVitalChecks",
+      "eventConditions": [
         {
-          "eventRefs": ["CarTurnedOffEvent"],
-          "actions": [
-            {
-              "eventRef": {
-                "triggerEventRef": "StopVitalsCheck",
-                "resultEventRef":  "VitalsCheckingStopped"
-              }
-            }
-          ]
+          "name": "Car Turned Off Condition",
+          "eventRef": "CarTurnedOffEvent",
+          "end": true
         }
       ],
-      "end": true
+      "defaultCondition": {
+        "transition": "DoCarVitalsChecks"
+      }
     }
   ],
   "events": [
@@ -55,16 +51,6 @@
     },
     {
       "name": "CarTurnedOffEvent",
-      "type": "car.events",
-      "source": "my/car"
-    },
-    {
-      "name": "StopVitalsCheck",
-      "type": "car.events",
-      "source": "my/car"
-    },
-    {
-      "name": "VitalsCheckingStopped",
       "type": "car.events",
       "source": "my/car"
     }
