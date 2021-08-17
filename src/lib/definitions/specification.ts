@@ -19,7 +19,7 @@ export * from './action';
 export * from './actiondatafilter';
 export * from './authdef';
 export * from './basicpropsdef';
-export * from './beareripropsdef';
+export * from './bearerpropsdef';
 export * from './branch';
 export * from './callbackstate';
 export * from './continueasdef';

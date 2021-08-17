@@ -16,7 +16,7 @@
 
 import { Metadata } from './metadata';
 import { overwriteMetadata } from './utils';
-export class Beareripropsdef {
+export class Bearerpropsdef {
   constructor(model: any) {
     Object.assign(this, model);
     overwriteMetadata(this);

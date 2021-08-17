@@ -268,7 +268,7 @@ export function overwritePropertiesIfObject(object: { properties: string | Speci
     }
 
     if (properties.token) {
-      object.properties = new Specification.Beareripropsdef(object);
+      object.properties = new Specification.Bearerpropsdef(object);
     }
 
     if (properties.grantType) {

@@ -302,7 +302,7 @@ export interface Authdef {
    * Defines the auth type
    */
   scheme?: 'basic' | 'bearer' | 'oauth2';
-  properties: string | Basicpropsdef | Beareripropsdef | Oauth2propsdef;
+  properties: string | Basicpropsdef | Bearerpropsdef | Oauth2propsdef;
 }
 export type Basicpropsdef =
   | string
@@ -317,7 +317,7 @@ export type Basicpropsdef =
       password: string;
       metadata?: /* Metadata information */ Metadata;
     };
-export type Beareripropsdef =
+export type Bearerpropsdef =
   | string
   | {
       /**

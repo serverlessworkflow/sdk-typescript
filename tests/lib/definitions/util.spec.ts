@@ -93,7 +93,7 @@ describe('Util ', () => {
       expect(target.properties.constructor.name).toBe('Basicpropsdef');
     });
 
-    it('should create an instance of Beareripropsdef', () => {
+    it('should create an instance of Bearerpropsdef', () => {
       const source = {
         properties: {
           token: 'token',
@@ -102,7 +102,7 @@ describe('Util ', () => {
 
       const target = Object.assign({}, source);
       overwritePropertiesIfObject(target);
-      expect(target.properties.constructor.name).toBe('Beareripropsdef');
+      expect(target.properties.constructor.name).toBe('Bearerpropsdef');
     });
 
     it('should create an instance of Oauth2propsdef', () => {

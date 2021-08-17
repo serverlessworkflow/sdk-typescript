@@ -19,7 +19,7 @@ export * from './action-builder';
 export * from './actiondatafilter-builder';
 export * from './authdef-builder';
 export * from './basicpropsdef-builder';
-export * from './beareripropsdef-builder';
+export * from './bearerpropsdef-builder';
 export * from './branch-builder';
 export * from './callbackstate-builder';
 export * from './continueasdef-builder';

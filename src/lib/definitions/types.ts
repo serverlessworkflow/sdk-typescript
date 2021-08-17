@@ -101,4 +101,4 @@ export type Auth = string /* uri */ | [Authdef, ...Authdef[]];
 
 export type Errors = string /* uri */ | [Errordef, ...Errordef[]];
 
-export type Properties = Specification.Basicpropsdef | Specification.Beareripropsdef | Specification.Oauth2propsdef;
+export type Properties = Specification.Basicpropsdef | Specification.Bearerpropsdef | Specification.Oauth2propsdef;
