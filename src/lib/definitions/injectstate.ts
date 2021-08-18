@@ -26,10 +26,11 @@ import {
   overwriteMetadata,
   overwritePropertyAsPlainType,
   overwriteStateDataFilter,
+  overwriteTimeoutWithStateExecTimeout,
   overwriteTransitionIfObject,
   setEndValueIfNoTransition,
 } from './utils';
-import { StateExecTimeout } from './types';
+import { StateExecTimeout } from './stateExecTimeout';
 
 export class Injectstate {
   constructor(model: any) {
@@ -38,7 +39,7 @@ export class Injectstate {
 
     overwriteEndIfObject(this);
     overwritePropertyAsPlainType('data', this);
-    overwritePropertyAsPlainType('timeouts', this);
+    overwriteTimeoutWithStateExecTimeout(this);
     overwriteStateDataFilter(this);
     overwriteTransitionIfObject(this);
     overwriteMetadata(this);
@@ -70,7 +71,7 @@ export class Injectstate {
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    stateExecTimeout?: StateExecTimeout;
   };
   /**
    * State data filter

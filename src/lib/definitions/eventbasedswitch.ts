@@ -28,9 +28,10 @@ import {
   overwriteMetadata,
   overwriteOnErrors,
   overwriteStateDataFilter,
-  overwritePropertyAsPlainType,
+  overwriteTimeoutWithStateExecTimeout,
 } from './utils';
-import { Eventcondition, EventTimeout, StateExecTimeout } from './types';
+import { Eventcondition, EventTimeout } from './types';
+import { StateExecTimeout } from './stateExecTimeout';
 
 export class Eventbasedswitch {
   constructor(model: any) {
@@ -41,7 +42,7 @@ export class Eventbasedswitch {
     Object.assign(this, defaultModel, model);
 
     overwriteStateDataFilter(this);
-    overwritePropertyAsPlainType('timeouts', this);
+    overwriteTimeoutWithStateExecTimeout(this);
     overwriteEventConditions(this);
     overwriteOnErrors(this);
     overwriteDefaultCondition(this);
@@ -68,7 +69,7 @@ export class Eventbasedswitch {
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    stateExecTimeout?: StateExecTimeout;
     eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
   };
   /**
@@ -76,7 +77,7 @@ export class Eventbasedswitch {
    */
   eventConditions: Eventcondition[];
   /**
-   * States error handling and retries definitions
+   * States error handling definitions
    */
   onErrors?: Error[];
   /**

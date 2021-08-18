@@ -17,13 +17,15 @@
 import * as fs from 'fs';
 import {
   eventdefBuilder,
-  subflowrefBuilder,
   actionBuilder,
   operationstateBuilder,
   eventstateBuilder,
   oneventsBuilder,
   workflowBuilder,
-  eventrefBuilder,
+  sleepBuilder,
+  eventbasedswitchBuilder,
+  enddeventconditionBuilder,
+  defaultconditiondefBuilder,
 } from '../../src';
 
 describe('checkcarvitals workflow example', () => {
@@ -38,38 +40,30 @@ describe('checkcarvitals workflow example', () => {
         eventstateBuilder()
           .name('WhenCarIsOn')
           .onEvents([oneventsBuilder().eventRefs(['CarTurnedOnEvent']).build()])
-          .transition('DoCarVitalsChecks')
+          .transition('DoCarVitalChecks')
           .build(),
         operationstateBuilder()
-          .name('DoCarVitalsChecks')
-          .actions([
-            actionBuilder()
-              .subFlowRef(subflowrefBuilder().workflowId('vitalscheck').waitForCompletion(false).build())
-              .build(),
-          ])
-          .transition('WaitForCarStopped')
+          .name('DoCarVitalChecks')
+          .actions([actionBuilder().subFlowRef('vitalscheck').sleep(sleepBuilder().after('PT1S').build()).build()])
+
+          .transition('CheckContinueVitalChecks')
           .build(),
-        eventstateBuilder()
-          .name('WaitForCarStopped')
-          .onEvents([
-            oneventsBuilder()
-              .eventRefs(['CarTurnedOffEvent'])
-              .actions([
-                actionBuilder()
-                  .eventRef(
-                    eventrefBuilder().triggerEventRef('StopVitalsCheck').resultEventRef('VitalsCheckingStopped').build()
-                  )
-                  .build(),
-              ])
+
+        eventbasedswitchBuilder()
+          .name('CheckContinueVitalChecks')
+          .eventConditions([
+            enddeventconditionBuilder()
+              .name('Car Turned Off Condition')
+              .eventRef('CarTurnedOffEvent')
+              .end(true)
               .build(),
           ])
+          .defaultCondition(defaultconditiondefBuilder().transition('DoCarVitalsChecks').build())
           .build(),
       ])
       .events([
         eventdefBuilder().name('CarTurnedOnEvent').type('car.events').source('my/car').build(),
         eventdefBuilder().name('CarTurnedOffEvent').type('car.events').source('my/car').build(),
-        eventdefBuilder().name('StopVitalsCheck').type('car.events').source('my/car').build(),
-        eventdefBuilder().name('VitalsCheckingStopped').type('car.events').source('my/car').build(),
       ])
       .build();
 

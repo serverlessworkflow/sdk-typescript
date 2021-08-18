@@ -30,11 +30,12 @@ import {
   overwriteOnErrors,
   overwriteOnEvents,
   overwriteStateDataFilter,
-  overwritePropertyAsPlainType,
   overwriteTransitionIfObject,
   setEndValueIfNoTransition,
+  overwriteTimeoutWithStateExecTimeout,
 } from './utils';
-import { ActionExecTimeout, EventTimeout, StateExecTimeout } from './types';
+import { ActionExecTimeout, EventTimeout } from './types';
+import { StateExecTimeout } from './stateExecTimeout';
 
 export class Eventstate /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ {
   constructor(model: any) {
@@ -42,7 +43,7 @@ export class Eventstate /* This state is used to wait for events from event sour
     Object.assign(this, defaultModel, model);
 
     overwriteOnEvents(this);
-    overwritePropertyAsPlainType('timeouts', this);
+    overwriteTimeoutWithStateExecTimeout(this);
     overwriteStateDataFilter(this);
     overwriteOnErrors(this);
     overwriteTransitionIfObject(this);
@@ -74,13 +75,13 @@ export class Eventstate /* This state is used to wait for events from event sour
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    stateExecTimeout?: StateExecTimeout;
     actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
     eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
   };
   stateDataFilter?: Statedatafilter;
   /**
-   * States error handling and retries definitions
+   * States error handling definitions
    */
   onErrors?: Error[];
   transition?: string | Transition;

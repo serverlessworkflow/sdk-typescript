@@ -60,7 +60,8 @@ const download = async (schemaUrl: URL, destDir: string): Promise<void> => {
 
 const argv = yargs(process.argv.slice(2)).argv;
 const schemaUrl: URL = new URL(
-  (argv.url as string) || `https://serverlessworkflow.io/schemas/${schemaVersion}/workflow.json`
+  (argv.url as string) ||
+    `https://raw.githubusercontent.com/serverlessworkflow/specification/${schemaVersion}.x/schema/workflow.json`
 );
 const destDir = path.resolve(process.cwd(), 'src/lib/schema');
 

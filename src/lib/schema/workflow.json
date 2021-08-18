@@ -100,6 +100,9 @@
     "timeouts": {
       "$ref": "timeouts.json#/timeouts"
     },
+    "errors": {
+      "$ref": "errors.json#/errors"
+    },
     "keepActive": {
       "type": "boolean",
       "default": false,
@@ -114,8 +117,16 @@
     "functions": {
       "$ref": "functions.json#/functions"
     },
+    "autoRetries": {
+      "type": "boolean",
+      "default": false,
+      "description": "If set to true, actions should automatically be retried on unchecked errors. Default is false"
+    },
     "retries": {
       "$ref": "retries.json#/retries"
+    },
+    "auth": {
+      "$ref": "auth.json#/auth"
     },
     "states": {
       "type": "array",
@@ -123,8 +134,8 @@
       "items": {
         "anyOf": [
           {
-            "title": "Delay State",
-            "$ref": "#/definitions/delaystate"
+            "title": "Sleep State",
+            "$ref": "#/definitions/sleepstate"
           },
           {
             "title": "Event State",
@@ -181,6 +192,37 @@
     }
   ],
   "definitions": {
+    "sleep": {
+      "type": "object",
+      "properties": {
+        "before": {
+          "type": "string",
+          "description": "Amount of time (ISO 8601 duration format) to sleep before function/subflow invocation. Does not apply if 'eventRef' is defined."
+        },
+        "after": {
+          "type": "string",
+          "description": "Amount of time (ISO 8601 duration format) to sleep after function/subflow invocation. Does not apply if 'eventRef' is defined."
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "before"
+          ]
+        },
+        {
+          "required": [
+            "after"
+          ]
+        },
+        {
+          "required": [
+            "before",
+            "after"
+          ]
+        }
+      ]
+    },
     "crondef": {
       "oneOf": [
         {
@@ -204,6 +246,43 @@
           "additionalProperties": false,
           "required": [
             "expression"
+          ]
+        }
+      ]
+    },
+    "continueasdef": {
+      "oneOf": [
+        {
+          "type": "string",
+          "description": "Unique id of the workflow to be continue execution as. Entire state data is passed as data input to next execution",
+          "minLength": 1
+        },
+        {
+          "type": "object",
+          "properties": {
+            "workflowId": {
+              "type": "string",
+              "description": "Unique id of the workflow to continue execution as"
+            },
+            "version": {
+              "type": "string",
+              "description": "Version of the workflow to continue execution as",
+              "minLength": 1
+            },
+            "data": {
+              "type": [
+                "string",
+                "object"
+              ],
+              "description": "If string type, an expression which selects parts of the states data output to become the workflow data input of continued execution. If object type, a custom object to become the workflow data input of the continued execution"
+            },
+            "workflowExecTimeout": {
+              "$ref": "timeouts.json#/definitions/workflowExecTimeout",
+              "description": "Workflow execution timeout to be used by the workflow continuing execution. Overwrites any specific settings set by that workflow"
+            }
+          },
+          "required": [
+            "workflowId"
           ]
         }
       ]
@@ -249,27 +328,26 @@
     "error": {
       "type": "object",
       "properties": {
-        "error": {
+        "errorRef": {
           "type": "string",
-          "description": "Domain-specific error name, or '*' to indicate all possible errors",
+          "description": "Reference to a unique workflow error definition. Used of errorRefs is not used",
           "minLength": 1
         },
-        "code": {
-          "type": "string",
-          "description": "Error code. Can be used in addition to the name to help runtimes resolve to technical errors/exceptions. Should not be defined if error is set to '*'",
-          "minLength": 1
-        },
-        "retryRef": {
-          "type": "string",
-          "description": "References a unique name of a retry definition.",
-          "minLength": 1
+        "errorRefs": {
+          "type": "array",
+          "description": "References one or more workflow error definitions. Used if errorRef is not used",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "additionalItems": false
         },
         "transition": {
-          "description": "Transition to next state to handle the error. If retryRef is defined, this transition is taken only if retries were unsuccessful.",
+          "description": "Transition to next state to handle the error.",
           "$ref": "#/definitions/transition"
         },
         "end": {
-          "description": "End workflow execution in case of this error. If retryRef is defined, this ends workflow only if retries were unsuccessful.",
+          "description": "End workflow execution in case of this error.",
           "$ref": "#/definitions/end"
         }
       },
@@ -277,13 +355,25 @@
       "oneOf": [
         {
           "required": [
-            "error",
+            "errorRef",
             "transition"
           ]
         },
         {
           "required": [
-            "error",
+            "errorRef",
+            "end"
+          ]
+        },
+        {
+          "required": [
+            "errorRefs",
+            "transition"
+          ]
+        },
+        {
+          "required": [
+            "errorRefs",
             "end"
           ]
         }
@@ -347,6 +437,32 @@
         "subFlowRef": {
           "description": "References a sub-workflow to invoke",
           "$ref": "#/definitions/subflowref"
+        },
+        "sleep": {
+          "description": "Defines time periods workflow execution should sleep before / after function execution",
+          "$ref": "#/definitions/sleep"
+        },
+        "retryRef": {
+          "type": "string",
+          "description": "References a defined workflow retry definition. If not defined the default retry policy is assumed"
+        },
+        "nonRetryableErrors": {
+          "type": "array",
+          "description": "List of unique references to defined workflow errors for which the action should not be retried. Used only when `autoRetries` is set to `true`",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "additionalItems": false
+        },
+        "retryableErrors": {
+          "type": "array",
+          "description": "List of unique references to defined workflow errors for which the action should be retried. Used only when `autoRetries` is set to `false`",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "additionalItems": false
         },
         "actionDataFilter": {
           "description": "Action data filter",
@@ -447,11 +563,6 @@
           "type": "object",
           "description": "Specifies a sub-workflow to be invoked",
           "properties": {
-            "waitForCompletion": {
-              "type": "boolean",
-              "default": true,
-              "description": "Workflow execution must wait for sub-workflow to finish before continuing"
-            },
             "workflowId": {
               "type": "string",
               "description": "Unique id of the sub-workflow to be invoked"
@@ -505,9 +616,9 @@
         "actions"
       ]
     },
-    "delaystate": {
+    "sleepstate": {
       "type": "object",
-      "description": "Causes the workflow execution to delay for a specified duration",
+      "description": "Causes the workflow execution to sleep for a specified duration",
       "properties": {
         "id": {
           "type": "string",
@@ -520,7 +631,7 @@
         },
         "type": {
           "type": "string",
-          "const": "delay",
+          "const": "sleep",
           "description": "State type"
         },
         "end": {
@@ -531,9 +642,9 @@
           "description": "State data filter",
           "$ref": "#/definitions/statedatafilter"
         },
-        "timeDelay": {
+        "duration": {
           "type": "string",
-          "description": "Amount of time (ISO 8601 format) to delay"
+          "description": "Duration (ISO 8601 duration format) to sleep"
         },
         "timeouts": {
           "type": "object",
@@ -547,7 +658,7 @@
         },
         "onErrors": {
           "type": "array",
-          "description": "States error handling and retries definitions",
+          "description": "States error handling definitions",
           "items": {
             "type": "object",
             "$ref": "#/definitions/error"
@@ -555,7 +666,7 @@
           "additionalItems": false
         },
         "transition": {
-          "description": "Next transition of the workflow after the time delay",
+          "description": "Next transition of the workflow after the workflow sleep",
           "$ref": "#/definitions/transition"
         },
         "compensatedBy": {
@@ -587,7 +698,7 @@
         "required": [
           "name",
           "type",
-          "timeDelay"
+          "duration"
         ]
       },
       "else": {
@@ -596,7 +707,7 @@
             "required": [
               "name",
               "type",
-              "timeDelay",
+              "duration",
               "end"
             ]
           },
@@ -604,7 +715,7 @@
             "required": [
               "name",
               "type",
-              "timeDelay",
+              "duration",
               "transition"
             ]
           }
@@ -665,7 +776,7 @@
         },
         "onErrors": {
           "type": "array",
-          "description": "States error handling and retries definitions",
+          "description": "States error handling definitions",
           "items": {
             "type": "object",
             "$ref": "#/definitions/error"
@@ -767,7 +878,7 @@
         },
         "onErrors": {
           "type": "array",
-          "description": "States error handling and retries definitions",
+          "description": "States error handling definitions",
           "items": {
             "type": "object",
             "$ref": "#/definitions/error"
@@ -817,7 +928,7 @@
               "name",
               "type",
               "actions",
-              "transition"
+              "end"
             ]
           },
           {
@@ -825,7 +936,7 @@
               "name",
               "type",
               "actions",
-              "end"
+              "transition"
             ]
           }
         ]
@@ -899,7 +1010,7 @@
         },
         "onErrors": {
           "type": "array",
-          "description": "States error handling and retries definitions",
+          "description": "States error handling definitions",
           "items": {
             "type": "object",
             "$ref": "#/definitions/error"
@@ -1019,7 +1130,7 @@
         },
         "onErrors": {
           "type": "array",
-          "description": "States error handling and retries definitions",
+          "description": "States error handling definitions",
           "items": {
             "type": "object",
             "$ref": "#/definitions/error"
@@ -1094,7 +1205,7 @@
         },
         "onErrors": {
           "type": "array",
-          "description": "States error handling and retries definitions",
+          "description": "States error handling definitions",
           "items": {
             "type": "object",
             "$ref": "#/definitions/error"
@@ -1414,14 +1525,14 @@
           "type": "string",
           "description": "Name of the iteration parameter that can be referenced in actions/workflow. For each parallel iteration, this param should contain an unique element of the inputCollection array"
         },
-        "max": {
+        "batchSize": {
           "type": [
             "number",
             "string"
           ],
           "minimum": 0,
           "minLength": 0,
-          "description": "Specifies how upper bound on how many iterations may run in parallel"
+          "description": "Specifies how many iterations may run in parallel at the same time. Used if 'mode' property is set to 'parallel' (default)"
         },
         "actions": {
           "type": "array",
@@ -1451,7 +1562,7 @@
         },
         "onErrors": {
           "type": "array",
-          "description": "States error handling and retries definitions",
+          "description": "States error handling definitions",
           "items": {
             "type": "object",
             "$ref": "#/definitions/error"
@@ -1471,6 +1582,15 @@
           "type": "boolean",
           "default": false,
           "description": "If true, this state is used to compensate another state. Default is false"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "sequential",
+            "parallel"
+          ],
+          "description": "Specifies how iterations are to be performed (sequentially or in parallel)",
+          "default": "parallel"
         },
         "metadata": {
           "$ref": "common.json#/definitions/metadata"
@@ -1573,7 +1693,7 @@
         },
         "onErrors": {
           "type": "array",
-          "description": "States error handling and retries definitions",
+          "description": "States error handling definitions",
           "items": {
             "type": "object",
             "$ref": "#/definitions/error"
@@ -1742,6 +1862,9 @@
               "type": "boolean",
               "default": false,
               "description": "If set to true, triggers workflow compensation. Default is false"
+            },
+            "continueAs": {
+              "$ref": "#/definitions/continueasdef"
             }
           },
           "additionalProperties": false,

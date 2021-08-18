@@ -32,12 +32,13 @@ import {
   overwriteEventDataFilter,
   overwriteMetadata,
   overwriteOnErrors,
-  overwritePropertyAsPlainType,
   overwriteStateDataFilter,
+  overwriteTimeoutWithStateExecTimeout,
   overwriteTransitionIfObject,
   setEndValueIfNoTransition,
 } from './utils';
-import { ActionExecTimeout, EventTimeout, StateExecTimeout } from './types';
+import { ActionExecTimeout, EventTimeout } from './types';
+import { StateExecTimeout } from './stateExecTimeout';
 
 export class Callbackstate {
   constructor(model: any) {
@@ -45,7 +46,7 @@ export class Callbackstate {
     Object.assign(this, defaultModel, model);
 
     overwriteAction(this);
-    overwritePropertyAsPlainType('timeouts', this);
+    overwriteTimeoutWithStateExecTimeout(this);
     overwriteEventDataFilter(this);
     overwriteStateDataFilter(this);
     overwriteOnErrors(this);
@@ -78,7 +79,7 @@ export class Callbackstate {
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    stateExecTimeout?: StateExecTimeout;
     actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
     eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
   };
@@ -91,7 +92,7 @@ export class Callbackstate {
    */
   stateDataFilter?: Statedatafilter;
   /**
-   * States error handling and retries definitions
+   * States error handling definitions
    */
   onErrors?: Error[];
   /**

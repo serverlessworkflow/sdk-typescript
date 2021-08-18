@@ -15,8 +15,10 @@
  */
 
 import Ajv, { ValidateFunction } from 'ajv';
+import authSchema from './schema/auth.json';
 import commonSchema from './schema/common.json';
-import eventsChema from './schema/events.json';
+import errorsSchema from './schema/errors.json';
+import eventsSchema from './schema/events.json';
 import functionsSchema from './schema/functions.json';
 import retriesSchema from './schema/retries.json';
 import secretsSchema from './schema/secrets.json';
@@ -25,8 +27,10 @@ import workflowSchema from './schema/workflow.json';
 import { validatorsPaths } from './validation/validators-paths';
 
 const schemas: any[] = [
+  authSchema,
   commonSchema,
-  eventsChema,
+  eventsSchema,
+  errorsSchema,
   functionsSchema,
   retriesSchema,
   secretsSchema,

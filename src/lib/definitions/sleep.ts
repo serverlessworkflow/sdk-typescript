@@ -14,27 +14,17 @@
  * limitations under the License.
  */
 
-export class Subflowref {
+export class Sleep {
   constructor(model: any) {
     Object.assign(this, model);
   }
 
   /**
-   * Unique id of the sub-workflow to be invoked
+   * Amount of time (ISO 8601 duration format) to sleep before function/subflow invocation. Does not apply if 'eventRef' is defined.
    */
-  workflowId: string;
+  before: string;
   /**
-   * Version of the sub-workflow to be invoked
+   * Amount of time (ISO 8601 duration format) to sleep after function/subflow invocation. Does not apply if 'eventRef' is defined.
    */
-  version?: string;
-
-  /**
-   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Subflowref} without deleted properties.
-   */
-  normalize = (): Subflowref => {
-    const clone = new Subflowref(this);
-
-    return clone;
-  };
+  after?: string;
 }

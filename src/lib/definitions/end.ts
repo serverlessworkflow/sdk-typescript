@@ -14,7 +14,14 @@
  * limitations under the License.
  */
 import { Produceeventdef } from './produceeventdef';
-import { normalizeCompensate, normalizeTerminate, overwriteProduceEvents } from './utils';
+import {
+  normalizeCompensate,
+  normalizeContinueAsIfObject,
+  normalizeTerminate,
+  overwriteContinueAsIfObject,
+  overwriteProduceEvents,
+} from './utils';
+import { Continueasdef } from './continueasdef';
 
 export class End {
   constructor(model: any) {
@@ -25,6 +32,7 @@ export class End {
     Object.assign(this, defaultModel, model);
 
     overwriteProduceEvents(this);
+    overwriteContinueAsIfObject(this);
   }
 
   /**
@@ -39,6 +47,7 @@ export class End {
    * If set to true, triggers workflow compensation. Default is false
    */
   compensate?: boolean;
+  continueAs?: string | Continueasdef;
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
@@ -49,6 +58,7 @@ export class End {
 
     normalizeCompensate(clone);
     normalizeTerminate(clone);
+    normalizeContinueAsIfObject(clone);
 
     return clone;
   };

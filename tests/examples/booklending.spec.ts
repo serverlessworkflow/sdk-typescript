@@ -18,7 +18,6 @@ import * as fs from 'fs';
 import {
   actionBuilder,
   databasedswitchBuilder,
-  delaystateBuilder,
   eventbasedswitchBuilder,
   eventstateBuilder,
   oneventsBuilder,
@@ -27,6 +26,7 @@ import {
   transitioneventconditionBuilder,
   workflowBuilder,
   functionrefBuilder,
+  sleepstateBuilder,
 } from '../../src';
 
 describe('booklending workflow example', () => {
@@ -121,9 +121,9 @@ describe('booklending workflow example', () => {
               )
               .build(),
           ])
-          .transition('Wait two weeks')
+          .transition('Sleep two weeks')
           .build(),
-        delaystateBuilder().name('Wait two weeks').timeDelay('PT2W').transition('Get Book Status').build(),
+        sleepstateBuilder().name('Sleep two weeks').duration('PT2W').transition('Get Book Status').build(),
         operationstateBuilder()
           .name('Check Out Book')
           .actions([

@@ -92,12 +92,12 @@
           }
         }
       ],
-      "transition": "Wait two weeks"
+      "transition": "Sleep two weeks"
     },
     {
-      "type": "delay",
-      "name": "Wait two weeks",
-      "timeDelay": "PT2W",
+      "type": "sleep",
+      "name": "Sleep two weeks",
+      "duration": "PT2W",
       "transition": "Get Book Status"
     },
     {

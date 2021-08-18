@@ -71,6 +71,7 @@ export type Workflow /* Serverless Workflow specification - workflow schema */ =
        */
       expressionLang?: string;
       timeouts?: Timeouts;
+      errors?: Errors;
       /**
        * If 'true', workflow instances is not terminated when there are no active execution paths. Instance can be terminated via 'terminate end definition' or reaching defined 'workflowExecTimeout'
        */
@@ -78,13 +79,18 @@ export type Workflow /* Serverless Workflow specification - workflow schema */ =
       metadata?: /* Metadata information */ Metadata;
       events?: Events;
       functions?: Functions;
+      /**
+       * If set to true, actions should automatically be retried on unchecked errors. Default is false
+       */
+      autoRetries?: boolean;
       retries?: Retries;
+      auth?: Auth;
       /**
        * State definitions
        */
       states: [
         (
-          | /* Causes the workflow execution to delay for a specified duration */ Delaystate
+          | /* Causes the workflow execution to sleep for a specified duration */ Sleepstate
           | /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ Eventstate
           | /* Defines actions be performed. Does not wait for incoming events */ Operationstate
           | /* Consists of a number of states that are executed in parallel */ Parallelstate
@@ -94,7 +100,7 @@ export type Workflow /* Serverless Workflow specification - workflow schema */ =
           | /* This state performs an action, then waits for the callback event that denotes completion of the action */ Callbackstate
         ),
         ...(
-          | /* Causes the workflow execution to delay for a specified duration */ Delaystate
+          | /* Causes the workflow execution to sleep for a specified duration */ Sleepstate
           | /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ Eventstate
           | /* Defines actions be performed. Does not wait for incoming events */ Operationstate
           | /* Consists of a number of states that are executed in parallel */ Parallelstate
@@ -158,6 +164,7 @@ export type Workflow /* Serverless Workflow specification - workflow schema */ =
        */
       expressionLang?: string;
       timeouts?: Timeouts;
+      errors?: Errors;
       /**
        * If 'true', workflow instances is not terminated when there are no active execution paths. Instance can be terminated via 'terminate end definition' or reaching defined 'workflowExecTimeout'
        */
@@ -165,13 +172,18 @@ export type Workflow /* Serverless Workflow specification - workflow schema */ =
       metadata?: /* Metadata information */ Metadata;
       events?: Events;
       functions?: Functions;
+      /**
+       * If set to true, actions should automatically be retried on unchecked errors. Default is false
+       */
+      autoRetries?: boolean;
       retries?: Retries;
+      auth?: Auth;
       /**
        * State definitions
        */
       states: [
         (
-          | /* Causes the workflow execution to delay for a specified duration */ Delaystate
+          | /* Causes the workflow execution to sleep for a specified duration */ Sleepstate
           | /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ Eventstate
           | /* Defines actions be performed. Does not wait for incoming events */ Operationstate
           | /* Consists of a number of states that are executed in parallel */ Parallelstate
@@ -181,7 +193,7 @@ export type Workflow /* Serverless Workflow specification - workflow schema */ =
           | /* This state performs an action, then waits for the callback event that denotes completion of the action */ Callbackstate
         ),
         ...(
-          | /* Causes the workflow execution to delay for a specified duration */ Delaystate
+          | /* Causes the workflow execution to sleep for a specified duration */ Sleepstate
           | /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ Eventstate
           | /* Defines actions be performed. Does not wait for incoming events */ Operationstate
           | /* Consists of a number of states that are executed in parallel */ Parallelstate
@@ -201,6 +213,19 @@ export type Action =
       functionRef: Functionref;
       eventRef?: /* Event References */ Eventref;
       subFlowRef?: Subflowref;
+      sleep?: Sleep;
+      /**
+       * References a defined workflow retry definition. If not defined the default retry policy is assumed
+       */
+      retryRef?: string;
+      /**
+       * List of unique references to defined workflow errors for which the action should not be retried. Used only when `autoRetries` is set to `true`
+       */
+      nonRetryableErrors?: [string, ...string[]];
+      /**
+       * List of unique references to defined workflow errors for which the action should be retried. Used only when `autoRetries` is set to `false`
+       */
+      retryableErrors?: [string, ...string[]];
       actionDataFilter?: Actiondatafilter;
     }
   | {
@@ -211,6 +236,19 @@ export type Action =
       functionRef?: Functionref;
       eventRef: /* Event References */ Eventref;
       subFlowRef?: Subflowref;
+      sleep?: Sleep;
+      /**
+       * References a defined workflow retry definition. If not defined the default retry policy is assumed
+       */
+      retryRef?: string;
+      /**
+       * List of unique references to defined workflow errors for which the action should not be retried. Used only when `autoRetries` is set to `true`
+       */
+      nonRetryableErrors?: [string, ...string[]];
+      /**
+       * List of unique references to defined workflow errors for which the action should be retried. Used only when `autoRetries` is set to `false`
+       */
+      retryableErrors?: [string, ...string[]];
       actionDataFilter?: Actiondatafilter;
     }
   | {
@@ -221,6 +259,19 @@ export type Action =
       functionRef?: Functionref;
       eventRef?: /* Event References */ Eventref;
       subFlowRef: Subflowref;
+      sleep?: Sleep;
+      /**
+       * References a defined workflow retry definition. If not defined the default retry policy is assumed
+       */
+      retryRef?: string;
+      /**
+       * List of unique references to defined workflow errors for which the action should not be retried. Used only when `autoRetries` is set to `true`
+       */
+      nonRetryableErrors?: [string, ...string[]];
+      /**
+       * List of unique references to defined workflow errors for which the action should be retried. Used only when `autoRetries` is set to `false`
+       */
+      retryableErrors?: [string, ...string[]];
       actionDataFilter?: Actiondatafilter;
     };
 /**
@@ -241,6 +292,40 @@ export interface Actiondatafilter {
    */
   toStateData?: string;
 }
+export type Auth = string /* uri */ | [Authdef, ...Authdef[]];
+export interface Authdef {
+  /**
+   * Unique auth definition name
+   */
+  name: string;
+  /**
+   * Defines the auth type
+   */
+  scheme?: 'basic' | 'bearer' | 'oauth2';
+  properties: string | Basicpropsdef | Bearerpropsdef | Oauth2propsdef;
+}
+export type Basicpropsdef =
+  | string
+  | {
+      /**
+       * String or a workflow expression. Contains the user name
+       */
+      username: string;
+      /**
+       * String or a workflow expression. Contains the user password
+       */
+      password: string;
+      metadata?: /* Metadata information */ Metadata;
+    };
+export type Bearerpropsdef =
+  | string
+  | {
+      /**
+       * String or a workflow expression. Contains the token
+       */
+      token: string;
+      metadata?: /* Metadata information */ Metadata;
+    };
 /**
  * Branch Definition
  */
@@ -293,7 +378,7 @@ export interface Callbackstate {
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    stateExecTimeout?: StateExecTimeout;
     actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
     eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
   };
@@ -306,7 +391,7 @@ export interface Callbackstate {
    */
   stateDataFilter?: Statedatafilter;
   /**
-   * States error handling and retries definitions
+   * States error handling definitions
    */
   onErrors?: Error[];
   /**
@@ -327,6 +412,30 @@ export interface Callbackstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
+export type Continueasdef =
+  | string
+  | {
+      /**
+       * Unique id of the workflow to continue execution as
+       */
+      workflowId: string;
+      /**
+       * Version of the workflow to continue execution as
+       */
+      version?: string;
+      /**
+       * If string type, an expression which selects parts of the states data output to become the workflow data input of continued execution. If object type, a custom object to become the workflow data input of the continued execution
+       */
+      data?:
+        | string
+        | {
+            [key: string]: any;
+          };
+      /**
+       * Workflow execution timeout to be used by the workflow continuing execution. Overwrites any specific settings set by that workflow
+       */
+      workflowExecTimeout?: WorkflowExecTimeout;
+    };
 /**
  * CloudEvent correlation definition
  */
@@ -376,14 +485,14 @@ export interface Databasedswitch {
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    stateExecTimeout?: StateExecTimeout;
   };
   /**
    * Defines conditions evaluated against state data
    */
   dataConditions: Datacondition[];
   /**
-   * States error handling and retries definitions
+   * States error handling definitions
    */
   onErrors?: Error[];
   /**
@@ -415,58 +524,6 @@ export type Defaultconditiondef /* DefaultCondition definition. Can be either a 
       transition?: Transition;
       end: End;
     };
-/**
- * Causes the workflow execution to delay for a specified duration
- */
-export interface Delaystate {
-  /**
-   * Unique State id
-   */
-  id?: string;
-  /**
-   * State name
-   */
-  name?: string;
-  /**
-   * State type
-   */
-  type?: 'delay';
-  /**
-   * State end definition
-   */
-  end?: End;
-  /**
-   * State data filter
-   */
-  stateDataFilter?: Statedatafilter;
-  /**
-   * Amount of time (ISO 8601 format) to delay
-   */
-  timeDelay?: string;
-  /**
-   * State specific timeouts
-   */
-  timeouts?: {
-    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
-  };
-  /**
-   * States error handling and retries definitions
-   */
-  onErrors?: Error[];
-  /**
-   * Next transition of the workflow after the time delay
-   */
-  transition?: Transition;
-  /**
-   * Unique Name of a workflow state which is responsible for compensation of this state
-   */
-  compensatedBy?: string;
-  /**
-   * If true, this state is used to compensate another state. Default is false
-   */
-  usedForCompensation?: boolean;
-  metadata?: /* Metadata information */ Metadata;
-}
 export type End =
   | boolean
   | {
@@ -482,6 +539,7 @@ export type End =
        * If set to true, triggers workflow compensation. Default is false
        */
       compensate?: boolean;
+      continueAs?: Continueasdef;
     };
 /**
  * Switch state data based condition
@@ -526,36 +584,67 @@ export interface Enddeventcondition {
 export type Error =
   | {
       /**
-       * Domain-specific error name, or '*' to indicate all possible errors
+       * Reference to a unique workflow error definition. Used of errorRefs is not used
        */
-      error: string;
+      errorRef: string;
       /**
-       * Error code. Can be used in addition to the name to help runtimes resolve to technical errors/exceptions. Should not be defined if error is set to '*'
+       * References one or more workflow error definitions. Used if errorRef is not used
        */
-      code?: string;
-      /**
-       * References a unique name of a retry definition.
-       */
-      retryRef?: string;
+      errorRefs?: [string, ...string[]];
       transition: Transition;
       end?: End;
     }
   | {
       /**
-       * Domain-specific error name, or '*' to indicate all possible errors
+       * Reference to a unique workflow error definition. Used of errorRefs is not used
        */
-      error: string;
+      errorRef: string;
       /**
-       * Error code. Can be used in addition to the name to help runtimes resolve to technical errors/exceptions. Should not be defined if error is set to '*'
+       * References one or more workflow error definitions. Used if errorRef is not used
        */
-      code?: string;
+      errorRefs?: [string, ...string[]];
+      transition?: Transition;
+      end: End;
+    }
+  | {
       /**
-       * References a unique name of a retry definition.
+       * Reference to a unique workflow error definition. Used of errorRefs is not used
        */
-      retryRef?: string;
+      errorRef?: string;
+      /**
+       * References one or more workflow error definitions. Used if errorRef is not used
+       */
+      errorRefs: [string, ...string[]];
+      transition: Transition;
+      end?: End;
+    }
+  | {
+      /**
+       * Reference to a unique workflow error definition. Used of errorRefs is not used
+       */
+      errorRef?: string;
+      /**
+       * References one or more workflow error definitions. Used if errorRef is not used
+       */
+      errorRefs: [string, ...string[]];
       transition?: Transition;
       end: End;
     };
+export interface Errordef {
+  /**
+   * Domain-specific error name
+   */
+  name: string;
+  /**
+   * Error code. Can be used in addition to the name to help runtimes resolve to technical errors/exceptions. Should not be defined if error is set to '*'
+   */
+  code?: string;
+  /**
+   * Error description
+   */
+  description?: string;
+}
+export type Errors = string /* uri */ | [Errordef, ...Errordef[]];
 /**
  * Timeout duration to wait for consuming defined events (ISO 8601 duration format)
  */
@@ -584,7 +673,7 @@ export interface Eventbasedswitch {
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    stateExecTimeout?: StateExecTimeout;
     eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
   };
   /**
@@ -592,7 +681,7 @@ export interface Eventbasedswitch {
    */
   eventConditions: Eventcondition[];
   /**
-   * States error handling and retries definitions
+   * States error handling definitions
    */
   onErrors?: Error[];
   /**
@@ -713,13 +802,13 @@ export type Eventstate =
        * State specific timeouts
        */
       timeouts?: {
-        stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+        stateExecTimeout?: StateExecTimeout;
         actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
         eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
       };
       stateDataFilter?: Statedatafilter;
       /**
-       * States error handling and retries definitions
+       * States error handling definitions
        */
       onErrors?: Error[];
       transition?: Transition;
@@ -755,13 +844,13 @@ export type Eventstate =
        * State specific timeouts
        */
       timeouts?: {
-        stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+        stateExecTimeout?: StateExecTimeout;
         actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
         eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
       };
       stateDataFilter?: Statedatafilter;
       /**
-       * States error handling and retries definitions
+       * States error handling definitions
        */
       onErrors?: Error[];
       transition: Transition;
@@ -805,9 +894,9 @@ export interface Foreachstate {
    */
   iterationParam?: string;
   /**
-   * Specifies how upper bound on how many iterations may run in parallel
+   * Specifies how many iterations may run in parallel at the same time. Used if 'mode' property is set to 'parallel' (default)
    */
-  max?: number | string;
+  batchSize?: number | string;
   /**
    * Actions to be executed for each of the elements of inputCollection
    */
@@ -816,7 +905,7 @@ export interface Foreachstate {
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    stateExecTimeout?: StateExecTimeout;
     actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
   };
   /**
@@ -824,7 +913,7 @@ export interface Foreachstate {
    */
   stateDataFilter?: Statedatafilter;
   /**
-   * States error handling and retries definitions
+   * States error handling definitions
    */
   onErrors?: Error[];
   /**
@@ -839,6 +928,10 @@ export interface Foreachstate {
    * If true, this state is used to compensate another state. Default is false
    */
   usedForCompensation?: boolean;
+  /**
+   * Specifies how iterations are to be performed (sequentially or in parallel)
+   */
+  mode?: 'sequential' | 'parallel';
   metadata?: /* Metadata information */ Metadata;
 }
 export interface Function {
@@ -847,13 +940,18 @@ export interface Function {
    */
   name: string;
   /**
-   * If type is `rest`, <path_to_openapi_definition>#<operation_id>. If type is `rpc`, <path_to_grpc_proto_file>#<service_name>#<service_method>. If type is `graphql`, <url_to_graphql_endpoint>#<literal "mutation" or "query">#<query_or_mutation_name>. If type is `expression`, defines the workflow expression.
+   * If type is `rest`, <path_to_openapi_definition>#<operation_id>. If type is `asyncapi`, <path_to_asyncapi_definition>#<operation_id>. If type is `rpc`, <path_to_grpc_proto_file>#<service_name>#<service_method>. If type is `graphql`, <url_to_graphql_endpoint>#<literal \"mutation\" or \"query\">#<query_or_mutation_name>. If type is `odata`, <URI_to_odata_service>#<Entity_Set_Name>. If type is `expression`, defines the workflow expression.
    */
   operation: string;
   /**
-   * Defines the function type. Is either `rest`, `rpc`, `graphql` or `expression`. Default is `rest`
+   * Defines the function type. Is either `rest`, `asyncapi, `rpc`, `graphql`, `odata`, or `expression`. Default is `rest`
    */
-  type?: 'rest' | 'rpc' | 'graphql' | 'expression';
+  type?: 'rest' | 'asyncapi' | 'rpc' | 'graphql' | 'odata' | 'expression';
+  /**
+   * References an auth definition name to be used to access to resource defined in the operation parameter
+   */
+  authRef?: string;
+  metadata?: /* Metadata information */ Metadata;
 }
 export type Functionref =
   | string
@@ -904,7 +1002,7 @@ export interface Injectstate {
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    stateExecTimeout?: StateExecTimeout;
   };
   /**
    * State data filter
@@ -930,6 +1028,55 @@ export interface Injectstate {
 export interface Metadata {
   [name: string]: string;
 }
+export type Oauth2propsdef =
+  | string
+  | {
+      /**
+       * String or a workflow expression. Contains the authority information
+       */
+      authority?: string;
+      /**
+       * Defines the grant type
+       */
+      grantType: 'password' | 'clientCredentials' | 'tokenExchange';
+      /**
+       * String or a workflow expression. Contains the client identifier
+       */
+      clientId: string;
+      /**
+       * Workflow secret or a workflow expression. Contains the client secret
+       */
+      clientSecret?: string;
+      /**
+       * Array containing strings or workflow expressions. Contains the OAuth2 scopes
+       */
+      scopes?: [string, ...string[]];
+      /**
+       * String or a workflow expression. Contains the user name. Used only if grantType is 'resourceOwner'
+       */
+      username?: string;
+      /**
+       * String or a workflow expression. Contains the user password. Used only if grantType is 'resourceOwner'
+       */
+      password?: string;
+      /**
+       * Array containing strings or workflow expressions. Contains the OAuth2 audiences
+       */
+      audiences?: [string, ...string[]];
+      /**
+       * String or a workflow expression. Contains the subject token
+       */
+      subjectToken?: string;
+      /**
+       * String or a workflow expression. Contains the requested subject
+       */
+      requestedSubject?: string;
+      /**
+       * String or a workflow expression. Contains the requested issuer
+       */
+      requestedIssuer?: string;
+      metadata?: /* Metadata information */ Metadata;
+    };
 export interface Onevents {
   /**
    * References one or more unique event names in the defined workflow events
@@ -984,11 +1131,11 @@ export interface Operationstate {
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    stateExecTimeout?: StateExecTimeout;
     actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
   };
   /**
-   * States error handling and retries definitions
+   * States error handling definitions
    */
   onErrors?: Error[];
   /**
@@ -1033,7 +1180,7 @@ export interface Parallelstate {
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    stateExecTimeout?: StateExecTimeout;
     branchExecTimeout?: /* Single branch execution timeout duration (ISO 8601 duration format) */ BranchExecTimeout;
   };
   /**
@@ -1049,7 +1196,7 @@ export interface Parallelstate {
    */
   numCompleted?: number | string;
   /**
-   * States error handling and retries definitions
+   * States error handling definitions
    */
   onErrors?: Error[];
   /**
@@ -1147,6 +1294,89 @@ export type Schedule =
         }
     );
 export type Secrets = string /* uri */ | [string, ...string[]];
+export type Sleep =
+  | {
+      /**
+       * Amount of time (ISO 8601 duration format) to sleep before function/subflow invocation. Does not apply if 'eventRef' is defined.
+       */
+      before: string;
+      /**
+       * Amount of time (ISO 8601 duration format) to sleep after function/subflow invocation. Does not apply if 'eventRef' is defined.
+       */
+      after?: string;
+    }
+  | {
+      /**
+       * Amount of time (ISO 8601 duration format) to sleep before function/subflow invocation. Does not apply if 'eventRef' is defined.
+       */
+      before?: string;
+      /**
+       * Amount of time (ISO 8601 duration format) to sleep after function/subflow invocation. Does not apply if 'eventRef' is defined.
+       */
+      after: string;
+    }
+  | {
+      /**
+       * Amount of time (ISO 8601 duration format) to sleep before function/subflow invocation. Does not apply if 'eventRef' is defined.
+       */
+      before: string;
+      /**
+       * Amount of time (ISO 8601 duration format) to sleep after function/subflow invocation. Does not apply if 'eventRef' is defined.
+       */
+      after: string;
+    };
+/**
+ * Causes the workflow execution to sleep for a specified duration
+ */
+export interface Sleepstate {
+  /**
+   * Unique State id
+   */
+  id?: string;
+  /**
+   * State name
+   */
+  name?: string;
+  /**
+   * State type
+   */
+  type?: 'sleep';
+  /**
+   * State end definition
+   */
+  end?: End;
+  /**
+   * State data filter
+   */
+  stateDataFilter?: Statedatafilter;
+  /**
+   * Duration (ISO 8601 duration format) to sleep
+   */
+  duration?: string;
+  /**
+   * State specific timeouts
+   */
+  timeouts?: {
+    stateExecTimeout?: StateExecTimeout;
+  };
+  /**
+   * States error handling definitions
+   */
+  onErrors?: Error[];
+  /**
+   * Next transition of the workflow after the workflow sleep
+   */
+  transition?: Transition;
+  /**
+   * Unique Name of a workflow state which is responsible for compensation of this state
+   */
+  compensatedBy?: string;
+  /**
+   * If true, this state is used to compensate another state. Default is false
+   */
+  usedForCompensation?: boolean;
+  metadata?: /* Metadata information */ Metadata;
+}
 export type Startdef =
   | string
   | {
@@ -1159,10 +1389,18 @@ export type Startdef =
        */
       schedule: Schedule;
     };
-/**
- * State execution timeout duration (ISO 8601 duration format)
- */
-export type StateExecTimeout = string;
+export type StateExecTimeout =
+  | string
+  | {
+      /**
+       * Single state execution timeout, not including retries (ISO 8601 duration format)
+       */
+      single?: string;
+      /**
+       * Total state execution timeout, including retries (ISO 8601 duration format)
+       */
+      total: string;
+    };
 export interface Statedatafilter {
   /**
    * Workflow expression to filter the state data input
@@ -1176,10 +1414,6 @@ export interface Statedatafilter {
 export type Subflowref =
   | string
   | {
-      /**
-       * Workflow execution must wait for sub-workflow to finish before continuing
-       */
-      waitForCompletion?: boolean;
       /**
        * Unique id of the sub-workflow to be invoked
        */
@@ -1196,7 +1430,7 @@ export type Timeouts =
   | string /* uri */
   | {
       workflowExecTimeout?: WorkflowExecTimeout;
-      stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+      stateExecTimeout?: StateExecTimeout;
       actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
       branchExecTimeout?: /* Single branch execution timeout duration (ISO 8601 duration format) */ BranchExecTimeout;
       eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;

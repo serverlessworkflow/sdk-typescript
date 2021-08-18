@@ -12,22 +12,19 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
-import { Subflowref } from '../../../src/lib/definitions/subflowref';
 
-describe('Subflowref ', () => {
-  it('normalize should unset properties whose value is equal to its default value', () => {
-    const object = new Subflowref({ workflowId: 'startApplicationWorkflowId' });
-    expect(object.waitForCompletion).toBeTrue();
-    const serializedObject = object.normalize();
+import { Metadata } from './metadata';
+import { overwriteMetadata } from './utils';
+export class Bearerpropsdef {
+  constructor(model: any) {
+    Object.assign(this, model);
+    overwriteMetadata(this);
+  }
 
-    expect(JSON.stringify(serializedObject)).toBe(
-      JSON.stringify({
-        workflowId: 'startApplicationWorkflowId',
-      })
-    );
-
-    expect(serializedObject.waitForCompletion).toBeUndefined();
-  });
-});
+  /**
+   * String or a workflow expression. Contains the token
+   */
+  token: string;
+  metadata?: /* Metadata information */ Metadata;
+}

@@ -13,20 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Specification } from '.';
-import * as yaml from 'js-yaml';
 
-import { validate } from '../utils';
 import { Metadata } from './metadata';
 import { Startdef } from './startdef';
-import { Events, Functions, Retries, Secrets, States } from './types';
+import { Timeouts } from './timeouts';
+import * as yaml from 'js-yaml';
+
+import { Specification } from '.';
+
+import { validate } from '../utils';
 import {
+  normalizeAuth,
   normalizeEvents,
   normalizeExpressionLang,
   normalizeFunctions,
   normalizeKeepActive,
   normalizeStates,
   normalizeTimeoutsIfObject,
+  overwriteAuth,
+  overwriteErrors,
   overwriteEvents,
   overwriteFunctions,
   overwriteMetadata,
@@ -36,7 +41,7 @@ import {
   overwriteStates,
   overwriteTimeoutsIfObject,
 } from './utils';
-import { Timeouts } from './timeouts';
+import { Auth, Errors, Events, Functions, Retries, Secrets, States } from './types';
 
 export class Workflow {
   constructor(model: any) {
@@ -51,13 +56,14 @@ export class Workflow {
     overwritePropertyAsPlainType('constants', this);
     overwriteStartIfObject(this);
     overwriteTimeoutsIfObject(this);
+    overwriteErrors(this);
     overwriteMetadata(this);
     overwriteEvents(this);
     overwriteFunctions(this);
     overwriteRetries(this);
+    overwriteAuth(this);
     overwriteStates(this);
   }
-
   /**
    * Workflow unique identifier
    */
@@ -110,6 +116,7 @@ export class Workflow {
    */
   expressionLang?: string;
   timeouts?: string /* uri */ | Timeouts;
+  errors?: Errors;
   /**
    * If 'true', workflow instances is not terminated when there are no active execution paths. Instance can be terminated via 'terminate end definition' or reaching defined 'workflowExecTimeout'
    */
@@ -117,7 +124,12 @@ export class Workflow {
   metadata?: /* Metadata information */ Metadata;
   events?: Events;
   functions?: Functions;
+  /**
+   * If set to true, actions should automatically be retried on unchecked errors. Default is false
+   */
+  autoRetries?: boolean;
   retries?: Retries;
+  auth?: Auth;
   /**
    * State definitions
    */
@@ -134,6 +146,7 @@ export class Workflow {
     normalizeKeepActive(clone);
     normalizeEvents(clone);
     normalizeFunctions(clone);
+    normalizeAuth(clone);
     normalizeStates(clone);
 
     return clone;

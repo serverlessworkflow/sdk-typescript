@@ -28,23 +28,23 @@ import {
   overwriteMetadata,
   overwriteOnErrors,
   overwriteStateDataFilter,
-  overwritePropertyAsPlainType,
+  overwriteTimeoutWithStateExecTimeout,
   overwriteTransitionIfObject,
   setEndValueIfNoTransition,
 } from './utils';
-import { StateExecTimeout } from './types';
+import { StateExecTimeout } from './stateExecTimeout';
 
-export class Delaystate {
+export class Sleepstate {
   constructor(model: any) {
     const defaultModel = {
-      type: 'delay',
+      type: 'sleep',
       usedForCompensation: false,
     };
     Object.assign(this, defaultModel, model);
 
     overwriteEndIfObject(this);
     overwriteStateDataFilter(this);
-    overwritePropertyAsPlainType('timeouts', this);
+    overwriteTimeoutWithStateExecTimeout(this);
     overwriteOnErrors(this);
     overwriteTransitionIfObject(this);
     overwriteMetadata(this);
@@ -61,7 +61,7 @@ export class Delaystate {
   /**
    * State type
    */
-  type?: 'delay';
+  type?: 'sleep';
   /**
    * State end definition
    */
@@ -71,21 +71,21 @@ export class Delaystate {
    */
   stateDataFilter?: Statedatafilter;
   /**
-   * Amount of time (ISO 8601 format) to delay
+   * Duration (ISO 8601 duration format) to sleep
    */
-  timeDelay?: string;
+  duration?: string;
   /**
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: /* State execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    stateExecTimeout?: StateExecTimeout;
   };
   /**
-   * States error handling and retries definitions
+   * States error handling definitions
    */
   onErrors?: Error[];
   /**
-   * Next transition of the workflow after the time delay
+   * Next transition of the workflow after the workflow sleep
    */
   transition?: string | Transition;
   /**
@@ -102,8 +102,8 @@ export class Delaystate {
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Delaystate} without deleted properties.
    */
-  normalize = (): Delaystate => {
-    const clone = new Delaystate(this);
+  normalize = (): Sleepstate => {
+    const clone = new Sleepstate(this);
 
     normalizeEndIfObject(clone);
     normalizeOnErrors(clone);
