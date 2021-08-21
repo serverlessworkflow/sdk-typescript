@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 
-import { DefinedError } from 'ajv';
-
 export class ValidationError {
-  readonly message: string;
-
-  constructor(readonly error: DefinedError) {
-    this.message = `invalid: ${error.instancePath} | ${error.schemaPath} | ${error.message}`;
-  }
+  constructor(public readonly message: string) {}
 }

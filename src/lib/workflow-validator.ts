@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-import { ValidateFunction, DefinedError } from 'ajv';
+import { ValidateFunction } from 'ajv';
 import { Specification } from './definitions';
 import { validators } from './validators';
 import { ValidationError } from './validation-error';
 
+import { schemaVersion } from '../../package.json';
+
 export class WorkflowValidator {
   /** The validation errors after running validate(), if any */
-  readonly errors: ValidationError[] | never[] = [];
+  readonly errors: ValidationError[] = [];
 
   /** Whether the workflow is valid or not */
   readonly isValid: boolean;
@@ -32,9 +34,20 @@ export class WorkflowValidator {
    */
   constructor(private workflow: Specification.Workflow) {
     const validateFn = validators.get('Workflow') as ValidateFunction<Specification.Workflow>;
-    this.isValid = validateFn(this.workflow);
+    validateFn(this.workflow);
     if (validateFn.errors) {
-      this.errors = validateFn.errors.map((error) => new ValidationError(error as DefinedError));
+      this.errors = validateFn.errors.map((error) => {
+        const message = `invalid: ${error.instancePath} | ${error.schemaPath} | ${error.message}`;
+        return new ValidationError(message);
+      });
     }
+
+    const specVersion = workflow.specVersion;
+    if (schemaVersion !== specVersion) {
+      const message = `provided workflow.specVersion value '${specVersion}' can not be different from the SDK supported version '${schemaVersion}'`;
+      this.errors.push(new ValidationError(message));
+    }
+
+    this.isValid = this.errors.length === 0;
   }
 }
