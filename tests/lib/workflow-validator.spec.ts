@@ -17,48 +17,62 @@
 import { ValidationError, WorkflowValidator } from '../../src';
 import { Workflow } from '../../src/lib/definitions/workflow';
 
-describe('workflow-validator', () => {
+const validWorkflow = {
+  id: 'helloworld',
+  version: '1.0',
+  specVersion: '0.7',
+  name: 'Hello World Workflow',
+  description: 'Inject Hello World',
+  start: 'Hello State',
+  states: [
+    {
+      name: 'Hello State',
+      type: 'inject',
+      data: {
+        result: 'Hello World!',
+      },
+      end: true,
+    },
+  ],
+};
+
+describe('workflow-validator, invalid state', () => {
   it('should return errors instance of ValidationError if the workflow provided is not valid', () => {
     // @ts-ignore
-    const workflow = {
-      id: 'helloworld',
-      name: 'Hello World Workflow',
-      version: '1.0',
-      specVersion: '0.7',
-      description: 'Inject Hello World',
-      start: 'Hello State',
-      states: [],
-    } as Workflow;
+    const workflowWithEmptyStates = Object.assign({ ...validWorkflow }, { states: [] }) as Workflow;
 
-    const workflowValidator = new WorkflowValidator(workflow);
-    expect(workflowValidator.isValid).toBeFalsy('Expected isValid to be false');
-    expect(workflowValidator.errors.length).toBe(1);
-    expect(workflowValidator.errors[0].constructor === ValidationError).toBeTruthy(
-      'Expected errors to be instance of ValidationError'
-    );
+    const workflowValidator = new WorkflowValidator(workflowWithEmptyStates);
+
+    const numErrors = 1;
+    expectInvalidWorkflow(workflowValidator, numErrors);
     expect(workflowValidator.errors[0].message).toMatch('states');
   });
 
+  it('should check if specVersion match the supported sdk version', () => {
+    // @ts-ignore
+    const workflowWithInvalidSpecVersion = Object.assign({ ...validWorkflow }, { specVersion: '0.1' }) as Workflow;
+
+    const workflowValidator = new WorkflowValidator(workflowWithInvalidSpecVersion);
+
+    const numErrors = 1;
+    expectInvalidWorkflow(workflowValidator, numErrors);
+
+    expect(workflowValidator.errors[0].message).toMatch('specVersion');
+  });
+
+  function expectInvalidWorkflow(workflowValidator: WorkflowValidator, numErrors: number) {
+    expect(workflowValidator.isValid).toBeFalsy('Expected isValid to be false');
+    expect(workflowValidator.errors.length).toBe(numErrors);
+    workflowValidator.errors.forEach((error) => {
+      expect(error.constructor === ValidationError).toBeTruthy('Expected errors to be instance of ValidationError');
+    });
+  }
+});
+
+describe('workflow-validator, valid state', () => {
   it('should have no errors if the workflow is valid', () => {
     // @ts-ignore
-    const workflow = {
-      id: 'helloworld',
-      version: '1.0',
-      specVersion: '0.7',
-      name: 'Hello World Workflow',
-      description: 'Inject Hello World',
-      start: 'Hello State',
-      states: [
-        {
-          name: 'Hello State',
-          type: 'inject',
-          data: {
-            result: 'Hello World!',
-          },
-          end: true,
-        },
-      ],
-    } as Workflow;
+    const workflow = validWorkflow as Workflow;
 
     const workflowValidator = new WorkflowValidator(workflow);
     expect(workflowValidator.errors.length).toBe(0);
