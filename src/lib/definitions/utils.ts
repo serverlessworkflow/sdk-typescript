@@ -226,7 +226,7 @@ export function overwriteStates(object: { states: Specification.States }) {
     ((object.states as Specification.States).map((v) => {
       switch (v.type) {
         case 'sleep':
-          return new Specification.Sleep(v);
+          return new Specification.Sleepstate(v);
         case 'event':
           return new Specification.Eventstate(v);
         case 'operation':
