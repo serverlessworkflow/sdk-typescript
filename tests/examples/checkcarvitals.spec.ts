@@ -58,7 +58,7 @@ describe('checkcarvitals workflow example', () => {
               .end(true)
               .build(),
           ])
-          .defaultCondition(defaultconditiondefBuilder().transition('DoCarVitalsChecks').build())
+          .defaultCondition(defaultconditiondefBuilder().transition('DoCarVitalChecks').build())
           .build(),
       ])
       .events([

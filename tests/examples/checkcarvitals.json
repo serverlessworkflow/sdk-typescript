@@ -39,7 +39,7 @@
         }
       ],
       "defaultCondition": {
-        "transition": "DoCarVitalsChecks"
+        "transition": "DoCarVitalChecks"
       }
     }
   ],
