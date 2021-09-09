@@ -14,5 +14,4 @@
  * limitations under the License.
  */
 
-export * from './serverless-workflow-sdk';
-export * from './lib/diagram';
+export * from './mermaidDiagram';
