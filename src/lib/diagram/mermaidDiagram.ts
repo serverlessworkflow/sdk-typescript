@@ -13,6 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Specification } from '../definitions';
+import { MermaidState } from './mermaidState';
 
-export * from './serverless-workflow-sdk';
-export * from './lib/diagram';
+export class MermaidDiagram {
+  constructor(private workflow: Specification.Workflow) {}
+
+  sourceCode() {
+    const mermaidStateDiagramVersion = 'stateDiagram-v2';
+    return (
+      mermaidStateDiagramVersion +
+      '\n' +
+      this.workflow.states
+        .map((state, index) => {
+          const isFirstState = index === 0;
+          return new MermaidState(state, isFirstState).sourceCode();
+        })
+        .join('\n\n')
+    );
+  }
+}

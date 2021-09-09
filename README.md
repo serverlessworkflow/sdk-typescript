@@ -176,3 +176,20 @@ if (!injectionStateValidator(injectionState)) {
   injectionStateValidator.errors.forEach(error => console.error(error.message));
 }
 ```
+
+
+#### Generate workflow diagram
+
+It is possible to generate the workflow diagram with [Mermaid](https://github.com/mermaid-js/mermaid)
+
+
+```
+const workflow = workflowBuilder()
+    .id("helloworld")
+    ....
+    .build();
+
+const mermaidSourceCode = new MermaidDiagram(workflow).sourceCode();
+```
+
+[Here](./examples/browser/mermaid.html) you can see a full example that uses mermaid in the browser to generate the workflow diagram.

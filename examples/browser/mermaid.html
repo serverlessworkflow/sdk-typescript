@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Serveless Workflow JS SDK</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<!--
+  Run http-server from the project root then navigate to http://localhost:8080/examples/browser/index.html
+-->
+<div id="mermaid"  class="mermaid"></div>
+<script src="../../dist/umd/index.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true});</script>
+<script type="text/javascript">
+    (() => {
+        const { workflowBuilder, injectstateBuilder, MermaidDiagram } = serverWorkflowSdk;
+        const mermaidDiv = document.getElementById('mermaid');
+        const workflow = workflowBuilder()
+            .id("helloworld")
+            .version("1.0")
+            .specVersion("0.7")
+            .name("Hello World Workflow")
+            .description("Inject Hello World")
+            .start("Hello State")
+            .states([
+                injectstateBuilder()
+                    .name("Hello State")
+                    .data({
+                        "result": "Hello World!"
+                    })
+                    .end(true)
+                    .build()
+            ])
+            .build();
+
+        const mermaidSourceCode = new MermaidDiagram(workflow).sourceCode();
+        mermaidDiv.innerHTML = mermaidSourceCode;
+    })();
+</script>
+
+
+
+</body>
+</html>
