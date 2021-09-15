@@ -34,7 +34,10 @@ export class MermaidState {
 
   private definitions(): string {
     return (
-      this.definitionName() + '\n' + this.definitionType() + (this.definitionDetails() !== undefined ? '\n' + this.definitionDetails() : '')
+      this.definitionName() +
+      '\n' +
+      this.definitionType() +
+      (this.definitionDetails() !== undefined ? '\n' + this.definitionDetails() : '')
     );
   }
 
@@ -54,7 +57,7 @@ export class MermaidState {
   }
 
   private stateName() {
-    return this.state.name?.replace(" ", "_");
+    return this.state.name?.replace(' ', '_');
   }
 
   private startTransition() {

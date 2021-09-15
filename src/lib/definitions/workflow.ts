@@ -75,7 +75,7 @@ export class Workflow {
   /**
    * Workflow name
    */
-  name: string;
+  name?: string;
   /**
    * Workflow description
    */
@@ -106,7 +106,7 @@ export class Workflow {
     | {
         [key: string]: any;
       };
-  start: string | Startdef;
+  start?: string | Startdef;
   /**
    * Serverless Workflow schema version
    */
