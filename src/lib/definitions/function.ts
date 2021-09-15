@@ -32,9 +32,9 @@ export class Function {
    */
   operation: string;
   /**
-   * Defines the function type. Is either `rest`, `asyncapi, `rpc`, `graphql`, `odata`, or `expression`. Default is `rest`
+   * Defines the function type. Is either `rest`, `asyncapi, `rpc`, `graphql`, `odata`, `expression`, or `custom`. Default is `rest`
    */
-  type?: 'rest' | 'asyncapi' | 'rpc' | 'graphql' | 'odata' | 'expression';
+  type?: 'rest' | 'asyncapi' | 'rpc' | 'graphql' | 'odata' | 'expression' | "custom";
   /**
    * References an auth definition name to be used to access to resource defined in the operation parameter
    */

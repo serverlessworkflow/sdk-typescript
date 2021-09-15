@@ -31,7 +31,7 @@ export function overwriteScheduleIfObject(object: { schedule: string | Specifica
  * Modify the provided object, set the value to 'start' property as an instance of Specification.Startdef class, if the provided value is an object
  * @param object to set/overwrite the property
  */
-export function overwriteStartIfObject(object: { start: string | Specification.Startdef }): void {
+export function overwriteStartIfObject(object: { start?: string | Specification.Startdef }): void {
   if (isObject(object.start)) {
     object.start = new Specification.Startdef(object.start);
   }
