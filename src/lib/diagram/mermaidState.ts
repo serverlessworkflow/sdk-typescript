@@ -82,9 +82,9 @@ export class MermaidState {
           ...this.naturalTransition(stateName, transitionDataCondition.transition, transitionDataCondition.condition)
         );
 
-        const endDataCondition = dataCondition as Specification.Enddatacondition; //TODO
+        const endDataCondition = dataCondition as Specification.Enddatacondition;
         if (endDataCondition.end) {
-          transitions.push(this.transitionDescription(stateName, endDataCondition.name, endDataCondition.condition));
+          transitions.push(this.transitionDescription(stateName, '[*]', transitionDataCondition.condition));
         }
       });
 

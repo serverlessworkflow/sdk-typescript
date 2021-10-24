@@ -109,6 +109,35 @@ CheckApplication --> RejectApplication : \${ .applicants | .age < 18 }
 CheckApplication --> RejectApplication : default`);
   });
 
+  it('should create source code for data-based state with end condition', () => {
+    const databasedswitch = new Specification.Databasedswitch(
+      JSON.parse(`{
+      "type":"switch",
+      "name":"CheckApplication",
+      "dataConditions": [
+        {
+          "condition": "\${ .applicants | .age >= 18 }",
+          "transition": "StartApplication"
+        },
+        {
+          "condition": "\${ .applicants | .age < 18 }",
+          "end": true
+        }
+      ],
+      "defaultCondition": {
+        "transition": "StartApplication"
+      }
+    }`)
+    );
+    const mermaidState = new MermaidState(databasedswitch);
+    expect(mermaidState.sourceCode()).toBe(`CheckApplication : CheckApplication
+CheckApplication : type = Switch State
+CheckApplication : Condition type = data-based
+CheckApplication --> StartApplication : \${ .applicants | .age >= 18 }
+CheckApplication --> [*] : \${ .applicants | .age < 18 }
+CheckApplication --> StartApplication : default`);
+  });
+
   it('should create source code for operation state', () => {
     const states = new Specification.Operationstate(
       JSON.parse(`{
