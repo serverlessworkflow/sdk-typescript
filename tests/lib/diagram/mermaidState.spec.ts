@@ -265,7 +265,7 @@ CheckCredit --> EvaluateDecision`);
   });
 
 
-  it(`should replace spaces with '_' for state key`, () => {
+  it(`should convert white spaces with underscore to create the state key`, () => {
     const databasedswitch = new Specification.Databasedswitch(
         JSON.parse(`{
       "type":"switch",
