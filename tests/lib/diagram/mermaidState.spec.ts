@@ -252,7 +252,7 @@ CheckCredit --> EvaluateDecision`);
 
   it('should create source code for any state with transition as object', () => {
     const states = new Specification.Callbackstate(
-      JSON.parse(`{
+        JSON.parse(`{
             "name": "CheckCredit",
             "type": "callback",
             "transition": {"nextState": "EvaluateDecision"}
@@ -262,5 +262,35 @@ CheckCredit --> EvaluateDecision`);
     expect(mermaidState.sourceCode()).toBe(`CheckCredit : CheckCredit
 CheckCredit : type = Callback State
 CheckCredit --> EvaluateDecision`);
+  });
+
+
+  it(`should replace spaces with '_' for state key`, () => {
+    const databasedswitch = new Specification.Databasedswitch(
+        JSON.parse(`{
+      "type":"switch",
+      "name":"Check Application",
+      "dataConditions": [
+        {
+          "condition": "\${ .applicants | .age >= 18 }",
+          "transition": "Start Application"
+        },
+        {
+          "condition": "\${ .applicants | .age < 18 }",
+          "end": true
+        }
+      ],
+      "defaultCondition": {
+        "transition": "Start Application"
+      }
+    }`)
+    );
+    const mermaidState = new MermaidState(databasedswitch);
+    expect(mermaidState.sourceCode()).toBe(`Check_Application : Check Application
+Check_Application : type = Switch State
+Check_Application : Condition type = data-based
+Check_Application --> Start_Application : \${ .applicants | .age >= 18 }
+Check_Application --> [*] : \${ .applicants | .age < 18 }
+Check_Application --> Start_Application : default`);
   });
 });
