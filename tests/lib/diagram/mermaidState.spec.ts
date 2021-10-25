@@ -75,8 +75,8 @@ ParallelExec --> [*]`);
     expect(mermaidState.sourceCode()).toBe(`CheckVisaStatus : CheckVisaStatus
 CheckVisaStatus : type = Switch State
 CheckVisaStatus : Condition type = event-based
-CheckVisaStatus --> HandleApprovedVisa
-CheckVisaStatus --> HandleRejectedVisa
+CheckVisaStatus --> HandleApprovedVisa : visaApprovedEvent
+CheckVisaStatus --> HandleRejectedVisa : visaRejectedEvent
 CheckVisaStatus --> HandleNoVisaDecision : default`);
   });
 

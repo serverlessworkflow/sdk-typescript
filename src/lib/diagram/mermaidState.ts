@@ -102,7 +102,9 @@ export class MermaidState {
       eventBasedSwitchState.eventConditions.forEach((eventCondition) => {
         const transitionEventCondition = eventCondition as Specification.Transitioneventcondition;
 
-        transitions.push(...this.naturalTransition(stateName, transitionEventCondition.transition));
+        transitions.push(
+          ...this.naturalTransition(stateName, transitionEventCondition.transition, transitionEventCondition.eventRef)
+        );
 
         const endEventCondition = eventCondition as Specification.Enddeventcondition;
         if (endEventCondition.end) {
