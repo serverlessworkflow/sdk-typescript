@@ -18,8 +18,8 @@ import { Transitiondatacondition } from './transitiondatacondition';
 import { Enddatacondition } from './enddatacondition';
 import { Retrydef } from './retrydef';
 import { Function } from './function';
-import { Databasedswitch } from './databasedswitch';
-import { Eventbasedswitch } from './eventbasedswitch';
+import { Databasedswitchstate } from './databasedswitchstate';
+import { Eventbasedswitchstate } from './eventbasedswitchstate';
 import { Transitioneventcondition } from './transitioneventcondition';
 import { Enddeventcondition } from './enddeventcondition';
 import { Eventstate } from './eventstate';
@@ -48,8 +48,8 @@ export type Retries = string /* uri */ | [Retrydef, ...Retrydef[]];
 export type Functions = string /* uri */ | [Function, ...Function[]];
 
 export type Switchstate /* Permits transitions to other states based on data conditions */ =
-  | Databasedswitch
-  | /* Permits transitions to other states based on events */ Eventbasedswitch;
+  | Databasedswitchstate
+  | /* Permits transitions to other states based on events */ Eventbasedswitchstate;
 
 export type Eventcondition /* Switch state data event condition */ =
   | Transitioneventcondition

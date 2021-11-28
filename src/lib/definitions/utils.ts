@@ -15,7 +15,6 @@
  */
 import { Specification } from './index';
 import { isObject } from '../utils';
-import { StateExecTimeout } from './stateExecTimeout';
 
 /**
  * Modify the provided object, set the value to 'schedule' property as an instance of Specification.Schedule class, if the provided value is an object
@@ -236,10 +235,10 @@ export function overwriteStates(object: { states: Specification.States }) {
         case 'switch':
           const switchState: any = v;
           if (switchState.dataConditions) {
-            return new Specification.Databasedswitch(v);
+            return new Specification.Databasedswitchstate(v);
           }
           if (switchState.eventConditions) {
-            return new Specification.Eventbasedswitch(v);
+            return new Specification.Eventbasedswitchstate(v);
           }
           throw new Error(`Unexpected switch type; \n state value= ${JSON.stringify(v, null, 4)}`);
         case 'inject':
@@ -449,7 +448,7 @@ export function overwritePropertyAsPlainType(property: string, object: any): voi
  */
 export function overwriteTimeoutWithStateExecTimeout(object: {
   timeouts?: {
-    stateExecTimeout?: StateExecTimeout;
+    stateExecTimeout?: Specification.StateExecTimeout;
   };
 }): void {
   overwritePropertyAsPlainType('timeouts', object);
@@ -703,6 +702,26 @@ export function normalizeType(object: { type?: string }) {
 }
 
 /**
+ * Modify the provided object by normalizing the 'invoke' property, where the default value is 'rest'.
+ * @param object to be modified
+ */
+export function normalizeInvoke(object: { invoke?: string }) {
+  if (object.invoke === 'sync') {
+    delete object.invoke;
+  }
+}
+
+/**
+ * Modify the provided object by normalizing the 'onParentComplete' property, where the default value is 'terminate'.
+ * @param object to be modified
+ */
+export function normalizeOnParentComplete(object: { onParentComplete?: 'continue' | 'terminate' }) {
+  if (object.onParentComplete === 'terminate') {
+    delete object.onParentComplete;
+  }
+}
+
+/**
  * Modify the provided object by normalizing the 'kind' property, where the default value is 'consumed'.
  * @param object to be modified
  */
@@ -772,8 +791,28 @@ export function normalizeEvents(object: { events?: Specification.Events }) {
  * Modify the provided object by normalizing the 'timeouts' property.
  * @param object to be modified
  */
-export function normalizeTimeoutsIfObject(object: { timeouts?: string /* uri */ | Specification.Timeouts }) {
+export function normalizeTimeoutsIfObject(object: { timeouts?: string | Specification.Timeouts }) {
   if (isObject(object.timeouts)) {
     object.timeouts = object.timeouts && object.timeouts.normalize();
+  }
+}
+
+/**
+ * Modify the provided object by normalizing the 'eventRef' property.
+ * @param object to be modified
+ */
+export function normalizeEventRef(object: { eventRef?: Specification.Eventref }) {
+  if (isObject(object.eventRef)) {
+    object.eventRef = object.eventRef && object.eventRef.normalize();
+  }
+}
+
+/**
+ * Modify the provided object by normalizing the 'functionRef' property.
+ * @param object to be modified
+ */
+export function normalizeFunctionRef(object: { functionRef?: string | Specification.Functionref }) {
+  if (isObject(object.functionRef)) {
+    object.functionRef = object.functionRef && object.functionRef.normalize();
   }
 }

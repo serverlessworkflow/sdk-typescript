@@ -20,22 +20,24 @@ import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Eventbasedswitch} data The underlying object
- * @returns {Specification.Eventbasedswitch} The validated underlying object
+ * @param {Specification.Eventbasedswitchstate} data The underlying object
+ * @returns {Specification.Eventbasedswitchstate} The validated underlying object
  */
-function eventbasedswitchBuildingFn(data: Specification.Eventbasedswitch): () => Specification.Eventbasedswitch {
+function eventbasedswitchstateBuildingFn(
+  data: Specification.Eventbasedswitchstate
+): () => Specification.Eventbasedswitchstate {
   return () => {
-    const model = new Specification.Eventbasedswitch(data);
+    const model = new Specification.Eventbasedswitchstate(data);
 
-    validate('Eventbasedswitch', model);
+    validate('Eventbasedswitchstate', model);
     return model;
   };
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.Eventbasedswitch`
- * @returns {Specification.Eventbasedswitch} A builder for `Specification.Eventbasedswitch`
+ * A factory to create a builder proxy for the type `Specification.Eventbasedswitchstate`
+ * @returns {Specification.Eventbasedswitchstate} A builder for `Specification.Eventbasedswitchstate`
  */
-export function eventbasedswitchBuilder(): Builder<Specification.Eventbasedswitch> {
-  return builder<Specification.Eventbasedswitch>(eventbasedswitchBuildingFn);
+export function eventbasedswitchstateBuilder(): Builder<Specification.Eventbasedswitchstate> {
+  return builder<Specification.Eventbasedswitchstate>(eventbasedswitchstateBuildingFn);
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { overwritePropertyAsPlainType } from './utils';
+import { normalizeInvoke, overwritePropertyAsPlainType } from './utils';
 
 export class Functionref {
   constructor(model: any) {
@@ -36,4 +36,20 @@ export class Functionref {
    * Only used if function type is 'graphql'. A string containing a valid GraphQL selection set
    */
   selectionSet?: string;
+  /**
+   * Specifies if the function should be invoked sync or async
+   */
+  invoke?: 'sync' | 'async';
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Functionref} without deleted properties.
+   */
+  normalize = (): Functionref => {
+    const clone = new Functionref(this);
+
+    normalizeInvoke(clone);
+
+    return clone;
+  };
 }

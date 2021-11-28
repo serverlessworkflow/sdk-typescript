@@ -72,7 +72,7 @@ export class MermaidState {
   private dataConditionsTransitions() {
     const transitions: string[] = [];
 
-    const dataBasedSwitchState = this.state as Specification.Databasedswitch;
+    const dataBasedSwitchState = this.state as Specification.Databasedswitchstate;
     if (dataBasedSwitchState.dataConditions) {
       const stateName = this.state.name;
       dataBasedSwitchState.dataConditions.forEach((dataCondition) => {
@@ -96,7 +96,7 @@ export class MermaidState {
   private eventConditionsTransition() {
     const transitions: string[] = [];
 
-    const eventBasedSwitchState = this.state as Specification.Eventbasedswitch;
+    const eventBasedSwitchState = this.state as Specification.Eventbasedswitchstate;
     if (eventBasedSwitchState.eventConditions) {
       const stateName = this.state.name;
       eventBasedSwitchState.eventConditions.forEach((eventCondition) => {
@@ -170,7 +170,9 @@ export class MermaidState {
 
     if (this.state.onErrors) {
       this.state.onErrors.forEach((error) => {
-        transitions.push(...this.naturalTransition(this.stateKeyDiagram(this.state.name), error.transition, error.errorRef));
+        transitions.push(
+          ...this.naturalTransition(this.stateKeyDiagram(this.state.name), error.transition, error.errorRef)
+        );
       });
     }
     return transitions;
@@ -208,7 +210,11 @@ export class MermaidState {
 
   private definitionType() {
     const type = this.state.type;
-    return this.stateDescription(this.stateKeyDiagram(this.state.name), 'type', type!.charAt(0).toUpperCase() + type!.slice(1) + ' State');
+    return this.stateDescription(
+      this.stateKeyDiagram(this.state.name),
+      'type',
+      type!.charAt(0).toUpperCase() + type!.slice(1) + ' State'
+    );
   }
 
   private parallelStateDetails(): string | undefined {
@@ -217,12 +223,18 @@ export class MermaidState {
     const descriptions: string[] = [];
 
     if (parallelState.completionType) {
-      descriptions.push(this.stateDescription(this.stateKeyDiagram(this.state.name), 'Completion type', parallelState.completionType));
+      descriptions.push(
+        this.stateDescription(this.stateKeyDiagram(this.state.name), 'Completion type', parallelState.completionType)
+      );
     }
 
     if (parallelState.branches) {
       descriptions.push(
-        this.stateDescription(this.stateKeyDiagram(this.state.name), 'Num. of branches', parallelState.branches?.length + '')
+        this.stateDescription(
+          this.stateKeyDiagram(this.state.name),
+          'Num. of branches',
+          parallelState.branches?.length + ''
+        )
       );
     }
 
@@ -251,7 +263,9 @@ export class MermaidState {
     }
 
     if (state.actions) {
-      descriptions.push(this.stateDescription(this.stateKeyDiagram(this.state.name), 'Num. of actions', state.actions?.length + ''));
+      descriptions.push(
+        this.stateDescription(this.stateKeyDiagram(this.state.name), 'Num. of actions', state.actions?.length + '')
+      );
     }
 
     return descriptions.length > 0
@@ -276,11 +290,15 @@ export class MermaidState {
     const descriptions: string[] = [];
 
     if (state.inputCollection) {
-      descriptions.push(this.stateDescription(this.stateKeyDiagram(this.state.name), 'Input collection', state.inputCollection));
+      descriptions.push(
+        this.stateDescription(this.stateKeyDiagram(this.state.name), 'Input collection', state.inputCollection)
+      );
     }
 
     if (state.actions) {
-      descriptions.push(this.stateDescription(this.stateKeyDiagram(this.state.name), 'Num. of actions', state.actions?.length + ''));
+      descriptions.push(
+        this.stateDescription(this.stateKeyDiagram(this.state.name), 'Num. of actions', state.actions?.length + '')
+      );
     }
 
     return descriptions.length > 0
@@ -303,7 +321,9 @@ export class MermaidState {
       } else if (typeof functionRef === 'string') {
         functionRefDescription = functionRef as string;
       }
-      descriptions.push(this.stateDescription(this.stateKeyDiagram(this.state.name), 'Callback function', functionRefDescription));
+      descriptions.push(
+        this.stateDescription(this.stateKeyDiagram(this.state.name), 'Callback function', functionRefDescription)
+      );
     }
 
     if (state.eventRef) {

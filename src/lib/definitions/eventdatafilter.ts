@@ -20,7 +20,11 @@ export class Eventdatafilter {
   }
 
   /**
-   * Workflow expression that filters the received event/payload (default: '${ . }')
+   * If set to false, event payload is not added/merged to state data. In this case 'data' and 'toStateData' should be ignored. Default is true.
+   */
+  useData?: boolean;
+  /**
+   * Workflow expression that filters the received event payload (default: '${ . }')
    */
   data?: string;
   /**

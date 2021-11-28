@@ -25,16 +25,6 @@ declare global {
     matchAll(re: RegExp): RegExpExecArray[];
   }
 }
-if (!String.prototype.matchAll) {
-  String.prototype.matchAll = function (re) {
-    const results: RegExpExecArray[] = [];
-    let matches: RegExpExecArray | null;
-    while ((matches = re.exec(this))) {
-      results.push(matches);
-    }
-    return results;
-  };
-}
 
 const types = ['Datacondition', 'Eventcondition', 'Events', 'Functions', 'Retries', 'Switchstate'];
 

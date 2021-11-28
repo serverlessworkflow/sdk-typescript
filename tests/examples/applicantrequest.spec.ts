@@ -17,7 +17,7 @@
 import * as fs from 'fs';
 import {
   actionBuilder,
-  databasedswitchBuilder,
+  databasedswitchstateBuilder,
   functionBuilder,
   functionrefBuilder,
   operationstateBuilder,
@@ -42,7 +42,7 @@ describe('applicationrequest workflow example', () => {
           .build(),
       ])
       .states([
-        databasedswitchBuilder()
+        databasedswitchstateBuilder()
           .name('CheckApplication')
           .dataConditions([
             transitiondataconditionBuilder()

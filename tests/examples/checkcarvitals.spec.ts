@@ -23,7 +23,7 @@ import {
   oneventsBuilder,
   workflowBuilder,
   sleepBuilder,
-  eventbasedswitchBuilder,
+  eventbasedswitchstateBuilder,
   enddeventconditionBuilder,
   defaultconditiondefBuilder,
 } from '../../src';
@@ -49,7 +49,7 @@ describe('checkcarvitals workflow example', () => {
           .transition('CheckContinueVitalChecks')
           .build(),
 
-        eventbasedswitchBuilder()
+        eventbasedswitchstateBuilder()
           .name('CheckContinueVitalChecks')
           .eventConditions([
             enddeventconditionBuilder()

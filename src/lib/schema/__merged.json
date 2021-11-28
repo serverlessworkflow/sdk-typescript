@@ -385,6 +385,7 @@
           "items": {
             "type": "string"
           },
+          "uniqueItems": true,
           "additionalItems": false
         },
         "actionMode": {
@@ -418,6 +419,10 @@
     "action": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique action identifier"
+        },
         "name": {
           "type": "string",
           "description": "Unique action definition name"
@@ -463,6 +468,11 @@
         "actionDataFilter": {
           "description": "Action data filter",
           "$ref": "#/definitions/actiondatafilter"
+        },
+        "condition": {
+          "description": "Expression, if defined, must evaluate to true for this action to be performed. If false, action is disregarded",
+          "type": "string",
+          "minLength": 1
         }
       },
       "additionalProperties": false,
@@ -506,6 +516,15 @@
             "selectionSet": {
               "type": "string",
               "description": "Only used if function type is 'graphql'. A string containing a valid GraphQL selection set"
+            },
+            "invoke": {
+              "type": "string",
+              "enum": [
+                "sync",
+                "async"
+              ],
+              "description": "Specifies if the function should be invoked sync or async",
+              "default": "sync"
             }
           },
           "additionalProperties": false,
@@ -527,6 +546,10 @@
           "type": "string",
           "description": "Reference to the unique name of a 'consumed' event definition"
         },
+        "resultEventTimeout": {
+          "type": "string",
+          "description": "Maximum amount of time (ISO 8601 format) to wait for the result event. If not defined it should default to the actionExecutionTimeout"
+        },
         "data": {
           "type": [
             "string",
@@ -540,6 +563,15 @@
           "additionalProperties": {
             "type": "string"
           }
+        },
+        "invoke": {
+          "type": "string",
+          "enum": [
+            "sync",
+            "async"
+          ],
+          "description": "Specifies if the function should be invoked sync or async. Default is sync.",
+          "default": "sync"
         }
       },
       "additionalProperties": false,
@@ -567,6 +599,24 @@
               "type": "string",
               "description": "Version of the sub-workflow to be invoked",
               "minLength": 1
+            },
+            "onParentComplete": {
+              "type": "string",
+              "enum": [
+                "continue",
+                "terminate"
+              ],
+              "description": "If invoke is 'async', specifies how subflow execution should behave when parent workflow completes. Default is 'terminate'",
+              "default": "terminate"
+            },
+            "invoke": {
+              "type": "string",
+              "enum": [
+                "sync",
+                "async"
+              ],
+              "description": "Specifies if the subflow should be invoked sync or async",
+              "default": "sync"
             }
           },
           "required": [
@@ -1073,14 +1123,14 @@
     "switchstate": {
       "oneOf": [
         {
-          "$ref": "#/definitions/databasedswitch"
+          "$ref": "#/definitions/databasedswitchstate"
         },
         {
-          "$ref": "#/definitions/eventbasedswitch"
+          "$ref": "#/definitions/eventbasedswitchstate"
         }
       ]
     },
-    "eventbasedswitch": {
+    "eventbasedswitchstate": {
       "type": "object",
       "description": "Permits transitions to other states based on events",
       "properties": {
@@ -1155,10 +1205,11 @@
       "required": [
         "name",
         "type",
-        "eventConditions"
+        "eventConditions",
+        "defaultCondition"
       ]
     },
-    "databasedswitch": {
+    "databasedswitchstate": {
       "type": "object",
       "description": "Permits transitions to other states based on data conditions",
       "properties": {
@@ -1230,7 +1281,8 @@
       "required": [
         "name",
         "type",
-        "dataConditions"
+        "dataConditions",
+        "defaultCondition"
       ]
     },
     "defaultconditiondef": {
@@ -1911,9 +1963,14 @@
     "eventdatafilter": {
       "type": "object",
       "properties": {
+        "useData": {
+          "type": "boolean",
+          "description": "If set to false, event payload is not added/merged to state data. In this case 'data' and 'toStateData' should be ignored. Default is true.",
+          "default": true
+        },
         "data": {
           "type": "string",
-          "description": "Workflow expression that filters the received event/payload (default: '${ . }')"
+          "description": "Workflow expression that filters the received event payload (default: '${ . }')"
         },
         "toStateData": {
           "type": "string",
@@ -1930,6 +1987,11 @@
           "type": "string",
           "description": "Workflow expression that selects state data that the state action can use"
         },
+        "useResults": {
+          "type": "boolean",
+          "description": "If set to false, action data results are not added/merged to state data. In this case 'results' and 'toStateData' should be ignored. Default is true.",
+          "default": true
+        },
         "results": {
           "type": "string",
           "description": "Workflow expression that filters the actions data results"
@@ -1941,84 +2003,6 @@
       },
       "additionalProperties": false,
       "required": []
-    },
-    "errordef": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Domain-specific error name",
-          "minLength": 1
-        },
-        "code": {
-          "type": "string",
-          "description": "Error code. Can be used in addition to the name to help runtimes resolve to technical errors/exceptions. Should not be defined if error is set to '*'",
-          "minLength": 1
-        },
-        "description": {
-          "type": "string",
-          "description": "Error description"
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "name"
-      ]
-    },
-    "retrydef": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Unique retry strategy name",
-          "minLength": 1
-        },
-        "delay": {
-          "type": "string",
-          "description": "Time delay between retry attempts (ISO 8601 duration format)"
-        },
-        "maxDelay": {
-          "type": "string",
-          "description": "Maximum time delay between retry attempts (ISO 8601 duration format)"
-        },
-        "increment": {
-          "type": "string",
-          "description": "Static value by which the delay increases during each attempt (ISO 8601 time format)"
-        },
-        "multiplier": {
-          "type": [
-            "number",
-            "string"
-          ],
-          "minimum": 0,
-          "minLength": 1,
-          "multipleOf": 0.01,
-          "description": "Numeric value, if specified the delay between retries is multiplied by this value."
-        },
-        "maxAttempts": {
-          "type": [
-            "number",
-            "string"
-          ],
-          "minimum": 1,
-          "minLength": 0,
-          "description": "Maximum number of retry attempts."
-        },
-        "jitter": {
-          "type": [
-            "number",
-            "string"
-          ],
-          "minimum": 0,
-          "maximum": 1,
-          "description": "If float type, maximum amount of random time added or subtracted from the delay between each retry relative to total delay (between 0 and 1). If string type, absolute maximum amount of random time added or subtracted from the delay between each retry (ISO 8601 duration format)"
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "name",
-        "maxAttempts"
-      ]
     },
     "workflowExecTimeout": {
       "oneOf": [
@@ -2190,48 +2174,6 @@
       "additionalProperties": {
         "type": "string"
       }
-    },
-    "function": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Unique function name",
-          "minLength": 1
-        },
-        "operation": {
-          "type": "string",
-          "description": "If type is `rest`, <path_to_openapi_definition>#<operation_id>. If type is `asyncapi`, <path_to_asyncapi_definition>#<operation_id>. If type is `rpc`, <path_to_grpc_proto_file>#<service_name>#<service_method>. If type is `graphql`, <url_to_graphql_endpoint>#<literal \\\"mutation\\\" or \\\"query\\\">#<query_or_mutation_name>. If type is `odata`, <URI_to_odata_service>#<Entity_Set_Name>. If type is `expression`, defines the workflow expression.",
-          "minLength": 1
-        },
-        "type": {
-          "type": "string",
-          "description": "Defines the function type. Is either `rest`, `asyncapi, `rpc`, `graphql`, `odata`, `expression`, or `custom`. Default is `rest`",
-          "enum": [
-            "rest",
-            "asyncapi",
-            "rpc",
-            "graphql",
-            "odata",
-            "expression",
-            "custom"
-          ],
-          "default": "rest"
-        },
-        "authRef": {
-          "type": "string",
-          "description": "References an auth definition name to be used to access to resource defined in the operation parameter",
-          "minLength": 1
-        },
-        "metadata": {
-          "$ref": "#/definitions/metadata"
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "name",
-        "operation"
-      ]
     },
     "authdef": {
       "type": "object",
@@ -2422,6 +2364,126 @@
             "clientId"
           ]
         }
+      ]
+    },
+    "errordef": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Domain-specific error name",
+          "minLength": 1
+        },
+        "code": {
+          "type": "string",
+          "description": "Error code. Can be used in addition to the name to help runtimes resolve to technical errors/exceptions. Should not be defined if error is set to '*'",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "Error description"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ]
+    },
+    "retrydef": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique retry strategy name",
+          "minLength": 1
+        },
+        "delay": {
+          "type": "string",
+          "description": "Time delay between retry attempts (ISO 8601 duration format)"
+        },
+        "maxDelay": {
+          "type": "string",
+          "description": "Maximum time delay between retry attempts (ISO 8601 duration format)"
+        },
+        "increment": {
+          "type": "string",
+          "description": "Static value by which the delay increases during each attempt (ISO 8601 time format)"
+        },
+        "multiplier": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "minimum": 0,
+          "minLength": 1,
+          "multipleOf": 0.01,
+          "description": "Numeric value, if specified the delay between retries is multiplied by this value."
+        },
+        "maxAttempts": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "minimum": 1,
+          "minLength": 0,
+          "description": "Maximum number of retry attempts."
+        },
+        "jitter": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "If float type, maximum amount of random time added or subtracted from the delay between each retry relative to total delay (between 0 and 1). If string type, absolute maximum amount of random time added or subtracted from the delay between each retry (ISO 8601 duration format)"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "maxAttempts"
+      ]
+    },
+    "function": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique function name",
+          "minLength": 1
+        },
+        "operation": {
+          "type": "string",
+          "description": "If type is `rest`, <path_to_openapi_definition>#<operation_id>. If type is `asyncapi`, <path_to_asyncapi_definition>#<operation_id>. If type is `rpc`, <path_to_grpc_proto_file>#<service_name>#<service_method>. If type is `graphql`, <url_to_graphql_endpoint>#<literal \\\"mutation\\\" or \\\"query\\\">#<query_or_mutation_name>. If type is `odata`, <URI_to_odata_service>#<Entity_Set_Name>. If type is `expression`, defines the workflow expression.",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "description": "Defines the function type. Is either `rest`, `asyncapi, `rpc`, `graphql`, `odata`, `expression`, or `custom`. Default is `rest`",
+          "enum": [
+            "rest",
+            "asyncapi",
+            "rpc",
+            "graphql",
+            "odata",
+            "expression",
+            "custom"
+          ],
+          "default": "rest"
+        },
+        "authRef": {
+          "type": "string",
+          "description": "References an auth definition name to be used to access to resource defined in the operation parameter",
+          "minLength": 1
+        },
+        "metadata": {
+          "$ref": "#/definitions/metadata"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "operation"
       ]
     },
     "secrets": {

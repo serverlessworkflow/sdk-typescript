@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { overwritePropertyAsPlainType } from './utils';
+import { normalizeInvoke, overwritePropertyAsPlainType } from './utils';
 
 export class Eventref {
   constructor(model: any) {
@@ -32,6 +32,10 @@ export class Eventref {
    */
   resultEventRef: string;
   /**
+   * Maximum amount of time (ISO 8601 format) to wait for the result event. If not defined it should default to the actionExecutionTimeout
+   */
+  resultEventTimeout?: string;
+  /**
    * If string type, an expression which selects parts of the states data output to become the data (payload) of the event referenced by 'triggerEventRef'. If object type, a custom object to become the data (payload) of the event referenced by 'triggerEventRef'.
    */
   data?:
@@ -44,5 +48,21 @@ export class Eventref {
    */
   contextAttributes?: {
     [name: string]: string;
+  };
+  /**
+   * Specifies if the function should be invoked sync or async. Default is sync.
+   */
+  invoke?: 'sync' | 'async';
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Eventref} without deleted properties.
+   */
+  normalize = (): Eventref => {
+    const clone = new Eventref(this);
+
+    normalizeInvoke(clone);
+
+    return clone;
   };
 }

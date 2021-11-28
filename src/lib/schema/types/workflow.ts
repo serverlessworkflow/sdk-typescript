@@ -17,7 +17,7 @@
 /**
  * Serverless Workflow specification - workflow schema
  */
-export type Workflow = /* Serverless Workflow specification - workflow schema */
+export type Workflow /* Serverless Workflow specification - workflow schema */ =
   | {
       /**
        * Workflow unique identifier
@@ -207,6 +207,10 @@ export type Workflow = /* Serverless Workflow specification - workflow schema */
 export type Action =
   | {
       /**
+       * Unique action identifier
+       */
+      id?: string;
+      /**
        * Unique action definition name
        */
       name?: string;
@@ -227,8 +231,16 @@ export type Action =
        */
       retryableErrors?: [string, ...string[]];
       actionDataFilter?: Actiondatafilter;
+      /**
+       * Expression, if defined, must evaluate to true for this action to be performed. If false, action is disregarded
+       */
+      condition?: string;
     }
   | {
+      /**
+       * Unique action identifier
+       */
+      id?: string;
       /**
        * Unique action definition name
        */
@@ -250,8 +262,16 @@ export type Action =
        */
       retryableErrors?: [string, ...string[]];
       actionDataFilter?: Actiondatafilter;
+      /**
+       * Expression, if defined, must evaluate to true for this action to be performed. If false, action is disregarded
+       */
+      condition?: string;
     }
   | {
+      /**
+       * Unique action identifier
+       */
+      id?: string;
       /**
        * Unique action definition name
        */
@@ -273,6 +293,10 @@ export type Action =
        */
       retryableErrors?: [string, ...string[]];
       actionDataFilter?: Actiondatafilter;
+      /**
+       * Expression, if defined, must evaluate to true for this action to be performed. If false, action is disregarded
+       */
+      condition?: string;
     };
 /**
  * Single actions definition execution timeout duration (ISO 8601 duration format)
@@ -283,6 +307,10 @@ export interface Actiondatafilter {
    * Workflow expression that selects state data that the state action can use
    */
   fromStateData?: string;
+  /**
+   * If set to false, action data results are not added/merged to state data. In this case 'results' and 'toStateData' should be ignored. Default is true.
+   */
+  useResults?: boolean;
   /**
    * Workflow expression that filters the actions data results
    */
@@ -464,7 +492,7 @@ export type Crondef =
 /**
  * Permits transitions to other states based on data conditions
  */
-export interface Databasedswitch {
+export interface Databasedswitchstate {
   /**
    * Unique State id
    */
@@ -498,7 +526,7 @@ export interface Databasedswitch {
   /**
    * Default transition of the workflow if there is no matching data conditions. Can include a transition or end definition
    */
-  defaultCondition?: /* DefaultCondition definition. Can be either a transition or end definition */ Defaultconditiondef;
+  defaultCondition: /* DefaultCondition definition. Can be either a transition or end definition */ Defaultconditiondef;
   /**
    * Unique Name of a workflow state which is responsible for compensation of this state
    */
@@ -509,13 +537,13 @@ export interface Databasedswitch {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
-export type Datacondition = /* Switch state data based condition */
+export type Datacondition /* Switch state data based condition */ =
   | Transitiondatacondition
   | /* Switch state data based condition */ Enddatacondition;
 /**
  * DefaultCondition definition. Can be either a transition or end definition
  */
-export type Defaultconditiondef = /* DefaultCondition definition. Can be either a transition or end definition */
+export type Defaultconditiondef /* DefaultCondition definition. Can be either a transition or end definition */ =
   | {
       transition: Transition;
       end?: End;
@@ -652,7 +680,7 @@ export type EventTimeout = string;
 /**
  * Permits transitions to other states based on events
  */
-export interface Eventbasedswitch {
+export interface Eventbasedswitchstate {
   /**
    * Unique State id
    */
@@ -687,7 +715,7 @@ export interface Eventbasedswitch {
   /**
    * Default transition of the workflow if there is no matching data conditions. Can include a transition or end definition
    */
-  defaultCondition?: /* DefaultCondition definition. Can be either a transition or end definition */ Defaultconditiondef;
+  defaultCondition: /* DefaultCondition definition. Can be either a transition or end definition */ Defaultconditiondef;
   /**
    * Unique Name of a workflow state which is responsible for compensation of this state
    */
@@ -698,12 +726,16 @@ export interface Eventbasedswitch {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
-export type Eventcondition = /* Switch state data event condition */
+export type Eventcondition /* Switch state data event condition */ =
   | Transitioneventcondition
   | /* Switch state data event condition */ Enddeventcondition;
 export interface Eventdatafilter {
   /**
-   * Workflow expression that filters the received event/payload (default: '${ . }')
+   * If set to false, event payload is not added/merged to state data. In this case 'data' and 'toStateData' should be ignored. Default is true.
+   */
+  useData?: boolean;
+  /**
+   * Workflow expression that filters the received event payload (default: '${ . }')
    */
   data?: string;
   /**
@@ -757,6 +789,10 @@ export interface Eventref {
    */
   resultEventRef: string;
   /**
+   * Maximum amount of time (ISO 8601 format) to wait for the result event. If not defined it should default to the actionExecutionTimeout
+   */
+  resultEventTimeout?: string;
+  /**
    * If string type, an expression which selects parts of the states data output to become the data (payload) of the event referenced by 'triggerEventRef'. If object type, a custom object to become the data (payload) of the event referenced by 'triggerEventRef'.
    */
   data?:
@@ -770,6 +806,10 @@ export interface Eventref {
   contextAttributes?: {
     [name: string]: string;
   };
+  /**
+   * Specifies if the function should be invoked sync or async. Default is sync.
+   */
+  invoke?: 'sync' | 'async';
 }
 export type Events = string /* uri */ | [Eventdef, ...Eventdef[]];
 /**
@@ -777,90 +817,90 @@ export type Events = string /* uri */ | [Eventdef, ...Eventdef[]];
  */
 export type Eventstate =
   /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */
-    | {
-        /**
-         * Unique State id
-         */
-        id?: string;
-        /**
-         * State name
-         */
-        name: string;
-        /**
-         * State type
-         */
-        type: 'event';
-        /**
-         * If true consuming one of the defined events causes its associated actions to be performed. If false all of the defined events must be consumed in order for actions to be performed
-         */
-        exclusive?: boolean;
-        /**
-         * Define the events to be consumed and optional actions to be performed
-         */
-        onEvents: Onevents[];
-        /**
-         * State specific timeouts
-         */
-        timeouts?: {
-          stateExecTimeout?: StateExecTimeout;
-          actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
-          eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
-        };
-        stateDataFilter?: Statedatafilter;
-        /**
-         * States error handling definitions
-         */
-        onErrors?: Error[];
-        transition?: Transition;
-        end: End;
-        /**
-         * Unique Name of a workflow state which is responsible for compensation of this state
-         */
-        compensatedBy?: string;
-        metadata?: /* Metadata information */ Metadata;
-      }
-    | {
-        /**
-         * Unique State id
-         */
-        id?: string;
-        /**
-         * State name
-         */
-        name: string;
-        /**
-         * State type
-         */
-        type: 'event';
-        /**
-         * If true consuming one of the defined events causes its associated actions to be performed. If false all of the defined events must be consumed in order for actions to be performed
-         */
-        exclusive?: boolean;
-        /**
-         * Define the events to be consumed and optional actions to be performed
-         */
-        onEvents: Onevents[];
-        /**
-         * State specific timeouts
-         */
-        timeouts?: {
-          stateExecTimeout?: StateExecTimeout;
-          actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
-          eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
-        };
-        stateDataFilter?: Statedatafilter;
-        /**
-         * States error handling definitions
-         */
-        onErrors?: Error[];
-        transition: Transition;
-        end?: End;
-        /**
-         * Unique Name of a workflow state which is responsible for compensation of this state
-         */
-        compensatedBy?: string;
-        metadata?: /* Metadata information */ Metadata;
+  | {
+      /**
+       * Unique State id
+       */
+      id?: string;
+      /**
+       * State name
+       */
+      name: string;
+      /**
+       * State type
+       */
+      type: 'event';
+      /**
+       * If true consuming one of the defined events causes its associated actions to be performed. If false all of the defined events must be consumed in order for actions to be performed
+       */
+      exclusive?: boolean;
+      /**
+       * Define the events to be consumed and optional actions to be performed
+       */
+      onEvents: Onevents[];
+      /**
+       * State specific timeouts
+       */
+      timeouts?: {
+        stateExecTimeout?: StateExecTimeout;
+        actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+        eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
       };
+      stateDataFilter?: Statedatafilter;
+      /**
+       * States error handling definitions
+       */
+      onErrors?: Error[];
+      transition?: Transition;
+      end: End;
+      /**
+       * Unique Name of a workflow state which is responsible for compensation of this state
+       */
+      compensatedBy?: string;
+      metadata?: /* Metadata information */ Metadata;
+    }
+  | {
+      /**
+       * Unique State id
+       */
+      id?: string;
+      /**
+       * State name
+       */
+      name: string;
+      /**
+       * State type
+       */
+      type: 'event';
+      /**
+       * If true consuming one of the defined events causes its associated actions to be performed. If false all of the defined events must be consumed in order for actions to be performed
+       */
+      exclusive?: boolean;
+      /**
+       * Define the events to be consumed and optional actions to be performed
+       */
+      onEvents: Onevents[];
+      /**
+       * State specific timeouts
+       */
+      timeouts?: {
+        stateExecTimeout?: StateExecTimeout;
+        actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+        eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
+      };
+      stateDataFilter?: Statedatafilter;
+      /**
+       * States error handling definitions
+       */
+      onErrors?: Error[];
+      transition: Transition;
+      end?: End;
+      /**
+       * Unique Name of a workflow state which is responsible for compensation of this state
+       */
+      compensatedBy?: string;
+      metadata?: /* Metadata information */ Metadata;
+    };
 /**
  * Execute a set of defined actions or workflows for each element of a data array
  */
@@ -970,6 +1010,10 @@ export type Functionref =
        * Only used if function type is 'graphql'. A string containing a valid GraphQL selection set
        */
       selectionSet?: string;
+      /**
+       * Specifies if the function should be invoked sync or async
+       */
+      invoke?: 'sync' | 'async';
     };
 export type Functions = string /* uri */ | [Function, ...Function[]];
 /**
@@ -1422,10 +1466,18 @@ export type Subflowref =
        * Version of the sub-workflow to be invoked
        */
       version?: string;
+      /**
+       * If invoke is 'async', specifies how subflow execution should behave when parent workflow completes. Default is 'terminate'
+       */
+      onParentComplete?: 'continue' | 'terminate';
+      /**
+       * Specifies if the subflow should be invoked sync or async
+       */
+      invoke?: 'sync' | 'async';
     };
-export type Switchstate = /* Permits transitions to other states based on data conditions */
-  | Databasedswitch
-  | /* Permits transitions to other states based on events */ Eventbasedswitch;
+export type Switchstate /* Permits transitions to other states based on data conditions */ =
+  | Databasedswitchstate
+  | /* Permits transitions to other states based on events */ Eventbasedswitchstate;
 export type Timeouts =
   | string /* uri */
   | {

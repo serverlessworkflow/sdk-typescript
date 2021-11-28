@@ -18,7 +18,7 @@ import * as fs from 'fs';
 import {
   actionBuilder,
   actiondatafilterBuilder,
-  databasedswitchBuilder,
+  databasedswitchstateBuilder,
   functionBuilder,
   functionrefBuilder,
   operationstateBuilder,
@@ -87,7 +87,7 @@ describe('jobmonitoring workflow example', () => {
           .stateDataFilter(statedatafilterBuilder().output('${ .jobstatus }').build())
           .transition('DetermineCompletion')
           .build(),
-        databasedswitchBuilder()
+        databasedswitchstateBuilder()
           .name('DetermineCompletion')
           .dataConditions([
             transitiondataconditionBuilder()

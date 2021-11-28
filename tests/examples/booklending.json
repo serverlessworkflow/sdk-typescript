@@ -44,7 +44,10 @@
           "condition": "${ .book.status == \"available\" }",
           "transition": "Check Out Book"
         }
-      ]
+      ],
+      "defaultCondition": {
+        "end": true
+      }
     },
     {
       "type": "operation",
@@ -76,7 +79,10 @@
           "eventRef": "Decline Hold Event",
           "transition": "Cancel Request"
         }
-      ]
+      ],
+      "defaultCondition": {
+        "end": true
+      }
     },
     {
       "type": "operation",
