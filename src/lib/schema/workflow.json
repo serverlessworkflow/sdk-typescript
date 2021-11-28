@@ -1,5 +1,5 @@
 {
-  "$id": "https://serverlessworkflow.io/schemas/0.7/workflow.json",
+  "$id": "https://serverlessworkflow.io/schemas/0.8/workflow.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Serverless Workflow specification - workflow schema",
   "type": "object",
@@ -385,6 +385,7 @@
           "items": {
             "type": "string"
           },
+          "uniqueItems": true,
           "additionalItems": false
         },
         "actionMode": {
@@ -418,6 +419,10 @@
     "action": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique action identifier"
+        },
         "name": {
           "type": "string",
           "description": "Unique action definition name"
@@ -463,6 +468,11 @@
         "actionDataFilter": {
           "description": "Action data filter",
           "$ref": "#/definitions/actiondatafilter"
+        },
+        "condition": {
+          "description": "Expression, if defined, must evaluate to true for this action to be performed. If false, action is disregarded",
+          "type": "string",
+          "minLength": 1
         }
       },
       "additionalProperties": false,
@@ -506,6 +516,15 @@
             "selectionSet": {
               "type": "string",
               "description": "Only used if function type is 'graphql'. A string containing a valid GraphQL selection set"
+            },
+            "invoke": {
+              "type": "string",
+              "enum": [
+                "sync",
+                "async"
+              ],
+              "description": "Specifies if the function should be invoked sync or async",
+              "default": "sync"
             }
           },
           "additionalProperties": false,
@@ -527,6 +546,10 @@
           "type": "string",
           "description": "Reference to the unique name of a 'consumed' event definition"
         },
+        "resultEventTimeout": {
+          "type": "string",
+          "description": "Maximum amount of time (ISO 8601 format) to wait for the result event. If not defined it should default to the actionExecutionTimeout"
+        },
         "data": {
           "type": [
             "string",
@@ -540,6 +563,15 @@
           "additionalProperties": {
             "type": "string"
           }
+        },
+        "invoke": {
+          "type": "string",
+          "enum": [
+            "sync",
+            "async"
+          ],
+          "description": "Specifies if the function should be invoked sync or async. Default is sync.",
+          "default": "sync"
         }
       },
       "additionalProperties": false,
@@ -567,6 +599,24 @@
               "type": "string",
               "description": "Version of the sub-workflow to be invoked",
               "minLength": 1
+            },
+            "onParentComplete": {
+              "type": "string",
+              "enum": [
+                "continue",
+                "terminate"
+              ],
+              "description": "If invoke is 'async', specifies how subflow execution should behave when parent workflow completes. Default is 'terminate'",
+              "default": "terminate"
+            },
+            "invoke": {
+              "type": "string",
+              "enum": [
+                "sync",
+                "async"
+              ],
+              "description": "Specifies if the subflow should be invoked sync or async",
+              "default": "sync"
             }
           },
           "required": [
@@ -1073,14 +1123,14 @@
     "switchstate": {
       "oneOf": [
         {
-          "$ref": "#/definitions/databasedswitch"
+          "$ref": "#/definitions/databasedswitchstate"
         },
         {
-          "$ref": "#/definitions/eventbasedswitch"
+          "$ref": "#/definitions/eventbasedswitchstate"
         }
       ]
     },
-    "eventbasedswitch": {
+    "eventbasedswitchstate": {
       "type": "object",
       "description": "Permits transitions to other states based on events",
       "properties": {
@@ -1155,10 +1205,11 @@
       "required": [
         "name",
         "type",
-        "eventConditions"
+        "eventConditions",
+        "defaultCondition"
       ]
     },
-    "databasedswitch": {
+    "databasedswitchstate": {
       "type": "object",
       "description": "Permits transitions to other states based on data conditions",
       "properties": {
@@ -1230,7 +1281,8 @@
       "required": [
         "name",
         "type",
-        "dataConditions"
+        "dataConditions",
+        "defaultCondition"
       ]
     },
     "defaultconditiondef": {
@@ -1911,9 +1963,14 @@
     "eventdatafilter": {
       "type": "object",
       "properties": {
+        "useData": {
+          "type": "boolean",
+          "description": "If set to false, event payload is not added/merged to state data. In this case 'data' and 'toStateData' should be ignored. Default is true.",
+          "default": true
+        },
         "data": {
           "type": "string",
-          "description": "Workflow expression that filters the received event/payload (default: '${ . }')"
+          "description": "Workflow expression that filters the received event payload (default: '${ . }')"
         },
         "toStateData": {
           "type": "string",
@@ -1929,6 +1986,11 @@
         "fromStateData": {
           "type": "string",
           "description": "Workflow expression that selects state data that the state action can use"
+        },
+        "useResults": {
+          "type": "boolean",
+          "description": "If set to false, action data results are not added/merged to state data. In this case 'results' and 'toStateData' should be ignored. Default is true.",
+          "default": true
         },
         "results": {
           "type": "string",

@@ -19,31 +19,28 @@ import { Error } from './error';
 import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import {
+  normalizeDataConditions,
   normalizeDefaultCondition,
-  normalizeEventConditions,
   normalizeOnErrors,
   normalizeUsedForCompensation,
+  overwriteDataConditions,
   overwriteDefaultCondition,
-  overwriteEventConditions,
   overwriteMetadata,
   overwriteOnErrors,
   overwriteStateDataFilter,
   overwriteTimeoutWithStateExecTimeout,
 } from './utils';
-import { Eventcondition, EventTimeout } from './types';
+import { Datacondition } from './types';
 import { StateExecTimeout } from './stateExecTimeout';
 
-export class Eventbasedswitch {
+export class Databasedswitchstate {
   constructor(model: any) {
-    const defaultModel = {
-      type: 'switch',
-      usedForCompensation: false,
-    };
+    const defaultModel = { type: 'switch', usedForCompensation: false };
     Object.assign(this, defaultModel, model);
 
     overwriteStateDataFilter(this);
     overwriteTimeoutWithStateExecTimeout(this);
-    overwriteEventConditions(this);
+    overwriteDataConditions(this);
     overwriteOnErrors(this);
     overwriteDefaultCondition(this);
     overwriteMetadata(this);
@@ -70,12 +67,11 @@ export class Eventbasedswitch {
    */
   timeouts?: {
     stateExecTimeout?: StateExecTimeout;
-    eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
   };
   /**
-   * Defines conditions evaluated against events
+   * Defines conditions evaluated against state data
    */
-  eventConditions: Eventcondition[];
+  dataConditions: Datacondition[];
   /**
    * States error handling definitions
    */
@@ -83,7 +79,7 @@ export class Eventbasedswitch {
   /**
    * Default transition of the workflow if there is no matching data conditions. Can include a transition or end definition
    */
-  defaultCondition?: /* DefaultCondition definition. Can be either a transition or end definition */ Defaultconditiondef;
+  defaultCondition: /* DefaultCondition definition. Can be either a transition or end definition */ Defaultconditiondef;
   /**
    * Unique Name of a workflow state which is responsible for compensation of this state
    */
@@ -96,12 +92,12 @@ export class Eventbasedswitch {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Eventbasedswitch} without deleted properties.
+   * @returns {Specification.Databasedswitch} without deleted properties.
    */
-  normalize = (): Eventbasedswitch => {
-    const clone = new Eventbasedswitch(this);
+  normalize = (): Databasedswitchstate => {
+    const clone = new Databasedswitchstate(this);
 
-    normalizeEventConditions(clone);
+    normalizeDataConditions(clone);
     normalizeOnErrors(clone);
     normalizeDefaultCondition(clone);
     normalizeUsedForCompensation(clone);

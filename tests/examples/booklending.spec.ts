@@ -17,8 +17,8 @@
 import * as fs from 'fs';
 import {
   actionBuilder,
-  databasedswitchBuilder,
-  eventbasedswitchBuilder,
+  databasedswitchstateBuilder,
+  eventbasedswitchstateBuilder,
   eventstateBuilder,
   oneventsBuilder,
   operationstateBuilder,
@@ -27,6 +27,7 @@ import {
   workflowBuilder,
   functionrefBuilder,
   sleepstateBuilder,
+  defaultconditiondefBuilder,
 } from '../../src';
 
 describe('booklending workflow example', () => {
@@ -35,7 +36,7 @@ describe('booklending workflow example', () => {
       .id('booklending')
       .name('Book Lending Workflow')
       .version('1.0')
-      .specVersion('0.7')
+      .specVersion('0.8')
       .start('Book Lending Request')
       .states([
         eventstateBuilder()
@@ -59,7 +60,7 @@ describe('booklending workflow example', () => {
           ])
           .transition('Book Status Decision')
           .build(),
-        databasedswitchBuilder()
+        databasedswitchstateBuilder()
           .name('Book Status Decision')
           .dataConditions([
             transitiondataconditionBuilder()
@@ -73,6 +74,7 @@ describe('booklending workflow example', () => {
               .transition('Check Out Book')
               .build(),
           ])
+          .defaultCondition(defaultconditiondefBuilder().end(true).build())
           .build(),
         operationstateBuilder()
           .name('Report Status To Lender')
@@ -91,7 +93,7 @@ describe('booklending workflow example', () => {
           ])
           .transition('Wait for Lender response')
           .build(),
-        eventbasedswitchBuilder()
+        eventbasedswitchstateBuilder()
           .name('Wait for Lender response')
           .eventConditions([
             transitioneventconditionBuilder()
@@ -105,6 +107,7 @@ describe('booklending workflow example', () => {
               .transition('Cancel Request')
               .build(),
           ])
+          .defaultCondition(defaultconditiondefBuilder().end(true).build())
           .build(),
         operationstateBuilder()
           .name('Request Hold')

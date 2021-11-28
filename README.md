@@ -49,7 +49,7 @@ import { workflowBuilder, injectstateBuilder, Specification } from '@severlesswo
 
 const workflow: Specification.Workflow = workflowBuilder()
   .id("helloworld")
-  .specVersion("0.7")
+  .specVersion("0.8")
   .version("1.0")
   .name("Hello World Workflow")
   .description("Inject Hello World")
@@ -72,7 +72,7 @@ import { Specification, Workflow } from '@severlessworkflow/sdk-typescript';
 
 const source = `id: helloworld
 version: '1.0'
-specVerion: '0.7'
+specVerion: '0.8'
 name: Hello World Workflow
 description: Inject Hello World
 start: Hello State
@@ -97,7 +97,7 @@ import { workflowBuilder, injectstateBuilder, Specification } from '@severlesswo
 const workflow: Specification.Workflow = workflowBuilder()
   .id("helloworld")
   .version("1.0")
-  .specVersion("0.7")
+  .specVersion("0.8")
   .name("Hello World Workflow")
   .description("Inject Hello World")
   .start("Hello State")
@@ -143,6 +143,7 @@ import { WorkflowValidator, Specification } from '@severlessworkflow/sdk-typescr
 const workflow: Specification.Workflow = {
   id: 'helloworld',
   version: '1.0',
+  specVersion: '0.8',
   name: 'Hello World Workflow',
   description: 'Inject Hello World',
   start: 'Hello State',

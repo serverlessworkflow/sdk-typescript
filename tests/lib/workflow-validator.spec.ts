@@ -20,7 +20,7 @@ import { Workflow } from '../../src/lib/definitions/workflow';
 const validWorkflow = {
   id: 'helloworld',
   version: '1.0',
-  specVersion: '0.7',
+  specVersion: '0.8',
   name: 'Hello World Workflow',
   description: 'Inject Hello World',
   start: 'Hello State',

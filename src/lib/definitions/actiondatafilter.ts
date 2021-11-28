@@ -24,6 +24,10 @@ export class Actiondatafilter {
    */
   fromStateData?: string;
   /**
+   * If set to false, action data results are not added/merged to state data. In this case 'results' and 'toStateData' should be ignored. Default is true.
+   */
+  useResults?: boolean;
+  /**
    * Workflow expression that filters the actions data results
    */
   results?: string;

@@ -17,7 +17,7 @@
 import * as fs from 'fs';
 import {
   actionBuilder,
-  databasedswitchBuilder,
+  databasedswitchstateBuilder,
   functionBuilder,
   functionrefBuilder,
   operationstateBuilder,
@@ -31,7 +31,7 @@ describe('applicationrequest workflow example', () => {
     const workflow = workflowBuilder()
       .id('applicantrequest')
       .version('1.0')
-      .specVersion('0.7')
+      .specVersion('0.8')
       .name('Applicant Request Decision Workflow')
       .description('Determine if applicant request is valid')
       .start('CheckApplication')
@@ -42,7 +42,7 @@ describe('applicationrequest workflow example', () => {
           .build(),
       ])
       .states([
-        databasedswitchBuilder()
+        databasedswitchstateBuilder()
           .name('CheckApplication')
           .dataConditions([
             transitiondataconditionBuilder()

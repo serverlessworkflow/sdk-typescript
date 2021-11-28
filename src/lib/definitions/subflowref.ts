@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { normalizeInvoke, normalizeOnParentComplete } from './utils';
+
 export class Subflowref {
   constructor(model: any) {
     Object.assign(this, model);
@@ -27,13 +29,23 @@ export class Subflowref {
    * Version of the sub-workflow to be invoked
    */
   version?: string;
-
+  /**
+   * If invoke is 'async', specifies how subflow execution should behave when parent workflow completes. Default is 'terminate'
+   */
+  onParentComplete?: 'continue' | 'terminate';
+  /**
+   * Specifies if the subflow should be invoked sync or async
+   */
+  invoke?: 'sync' | 'async';
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Subflowref} without deleted properties.
    */
   normalize = (): Subflowref => {
     const clone = new Subflowref(this);
+
+    normalizeInvoke(clone);
+    normalizeOnParentComplete(clone);
 
     return clone;
   };

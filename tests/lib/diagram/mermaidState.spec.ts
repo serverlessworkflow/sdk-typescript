@@ -51,7 +51,7 @@ ParallelExec --> [*]`);
   });
 
   it('should create source code for event-based state', () => {
-    const eventbasedswitch = new Specification.Eventbasedswitch(
+    const eventbasedswitch = new Specification.Eventbasedswitchstate(
       JSON.parse(`{
           "name": "CheckVisaStatus",
           "type": "switch",
@@ -81,7 +81,7 @@ CheckVisaStatus --> HandleNoVisaDecision : default`);
   });
 
   it('should create source code for data-based state', () => {
-    const databasedswitch = new Specification.Databasedswitch(
+    const databasedswitch = new Specification.Databasedswitchstate(
       JSON.parse(`{
           "type":"switch",
           "name":"CheckApplication",
@@ -110,7 +110,7 @@ CheckApplication --> RejectApplication : default`);
   });
 
   it('should create source code for data-based state with end condition', () => {
-    const databasedswitch = new Specification.Databasedswitch(
+    const databasedswitch = new Specification.Databasedswitchstate(
       JSON.parse(`{
       "type":"switch",
       "name":"CheckApplication",
@@ -252,7 +252,7 @@ CheckCredit --> EvaluateDecision`);
 
   it('should create source code for any state with transition as object', () => {
     const states = new Specification.Callbackstate(
-        JSON.parse(`{
+      JSON.parse(`{
             "name": "CheckCredit",
             "type": "callback",
             "transition": {"nextState": "EvaluateDecision"}
@@ -264,10 +264,9 @@ CheckCredit : type = Callback State
 CheckCredit --> EvaluateDecision`);
   });
 
-
   it(`should convert white spaces with underscore to create the state key`, () => {
-    const databasedswitch = new Specification.Databasedswitch(
-        JSON.parse(`{
+    const databasedswitch = new Specification.Databasedswitchstate(
+      JSON.parse(`{
       "type":"switch",
       "name":"Check Application",
       "dataConditions": [

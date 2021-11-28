@@ -17,6 +17,8 @@ import { Actiondatafilter } from './actiondatafilter';
 import { Eventref } from './eventref';
 import { Functionref } from './functionref';
 import {
+  normalizeEventRef,
+  normalizeFunctionRef,
   normalizeSubFlowRefIfObject,
   overwriteActionDataFilter,
   overwriteEventRef,
@@ -39,6 +41,10 @@ export class Action {
   }
 
   /**
+   * Unique action identifier
+   */
+  id?: string;
+  /**
    * Unique action definition name
    */
   name?: string;
@@ -59,6 +65,10 @@ export class Action {
    */
   retryableErrors?: [string, ...string[]];
   actionDataFilter?: Actiondatafilter;
+  /**
+   * Expression, if defined, must evaluate to true for this action to be performed. If false, action is disregarded
+   */
+  condition?: string;
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
@@ -66,7 +76,10 @@ export class Action {
    */
   normalize = (): Action => {
     const clone = new Action(this);
+
     normalizeSubFlowRefIfObject(clone);
+    normalizeEventRef(clone);
+    normalizeFunctionRef(clone);
 
     return clone;
   };
