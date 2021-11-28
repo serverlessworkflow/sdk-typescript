@@ -30,7 +30,7 @@ describe('sendcloudevent workflow example', () => {
     const workflow = workflowBuilder()
       .id('sendcloudeventonprovision')
       .version('1.0')
-      .specVersion('0.7')
+      .specVersion('0.8')
       .name('Send CloudEvent on provision completion')
       .start('ProvisionOrdersState')
       .events([

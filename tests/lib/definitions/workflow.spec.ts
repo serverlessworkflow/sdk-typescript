@@ -95,7 +95,7 @@ describe('workflow ', () => {
       workflowBuilder()
         .id('helloworld')
         .version('1.0')
-        .specVersion('0.7')
+        .specVersion('0.8')
         .name('Hello World Workflow')
         .description('Inject Hello World')
         .start('Hello State')
@@ -114,7 +114,7 @@ describe('workflow ', () => {
       '{' +
         '"id":"helloworld",' +
         '"version":"1.0",' +
-        '"specVersion":"0.7",' +
+        '"specVersion":"0.8",' +
         '"name":"Hello World Workflow",' +
         '"description":"Inject Hello World",' +
         '"start":"Hello State",' +
@@ -137,7 +137,7 @@ describe('workflow ', () => {
       workflowBuilder()
         .id('helloworld')
         .version('1.0')
-        .specVersion('0.7')
+        .specVersion('0.8')
         .name('Hello World Workflow')
         .description('Inject Hello World')
         .start('Hello State')
@@ -155,7 +155,7 @@ describe('workflow ', () => {
     expect(yamlWorkflow).toBe(
       'id: helloworld\n' +
         "version: '1.0'\n" +
-        "specVersion: '0.7'\n" +
+        "specVersion: '0.8'\n" +
         'name: Hello World Workflow\n' +
         'description: Inject Hello World\n' +
         'start: Hello State\n' +

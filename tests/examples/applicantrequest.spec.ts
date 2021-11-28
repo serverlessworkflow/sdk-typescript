@@ -31,7 +31,7 @@ describe('applicationrequest workflow example', () => {
     const workflow = workflowBuilder()
       .id('applicantrequest')
       .version('1.0')
-      .specVersion('0.7')
+      .specVersion('0.8')
       .name('Applicant Request Decision Workflow')
       .description('Determine if applicant request is valid')
       .start('CheckApplication')
