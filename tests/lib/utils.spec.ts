@@ -22,7 +22,7 @@ describe('validate', () => {
   });
 
   it('should return true for valid objects', () => {
-    expect(validate('End', false)).withContext('Expected function validate to return true for valid objects');
+    expect(validate('End', false));
   });
 
   it('should ignore "normalize" function as additionalProperty', () => {

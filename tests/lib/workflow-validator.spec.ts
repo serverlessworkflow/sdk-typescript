@@ -61,10 +61,10 @@ describe('workflow-validator, invalid state', () => {
   });
 
   function expectInvalidWorkflow(workflowValidator: WorkflowValidator, numErrors: number) {
-    expect(workflowValidator.isValid).withContext('Expected isValid to be false');
+    expect(workflowValidator.isValid);
     expect(workflowValidator.errors.length).toBe(numErrors);
     workflowValidator.errors.forEach((error) => {
-      expect(error.constructor === ValidationError).withContext('Expected errors to be instance of ValidationError');
+      expect(error.constructor === ValidationError);
     });
   }
 });
@@ -76,6 +76,6 @@ describe('workflow-validator, valid state', () => {
 
     const workflowValidator = new WorkflowValidator(workflow);
     expect(workflowValidator.errors.length).toBe(0);
-    expect(workflowValidator.isValid).withContext('Expected isValid to be true');
+    expect(workflowValidator.isValid);
   });
 });
