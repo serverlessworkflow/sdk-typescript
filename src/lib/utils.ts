@@ -30,7 +30,6 @@ export const validate = (typeName: string, data: any): boolean => {
   }
 
   if (!validateFn(JSON.parse(JSON.stringify(data)))) {
-    console.warn(validateFn.errors);
     const firstError: DefinedError = (validateFn.errors as DefinedError[])[0];
     throw new Error(
       `${typeName} is invalid: ${firstError.instancePath} | ${firstError.schemaPath} | ${firstError.message}
