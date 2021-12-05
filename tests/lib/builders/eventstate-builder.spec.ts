@@ -25,7 +25,7 @@ describe('eventstateBuilder ', () => {
       .transition('Get Book Status')
       .build();
 
-    expect(object.exclusive).toBeTrue();
+    expect(object.exclusive).toBeTruthy();
 
     const serializedObject = object.normalize();
     expect(JSON.stringify(serializedObject)).toBe(
