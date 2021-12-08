@@ -25,7 +25,7 @@
     "pretest": "npx rimraf out-tsc",
     "test": "npx tsc --project ./tests/tsconfig.json && npx jest",
     "prebuild": "npx rimraf dist",
-    "build": "npx rollup -c rollup.config.ts && npx shx mv ./dist/src/lib ./dist/lib && npx rimraf ./dist/src",
+    "build": "npx rollup -c rollup.config.ts && npx shx mv ./dist/src/lib ./dist/lib &&  npx shx mv ./dist/src/*d.ts.map ./dist/src/*d.ts ./dist && npx rimraf ./dist/src",
     "postbuild": "npx shx cp ./package.json ./README.md ./LICENSE ./dist/",
     "verify-publish-directory": "node -e 'if (!process.cwd().endsWith(\"dist\")) { console.error(\"Packaging/Publishing should be done from ./dist/\"); process.exitCode = 1; } process.exit();'",
     "prepack": "npm run verify-publish-directory",
