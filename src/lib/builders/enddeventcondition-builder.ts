@@ -27,7 +27,7 @@ function enddeventconditionBuildingFn(data: Specification.Enddeventcondition): (
   return () => {
     const model = new Specification.Enddeventcondition(data);
 
-    validate('Enddeventcondition', model);
+    validate('Enddeventcondition', model.normalize());
     return model;
   };
 }

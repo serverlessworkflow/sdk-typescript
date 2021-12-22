@@ -15,10 +15,19 @@
  */
 import { Metadata } from './metadata';
 import { Transition } from './transition';
-import { normalizeTransitionIfObject, overwriteMetadata, overwriteTransitionIfObject } from './utils';
+import {
+  cleanSourceModelProperty,
+  normalizeTransitionIfObject,
+  overwriteMetadata,
+  overwriteTransitionIfObject,
+} from './utils';
 
 export class Transitiondatacondition {
+  sourceModel?: Transitiondatacondition;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     Object.assign(this, model);
 
     overwriteTransitionIfObject(this);
@@ -48,6 +57,7 @@ export class Transitiondatacondition {
 
     normalizeTransitionIfObject(clone);
 
+    cleanSourceModelProperty(clone);
     return clone;
   };
 }

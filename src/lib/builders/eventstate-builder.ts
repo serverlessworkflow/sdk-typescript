@@ -30,7 +30,7 @@ function eventstateBuildingFn(data: Specification.Eventstate): () => Specificati
 
     setEndValueIfNoTransition(model);
 
-    validate('Eventstate', model);
+    validate('Eventstate', model.normalize());
     return model;
   };
 }

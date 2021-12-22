@@ -15,6 +15,7 @@
  */
 import { Produceeventdef } from './produceeventdef';
 import {
+  cleanSourceModelProperty,
   normalizeCompensate,
   normalizeContinueAsIfObject,
   normalizeTerminate,
@@ -24,7 +25,11 @@ import {
 import { Continueasdef } from './continueasdef';
 
 export class End {
+  sourceModel?: End;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     const defaultModel = {
       compensate: false,
       terminate: false,
@@ -56,10 +61,11 @@ export class End {
   normalize = (): End => {
     const clone = new End(this);
 
-    normalizeCompensate(clone);
-    normalizeTerminate(clone);
+    normalizeCompensate(clone, this.sourceModel);
+    normalizeTerminate(clone, this.sourceModel);
     normalizeContinueAsIfObject(clone);
 
+    cleanSourceModelProperty(clone);
     return clone;
   };
 }

@@ -20,6 +20,7 @@ import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
+  cleanSourceModelProperty,
   normalizeActionMode,
   normalizeActions,
   normalizeEndIfObject,
@@ -31,15 +32,19 @@ import {
   overwriteMetadata,
   overwriteOnErrors,
   overwriteStateDataFilter,
+  overwriteTimeoutWithStateExecTimeout,
   overwriteTransitionIfObject,
   setEndValueIfNoTransition,
-  overwriteTimeoutWithStateExecTimeout,
 } from './utils';
 import { ActionExecTimeout } from './types';
 import { StateExecTimeout } from './stateExecTimeout';
 
 export class Operationstate {
+  sourceModel?: Operationstate;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     const defaultModel = {
       type: 'operation',
       actionMode: 'sequential',
@@ -117,12 +122,16 @@ export class Operationstate {
     const clone = new Operationstate(this);
 
     normalizeEndIfObject(clone);
-    normalizeActionMode(clone);
+
+    normalizeActionMode(clone, this.sourceModel);
+
     normalizeActions(clone);
     normalizeOnErrors(clone);
     normalizeTransitionIfObject(clone);
-    normalizeUsedForCompensation(clone);
+    normalizeUsedForCompensation(clone, this.sourceModel);
     setEndValueIfNoTransition(clone);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

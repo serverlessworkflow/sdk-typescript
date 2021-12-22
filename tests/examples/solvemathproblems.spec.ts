@@ -44,7 +44,6 @@ describe('solvemathproblems workflow example', () => {
           .inputCollection('${ .expressions }')
           .iterationParam('singleexpression')
           .outputCollection('${ .results }')
-          .usedForCompensation(false)
           .actions([
             actionBuilder()
               .functionRef(

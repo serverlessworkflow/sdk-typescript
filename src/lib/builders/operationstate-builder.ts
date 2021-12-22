@@ -30,7 +30,7 @@ function operationstateBuildingFn(data: Specification.Operationstate): () => Spe
 
     setEndValueIfNoTransition(model);
 
-    validate('Operationstate', model);
+    validate('Operationstate', model.normalize());
     return model;
   };
 }

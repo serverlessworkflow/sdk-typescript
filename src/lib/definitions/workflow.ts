@@ -23,6 +23,7 @@ import { Specification } from '.';
 
 import { validate } from '../utils';
 import {
+  cleanSourceModelProperty,
   normalizeAuth,
   normalizeEvents,
   normalizeExpressionLang,
@@ -44,7 +45,11 @@ import {
 import { Auth, Errors, Events, Functions, Retries, Secrets, States } from './types';
 
 export class Workflow {
+  sourceModel?: Workflow;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     const defaultModel = {
       expressionLang: 'jq',
       keepActive: true,
@@ -141,14 +146,15 @@ export class Workflow {
   normalize = (): Workflow => {
     const clone = new Workflow(this);
 
-    normalizeExpressionLang(clone);
+    normalizeExpressionLang(clone, this.sourceModel);
     normalizeTimeoutsIfObject(clone);
-    normalizeKeepActive(clone);
+    normalizeKeepActive(clone, this.sourceModel);
     normalizeEvents(clone);
     normalizeFunctions(clone);
     normalizeAuth(clone);
     normalizeStates(clone);
 
+    cleanSourceModelProperty(clone);
     return clone;
   };
 
@@ -172,7 +178,7 @@ export class Workflow {
    * @returns {string} The workflow as JSON
    */
   static toJson(workflow: Workflow): string {
-    validate('Workflow', workflow);
+    validate('Workflow', workflow.normalize());
     return JSON.stringify(workflow.normalize());
   }
 
@@ -182,7 +188,7 @@ export class Workflow {
    * @returns {string} The workflow as YAML
    */
   static toYaml(workflow: Workflow): string {
-    validate('Workflow', workflow);
+    validate('Workflow', workflow.normalize());
     return yaml.dump(JSON.parse(JSON.stringify(workflow.normalize())));
   }
 }

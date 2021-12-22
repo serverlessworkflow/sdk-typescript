@@ -19,6 +19,7 @@ import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
+  cleanSourceModelProperty,
   normalizeEndIfObject,
   normalizeTransitionIfObject,
   normalizeUsedForCompensation,
@@ -33,7 +34,11 @@ import {
 import { StateExecTimeout } from './stateExecTimeout';
 
 export class Injectstate {
+  sourceModel?: Injectstate;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     const defaultModel = { type: 'inject', usedForCompensation: false };
     Object.assign(this, defaultModel, model);
 
@@ -100,8 +105,10 @@ export class Injectstate {
 
     normalizeEndIfObject(clone);
     normalizeTransitionIfObject(clone);
-    normalizeUsedForCompensation(clone);
+    normalizeUsedForCompensation(clone, this.sourceModel);
     setEndValueIfNoTransition(clone);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

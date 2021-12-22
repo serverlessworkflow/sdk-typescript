@@ -27,7 +27,7 @@ function actionBuildingFn(data: Specification.Action): () => Specification.Actio
   return () => {
     const model = new Specification.Action(data);
 
-    validate('Action', model);
+    validate('Action', model.normalize());
     return model;
   };
 }

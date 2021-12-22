@@ -27,7 +27,7 @@ function oneventsBuildingFn(data: Specification.Onevents): () => Specification.O
   return () => {
     const model = new Specification.Onevents(data);
 
-    validate('Onevents', model);
+    validate('Onevents', model.normalize());
     return model;
   };
 }

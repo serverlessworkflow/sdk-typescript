@@ -509,9 +509,9 @@ export function normalizeWorkflowExecTimeout(object: { workflowExecTimeout?: Spe
  * Modify the provided object by normalizing the 'actionMode' property, where the default value is 'sequential'.
  * @param object to be modified
  */
-export function normalizeActionMode(object: { actionMode?: string }) {
-  if (object.actionMode === 'sequential') {
-    delete object.actionMode;
+export function normalizeActionMode(target: { actionMode?: string }, source?: { actionMode?: string }) {
+  if (!source?.actionMode) {
+    delete target.actionMode;
   }
 }
 
@@ -519,8 +519,8 @@ export function normalizeActionMode(object: { actionMode?: string }) {
  * Modify the provided object by normalizing the 'completionType' property, where the default value is 'allOf'.
  * @param object to be modified
  */
-export function normalizeCompletionType(object: { completionType?: string }) {
-  if (object.completionType === 'allOf') {
+export function normalizeCompletionType(object: { completionType?: string }, source?: { completionType?: string }) {
+  if (!source?.completionType) {
     delete object.completionType;
   }
 }
@@ -529,8 +529,11 @@ export function normalizeCompletionType(object: { completionType?: string }) {
  * Modify the provided object by normalizing the 'usedForCompensation' property, where the default value is 'false'.
  * @param object to be modified
  */
-export function normalizeUsedForCompensation(object: { usedForCompensation?: boolean }) {
-  if (!object.usedForCompensation) {
+export function normalizeUsedForCompensation(
+  object: { usedForCompensation?: boolean },
+  source?: { usedForCompensation?: boolean }
+) {
+  if (source?.usedForCompensation === undefined) {
     delete object.usedForCompensation;
   }
 }
@@ -539,8 +542,8 @@ export function normalizeUsedForCompensation(object: { usedForCompensation?: boo
  * Modify the provided object by normalizing the 'mode' property, where the default value is 'parallel'.
  * @param object to be modified
  */
-export function normalizeMode(object: { mode?: string }) {
-  if (object.mode === 'parallel') {
+export function normalizeMode(object: { mode?: string }, source?: { mode?: string }) {
+  if (!source?.mode) {
     delete object.mode;
   }
 }
@@ -625,8 +628,8 @@ export function normalizeTransitionIfObject(object: { transition?: string | Spec
  * Modify the provided object by normalizing the 'compensate' property, where the default value is 'false'.
  * @param object to be modified
  */
-export function normalizeCompensate(object: { compensate?: boolean }) {
-  if (!object.compensate) {
+export function normalizeCompensate(object: { compensate?: boolean }, source?: { compensate?: boolean }) {
+  if (source?.compensate === undefined) {
     delete object.compensate;
   }
 }
@@ -635,8 +638,8 @@ export function normalizeCompensate(object: { compensate?: boolean }) {
  * Modify the provided object by normalizing the 'scheme' property, where the default value is 'basic'.
  * @param object to be modified
  */
-export function normalizeScheme(object: { scheme?: string }) {
-  if (object.scheme === 'basic') {
+export function normalizeScheme(object: { scheme?: string }, source?: { scheme?: string }) {
+  if (!source?.scheme) {
     delete object.scheme;
   }
 }
@@ -645,8 +648,8 @@ export function normalizeScheme(object: { scheme?: string }) {
  * Modify the provided object by normalizing the 'terminate' property, where the default value is 'false'.
  * @param object to be modified
  */
-export function normalizeTerminate(object: { terminate?: boolean }) {
-  if (!object.terminate) {
+export function normalizeTerminate(object: { terminate?: boolean }, source?: { terminate?: boolean }) {
+  if (source?.terminate === undefined) {
     delete object.terminate;
   }
 }
@@ -655,8 +658,8 @@ export function normalizeTerminate(object: { terminate?: boolean }) {
  * Modify the provided object by normalizing the 'exclusive' property, where the default value is 'true'.
  * @param object to be modified
  */
-export function normalizeExclusive(object: { exclusive?: boolean }) {
-  if (object.exclusive) {
+export function normalizeExclusive(object: { exclusive?: boolean }, source?: { exclusive?: boolean }) {
+  if (source?.exclusive === undefined) {
     delete object.exclusive;
   }
 }
@@ -665,8 +668,8 @@ export function normalizeExclusive(object: { exclusive?: boolean }) {
  * Modify the provided object by normalizing the 'keepActive' property, where the default value is 'true'.
  * @param object to be modified
  */
-export function normalizeKeepActive(object: { keepActive?: boolean }) {
-  if (object.keepActive) {
+export function normalizeKeepActive(object: { keepActive?: boolean }, source?: { keepActive?: boolean }) {
+  if (source?.keepActive === undefined) {
     delete object.keepActive;
   }
 }
@@ -675,8 +678,8 @@ export function normalizeKeepActive(object: { keepActive?: boolean }) {
  * Modify the provided object by normalizing the 'expressionLang' property, where the default value is 'jq'.
  * @param object to be modified
  */
-export function normalizeExpressionLang(object: { expressionLang?: string }) {
-  if (object.expressionLang === 'jq') {
+export function normalizeExpressionLang(object: { expressionLang?: string }, source?: { expressionLang?: string }) {
+  if (!source?.expressionLang) {
     delete object.expressionLang;
   }
 }
@@ -685,8 +688,8 @@ export function normalizeExpressionLang(object: { expressionLang?: string }) {
  * Modify the provided object by normalizing the 'interrupt' property, where the default value is 'true'.
  * @param object to be modified
  */
-export function normalizeInterrupt(object: { interrupt?: boolean }) {
-  if (object.interrupt) {
+export function normalizeInterrupt(object: { interrupt?: boolean }, source?: { interrupt?: boolean }) {
+  if (source?.interrupt === undefined) {
     delete object.interrupt;
   }
 }
@@ -695,8 +698,8 @@ export function normalizeInterrupt(object: { interrupt?: boolean }) {
  * Modify the provided object by normalizing the 'type' property, where the default value is 'rest'.
  * @param object to be modified
  */
-export function normalizeType(object: { type?: string }) {
-  if (object.type === 'rest') {
+export function normalizeType(object: { type?: string }, source?: { type?: string }) {
+  if (!source?.type) {
     delete object.type;
   }
 }
@@ -705,8 +708,8 @@ export function normalizeType(object: { type?: string }) {
  * Modify the provided object by normalizing the 'invoke' property, where the default value is 'rest'.
  * @param object to be modified
  */
-export function normalizeInvoke(object: { invoke?: string }) {
-  if (object.invoke === 'sync') {
+export function normalizeInvoke(object: { invoke?: string }, source?: { invoke?: string }) {
+  if (!source?.invoke) {
     delete object.invoke;
   }
 }
@@ -715,8 +718,11 @@ export function normalizeInvoke(object: { invoke?: string }) {
  * Modify the provided object by normalizing the 'onParentComplete' property, where the default value is 'terminate'.
  * @param object to be modified
  */
-export function normalizeOnParentComplete(object: { onParentComplete?: 'continue' | 'terminate' }) {
-  if (object.onParentComplete === 'terminate') {
+export function normalizeOnParentComplete(
+  object: { onParentComplete?: 'continue' | 'terminate' },
+  source?: { onParentComplete?: 'continue' | 'terminate' }
+) {
+  if (!source?.onParentComplete) {
     delete object.onParentComplete;
   }
 }
@@ -725,8 +731,8 @@ export function normalizeOnParentComplete(object: { onParentComplete?: 'continue
  * Modify the provided object by normalizing the 'kind' property, where the default value is 'consumed'.
  * @param object to be modified
  */
-export function normalizeKind(object: { kind?: string }) {
-  if (object.kind === 'consumed') {
+export function normalizeKind(object: { kind?: string }, source?: { kind?: string }) {
+  if (!source?.kind) {
     delete object.kind;
   }
 }
@@ -735,8 +741,8 @@ export function normalizeKind(object: { kind?: string }) {
  * Modify the provided object by normalizing the 'dataOnly' property, where the default value is 'true'.
  * @param object to be modified
  */
-export function normalizeDataOnly(object: { dataOnly?: boolean }) {
-  if (object.dataOnly) {
+export function normalizeDataOnly(object: { dataOnly?: boolean }, source?: { dataOnly?: boolean }) {
+  if (source?.dataOnly === undefined) {
     delete object.dataOnly;
   }
 }
@@ -815,4 +821,12 @@ export function normalizeFunctionRef(object: { functionRef?: string | Specificat
   if (isObject(object.functionRef)) {
     object.functionRef = object.functionRef && object.functionRef.normalize();
   }
+}
+
+/**
+ * Modify the provided object by deleting the 'source' property
+ * @param object
+ */
+export function cleanSourceModelProperty(object?: { sourceModel?: any }): void {
+  delete object?.sourceModel;
 }

@@ -22,6 +22,7 @@ import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
+  cleanSourceModelProperty,
   normalizeAction,
   normalizeEndIfObject,
   normalizeOnErrors,
@@ -41,7 +42,11 @@ import { ActionExecTimeout, EventTimeout } from './types';
 import { StateExecTimeout } from './stateExecTimeout';
 
 export class Callbackstate {
+  sourceModel?: Callbackstate;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     const defaultModel = { type: 'callback', usedForCompensation: false };
     Object.assign(this, defaultModel, model);
 
@@ -124,8 +129,10 @@ export class Callbackstate {
     normalizeOnErrors(clone);
     normalizeTransitionIfObject(clone);
     normalizeEndIfObject(clone);
-    normalizeUsedForCompensation(clone);
+    normalizeUsedForCompensation(clone, this.sourceModel);
     setEndValueIfNoTransition(clone);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

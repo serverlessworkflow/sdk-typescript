@@ -27,7 +27,7 @@ function functionrefBuildingFn(data: Specification.Functionref): () => Specifica
   return () => {
     const model = new Specification.Functionref(data);
 
-    validate('Functionref', model);
+    validate('Functionref', model.normalize());
     return model;
   };
 }

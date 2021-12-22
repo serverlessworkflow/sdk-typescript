@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-import { normalizeInvoke, normalizeOnParentComplete } from './utils';
+import { cleanSourceModelProperty, normalizeInvoke, normalizeOnParentComplete } from './utils';
 
 export class Subflowref {
+  sourceModel?: Subflowref;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     Object.assign(this, model);
   }
 
@@ -44,9 +48,10 @@ export class Subflowref {
   normalize = (): Subflowref => {
     const clone = new Subflowref(this);
 
-    normalizeInvoke(clone);
-    normalizeOnParentComplete(clone);
+    normalizeInvoke(clone, this.sourceModel);
+    normalizeOnParentComplete(clone, this.sourceModel);
 
+    cleanSourceModelProperty(clone);
     return clone;
   };
 }

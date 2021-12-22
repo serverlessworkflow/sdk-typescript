@@ -19,6 +19,7 @@ import { Error } from './error';
 import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import {
+  cleanSourceModelProperty,
   normalizeDefaultCondition,
   normalizeEventConditions,
   normalizeOnErrors,
@@ -34,7 +35,11 @@ import { Eventcondition, EventTimeout } from './types';
 import { StateExecTimeout } from './stateExecTimeout';
 
 export class Eventbasedswitchstate {
+  sourceModel?: Eventbasedswitchstate;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     const defaultModel = {
       type: 'switch',
       usedForCompensation: false,
@@ -104,8 +109,9 @@ export class Eventbasedswitchstate {
     normalizeEventConditions(clone);
     normalizeOnErrors(clone);
     normalizeDefaultCondition(clone);
-    normalizeUsedForCompensation(clone);
+    normalizeUsedForCompensation(clone, this.sourceModel);
 
+    cleanSourceModelProperty(clone);
     return clone;
   };
 }

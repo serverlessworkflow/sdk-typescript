@@ -29,7 +29,7 @@ function databasedswitchstateBuildingFn(
   return () => {
     const model = new Specification.Databasedswitchstate(data);
 
-    validate('Databasedswitchstate', model);
+    validate('Databasedswitchstate', model.normalize());
     return model;
   };
 }

@@ -33,12 +33,17 @@ import {
   overwriteTransitionIfObject,
   setEndValueIfNoTransition,
   overwriteTimeoutWithStateExecTimeout,
+  cleanSourceModelProperty,
 } from './utils';
 import { ActionExecTimeout, EventTimeout } from './types';
 import { StateExecTimeout } from './stateExecTimeout';
 
 export class Eventstate /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ {
+  sourceModel?: Eventstate;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     const defaultModel = { type: 'event', exclusive: true };
     Object.assign(this, defaultModel, model);
 
@@ -99,12 +104,14 @@ export class Eventstate /* This state is used to wait for events from event sour
   normalize = (): Eventstate => {
     const clone = new Eventstate(this);
 
-    normalizeExclusive(clone);
+    normalizeExclusive(clone, this.sourceModel);
     normalizeOnEvents(clone);
     normalizeOnErrors(clone);
     normalizeTransitionIfObject(clone);
     normalizeEndIfObject(clone);
     setEndValueIfNoTransition(clone);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

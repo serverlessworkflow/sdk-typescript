@@ -17,6 +17,7 @@
 import { End } from './end';
 import { Transition } from './transition';
 import {
+  cleanSourceModelProperty,
   normalizeEndIfObject,
   normalizeTransitionIfObject,
   overwriteEndIfObject,
@@ -24,7 +25,11 @@ import {
   setEndValueIfNoTransition,
 } from './utils';
 export class Defaultconditiondef /* DefaultCondition definition. Can be either a transition or end definition */ {
+  sourceModel?: Defaultconditiondef;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     Object.assign(this, model);
 
     overwriteTransitionIfObject(this);
@@ -44,6 +49,8 @@ export class Defaultconditiondef /* DefaultCondition definition. Can be either a
     normalizeEndIfObject(clone);
     normalizeTransitionIfObject(clone);
     setEndValueIfNoTransition(clone);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

@@ -16,6 +16,7 @@
 import { End } from './end';
 import { Transition } from './transition';
 import {
+  cleanSourceModelProperty,
   normalizeEndIfObject,
   normalizeTransitionIfObject,
   overwriteEndIfObject,
@@ -24,7 +25,11 @@ import {
 } from './utils';
 
 export class Error {
+  sourceModel?: Error;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     Object.assign(this, model);
 
     overwriteTransitionIfObject(this);
@@ -54,6 +59,7 @@ export class Error {
 
     setEndValueIfNoTransition(clone);
 
+    cleanSourceModelProperty(clone);
     return clone;
   };
 }

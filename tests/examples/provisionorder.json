@@ -25,6 +25,7 @@
   "states":[
     {
       "type":"operation",
+      "actionMode":"sequential",
       "name":"ProvisionOrder",
       "actions":[
         {

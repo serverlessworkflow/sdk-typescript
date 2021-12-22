@@ -27,7 +27,7 @@ function functionBuildingFn(data: Specification.Function): () => Specification.F
   return () => {
     const model = new Specification.Function(data);
 
-    validate('Function', model);
+    validate('Function', model.normalize());
     return model;
   };
 }

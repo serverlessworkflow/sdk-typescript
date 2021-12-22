@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-import { normalizeInterrupt } from './utils';
+import { cleanSourceModelProperty, normalizeInterrupt } from './utils';
 
 export class WorkflowExecTimeout {
+  sourceModel?: WorkflowExecTimeout;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     const defaultModel = { interrupt: true };
     Object.assign(this, defaultModel, model);
   }
@@ -43,8 +47,9 @@ export class WorkflowExecTimeout {
   normalize = (): WorkflowExecTimeout => {
     const clone = new WorkflowExecTimeout(this);
 
-    normalizeInterrupt(clone);
+    normalizeInterrupt(clone, this.sourceModel);
 
+    cleanSourceModelProperty(clone);
     return clone;
   };
 }

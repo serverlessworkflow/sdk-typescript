@@ -35,12 +35,17 @@ import {
   overwriteTransitionIfObject,
   setEndValueIfNoTransition,
   overwriteTimeoutWithStateExecTimeout,
+  cleanSourceModelProperty,
 } from './utils';
 import { BranchExecTimeout } from './types';
 import { StateExecTimeout } from './stateExecTimeout';
 
 export class Parallelstate {
+  sourceModel?: Parallelstate;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     const defaultModel = {
       type: 'parallel',
       completionType: 'allOf',
@@ -123,11 +128,13 @@ export class Parallelstate {
 
     normalizeEndIfObject(clone);
     normalizeBranches(clone);
-    normalizeCompletionType(clone);
+    normalizeCompletionType(clone, this.sourceModel);
     normalizeOnErrors(clone);
     normalizeTransitionIfObject(clone);
-    normalizeUsedForCompensation(clone);
+    normalizeUsedForCompensation(clone, this.sourceModel);
     setEndValueIfNoTransition(clone);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

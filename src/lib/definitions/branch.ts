@@ -15,11 +15,15 @@
  */
 
 import { Action } from './action';
-import { normalizeActions, overwriteActions, overwritePropertyAsPlainType } from './utils';
+import { cleanSourceModelProperty, normalizeActions, overwriteActions, overwritePropertyAsPlainType } from './utils';
 import { ActionExecTimeout, BranchExecTimeout } from './types';
 
 export class Branch /* Branch Definition */ {
+  sourceModel?: Branch;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     Object.assign(this, model);
     overwriteActions(this);
     overwritePropertyAsPlainType('timeouts', this);
@@ -43,12 +47,13 @@ export class Branch /* Branch Definition */ {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Action} without deleted properties.
+   * @returns {Specification.Branch} without deleted properties.
    */
   normalize = (): Branch => {
     const clone = new Branch(this);
     normalizeActions(clone);
 
+    cleanSourceModelProperty(clone);
     return clone;
   };
 }

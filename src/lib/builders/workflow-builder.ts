@@ -27,7 +27,7 @@ function workflowBuildingFn(data: Specification.Workflow): () => Specification.W
   return () => {
     const model = new Specification.Workflow(data);
 
-    validate('Workflow', model);
+    validate('Workflow', model.normalize());
     return model;
   };
 }

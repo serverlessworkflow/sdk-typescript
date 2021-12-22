@@ -17,6 +17,7 @@ import { Actiondatafilter } from './actiondatafilter';
 import { Eventref } from './eventref';
 import { Functionref } from './functionref';
 import {
+  cleanSourceModelProperty,
   normalizeEventRef,
   normalizeFunctionRef,
   normalizeSubFlowRefIfObject,
@@ -30,7 +31,11 @@ import { Subflowref } from './subflowref';
 import { Sleep } from './sleep';
 
 export class Action {
+  sourceModel?: Action;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     Object.assign(this, model);
 
     overwriteFunctionRefIfObject(this);
@@ -80,6 +85,8 @@ export class Action {
     normalizeSubFlowRefIfObject(clone);
     normalizeEventRef(clone);
     normalizeFunctionRef(clone);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

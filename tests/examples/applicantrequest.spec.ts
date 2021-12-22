@@ -58,7 +58,6 @@ describe('applicationrequest workflow example', () => {
           .build(),
         operationstateBuilder()
           .name('StartApplication')
-          .actionMode('sequential')
           .actions([actionBuilder().subFlowRef('startApplicationWorkflowId').build()])
           .build(),
         operationstateBuilder()

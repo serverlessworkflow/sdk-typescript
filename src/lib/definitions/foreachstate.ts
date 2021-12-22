@@ -34,12 +34,17 @@ import {
   setEndValueIfNoTransition,
   normalizeMode,
   overwriteTimeoutWithStateExecTimeout,
+  cleanSourceModelProperty,
 } from './utils';
 import { ActionExecTimeout } from './types';
 import { StateExecTimeout } from './stateExecTimeout';
 
 export class Foreachstate {
+  sourceModel?: Foreachstate;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     const defaultModel = { type: 'foreach', usedForCompensation: false, mode: 'parallel' };
     Object.assign(this, defaultModel, model);
 
@@ -133,9 +138,11 @@ export class Foreachstate {
     normalizeActions(clone);
     normalizeOnErrors(clone);
     normalizeTransitionIfObject(clone);
-    normalizeUsedForCompensation(clone);
-    normalizeMode(clone);
+    normalizeUsedForCompensation(clone, this.sourceModel);
+    normalizeMode(clone, this.sourceModel);
     setEndValueIfNoTransition(clone);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

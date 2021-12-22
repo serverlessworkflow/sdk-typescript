@@ -41,6 +41,7 @@
     },
     {
       "type":"operation",
+      "actionMode":"sequential",
       "name":"RejectApplication",
       "actions":[
         {

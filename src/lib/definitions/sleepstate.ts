@@ -20,6 +20,7 @@ import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
+  cleanSourceModelProperty,
   normalizeEndIfObject,
   normalizeOnErrors,
   normalizeTransitionIfObject,
@@ -35,7 +36,11 @@ import {
 import { StateExecTimeout } from './stateExecTimeout';
 
 export class Sleepstate {
+  sourceModel?: Sleepstate;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     const defaultModel = {
       type: 'sleep',
       usedForCompensation: false,
@@ -108,8 +113,11 @@ export class Sleepstate {
     normalizeEndIfObject(clone);
     normalizeOnErrors(clone);
     normalizeTransitionIfObject(clone);
-    normalizeUsedForCompensation(clone);
+    normalizeUsedForCompensation(clone, this.sourceModel);
     setEndValueIfNoTransition(clone);
+
+    cleanSourceModelProperty(clone);
+
     return clone;
   };
 }
