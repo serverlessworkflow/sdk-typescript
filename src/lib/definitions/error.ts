@@ -17,10 +17,10 @@ import { End } from './end';
 import { Transition } from './transition';
 import {
   cleanSourceModelProperty,
-  normalizeEndIfObject,
-  normalizeTransitionIfObject,
-  overwriteEndIfObject,
-  overwriteTransitionIfObject,
+  normalizeEnd,
+  normalizeTransition,
+  overwriteEnd,
+  overwriteTransition,
   setEndValueIfNoTransition,
 } from './utils';
 
@@ -32,8 +32,8 @@ export class Error {
 
     Object.assign(this, model);
 
-    overwriteTransitionIfObject(this);
-    overwriteEndIfObject(this);
+    overwriteTransition(this);
+    overwriteEnd(this);
   }
 
   /**
@@ -54,8 +54,8 @@ export class Error {
   normalize = (): Error => {
     const clone = new Error(this);
 
-    normalizeEndIfObject(clone);
-    normalizeTransitionIfObject(clone);
+    normalizeEnd(clone);
+    normalizeTransition(clone);
 
     setEndValueIfNoTransition(clone);
 

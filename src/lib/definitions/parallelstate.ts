@@ -23,16 +23,16 @@ import { Transition } from './transition';
 import {
   normalizeBranches,
   normalizeCompletionType,
-  normalizeEndIfObject,
+  normalizeEnd,
   normalizeOnErrors,
-  normalizeTransitionIfObject,
+  normalizeTransition,
   normalizeUsedForCompensation,
   overwriteBranches,
-  overwriteEndIfObject,
+  overwriteEnd,
   overwriteMetadata,
   overwriteOnErrors,
   overwriteStateDataFilter,
-  overwriteTransitionIfObject,
+  overwriteTransition,
   setEndValueIfNoTransition,
   overwriteTimeoutWithStateExecTimeout,
   cleanSourceModelProperty,
@@ -53,12 +53,12 @@ export class Parallelstate {
     };
     Object.assign(this, defaultModel, model);
 
-    overwriteEndIfObject(this);
+    overwriteEnd(this);
     overwriteStateDataFilter(this);
     overwriteTimeoutWithStateExecTimeout(this);
     overwriteBranches(this);
     overwriteOnErrors(this);
-    overwriteTransitionIfObject(this);
+    overwriteTransition(this);
     overwriteMetadata(this);
   }
 
@@ -126,11 +126,11 @@ export class Parallelstate {
   normalize = (): Parallelstate => {
     const clone = new Parallelstate(this);
 
-    normalizeEndIfObject(clone);
+    normalizeEnd(clone);
     normalizeBranches(clone);
     normalizeCompletionType(clone, this.sourceModel);
     normalizeOnErrors(clone);
-    normalizeTransitionIfObject(clone);
+    normalizeTransition(clone);
     normalizeUsedForCompensation(clone, this.sourceModel);
     setEndValueIfNoTransition(clone);
 

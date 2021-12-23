@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 import { Crondef } from './crondef';
-import { overwriteCronIfObject } from './utils';
+import { overwriteCron } from './utils';
 
 export class Schedule {
   constructor(model: any) {
     Object.assign(this, model);
 
-    overwriteCronIfObject(this);
+    overwriteCron(this);
   }
 
   /**

@@ -21,16 +21,16 @@ import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
   cleanSourceModelProperty,
-  normalizeEndIfObject,
+  normalizeEnd,
   normalizeOnErrors,
-  normalizeTransitionIfObject,
+  normalizeTransition,
   normalizeUsedForCompensation,
-  overwriteEndIfObject,
+  overwriteEnd,
   overwriteMetadata,
   overwriteOnErrors,
   overwriteStateDataFilter,
   overwriteTimeoutWithStateExecTimeout,
-  overwriteTransitionIfObject,
+  overwriteTransition,
   setEndValueIfNoTransition,
 } from './utils';
 import { StateExecTimeout } from './stateExecTimeout';
@@ -47,11 +47,11 @@ export class Sleepstate {
     };
     Object.assign(this, defaultModel, model);
 
-    overwriteEndIfObject(this);
+    overwriteEnd(this);
     overwriteStateDataFilter(this);
     overwriteTimeoutWithStateExecTimeout(this);
     overwriteOnErrors(this);
-    overwriteTransitionIfObject(this);
+    overwriteTransition(this);
     overwriteMetadata(this);
   }
 
@@ -110,9 +110,9 @@ export class Sleepstate {
   normalize = (): Sleepstate => {
     const clone = new Sleepstate(this);
 
-    normalizeEndIfObject(clone);
+    normalizeEnd(clone);
     normalizeOnErrors(clone);
-    normalizeTransitionIfObject(clone);
+    normalizeTransition(clone);
     normalizeUsedForCompensation(clone, this.sourceModel);
     setEndValueIfNoTransition(clone);
 

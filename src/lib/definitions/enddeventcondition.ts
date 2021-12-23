@@ -18,8 +18,8 @@ import { Eventdatafilter } from './eventdatafilter';
 import { Metadata } from './metadata';
 import {
   cleanSourceModelProperty,
-  normalizeEndIfObject,
-  overwriteEndIfObject,
+  normalizeEnd,
+  overwriteEnd,
   overwriteEventDataFilter,
   overwriteMetadata,
 } from './utils';
@@ -32,7 +32,7 @@ export class Enddeventcondition {
 
     Object.assign(this, model);
 
-    overwriteEndIfObject(this);
+    overwriteEnd(this);
     overwriteEventDataFilter(this);
     overwriteMetadata(this);
   }
@@ -62,7 +62,7 @@ export class Enddeventcondition {
   normalize = (): Enddeventcondition => {
     const clone = new Enddeventcondition(this);
 
-    normalizeEndIfObject(clone);
+    normalizeEnd(clone);
 
     cleanSourceModelProperty(clone);
 

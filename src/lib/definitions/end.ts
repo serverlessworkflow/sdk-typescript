@@ -17,9 +17,9 @@ import { Produceeventdef } from './produceeventdef';
 import {
   cleanSourceModelProperty,
   normalizeCompensate,
-  normalizeContinueAsIfObject,
+  normalizeContinueAs,
   normalizeTerminate,
-  overwriteContinueAsIfObject,
+  overwriteContinueAs,
   overwriteProduceEvents,
 } from './utils';
 import { Continueasdef } from './continueasdef';
@@ -37,7 +37,7 @@ export class End {
     Object.assign(this, defaultModel, model);
 
     overwriteProduceEvents(this);
-    overwriteContinueAsIfObject(this);
+    overwriteContinueAs(this);
   }
 
   /**
@@ -63,7 +63,7 @@ export class End {
 
     normalizeCompensate(clone, this.sourceModel);
     normalizeTerminate(clone, this.sourceModel);
-    normalizeContinueAsIfObject(clone);
+    normalizeContinueAs(clone);
 
     cleanSourceModelProperty(clone);
     return clone;

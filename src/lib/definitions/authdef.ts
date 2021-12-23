@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { cleanSourceModelProperty, normalizeScheme, overwritePropertiesIfObject } from './utils';
+import { cleanSourceModelProperty, normalizeScheme, overwriteProperties } from './utils';
 import { Properties } from './types';
 
 export class Authdef {
@@ -26,7 +26,7 @@ export class Authdef {
     const defaultModel = { scheme: 'basic' };
     Object.assign(this, defaultModel, model);
 
-    overwritePropertiesIfObject(this);
+    overwriteProperties(this);
   }
   /**
    * Unique auth definition name

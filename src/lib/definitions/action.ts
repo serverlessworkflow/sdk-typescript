@@ -20,12 +20,12 @@ import {
   cleanSourceModelProperty,
   normalizeEventRef,
   normalizeFunctionRef,
-  normalizeSubFlowRefIfObject,
+  normalizeSubFlowRef,
   overwriteActionDataFilter,
   overwriteEventRef,
-  overwriteFunctionRefIfObject,
+  overwriteFunctionRef,
   overwriteSleep,
-  overwriteSubFlowRefIfObject,
+  overwriteSubFlowRef,
 } from './utils';
 import { Subflowref } from './subflowref';
 import { Sleep } from './sleep';
@@ -38,9 +38,9 @@ export class Action {
 
     Object.assign(this, model);
 
-    overwriteFunctionRefIfObject(this);
+    overwriteFunctionRef(this);
     overwriteEventRef(this);
-    overwriteSubFlowRefIfObject(this);
+    overwriteSubFlowRef(this);
     overwriteSleep(this);
     overwriteActionDataFilter(this);
   }
@@ -82,7 +82,7 @@ export class Action {
   normalize = (): Action => {
     const clone = new Action(this);
 
-    normalizeSubFlowRefIfObject(clone);
+    normalizeSubFlowRef(clone);
     normalizeEventRef(clone);
     normalizeFunctionRef(clone);
 

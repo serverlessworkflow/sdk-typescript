@@ -20,15 +20,15 @@ import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
   cleanSourceModelProperty,
-  normalizeEndIfObject,
-  normalizeTransitionIfObject,
+  normalizeEnd,
+  normalizeTransition,
   normalizeUsedForCompensation,
-  overwriteEndIfObject,
+  overwriteEnd,
   overwriteMetadata,
   overwritePropertyAsPlainType,
   overwriteStateDataFilter,
   overwriteTimeoutWithStateExecTimeout,
-  overwriteTransitionIfObject,
+  overwriteTransition,
   setEndValueIfNoTransition,
 } from './utils';
 import { StateExecTimeout } from './stateExecTimeout';
@@ -42,11 +42,11 @@ export class Injectstate {
     const defaultModel = { type: 'inject', usedForCompensation: false };
     Object.assign(this, defaultModel, model);
 
-    overwriteEndIfObject(this);
+    overwriteEnd(this);
     overwritePropertyAsPlainType('data', this);
     overwriteTimeoutWithStateExecTimeout(this);
     overwriteStateDataFilter(this);
-    overwriteTransitionIfObject(this);
+    overwriteTransition(this);
     overwriteMetadata(this);
   }
 
@@ -103,8 +103,8 @@ export class Injectstate {
   normalize = (): Injectstate => {
     const clone = new Injectstate(this);
 
-    normalizeEndIfObject(clone);
-    normalizeTransitionIfObject(clone);
+    normalizeEnd(clone);
+    normalizeTransition(clone);
     normalizeUsedForCompensation(clone, this.sourceModel);
     setEndValueIfNoTransition(clone);
 

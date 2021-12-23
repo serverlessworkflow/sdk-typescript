@@ -30,7 +30,7 @@ import {
   normalizeFunctions,
   normalizeKeepActive,
   normalizeStates,
-  normalizeTimeoutsIfObject,
+  normalizeTimeouts,
   overwriteAuth,
   overwriteErrors,
   overwriteEvents,
@@ -38,9 +38,9 @@ import {
   overwriteMetadata,
   overwritePropertyAsPlainType,
   overwriteRetries,
-  overwriteStartIfObject,
+  overwriteStart,
   overwriteStates,
-  overwriteTimeoutsIfObject,
+  overwriteTimeouts,
 } from './utils';
 import { Auth, Errors, Events, Functions, Retries, Secrets, States } from './types';
 
@@ -59,8 +59,8 @@ export class Workflow {
 
     overwritePropertyAsPlainType('dataInputSchema', this);
     overwritePropertyAsPlainType('constants', this);
-    overwriteStartIfObject(this);
-    overwriteTimeoutsIfObject(this);
+    overwriteStart(this);
+    overwriteTimeouts(this);
     overwriteErrors(this);
     overwriteMetadata(this);
     overwriteEvents(this);
@@ -147,7 +147,7 @@ export class Workflow {
     const clone = new Workflow(this);
 
     normalizeExpressionLang(clone, this.sourceModel);
-    normalizeTimeoutsIfObject(clone);
+    normalizeTimeouts(clone);
     normalizeKeepActive(clone, this.sourceModel);
     normalizeEvents(clone);
     normalizeFunctions(clone);

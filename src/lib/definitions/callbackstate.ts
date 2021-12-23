@@ -24,18 +24,18 @@ import { Transition } from './transition';
 import {
   cleanSourceModelProperty,
   normalizeAction,
-  normalizeEndIfObject,
+  normalizeEnd,
   normalizeOnErrors,
-  normalizeTransitionIfObject,
+  normalizeTransition,
   normalizeUsedForCompensation,
   overwriteAction,
-  overwriteEndIfObject,
+  overwriteEnd,
   overwriteEventDataFilter,
   overwriteMetadata,
   overwriteOnErrors,
   overwriteStateDataFilter,
   overwriteTimeoutWithStateExecTimeout,
-  overwriteTransitionIfObject,
+  overwriteTransition,
   setEndValueIfNoTransition,
 } from './utils';
 import { ActionExecTimeout, EventTimeout } from './types';
@@ -55,8 +55,8 @@ export class Callbackstate {
     overwriteEventDataFilter(this);
     overwriteStateDataFilter(this);
     overwriteOnErrors(this);
-    overwriteTransitionIfObject(this);
-    overwriteEndIfObject(this);
+    overwriteTransition(this);
+    overwriteEnd(this);
     overwriteMetadata(this);
   }
 
@@ -127,8 +127,8 @@ export class Callbackstate {
 
     normalizeAction(clone);
     normalizeOnErrors(clone);
-    normalizeTransitionIfObject(clone);
-    normalizeEndIfObject(clone);
+    normalizeTransition(clone);
+    normalizeEnd(clone);
     normalizeUsedForCompensation(clone, this.sourceModel);
     setEndValueIfNoTransition(clone);
 

@@ -23,17 +23,17 @@ import {
   cleanSourceModelProperty,
   normalizeActionMode,
   normalizeActions,
-  normalizeEndIfObject,
+  normalizeEnd,
   normalizeOnErrors,
-  normalizeTransitionIfObject,
+  normalizeTransition,
   normalizeUsedForCompensation,
   overwriteActions,
-  overwriteEndIfObject,
+  overwriteEnd,
   overwriteMetadata,
   overwriteOnErrors,
   overwriteStateDataFilter,
   overwriteTimeoutWithStateExecTimeout,
-  overwriteTransitionIfObject,
+  overwriteTransition,
   setEndValueIfNoTransition,
 } from './utils';
 import { ActionExecTimeout } from './types';
@@ -52,12 +52,12 @@ export class Operationstate {
     };
     Object.assign(this, defaultModel, model);
 
-    overwriteEndIfObject(this);
+    overwriteEnd(this);
     overwriteStateDataFilter(this);
     overwriteActions(this);
     overwriteTimeoutWithStateExecTimeout(this);
     overwriteOnErrors(this);
-    overwriteTransitionIfObject(this);
+    overwriteTransition(this);
     overwriteMetadata(this);
   }
 
@@ -121,13 +121,13 @@ export class Operationstate {
   normalize = (): Operationstate => {
     const clone = new Operationstate(this);
 
-    normalizeEndIfObject(clone);
+    normalizeEnd(clone);
 
     normalizeActionMode(clone, this.sourceModel);
 
     normalizeActions(clone);
     normalizeOnErrors(clone);
-    normalizeTransitionIfObject(clone);
+    normalizeTransition(clone);
     normalizeUsedForCompensation(clone, this.sourceModel);
     setEndValueIfNoTransition(clone);
 

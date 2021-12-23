@@ -20,17 +20,17 @@ import { Onevents } from './onevents';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
-  normalizeEndIfObject,
+  normalizeEnd,
   normalizeExclusive,
   normalizeOnErrors,
   normalizeOnEvents,
-  normalizeTransitionIfObject,
-  overwriteEndIfObject,
+  normalizeTransition,
+  overwriteEnd,
   overwriteMetadata,
   overwriteOnErrors,
   overwriteOnEvents,
   overwriteStateDataFilter,
-  overwriteTransitionIfObject,
+  overwriteTransition,
   setEndValueIfNoTransition,
   overwriteTimeoutWithStateExecTimeout,
   cleanSourceModelProperty,
@@ -51,8 +51,8 @@ export class Eventstate /* This state is used to wait for events from event sour
     overwriteTimeoutWithStateExecTimeout(this);
     overwriteStateDataFilter(this);
     overwriteOnErrors(this);
-    overwriteTransitionIfObject(this);
-    overwriteEndIfObject(this);
+    overwriteTransition(this);
+    overwriteEnd(this);
     overwriteMetadata(this);
   }
 
@@ -107,8 +107,8 @@ export class Eventstate /* This state is used to wait for events from event sour
     normalizeExclusive(clone, this.sourceModel);
     normalizeOnEvents(clone);
     normalizeOnErrors(clone);
-    normalizeTransitionIfObject(clone);
-    normalizeEndIfObject(clone);
+    normalizeTransition(clone);
+    normalizeEnd(clone);
     setEndValueIfNoTransition(clone);
 
     cleanSourceModelProperty(clone);
