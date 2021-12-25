@@ -46,6 +46,8 @@ export class Operationstate {
     this.sourceModel = Object.assign({}, model);
 
     const defaultModel = {
+      id: undefined,
+      name: undefined,
       type: 'operation',
       actionMode: 'sequential',
       usedForCompensation: false,

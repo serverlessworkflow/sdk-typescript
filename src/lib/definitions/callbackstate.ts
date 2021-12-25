@@ -47,7 +47,12 @@ export class Callbackstate {
   constructor(model: any) {
     this.sourceModel = Object.assign({}, model);
 
-    const defaultModel = { type: 'callback', usedForCompensation: false };
+    const defaultModel = {
+      id: undefined,
+      name: undefined,
+      type: 'callback',
+      usedForCompensation: false,
+    };
     Object.assign(this, defaultModel, model);
 
     overwriteAction(this);
@@ -59,7 +64,6 @@ export class Callbackstate {
     overwriteEnd(this);
     overwriteMetadata(this);
   }
-
   /**
    * Unique state id
    */

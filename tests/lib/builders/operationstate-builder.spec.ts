@@ -28,8 +28,8 @@ describe('operationstateBuilder ', () => {
     const serializedObject = object.normalize();
     expect(JSON.stringify(serializedObject)).toBe(
       JSON.stringify({
-        type: 'operation',
         name: 'StartApplication',
+        type: 'operation',
         actions: [{ subFlowRef: 'startApplicationWorkflowId' }],
         end: true,
       })

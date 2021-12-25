@@ -42,6 +42,8 @@ export class Sleepstate {
     this.sourceModel = Object.assign({}, model);
 
     const defaultModel = {
+      id: undefined,
+      name: undefined,
       type: 'sleep',
       usedForCompensation: false,
     };

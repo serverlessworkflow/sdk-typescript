@@ -51,9 +51,20 @@ export class Workflow {
     this.sourceModel = Object.assign({}, model);
 
     const defaultModel = {
+      id: undefined,
+      name: undefined,
+      version: undefined,
+      description: undefined,
+      specVersion: undefined,
+      start: undefined,
+      states: undefined,
+      functions: undefined,
+      events: undefined,
+      retries: undefined,
+      timeouts: undefined,
       expressionLang: 'jq',
       keepActive: true,
-    } as Specification.Workflow;
+    };
 
     Object.assign(this, defaultModel, model);
 

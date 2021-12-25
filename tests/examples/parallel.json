@@ -1,15 +1,15 @@
 {
   "id": "parallelexec",
-  "version": "1.0",
-  "specVersion": "0.8",
   "name": "Parallel Execution Workflow",
+  "version": "1.0",
   "description": "Executes two branches in parallel",
+  "specVersion": "0.8",
   "start": "ParallelExec",
   "states":[
     {
+      "name": "ParallelExec",
       "type": "parallel",
       "completionType": "allOf",
-      "name": "ParallelExec",
       "branches": [
         {
           "name": "ShortDelayBranch",

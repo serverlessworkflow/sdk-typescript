@@ -40,7 +40,7 @@ export class Databasedswitchstate {
   constructor(model: any) {
     this.sourceModel = Object.assign({}, model);
 
-    const defaultModel = { type: 'switch', usedForCompensation: false };
+    const defaultModel = { id: undefined, name: undefined, type: 'switch', usedForCompensation: false };
     Object.assign(this, defaultModel, model);
 
     overwriteStateDataFilter(this);

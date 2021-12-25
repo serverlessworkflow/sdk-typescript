@@ -20,6 +20,7 @@ import { Onevents } from './onevents';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
+  cleanSourceModelProperty,
   normalizeEnd,
   normalizeExclusive,
   normalizeOnErrors,
@@ -30,10 +31,9 @@ import {
   overwriteOnErrors,
   overwriteOnEvents,
   overwriteStateDataFilter,
+  overwriteTimeoutWithStateExecTimeout,
   overwriteTransition,
   setEndValueIfNoTransition,
-  overwriteTimeoutWithStateExecTimeout,
-  cleanSourceModelProperty,
 } from './utils';
 import { ActionExecTimeout, EventTimeout } from './types';
 import { StateExecTimeout } from './stateExecTimeout';
@@ -44,7 +44,12 @@ export class Eventstate /* This state is used to wait for events from event sour
   constructor(model: any) {
     this.sourceModel = Object.assign({}, model);
 
-    const defaultModel = { type: 'event', exclusive: true };
+    const defaultModel = {
+      id: undefined,
+      name: undefined,
+      type: 'event',
+      exclusive: true,
+    };
     Object.assign(this, defaultModel, model);
 
     overwriteOnEvents(this);

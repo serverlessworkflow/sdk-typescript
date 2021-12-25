@@ -21,6 +21,7 @@ import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
+  cleanSourceModelProperty,
   normalizeBranches,
   normalizeCompletionType,
   normalizeEnd,
@@ -32,10 +33,9 @@ import {
   overwriteMetadata,
   overwriteOnErrors,
   overwriteStateDataFilter,
+  overwriteTimeoutWithStateExecTimeout,
   overwriteTransition,
   setEndValueIfNoTransition,
-  overwriteTimeoutWithStateExecTimeout,
-  cleanSourceModelProperty,
 } from './utils';
 import { BranchExecTimeout } from './types';
 import { StateExecTimeout } from './stateExecTimeout';
@@ -47,6 +47,8 @@ export class Parallelstate {
     this.sourceModel = Object.assign({}, model);
 
     const defaultModel = {
+      id: undefined,
+      name: undefined,
       type: 'parallel',
       completionType: 'allOf',
       usedForCompensation: false,
