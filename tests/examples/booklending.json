@@ -10,7 +10,9 @@
       "type": "event",
       "onEvents": [
         {
-          "eventRefs": ["Book Lending Request Event"]
+          "eventRefs": [
+            "Book Lending Request Event"
+          ]
         }
       ],
       "transition": "Get Book Status"

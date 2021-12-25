@@ -20,15 +20,6 @@ import { ActionExecTimeout, BranchExecTimeout } from './types';
 
 export class Branch /* Branch Definition */ {
   sourceModel?: Branch;
-
-  constructor(model: any) {
-    this.sourceModel = Object.assign({}, model);
-
-    Object.assign(this, model);
-    overwriteActions(this);
-    overwritePropertyAsPlainType('timeouts', this);
-  }
-
   /**
    * Branch name
    */
@@ -44,6 +35,14 @@ export class Branch /* Branch Definition */ {
    * Actions to be executed in this branch
    */
   actions: Action[];
+
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    Object.assign(this, model);
+    overwriteActions(this);
+    overwritePropertyAsPlainType('timeouts', this);
+  }
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.

@@ -41,28 +41,6 @@ import { StateExecTimeout } from './stateExecTimeout';
 
 export class Foreachstate {
   sourceModel?: Foreachstate;
-
-  constructor(model: any) {
-    this.sourceModel = Object.assign({}, model);
-
-    const defaultModel = {
-      id: undefined,
-      name: undefined,
-      type: 'foreach',
-      usedForCompensation: false,
-      mode: 'parallel',
-    };
-    Object.assign(this, defaultModel, model);
-
-    overwriteEnd(this);
-    overwriteActions(this);
-    overwriteTimeoutWithStateExecTimeout(this);
-    overwriteStateDataFilter(this);
-    overwriteOnErrors(this);
-    overwriteTransition(this);
-    overwriteMetadata(this);
-  }
-
   /**
    * Unique State id
    */
@@ -131,6 +109,27 @@ export class Foreachstate {
    */
   mode?: 'sequential' | 'parallel';
   metadata?: /* Metadata information */ Metadata;
+
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = {
+      id: undefined,
+      name: undefined,
+      type: 'foreach',
+      usedForCompensation: false,
+      mode: 'parallel',
+    };
+    Object.assign(this, defaultModel, model);
+
+    overwriteEnd(this);
+    overwriteActions(this);
+    overwriteTimeoutWithStateExecTimeout(this);
+    overwriteStateDataFilter(this);
+    overwriteOnErrors(this);
+    overwriteTransition(this);
+    overwriteMetadata(this);
+  }
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.

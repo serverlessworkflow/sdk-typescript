@@ -19,9 +19,9 @@ import {
   eventdefBuilder,
   eventstateBuilder,
   functionBuilder,
+  functionrefBuilder,
   oneventsBuilder,
   workflowBuilder,
-  functionrefBuilder,
 } from '../../src';
 
 describe('carauctionbids workflow example', () => {

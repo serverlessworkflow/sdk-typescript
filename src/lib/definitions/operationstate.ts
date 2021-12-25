@@ -41,28 +41,6 @@ import { StateExecTimeout } from './stateExecTimeout';
 
 export class Operationstate {
   sourceModel?: Operationstate;
-
-  constructor(model: any) {
-    this.sourceModel = Object.assign({}, model);
-
-    const defaultModel = {
-      id: undefined,
-      name: undefined,
-      type: 'operation',
-      actionMode: 'sequential',
-      usedForCompensation: false,
-    };
-    Object.assign(this, defaultModel, model);
-
-    overwriteEnd(this);
-    overwriteStateDataFilter(this);
-    overwriteActions(this);
-    overwriteTimeoutWithStateExecTimeout(this);
-    overwriteOnErrors(this);
-    overwriteTransition(this);
-    overwriteMetadata(this);
-  }
-
   /**
    * Unique State id
    */
@@ -115,6 +93,27 @@ export class Operationstate {
    */
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
+
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = {
+      id: undefined,
+      name: undefined,
+      type: 'operation',
+      actionMode: 'sequential',
+      usedForCompensation: false,
+    };
+    Object.assign(this, defaultModel, model);
+
+    overwriteEnd(this);
+    overwriteStateDataFilter(this);
+    overwriteActions(this);
+    overwriteTimeoutWithStateExecTimeout(this);
+    overwriteOnErrors(this);
+    overwriteTransition(this);
+    overwriteMetadata(this);
+  }
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.

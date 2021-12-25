@@ -18,18 +18,6 @@ import { cleanSourceModelProperty, normalizeCompensate, overwriteProduceEvents }
 
 export class Transition {
   sourceModel?: Transition;
-
-  constructor(model: any) {
-    this.sourceModel = Object.assign({}, model);
-
-    const defaultModel = {
-      compensate: false,
-    };
-    Object.assign(this, defaultModel, model);
-
-    overwriteProduceEvents(this);
-  }
-
   /**
    * Name of state to transition to
    */
@@ -42,6 +30,17 @@ export class Transition {
    * If set to true, triggers workflow compensation when before this transition is taken. Default is false
    */
   compensate?: boolean;
+
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = {
+      compensate: false,
+    };
+    Object.assign(this, defaultModel, model);
+
+    overwriteProduceEvents(this);
+  }
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.

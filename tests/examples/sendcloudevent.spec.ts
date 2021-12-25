@@ -16,13 +16,13 @@
 import * as fs from 'fs';
 import {
   actionBuilder,
+  endBuilder,
   eventdefBuilder,
   foreachstateBuilder,
   functionBuilder,
+  functionrefBuilder,
   produceeventdefBuilder,
   workflowBuilder,
-  functionrefBuilder,
-  endBuilder,
 } from '../../src';
 
 describe('sendcloudevent workflow example', () => {

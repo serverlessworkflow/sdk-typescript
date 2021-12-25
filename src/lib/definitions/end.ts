@@ -26,20 +26,6 @@ import { Continueasdef } from './continueasdef';
 
 export class End {
   sourceModel?: End;
-
-  constructor(model: any) {
-    this.sourceModel = Object.assign({}, model);
-
-    const defaultModel = {
-      compensate: false,
-      terminate: false,
-    };
-    Object.assign(this, defaultModel, model);
-
-    overwriteProduceEvents(this);
-    overwriteContinueAs(this);
-  }
-
   /**
    * If true, completes all execution flows in the given workflow instance
    */
@@ -53,6 +39,19 @@ export class End {
    */
   compensate?: boolean;
   continueAs?: string | Continueasdef;
+
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = {
+      compensate: false,
+      terminate: false,
+    };
+    Object.assign(this, defaultModel, model);
+
+    overwriteProduceEvents(this);
+    overwriteContinueAs(this);
+  }
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.

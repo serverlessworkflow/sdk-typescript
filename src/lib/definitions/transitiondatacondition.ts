@@ -19,16 +19,6 @@ import { cleanSourceModelProperty, normalizeTransition, overwriteMetadata, overw
 
 export class Transitiondatacondition {
   sourceModel?: Transitiondatacondition;
-
-  constructor(model: any) {
-    this.sourceModel = Object.assign({}, model);
-
-    Object.assign(this, model);
-
-    overwriteTransition(this);
-    overwriteMetadata(this);
-  }
-
   /**
    * Data condition name
    */
@@ -42,6 +32,15 @@ export class Transitiondatacondition {
    */
   transition: string | Transition;
   metadata?: /* Metadata information */ Metadata;
+
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    Object.assign(this, model);
+
+    overwriteTransition(this);
+    overwriteMetadata(this);
+  }
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.

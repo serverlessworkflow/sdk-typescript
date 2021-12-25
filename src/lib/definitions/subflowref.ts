@@ -18,13 +18,6 @@ import { cleanSourceModelProperty, normalizeInvoke, normalizeOnParentComplete } 
 
 export class Subflowref {
   sourceModel?: Subflowref;
-
-  constructor(model: any) {
-    this.sourceModel = Object.assign({}, model);
-
-    Object.assign(this, model);
-  }
-
   /**
    * Unique id of the sub-workflow to be invoked
    */
@@ -41,6 +34,13 @@ export class Subflowref {
    * Specifies if the subflow should be invoked sync or async
    */
   invoke?: 'sync' | 'async';
+
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    Object.assign(this, model);
+  }
+
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Subflowref} without deleted properties.

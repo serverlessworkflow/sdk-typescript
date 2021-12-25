@@ -25,17 +25,6 @@ import {
 
 export class Onevents {
   sourceModel?: Onevents;
-
-  constructor(model: any) {
-    this.sourceModel = Object.assign({}, model);
-
-    const defaultModel = { actionMode: 'sequential' };
-    Object.assign(this, defaultModel, model);
-
-    overwriteActions(this);
-    overwriteEventDataFilter(this);
-  }
-
   /**
    * References one or more unique event names in the defined workflow events
    */
@@ -52,6 +41,16 @@ export class Onevents {
    * Event data filter
    */
   eventDataFilter?: Eventdatafilter;
+
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = { actionMode: 'sequential' };
+    Object.assign(this, defaultModel, model);
+
+    overwriteActions(this);
+    overwriteEventDataFilter(this);
+  }
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.

@@ -16,12 +16,8 @@
 
 import { Metadata } from './metadata';
 import { overwriteMetadata } from './utils';
-export class Oauth2propsdef {
-  constructor(model: any) {
-    Object.assign(this, model);
-    overwriteMetadata(this);
-  }
 
+export class Oauth2propsdef {
   /**
    * String or a workflow expression. Contains the authority information
    */
@@ -67,4 +63,9 @@ export class Oauth2propsdef {
    */
   requestedIssuer?: string;
   metadata?: /* Metadata information */ Metadata;
+
+  constructor(model: any) {
+    Object.assign(this, model);
+    overwriteMetadata(this);
+  }
 }

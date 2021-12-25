@@ -15,10 +15,6 @@
  */
 
 export class Retrydef {
-  constructor(model: any) {
-    Object.assign(this, model);
-  }
-
   /**
    * Unique retry strategy name
    */
@@ -47,4 +43,8 @@ export class Retrydef {
    * If float type, maximum amount of random time added or subtracted from the delay between each retry relative to total delay (between 0 and 1). If string type, absolute maximum amount of random time added or subtracted from the delay between each retry (ISO 8601 duration format)
    */
   jitter?: number | string;
+
+  constructor(model: any) {
+    Object.assign(this, model);
+  }
 }

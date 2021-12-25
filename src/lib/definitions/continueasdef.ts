@@ -25,15 +25,6 @@ import {
 
 export class Continueasdef {
   sourceModel?: Continueasdef;
-
-  constructor(model: any) {
-    this.sourceModel = Object.assign({}, model);
-
-    Object.assign(this, model);
-    overwriteWorkflowExecTimeout(this);
-    overwritePropertyAsPlainType('data', this);
-  }
-
   /**
    * Unique id of the workflow to continue execution as
    */
@@ -54,6 +45,14 @@ export class Continueasdef {
    * Workflow execution timeout to be used by the workflow continuing execution. Overwrites any specific settings set by that workflow
    */
   workflowExecTimeout?: WorkflowExecTimeout;
+
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    Object.assign(this, model);
+    overwriteWorkflowExecTimeout(this);
+    overwritePropertyAsPlainType('data', this);
+  }
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.

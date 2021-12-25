@@ -26,17 +26,6 @@ import {
 
 export class Enddeventcondition {
   sourceModel?: Enddeventcondition;
-
-  constructor(model: any) {
-    this.sourceModel = Object.assign({}, model);
-
-    Object.assign(this, model);
-
-    overwriteEnd(this);
-    overwriteEventDataFilter(this);
-    overwriteMetadata(this);
-  }
-
   /**
    * Event condition name
    */
@@ -54,6 +43,16 @@ export class Enddeventcondition {
    */
   eventDataFilter?: Eventdatafilter;
   metadata?: /* Metadata information */ Metadata;
+
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    Object.assign(this, model);
+
+    overwriteEnd(this);
+    overwriteEventDataFilter(this);
+    overwriteMetadata(this);
+  }
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.

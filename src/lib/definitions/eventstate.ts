@@ -40,27 +40,6 @@ import { StateExecTimeout } from './stateExecTimeout';
 
 export class Eventstate /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ {
   sourceModel?: Eventstate;
-
-  constructor(model: any) {
-    this.sourceModel = Object.assign({}, model);
-
-    const defaultModel = {
-      id: undefined,
-      name: undefined,
-      type: 'event',
-      exclusive: true,
-    };
-    Object.assign(this, defaultModel, model);
-
-    overwriteOnEvents(this);
-    overwriteTimeoutWithStateExecTimeout(this);
-    overwriteStateDataFilter(this);
-    overwriteOnErrors(this);
-    overwriteTransition(this);
-    overwriteEnd(this);
-    overwriteMetadata(this);
-  }
-
   /**
    * Unique State id
    */
@@ -101,6 +80,26 @@ export class Eventstate /* This state is used to wait for events from event sour
    */
   compensatedBy?: string;
   metadata?: /* Metadata information */ Metadata;
+
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = {
+      id: undefined,
+      name: undefined,
+      type: 'event',
+      exclusive: true,
+    };
+    Object.assign(this, defaultModel, model);
+
+    overwriteOnEvents(this);
+    overwriteTimeoutWithStateExecTimeout(this);
+    overwriteStateDataFilter(this);
+    overwriteOnErrors(this);
+    overwriteTransition(this);
+    overwriteEnd(this);
+    overwriteMetadata(this);
+  }
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.

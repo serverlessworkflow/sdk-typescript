@@ -16,17 +16,9 @@
 import { cleanSourceModelProperty, normalizeType, overwriteMetadata } from './utils';
 
 import { Metadata } from './metadata';
+
 export class Function {
   sourceModel?: Function;
-
-  constructor(model: any) {
-    this.sourceModel = Object.assign({}, model);
-
-    const defaultModel = { type: 'rest' };
-    Object.assign(this, defaultModel, model);
-    overwriteMetadata(this);
-  }
-
   /**
    * Unique function name
    */
@@ -44,6 +36,14 @@ export class Function {
    */
   authRef?: string;
   metadata?: /* Metadata information */ Metadata;
+
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = { type: 'rest' };
+    Object.assign(this, defaultModel, model);
+    overwriteMetadata(this);
+  }
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.

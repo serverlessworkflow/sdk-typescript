@@ -32,19 +32,6 @@ import { Sleep } from './sleep';
 
 export class Action {
   sourceModel?: Action;
-
-  constructor(model: any) {
-    this.sourceModel = Object.assign({}, model);
-
-    Object.assign(this, model);
-
-    overwriteFunctionRef(this);
-    overwriteEventRef(this);
-    overwriteSubFlowRef(this);
-    overwriteSleep(this);
-    overwriteActionDataFilter(this);
-  }
-
   /**
    * Unique action identifier
    */
@@ -74,6 +61,18 @@ export class Action {
    * Expression, if defined, must evaluate to true for this action to be performed. If false, action is disregarded
    */
   condition?: string;
+
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    Object.assign(this, model);
+
+    overwriteFunctionRef(this);
+    overwriteEventRef(this);
+    overwriteSubFlowRef(this);
+    overwriteSleep(this);
+    overwriteActionDataFilter(this);
+  }
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.

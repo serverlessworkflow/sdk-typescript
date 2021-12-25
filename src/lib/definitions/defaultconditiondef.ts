@@ -24,8 +24,11 @@ import {
   overwriteTransition,
   setEndValueIfNoTransition,
 } from './utils';
+
 export class Defaultconditiondef /* DefaultCondition definition. Can be either a transition or end definition */ {
   sourceModel?: Defaultconditiondef;
+  transition: string | Transition;
+  end?: boolean | End;
 
   constructor(model: any) {
     this.sourceModel = Object.assign({}, model);
@@ -35,9 +38,6 @@ export class Defaultconditiondef /* DefaultCondition definition. Can be either a
     overwriteTransition(this);
     overwriteEnd(this);
   }
-
-  transition: string | Transition;
-  end?: boolean | End;
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
