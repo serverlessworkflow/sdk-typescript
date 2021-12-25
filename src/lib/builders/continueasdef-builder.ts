@@ -27,7 +27,7 @@ function continueasdefBuildingFn(data: Specification.Continueasdef): () => Speci
   return () => {
     const model = new Specification.Continueasdef(data);
 
-    validate('Continueasdef', model);
+    validate('Continueasdef', model.normalize());
     return model;
   };
 }

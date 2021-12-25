@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 import { Schedule } from './schedule';
-import { overwriteScheduleIfObject } from './utils';
+import { overwriteSchedule } from './utils';
 
 export class Startdef {
   constructor(model: any) {
     Object.assign(this, model);
 
-    overwriteScheduleIfObject(this);
+    overwriteSchedule(this);
   }
 
   /**

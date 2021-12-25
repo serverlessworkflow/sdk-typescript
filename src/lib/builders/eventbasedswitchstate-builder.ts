@@ -29,7 +29,7 @@ function eventbasedswitchstateBuildingFn(
   return () => {
     const model = new Specification.Eventbasedswitchstate(data);
 
-    validate('Eventbasedswitchstate', model);
+    validate('Eventbasedswitchstate', model.normalize());
     return model;
   };
 }

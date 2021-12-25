@@ -8,6 +8,7 @@
   "states":[
     {
       "type": "parallel",
+      "completionType": "allOf",
       "name": "ParallelExec",
       "branches": [
         {

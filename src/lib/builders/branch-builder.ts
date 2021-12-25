@@ -27,7 +27,7 @@ function branchBuildingFn(data: Specification.Branch): () => Specification.Branc
   return () => {
     const model = new Specification.Branch(data);
 
-    validate('Branch', model);
+    validate('Branch', model.normalize());
     return model;
   };
 }

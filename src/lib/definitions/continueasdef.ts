@@ -16,10 +16,19 @@
  */
 
 import { WorkflowExecTimeout } from './workflowExecTimeout';
-import { normalizeWorkflowExecTimeout, overwritePropertyAsPlainType, overwriteWorkflowExecTimeout } from './utils';
+import {
+  cleanSourceModelProperty,
+  normalizeWorkflowExecTimeout,
+  overwritePropertyAsPlainType,
+  overwriteWorkflowExecTimeout,
+} from './utils';
 
 export class Continueasdef {
+  sourceModel?: Continueasdef;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     Object.assign(this, model);
     overwriteWorkflowExecTimeout(this);
     overwritePropertyAsPlainType('data', this);
@@ -53,6 +62,9 @@ export class Continueasdef {
   normalize = (): Continueasdef => {
     const clone = new Continueasdef(this);
     normalizeWorkflowExecTimeout(clone);
+
+    cleanSourceModelProperty(clone);
+
     return clone;
   };
 }

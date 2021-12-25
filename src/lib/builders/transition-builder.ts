@@ -27,7 +27,7 @@ function transitionBuildingFn(data: Specification.Transition): () => Specificati
   return () => {
     const model = new Specification.Transition(data);
 
-    validate('Transition', model);
+    validate('Transition', model.normalize());
     return model;
   };
 }

@@ -27,7 +27,7 @@ function endBuildingFn(data: Specification.End): () => Specification.End {
   return () => {
     const model = new Specification.End(data);
 
-    validate('End', model);
+    validate('End', model.normalize());
     return model;
   };
 }

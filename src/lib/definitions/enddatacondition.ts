@@ -15,13 +15,17 @@
  */
 import { End } from './end';
 import { Metadata } from './metadata';
-import { normalizeEndIfObject, overwriteEndIfObject, overwriteMetadata } from './utils';
+import { cleanSourceModelProperty, normalizeEnd, overwriteEnd, overwriteMetadata } from './utils';
 
 export class Enddatacondition {
+  sourceModel?: Enddatacondition;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     Object.assign(this, model);
 
-    overwriteEndIfObject(this);
+    overwriteEnd(this);
     overwriteMetadata(this);
   }
 
@@ -46,7 +50,9 @@ export class Enddatacondition {
   normalize = (): Enddatacondition => {
     const clone = new Enddatacondition(this);
 
-    normalizeEndIfObject(clone);
+    normalizeEnd(clone);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

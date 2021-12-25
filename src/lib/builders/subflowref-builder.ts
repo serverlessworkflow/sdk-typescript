@@ -27,7 +27,7 @@ function subflowrefBuildingFn(data: Specification.Subflowref): () => Specificati
   return () => {
     const model = new Specification.Subflowref(data);
 
-    validate('Subflowref', model);
+    validate('Subflowref', model.normalize());
     return model;
   };
 }

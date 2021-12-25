@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-import { normalizeInvoke, overwritePropertyAsPlainType } from './utils';
+import { cleanSourceModelProperty, normalizeInvoke, overwritePropertyAsPlainType } from './utils';
 
 export class Eventref {
+  sourceModel?: Eventref;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     Object.assign(this, model);
     overwritePropertyAsPlainType('data', this);
     overwritePropertyAsPlainType('contextAttributes', this);
@@ -61,7 +65,9 @@ export class Eventref {
   normalize = (): Eventref => {
     const clone = new Eventref(this);
 
-    normalizeInvoke(clone);
+    normalizeInvoke(clone, this.sourceModel);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

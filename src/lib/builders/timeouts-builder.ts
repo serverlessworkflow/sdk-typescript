@@ -27,7 +27,7 @@ function timeoutsBuildingFn(data: Specification.Timeouts): () => Specification.T
   return () => {
     const model = new Specification.Timeouts(data);
 
-    validate('Timeouts', model);
+    validate('Timeouts', model.normalize());
     return model;
   };
 }

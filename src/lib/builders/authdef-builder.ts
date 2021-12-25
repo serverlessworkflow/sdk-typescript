@@ -27,7 +27,7 @@ function authdefBuildingFn(data: Specification.Authdef): () => Specification.Aut
   return () => {
     const model = new Specification.Authdef(data);
 
-    validate('Authdef', model);
+    validate('Authdef', model.normalize());
     return model;
   };
 }

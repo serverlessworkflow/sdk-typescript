@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-import { normalizeInvoke, overwritePropertyAsPlainType } from './utils';
+import { cleanSourceModelProperty, normalizeInvoke, overwritePropertyAsPlainType } from './utils';
 
 export class Functionref {
+  sourceModel?: Functionref;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     Object.assign(this, model);
     overwritePropertyAsPlainType('arguments', this);
   }
@@ -48,7 +52,9 @@ export class Functionref {
   normalize = (): Functionref => {
     const clone = new Functionref(this);
 
-    normalizeInvoke(clone);
+    normalizeInvoke(clone, this.sourceModel);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

@@ -132,7 +132,7 @@ function ${camelType}BuildingFn(data: Specification.${dataType}): (() => Specifi
 
     ${extension?.preValidate ? extension.preValidate : ''}
     
-    validate('${dataType}', model);
+    validate('${dataType}', model.normalize());
     return model;
   };
 }

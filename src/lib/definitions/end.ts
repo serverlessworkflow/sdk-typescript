@@ -15,16 +15,21 @@
  */
 import { Produceeventdef } from './produceeventdef';
 import {
+  cleanSourceModelProperty,
   normalizeCompensate,
-  normalizeContinueAsIfObject,
+  normalizeContinueAs,
   normalizeTerminate,
-  overwriteContinueAsIfObject,
+  overwriteContinueAs,
   overwriteProduceEvents,
 } from './utils';
 import { Continueasdef } from './continueasdef';
 
 export class End {
+  sourceModel?: End;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     const defaultModel = {
       compensate: false,
       terminate: false,
@@ -32,7 +37,7 @@ export class End {
     Object.assign(this, defaultModel, model);
 
     overwriteProduceEvents(this);
-    overwriteContinueAsIfObject(this);
+    overwriteContinueAs(this);
   }
 
   /**
@@ -56,10 +61,11 @@ export class End {
   normalize = (): End => {
     const clone = new End(this);
 
-    normalizeCompensate(clone);
-    normalizeTerminate(clone);
-    normalizeContinueAsIfObject(clone);
+    normalizeCompensate(clone, this.sourceModel);
+    normalizeTerminate(clone, this.sourceModel);
+    normalizeContinueAs(clone);
 
+    cleanSourceModelProperty(clone);
     return clone;
   };
 }

@@ -17,17 +17,22 @@ import { Eventdatafilter } from './eventdatafilter';
 import { Metadata } from './metadata';
 import { Transition } from './transition';
 import {
-  normalizeTransitionIfObject,
+  cleanSourceModelProperty,
+  normalizeTransition,
   overwriteEventDataFilter,
   overwriteMetadata,
-  overwriteTransitionIfObject,
+  overwriteTransition,
 } from './utils';
 
 export class Transitioneventcondition {
+  sourceModel?: Transitioneventcondition;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     Object.assign(this, model);
 
-    overwriteTransitionIfObject(this);
+    overwriteTransition(this);
     overwriteEventDataFilter(this);
     overwriteMetadata(this);
   }
@@ -57,8 +62,9 @@ export class Transitioneventcondition {
   normalize = (): Transitioneventcondition => {
     const clone = new Transitioneventcondition(this);
 
-    normalizeTransitionIfObject(clone);
+    normalizeTransition(clone);
 
+    cleanSourceModelProperty(clone);
     return clone;
   };
 }

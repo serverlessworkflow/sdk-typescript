@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 import { Produceeventdef } from './produceeventdef';
-import { normalizeCompensate, overwriteProduceEvents } from './utils';
+import { cleanSourceModelProperty, normalizeCompensate, overwriteProduceEvents } from './utils';
 
 export class Transition {
+  sourceModel?: Transition;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     const defaultModel = {
       compensate: false,
     };
@@ -46,8 +50,9 @@ export class Transition {
   normalize = (): Transition => {
     const clone = new Transition(this);
 
-    normalizeCompensate(clone);
+    normalizeCompensate(clone, this.sourceModel);
 
+    cleanSourceModelProperty(clone);
     return clone;
   };
 }

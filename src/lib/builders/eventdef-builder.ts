@@ -27,7 +27,7 @@ function eventdefBuildingFn(data: Specification.Eventdef): () => Specification.E
   return () => {
     const model = new Specification.Eventdef(data);
 
-    validate('Eventdef', model);
+    validate('Eventdef', model.normalize());
     return model;
   };
 }

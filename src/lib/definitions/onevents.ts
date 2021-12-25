@@ -15,10 +15,20 @@
  */
 import { Action } from './action';
 import { Eventdatafilter } from './eventdatafilter';
-import { normalizeActionMode, normalizeActions, overwriteActions, overwriteEventDataFilter } from './utils';
+import {
+  cleanSourceModelProperty,
+  normalizeActionMode,
+  normalizeActions,
+  overwriteActions,
+  overwriteEventDataFilter,
+} from './utils';
 
 export class Onevents {
+  sourceModel?: Onevents;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     const defaultModel = { actionMode: 'sequential' };
     Object.assign(this, defaultModel, model);
 
@@ -50,8 +60,10 @@ export class Onevents {
   normalize = (): Onevents => {
     const clone = new Onevents(this);
 
-    normalizeActionMode(clone);
+    normalizeActionMode(clone, this.sourceModel);
     normalizeActions(clone);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

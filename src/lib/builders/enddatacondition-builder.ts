@@ -27,7 +27,7 @@ function enddataconditionBuildingFn(data: Specification.Enddatacondition): () =>
   return () => {
     const model = new Specification.Enddatacondition(data);
 
-    validate('Enddatacondition', model);
+    validate('Enddatacondition', model.normalize());
     return model;
   };
 }

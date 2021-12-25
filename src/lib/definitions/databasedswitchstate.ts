@@ -19,6 +19,7 @@ import { Error } from './error';
 import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import {
+  cleanSourceModelProperty,
   normalizeDataConditions,
   normalizeDefaultCondition,
   normalizeOnErrors,
@@ -34,7 +35,11 @@ import { Datacondition } from './types';
 import { StateExecTimeout } from './stateExecTimeout';
 
 export class Databasedswitchstate {
+  sourceModel?: Databasedswitchstate;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     const defaultModel = { type: 'switch', usedForCompensation: false };
     Object.assign(this, defaultModel, model);
 
@@ -100,7 +105,8 @@ export class Databasedswitchstate {
     normalizeDataConditions(clone);
     normalizeOnErrors(clone);
     normalizeDefaultCondition(clone);
-    normalizeUsedForCompensation(clone);
+    normalizeUsedForCompensation(clone, this.sourceModel);
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

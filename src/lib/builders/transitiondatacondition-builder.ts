@@ -29,7 +29,7 @@ function transitiondataconditionBuildingFn(
   return () => {
     const model = new Specification.Transitiondatacondition(data);
 
-    validate('Transitiondatacondition', model);
+    validate('Transitiondatacondition', model.normalize());
     return model;
   };
 }

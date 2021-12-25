@@ -23,13 +23,14 @@ import { Specification } from '.';
 
 import { validate } from '../utils';
 import {
+  cleanSourceModelProperty,
   normalizeAuth,
   normalizeEvents,
   normalizeExpressionLang,
   normalizeFunctions,
   normalizeKeepActive,
   normalizeStates,
-  normalizeTimeoutsIfObject,
+  normalizeTimeouts,
   overwriteAuth,
   overwriteErrors,
   overwriteEvents,
@@ -37,14 +38,18 @@ import {
   overwriteMetadata,
   overwritePropertyAsPlainType,
   overwriteRetries,
-  overwriteStartIfObject,
+  overwriteStart,
   overwriteStates,
-  overwriteTimeoutsIfObject,
+  overwriteTimeouts,
 } from './utils';
 import { Auth, Errors, Events, Functions, Retries, Secrets, States } from './types';
 
 export class Workflow {
+  sourceModel?: Workflow;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     const defaultModel = {
       expressionLang: 'jq',
       keepActive: true,
@@ -54,8 +59,8 @@ export class Workflow {
 
     overwritePropertyAsPlainType('dataInputSchema', this);
     overwritePropertyAsPlainType('constants', this);
-    overwriteStartIfObject(this);
-    overwriteTimeoutsIfObject(this);
+    overwriteStart(this);
+    overwriteTimeouts(this);
     overwriteErrors(this);
     overwriteMetadata(this);
     overwriteEvents(this);
@@ -141,14 +146,15 @@ export class Workflow {
   normalize = (): Workflow => {
     const clone = new Workflow(this);
 
-    normalizeExpressionLang(clone);
-    normalizeTimeoutsIfObject(clone);
-    normalizeKeepActive(clone);
+    normalizeExpressionLang(clone, this.sourceModel);
+    normalizeTimeouts(clone);
+    normalizeKeepActive(clone, this.sourceModel);
     normalizeEvents(clone);
     normalizeFunctions(clone);
     normalizeAuth(clone);
     normalizeStates(clone);
 
+    cleanSourceModelProperty(clone);
     return clone;
   };
 
@@ -172,7 +178,7 @@ export class Workflow {
    * @returns {string} The workflow as JSON
    */
   static toJson(workflow: Workflow): string {
-    validate('Workflow', workflow);
+    validate('Workflow', workflow.normalize());
     return JSON.stringify(workflow.normalize());
   }
 
@@ -182,7 +188,7 @@ export class Workflow {
    * @returns {string} The workflow as YAML
    */
   static toYaml(workflow: Workflow): string {
-    validate('Workflow', workflow);
+    validate('Workflow', workflow.normalize());
     return yaml.dump(JSON.parse(JSON.stringify(workflow.normalize())));
   }
 }

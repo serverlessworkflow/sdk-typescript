@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-import { normalizeScheme, overwritePropertiesIfObject } from './utils';
+import { cleanSourceModelProperty, normalizeScheme, overwriteProperties } from './utils';
 import { Properties } from './types';
 
 export class Authdef {
+  sourceModel?: Authdef;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     const defaultModel = { scheme: 'basic' };
     Object.assign(this, defaultModel, model);
 
-    overwritePropertiesIfObject(this);
+    overwriteProperties(this);
   }
   /**
    * Unique auth definition name
@@ -41,7 +45,9 @@ export class Authdef {
   normalize = (): Authdef => {
     const clone = new Authdef(this);
 
-    normalizeScheme(clone);
+    normalizeScheme(clone, this.sourceModel);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

@@ -30,7 +30,7 @@ function injectstateBuildingFn(data: Specification.Injectstate): () => Specifica
 
     setEndValueIfNoTransition(model);
 
-    validate('Injectstate', model);
+    validate('Injectstate', model.normalize());
     return model;
   };
 }

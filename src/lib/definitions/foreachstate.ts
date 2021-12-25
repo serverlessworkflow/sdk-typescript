@@ -21,34 +21,39 @@ import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
   normalizeActions,
-  normalizeEndIfObject,
+  normalizeEnd,
   normalizeOnErrors,
-  normalizeTransitionIfObject,
+  normalizeTransition,
   normalizeUsedForCompensation,
   overwriteActions,
-  overwriteEndIfObject,
+  overwriteEnd,
   overwriteMetadata,
   overwriteOnErrors,
   overwriteStateDataFilter,
-  overwriteTransitionIfObject,
+  overwriteTransition,
   setEndValueIfNoTransition,
   normalizeMode,
   overwriteTimeoutWithStateExecTimeout,
+  cleanSourceModelProperty,
 } from './utils';
 import { ActionExecTimeout } from './types';
 import { StateExecTimeout } from './stateExecTimeout';
 
 export class Foreachstate {
+  sourceModel?: Foreachstate;
+
   constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
     const defaultModel = { type: 'foreach', usedForCompensation: false, mode: 'parallel' };
     Object.assign(this, defaultModel, model);
 
-    overwriteEndIfObject(this);
+    overwriteEnd(this);
     overwriteActions(this);
     overwriteTimeoutWithStateExecTimeout(this);
     overwriteStateDataFilter(this);
     overwriteOnErrors(this);
-    overwriteTransitionIfObject(this);
+    overwriteTransition(this);
     overwriteMetadata(this);
   }
 
@@ -129,13 +134,15 @@ export class Foreachstate {
   normalize = (): Foreachstate => {
     const clone = new Foreachstate(this);
 
-    normalizeEndIfObject(clone);
+    normalizeEnd(clone);
     normalizeActions(clone);
     normalizeOnErrors(clone);
-    normalizeTransitionIfObject(clone);
-    normalizeUsedForCompensation(clone);
-    normalizeMode(clone);
+    normalizeTransition(clone);
+    normalizeUsedForCompensation(clone, this.sourceModel);
+    normalizeMode(clone, this.sourceModel);
     setEndValueIfNoTransition(clone);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };
