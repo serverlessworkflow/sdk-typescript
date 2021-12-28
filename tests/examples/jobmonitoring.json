@@ -5,12 +5,12 @@
   "description": "Monitor finished execution of a submitted job",
   "specVersion": "0.8",
   "start": "SubmitJob",
-  "states":[
+  "states": [
     {
-      "name":"SubmitJob",
-      "type":"operation",
-      "actionMode":"sequential",
-      "actions":[
+      "name": "SubmitJob",
+      "type": "operation",
+      "actionMode": "sequential",
+      "actions": [
         {
           "functionRef": {
             "refName": "submitJob",
@@ -35,10 +35,10 @@
       "transition": "GetJobStatus"
     },
     {
-      "name":"GetJobStatus",
-      "type":"operation",
-      "actionMode":"sequential",
-      "actions":[
+      "name": "GetJobStatus",
+      "type": "operation",
+      "actionMode": "sequential",
+      "actions": [
         {
           "functionRef": {
             "refName": "checkJobStatus",
@@ -57,8 +57,8 @@
       "transition": "DetermineCompletion"
     },
     {
-      "name":"DetermineCompletion",
-      "type":"switch",
+      "name": "DetermineCompletion",
+      "type": "switch",
       "dataConditions": [
         {
           "condition": "${ .jobStatus == \"SUCCEEDED\" }",
@@ -74,10 +74,10 @@
       }
     },
     {
-      "name":"JobSucceeded",
-      "type":"operation",
-      "actionMode":"sequential",
-      "actions":[
+      "name": "JobSucceeded",
+      "type": "operation",
+      "actionMode": "sequential",
+      "actions": [
         {
           "functionRef": {
             "refName": "reportJobSuceeded",
@@ -90,10 +90,10 @@
       "end": true
     },
     {
-      "name":"JobFailed",
-      "type":"operation",
-      "actionMode":"sequential",
-      "actions":[
+      "name": "JobFailed",
+      "type": "operation",
+      "actionMode": "sequential",
+      "actions": [
         {
           "functionRef": {
             "refName": "reportJobFailed",

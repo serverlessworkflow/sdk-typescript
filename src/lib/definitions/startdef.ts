@@ -17,12 +17,6 @@ import { Schedule } from './schedule';
 import { overwriteSchedule } from './utils';
 
 export class Startdef {
-  constructor(model: any) {
-    Object.assign(this, model);
-
-    overwriteSchedule(this);
-  }
-
   /**
    * Name of the starting workflow state
    */
@@ -31,4 +25,10 @@ export class Startdef {
    * Define the time/repeating intervals or cron at which workflow instances should be automatically started.
    */
   schedule: string | Schedule;
+
+  constructor(model: any) {
+    Object.assign(this, model);
+
+    overwriteSchedule(this);
+  }
 }

@@ -19,16 +19,6 @@ import { cleanSourceModelProperty, normalizeEnd, overwriteEnd, overwriteMetadata
 
 export class Enddatacondition {
   sourceModel?: Enddatacondition;
-
-  constructor(model: any) {
-    this.sourceModel = Object.assign({}, model);
-
-    Object.assign(this, model);
-
-    overwriteEnd(this);
-    overwriteMetadata(this);
-  }
-
   /**
    * Data condition name
    */
@@ -42,6 +32,15 @@ export class Enddatacondition {
    */
   end: boolean | End;
   metadata?: /* Metadata information */ Metadata;
+
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    Object.assign(this, model);
+
+    overwriteEnd(this);
+    overwriteMetadata(this);
+  }
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.

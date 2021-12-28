@@ -16,15 +16,16 @@
 
 import { Metadata } from './metadata';
 import { overwriteMetadata } from './utils';
-export class Bearerpropsdef {
-  constructor(model: any) {
-    Object.assign(this, model);
-    overwriteMetadata(this);
-  }
 
+export class Bearerpropsdef {
   /**
    * String or a workflow expression. Contains the token
    */
   token: string;
   metadata?: /* Metadata information */ Metadata;
+
+  constructor(model: any) {
+    Object.assign(this, model);
+    overwriteMetadata(this);
+  }
 }

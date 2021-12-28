@@ -19,15 +19,6 @@ import { Properties } from './types';
 
 export class Authdef {
   sourceModel?: Authdef;
-
-  constructor(model: any) {
-    this.sourceModel = Object.assign({}, model);
-
-    const defaultModel = { scheme: 'basic' };
-    Object.assign(this, defaultModel, model);
-
-    overwriteProperties(this);
-  }
   /**
    * Unique auth definition name
    */
@@ -37,6 +28,15 @@ export class Authdef {
    */
   scheme?: 'basic' | 'bearer' | 'oauth2';
   properties: string | Properties;
+
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = { scheme: 'basic' };
+    Object.assign(this, defaultModel, model);
+
+    overwriteProperties(this);
+  }
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.

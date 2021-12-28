@@ -43,27 +43,6 @@ import { StateExecTimeout } from './stateExecTimeout';
 
 export class Callbackstate {
   sourceModel?: Callbackstate;
-
-  constructor(model: any) {
-    this.sourceModel = Object.assign({}, model);
-
-    const defaultModel = {
-      id: undefined,
-      name: undefined,
-      type: 'callback',
-      usedForCompensation: false,
-    };
-    Object.assign(this, defaultModel, model);
-
-    overwriteAction(this);
-    overwriteTimeoutWithStateExecTimeout(this);
-    overwriteEventDataFilter(this);
-    overwriteStateDataFilter(this);
-    overwriteOnErrors(this);
-    overwriteTransition(this);
-    overwriteEnd(this);
-    overwriteMetadata(this);
-  }
   /**
    * Unique state id
    */
@@ -121,6 +100,27 @@ export class Callbackstate {
    */
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
+
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = {
+      id: undefined,
+      name: undefined,
+      type: 'callback',
+      usedForCompensation: false,
+    };
+    Object.assign(this, defaultModel, model);
+
+    overwriteAction(this);
+    overwriteTimeoutWithStateExecTimeout(this);
+    overwriteEventDataFilter(this);
+    overwriteStateDataFilter(this);
+    overwriteOnErrors(this);
+    overwriteTransition(this);
+    overwriteEnd(this);
+    overwriteMetadata(this);
+  }
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.

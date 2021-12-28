@@ -25,20 +25,6 @@ import { CorrelationDefs } from './types';
 
 export class Eventdef {
   sourceModel?: Eventdef;
-
-  constructor(model: any) {
-    this.sourceModel = Object.assign({}, model);
-
-    const defaultModel = {
-      kind: 'consumed',
-      dataOnly: true,
-    };
-    Object.assign(this, defaultModel, model);
-
-    overwriteCorrelation(this);
-    overwriteMetadata(this);
-  }
-
   /**
    * Unique event name
    */
@@ -59,7 +45,6 @@ export class Eventdef {
    * CloudEvent correlation definitions
    */
   correlation?: CorrelationDefs;
-
   /**
    * If `true`, only the Event payload is accessible to consuming Workflow states. If `false`, both event payload and context attributes should be accessible
    */
@@ -68,6 +53,19 @@ export class Eventdef {
    * Metadata information
    */
   metadata?: /* Metadata information */ Metadata;
+
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = {
+      kind: 'consumed',
+      dataOnly: true,
+    };
+    Object.assign(this, defaultModel, model);
+
+    overwriteCorrelation(this);
+    overwriteMetadata(this);
+  }
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.

@@ -20,6 +20,7 @@ import { promises as fsPromises } from 'fs';
 import * as path from 'path';
 import { fileHeader } from './consts';
 import { capitalizeFirstLetter, mergeDefinitions, mergeSchemas, reset } from './utils';
+
 const { writeFile } = fsPromises;
 
 /**

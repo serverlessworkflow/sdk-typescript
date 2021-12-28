@@ -5,14 +5,14 @@
   "description": "Solve math problems",
   "specVersion": "0.8",
   "start": "Solve",
-  "states":[
+  "states": [
     {
-      "name":"Solve",
-      "type":"foreach",
+      "name": "Solve",
+      "type": "foreach",
       "inputCollection": "${ .expressions }",
       "iterationParam": "singleexpression",
       "outputCollection": "${ .results }",
-      "actions":[
+      "actions": [
         {
           "functionRef": {
             "refName": "solveMathExpressionFunction",

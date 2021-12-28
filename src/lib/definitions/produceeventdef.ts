@@ -17,12 +17,6 @@
 import { overwritePropertyAsPlainType } from './utils';
 
 export class Produceeventdef {
-  constructor(model: any) {
-    Object.assign(this, model);
-    overwritePropertyAsPlainType('data', this);
-    overwritePropertyAsPlainType('contextAttributes', this);
-  }
-
   /**
    * References a name of a defined event
    */
@@ -41,4 +35,10 @@ export class Produceeventdef {
   contextAttributes?: {
     [name: string]: string;
   };
+
+  constructor(model: any) {
+    Object.assign(this, model);
+    overwritePropertyAsPlainType('data', this);
+    overwritePropertyAsPlainType('contextAttributes', this);
+  }
 }

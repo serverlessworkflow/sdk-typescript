@@ -10,7 +10,9 @@
       "type": "event",
       "onEvents": [
         {
-          "eventRefs": ["CarTurnedOnEvent"]
+          "eventRefs": [
+            "CarTurnedOnEvent"
+          ]
         }
       ],
       "transition": "DoCarVitalChecks"

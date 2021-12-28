@@ -15,10 +15,6 @@
  */
 
 export class Eventdatafilter {
-  constructor(model: any) {
-    Object.assign(this, model);
-  }
-
   /**
    * If set to false, event payload is not added/merged to state data. In this case 'data' and 'toStateData' should be ignored. Default is true.
    */
@@ -31,4 +27,8 @@ export class Eventdatafilter {
    *  Workflow expression that selects a state data element to which the filtered event should be added/merged into. If not specified, denotes, the top-level state data element.
    */
   toStateData?: string;
+
+  constructor(model: any) {
+    Object.assign(this, model);
+  }
 }

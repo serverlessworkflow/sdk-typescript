@@ -16,13 +16,8 @@
 
 import { Metadata } from './metadata';
 import { overwriteMetadata } from './utils';
+
 export class Basicpropsdef {
-  constructor(model: any) {
-    Object.assign(this, model);
-
-    overwriteMetadata(this);
-  }
-
   /**
    * String or a workflow expression. Contains the user name
    */
@@ -32,4 +27,10 @@ export class Basicpropsdef {
    */
   password: string;
   metadata?: /* Metadata information */ Metadata;
+
+  constructor(model: any) {
+    Object.assign(this, model);
+
+    overwriteMetadata(this);
+  }
 }

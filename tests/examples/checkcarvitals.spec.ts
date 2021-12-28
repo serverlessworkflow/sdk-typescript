@@ -16,16 +16,16 @@
 
 import * as fs from 'fs';
 import {
-  eventdefBuilder,
   actionBuilder,
-  operationstateBuilder,
+  defaultconditiondefBuilder,
+  enddeventconditionBuilder,
+  eventbasedswitchstateBuilder,
+  eventdefBuilder,
   eventstateBuilder,
   oneventsBuilder,
-  workflowBuilder,
+  operationstateBuilder,
   sleepBuilder,
-  eventbasedswitchstateBuilder,
-  enddeventconditionBuilder,
-  defaultconditiondefBuilder,
+  workflowBuilder,
 } from '../../src';
 
 describe('checkcarvitals workflow example', () => {

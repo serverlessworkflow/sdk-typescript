@@ -19,14 +19,14 @@ import {
   actionBuilder,
   actiondatafilterBuilder,
   databasedswitchstateBuilder,
+  defaultconditiondefBuilder,
   functionBuilder,
   functionrefBuilder,
   operationstateBuilder,
+  sleepstateBuilder,
   statedatafilterBuilder,
   transitiondataconditionBuilder,
   workflowBuilder,
-  defaultconditiondefBuilder,
-  sleepstateBuilder,
 } from '../../src';
 
 describe('jobmonitoring workflow example', () => {

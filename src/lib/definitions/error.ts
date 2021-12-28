@@ -26,16 +26,6 @@ import {
 
 export class Error {
   sourceModel?: Error;
-
-  constructor(model: any) {
-    this.sourceModel = Object.assign({}, model);
-
-    Object.assign(this, model);
-
-    overwriteTransition(this);
-    overwriteEnd(this);
-  }
-
   /**
    * Reference to a unique workflow error definition. Used of errorRefs is not used
    */
@@ -46,6 +36,15 @@ export class Error {
   errorRefs?: [string, ...string[]];
   transition: string | Transition;
   end?: boolean | End;
+
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    Object.assign(this, model);
+
+    overwriteTransition(this);
+    overwriteEnd(this);
+  }
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.

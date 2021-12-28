@@ -17,12 +17,6 @@ import { Crondef } from './crondef';
 import { overwriteCron } from './utils';
 
 export class Schedule {
-  constructor(model: any) {
-    Object.assign(this, model);
-
-    overwriteCron(this);
-  }
-
   /**
    * Time interval (must be repeating interval) described with ISO 8601 format. Declares when workflow instances will be automatically created.
    */
@@ -32,4 +26,10 @@ export class Schedule {
    * Timezone name used to evaluate the interval & cron-expression. (default: UTC)
    */
   timezone?: string;
+
+  constructor(model: any) {
+    Object.assign(this, model);
+
+    overwriteCron(this);
+  }
 }

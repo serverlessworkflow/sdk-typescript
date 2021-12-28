@@ -18,14 +18,6 @@ import { cleanSourceModelProperty, normalizeInvoke, overwritePropertyAsPlainType
 
 export class Functionref {
   sourceModel?: Functionref;
-
-  constructor(model: any) {
-    this.sourceModel = Object.assign({}, model);
-
-    Object.assign(this, model);
-    overwritePropertyAsPlainType('arguments', this);
-  }
-
   /**
    * Name of the referenced function
    */
@@ -44,6 +36,13 @@ export class Functionref {
    * Specifies if the function should be invoked sync or async
    */
   invoke?: 'sync' | 'async';
+
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    Object.assign(this, model);
+    overwritePropertyAsPlainType('arguments', this);
+  }
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.

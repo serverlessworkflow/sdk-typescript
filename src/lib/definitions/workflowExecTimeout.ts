@@ -18,14 +18,6 @@ import { cleanSourceModelProperty, normalizeInterrupt } from './utils';
 
 export class WorkflowExecTimeout {
   sourceModel?: WorkflowExecTimeout;
-
-  constructor(model: any) {
-    this.sourceModel = Object.assign({}, model);
-
-    const defaultModel = { interrupt: true };
-    Object.assign(this, defaultModel, model);
-  }
-
   /**
    * Workflow execution timeout duration (ISO 8601 duration format). If not specified should be 'unlimited'
    */
@@ -38,6 +30,13 @@ export class WorkflowExecTimeout {
    * Name of a workflow state to be executed before workflow instance is terminated
    */
   runBefore?: string;
+
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = { interrupt: true };
+    Object.assign(this, defaultModel, model);
+  }
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.

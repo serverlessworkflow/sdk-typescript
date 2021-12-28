@@ -27,6 +27,7 @@ import rimraf from 'rimraf';
 import yargs from 'yargs';
 import { version } from '../package.json';
 import { readMeDisclaimer } from './consts';
+
 const { writeFile, mkdir } = fsPromises;
 const rimrafP = async (f: string): Promise<void> =>
   new Promise<void>((resolve, reject) =>
@@ -35,6 +36,7 @@ const rimrafP = async (f: string): Promise<void> =>
       resolve();
     })
   );
+
 /**
  * Represents the links of a GitHub content item
  */

@@ -25,6 +25,11 @@ import { StateExecTimeout } from './stateExecTimeout';
 
 export class Timeouts {
   sourceModel?: Timeouts;
+  workflowExecTimeout?: WorkflowExecTimeout;
+  stateExecTimeout?: StateExecTimeout;
+  actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+  branchExecTimeout?: /* Single branch execution timeout duration (ISO 8601 duration format) */ BranchExecTimeout;
+  eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
 
   constructor(model: any) {
     this.sourceModel = Object.assign({}, model);
@@ -33,12 +38,6 @@ export class Timeouts {
     overwriteWorkflowExecTimeout(this);
     overwriteStateExecTimeout(this);
   }
-
-  workflowExecTimeout?: WorkflowExecTimeout;
-  stateExecTimeout?: StateExecTimeout;
-  actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
-  branchExecTimeout?: /* Single branch execution timeout duration (ISO 8601 duration format) */ BranchExecTimeout;
-  eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.

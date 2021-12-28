@@ -36,20 +36,6 @@ import { StateExecTimeout } from './stateExecTimeout';
 
 export class Eventbasedswitchstate {
   sourceModel?: Eventbasedswitchstate;
-
-  constructor(model: any) {
-    this.sourceModel = Object.assign({}, model);
-
-    const defaultModel = { id: undefined, name: undefined, type: 'switch', usedForCompensation: false };
-    Object.assign(this, defaultModel, model);
-
-    overwriteStateDataFilter(this);
-    overwriteTimeoutWithStateExecTimeout(this);
-    overwriteEventConditions(this);
-    overwriteOnErrors(this);
-    overwriteDefaultCondition(this);
-    overwriteMetadata(this);
-  }
   /**
    * Unique State id
    */
@@ -94,6 +80,20 @@ export class Eventbasedswitchstate {
    */
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
+
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = { id: undefined, name: undefined, type: 'switch', usedForCompensation: false };
+    Object.assign(this, defaultModel, model);
+
+    overwriteStateDataFilter(this);
+    overwriteTimeoutWithStateExecTimeout(this);
+    overwriteEventConditions(this);
+    overwriteOnErrors(this);
+    overwriteDefaultCondition(this);
+    overwriteMetadata(this);
+  }
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.

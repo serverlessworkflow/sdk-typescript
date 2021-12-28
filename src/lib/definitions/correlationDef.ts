@@ -15,10 +15,6 @@
  */
 
 export class CorrelationDef {
-  constructor(model: any) {
-    Object.assign(this, model);
-  }
-
   /**
    * CloudEvent Extension Context Attribute name
    */
@@ -27,4 +23,8 @@ export class CorrelationDef {
    * CloudEvent Extension Context Attribute value
    */
   contextAttributeValue?: string;
+
+  constructor(model: any) {
+    Object.assign(this, model);
+  }
 }

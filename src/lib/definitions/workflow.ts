@@ -46,40 +46,6 @@ import { Auth, Errors, Events, Functions, Retries, Secrets, States } from './typ
 
 export class Workflow {
   sourceModel?: Workflow;
-
-  constructor(model: any) {
-    this.sourceModel = Object.assign({}, model);
-
-    const defaultModel = {
-      id: undefined,
-      name: undefined,
-      version: undefined,
-      description: undefined,
-      specVersion: undefined,
-      start: undefined,
-      states: undefined,
-      functions: undefined,
-      events: undefined,
-      retries: undefined,
-      timeouts: undefined,
-      expressionLang: 'jq',
-      keepActive: true,
-    };
-
-    Object.assign(this, defaultModel, model);
-
-    overwritePropertyAsPlainType('dataInputSchema', this);
-    overwritePropertyAsPlainType('constants', this);
-    overwriteStart(this);
-    overwriteTimeouts(this);
-    overwriteErrors(this);
-    overwriteMetadata(this);
-    overwriteEvents(this);
-    overwriteFunctions(this);
-    overwriteRetries(this);
-    overwriteAuth(this);
-    overwriteStates(this);
-  }
   /**
    * Workflow unique identifier
    */
@@ -150,24 +116,40 @@ export class Workflow {
    * State definitions
    */
   states: States;
-  /**
-   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Workflow} without deleted properties.
-   */
-  normalize = (): Workflow => {
-    const clone = new Workflow(this);
 
-    normalizeExpressionLang(clone, this.sourceModel);
-    normalizeTimeouts(clone);
-    normalizeKeepActive(clone, this.sourceModel);
-    normalizeEvents(clone);
-    normalizeFunctions(clone);
-    normalizeAuth(clone);
-    normalizeStates(clone);
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
 
-    cleanSourceModelProperty(clone);
-    return clone;
-  };
+    const defaultModel = {
+      id: undefined,
+      name: undefined,
+      version: undefined,
+      description: undefined,
+      specVersion: undefined,
+      start: undefined,
+      states: undefined,
+      functions: undefined,
+      events: undefined,
+      retries: undefined,
+      timeouts: undefined,
+      expressionLang: 'jq',
+      keepActive: true,
+    };
+
+    Object.assign(this, defaultModel, model);
+
+    overwritePropertyAsPlainType('dataInputSchema', this);
+    overwritePropertyAsPlainType('constants', this);
+    overwriteStart(this);
+    overwriteTimeouts(this);
+    overwriteErrors(this);
+    overwriteMetadata(this);
+    overwriteEvents(this);
+    overwriteFunctions(this);
+    overwriteRetries(this);
+    overwriteAuth(this);
+    overwriteStates(this);
+  }
 
   /**
    * Parses the provided string as Workflow
@@ -202,4 +184,23 @@ export class Workflow {
     validate('Workflow', workflow.normalize());
     return yaml.dump(JSON.parse(JSON.stringify(workflow.normalize())));
   }
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Workflow} without deleted properties.
+   */
+  normalize = (): Workflow => {
+    const clone = new Workflow(this);
+
+    normalizeExpressionLang(clone, this.sourceModel);
+    normalizeTimeouts(clone);
+    normalizeKeepActive(clone, this.sourceModel);
+    normalizeEvents(clone);
+    normalizeFunctions(clone);
+    normalizeAuth(clone);
+    normalizeStates(clone);
+
+    cleanSourceModelProperty(clone);
+    return clone;
+  };
 }

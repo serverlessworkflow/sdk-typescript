@@ -5,12 +5,12 @@
   "description": "Provision Orders and handle errors thrown",
   "specVersion": "0.8",
   "start": "ProvisionOrder",
-  "states":[
+  "states": [
     {
-      "name":"ProvisionOrder",
-      "type":"operation",
-      "actionMode":"sequential",
-      "actions":[
+      "name": "ProvisionOrder",
+      "type": "operation",
+      "actionMode": "sequential",
+      "actions": [
         {
           "functionRef": {
             "refName": "provisionOrderFunction",

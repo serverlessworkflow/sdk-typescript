@@ -18,15 +18,6 @@ import { cleanSourceModelProperty, normalizeInvoke, overwritePropertyAsPlainType
 
 export class Eventref {
   sourceModel?: Eventref;
-
-  constructor(model: any) {
-    this.sourceModel = Object.assign({}, model);
-
-    Object.assign(this, model);
-    overwritePropertyAsPlainType('data', this);
-    overwritePropertyAsPlainType('contextAttributes', this);
-  }
-
   /**
    * Reference to the unique name of a 'produced' event definition
    */
@@ -57,6 +48,14 @@ export class Eventref {
    * Specifies if the function should be invoked sync or async. Default is sync.
    */
   invoke?: 'sync' | 'async';
+
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    Object.assign(this, model);
+    overwritePropertyAsPlainType('data', this);
+    overwritePropertyAsPlainType('contextAttributes', this);
+  }
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.

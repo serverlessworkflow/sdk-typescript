@@ -18,12 +18,12 @@ import * as fs from 'fs';
 import {
   actionBuilder,
   databasedswitchstateBuilder,
+  defaultconditiondefBuilder,
   functionBuilder,
   functionrefBuilder,
   operationstateBuilder,
   transitiondataconditionBuilder,
   workflowBuilder,
-  defaultconditiondefBuilder,
 } from '../../src';
 
 describe('applicationrequest workflow example', () => {

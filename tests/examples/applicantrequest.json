@@ -5,10 +5,10 @@
   "description": "Determine if applicant request is valid",
   "specVersion": "0.8",
   "start": "CheckApplication",
-  "states":[
+  "states": [
     {
-      "name":"CheckApplication",
-      "type":"switch",
+      "name": "CheckApplication",
+      "type": "switch",
       "dataConditions": [
         {
           "condition": "${ .applicants | .age >= 18 }",
@@ -34,10 +34,10 @@
       "end": true
     },
     {
-      "name":"RejectApplication",
-      "type":"operation",
-      "actionMode":"sequential",
-      "actions":[
+      "name": "RejectApplication",
+      "type": "operation",
+      "actionMode": "sequential",
+      "actions": [
         {
           "functionRef": {
             "refName": "sendRejectionEmailFunction",

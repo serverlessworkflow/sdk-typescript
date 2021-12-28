@@ -18,16 +18,16 @@ import * as fs from 'fs';
 import {
   actionBuilder,
   databasedswitchstateBuilder,
+  defaultconditiondefBuilder,
   eventbasedswitchstateBuilder,
   eventstateBuilder,
+  functionrefBuilder,
   oneventsBuilder,
   operationstateBuilder,
+  sleepstateBuilder,
   transitiondataconditionBuilder,
   transitioneventconditionBuilder,
   workflowBuilder,
-  functionrefBuilder,
-  sleepstateBuilder,
-  defaultconditiondefBuilder,
 } from '../../src';
 
 describe('booklending workflow example', () => {
