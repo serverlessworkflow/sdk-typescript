@@ -6,8 +6,8 @@
   "start": "WhenCarIsOn",
   "states": [
     {
-      "type": "event",
       "name": "WhenCarIsOn",
+      "type": "event",
       "onEvents": [
         {
           "eventRefs": ["CarTurnedOnEvent"]
@@ -16,8 +16,8 @@
       "transition": "DoCarVitalChecks"
     },
     {
-      "type": "operation",
       "name": "DoCarVitalChecks",
+      "type": "operation",
       "actions": [
         {
           "subFlowRef": "vitalscheck",
@@ -29,8 +29,8 @@
       "transition": "CheckContinueVitalChecks"
     },
     {
-      "type": "switch",
       "name": "CheckContinueVitalChecks",
+      "type": "switch",
       "eventConditions": [
         {
           "name": "Car Turned Off Condition",

@@ -20,8 +20,10 @@ import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
+  cleanSourceModelProperty,
   normalizeActions,
   normalizeEnd,
+  normalizeMode,
   normalizeOnErrors,
   normalizeTransition,
   normalizeUsedForCompensation,
@@ -30,11 +32,9 @@ import {
   overwriteMetadata,
   overwriteOnErrors,
   overwriteStateDataFilter,
+  overwriteTimeoutWithStateExecTimeout,
   overwriteTransition,
   setEndValueIfNoTransition,
-  normalizeMode,
-  overwriteTimeoutWithStateExecTimeout,
-  cleanSourceModelProperty,
 } from './utils';
 import { ActionExecTimeout } from './types';
 import { StateExecTimeout } from './stateExecTimeout';
@@ -45,7 +45,13 @@ export class Foreachstate {
   constructor(model: any) {
     this.sourceModel = Object.assign({}, model);
 
-    const defaultModel = { type: 'foreach', usedForCompensation: false, mode: 'parallel' };
+    const defaultModel = {
+      id: undefined,
+      name: undefined,
+      type: 'foreach',
+      usedForCompensation: false,
+      mode: 'parallel',
+    };
     Object.assign(this, defaultModel, model);
 
     overwriteEnd(this);
@@ -120,7 +126,6 @@ export class Foreachstate {
    * If true, this state is used to compensate another state. Default is false
    */
   usedForCompensation?: boolean;
-
   /**
    * Specifies how iterations are to be performed (sequentially or in parallel)
    */

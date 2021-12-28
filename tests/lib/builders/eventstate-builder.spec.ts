@@ -30,8 +30,8 @@ describe('eventstateBuilder ', () => {
     const serializedObject = object.normalize();
     expect(JSON.stringify(serializedObject)).toBe(
       JSON.stringify({
-        type: 'event',
         name: 'Book Lending Request',
+        type: 'event',
         onEvents: [
           {
             eventRefs: ['Book Lending Request Event'],

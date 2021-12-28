@@ -39,7 +39,12 @@ export class Injectstate {
   constructor(model: any) {
     this.sourceModel = Object.assign({}, model);
 
-    const defaultModel = { type: 'inject', usedForCompensation: false };
+    const defaultModel = {
+      id: undefined,
+      name: undefined,
+      type: 'inject',
+      usedForCompensation: false,
+    };
     Object.assign(this, defaultModel, model);
 
     overwriteEnd(this);
