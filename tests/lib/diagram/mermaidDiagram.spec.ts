@@ -74,12 +74,13 @@ Item_Purchase --> [*]
 Cancel_Purchase : Cancel Purchase
 Cancel_Purchase : type = Operation State
 Cancel_Purchase : usedForCompensation
+Cancel_Purchase : Action mode = sequential
 Cancel_Purchase : Num. of actions = 1
 Cancel_Purchase --> Send_confirmation_purchase_cancelled
 
 Send_confirmation_purchase_cancelled : Send confirmation purchase cancelled
 Send_confirmation_purchase_cancelled : type = Operation State
-Send_confirmation_purchase_cancelled : Num. of actions = 1
-Send_confirmation_purchase_cancelled --> [*]`);
+Send_confirmation_purchase_cancelled : Action mode = sequential
+Send_confirmation_purchase_cancelled : Num. of actions = 1`);
   });
 });
