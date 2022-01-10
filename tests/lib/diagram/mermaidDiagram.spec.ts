@@ -19,8 +19,8 @@ import fs from 'fs';
 
 describe('MermaidDiagram', () => {
   it('should create mermaid diagram source code', () => {
-    const expected = fs.readFileSync('./tests/examples/jobmonitoring.json', 'utf8');
-    const actual = new MermaidDiagram(Specification.Workflow.fromSource(expected)).sourceCode();
+    const jsonSource = fs.readFileSync('./tests/examples/jobmonitoring.json', 'utf8');
+    const actual = new MermaidDiagram(Specification.Workflow.fromSource(jsonSource)).sourceCode();
     expect(actual).toBe(`stateDiagram-v2
 SubmitJob : SubmitJob
 SubmitJob : type = Operation State
@@ -58,5 +58,28 @@ JobFailed : type = Operation State
 JobFailed : Action mode = sequential
 JobFailed : Num. of actions = 1
 JobFailed --> [*]`);
+  });
+
+  it(`should handle compensated by`, () => {
+    const jsonSource = fs.readFileSync('./tests/lib/diagram/wf_with_compensation.json', 'utf8');
+    const actual = new MermaidDiagram(Specification.Workflow.fromSource(jsonSource)).sourceCode();
+
+    expect(actual).toBe(`stateDiagram-v2
+Item_Purchase : Item Purchase
+Item_Purchase : type = Event State
+[*] --> Item_Purchase
+Item_Purchase --> Cancel_Purchase : compensated by
+Item_Purchase --> [*]
+
+Cancel_Purchase : Cancel Purchase
+Cancel_Purchase : type = Operation State
+Cancel_Purchase : usedForCompensation
+Cancel_Purchase : Num. of actions = 1
+Cancel_Purchase --> Send_confirmation_purchase_cancelled
+
+Send_confirmation_purchase_cancelled : Send confirmation purchase cancelled
+Send_confirmation_purchase_cancelled : type = Operation State
+Send_confirmation_purchase_cancelled : Num. of actions = 1
+Send_confirmation_purchase_cancelled --> [*]`);
   });
 });

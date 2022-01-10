@@ -159,7 +159,7 @@ export class Workflow {
   static fromSource(value: string): Specification.Workflow {
     try {
       const model = yaml.load(value);
-      return new Workflow(model);
+      return new Workflow(model).normalize();
     } catch (ex) {
       throw new Error('Format not supported');
     }
