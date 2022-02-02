@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Specification } from '../definitions';
-import { isObject } from '../utils';
+import {Specification} from '../definitions';
+import {isObject} from '../utils';
 
 export class MermaidState {
   constructor(
@@ -144,7 +144,7 @@ export class MermaidState {
       if (isObject(this.state.end)) {
         const end = this.state.end as Specification.End;
 
-        if (end.produceEvents!.length > 0) {
+        if (end.produceEvents) {
           transitionLabel = 'Produced event = [' + end.produceEvents!.map((pe) => pe.eventRef).join(',') + ']';
         }
       }
