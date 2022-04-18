@@ -16,21 +16,16 @@
 import { End } from './end';
 import { Transition } from './transition';
 import {
-  normalizeEndIfObject,
-  normalizeTransitionIfObject,
-  overwriteEndIfObject,
-  overwriteTransitionIfObject,
+  cleanSourceModelProperty,
+  normalizeEnd,
+  normalizeTransition,
+  overwriteEnd,
+  overwriteTransition,
   setEndValueIfNoTransition,
 } from './utils';
 
 export class Error {
-  constructor(model: any) {
-    Object.assign(this, model);
-
-    overwriteTransitionIfObject(this);
-    overwriteEndIfObject(this);
-  }
-
+  sourceModel?: Error;
   /**
    * Reference to a unique workflow error definition. Used of errorRefs is not used
    */
@@ -42,6 +37,15 @@ export class Error {
   transition: string | Transition;
   end?: boolean | End;
 
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    Object.assign(this, model);
+
+    overwriteTransition(this);
+    overwriteEnd(this);
+  }
+
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Error} without deleted properties.
@@ -49,11 +53,12 @@ export class Error {
   normalize = (): Error => {
     const clone = new Error(this);
 
-    normalizeEndIfObject(clone);
-    normalizeTransitionIfObject(clone);
+    normalizeEnd(clone);
+    normalizeTransition(clone);
 
     setEndValueIfNoTransition(clone);
 
+    cleanSourceModelProperty(clone);
     return clone;
   };
 }

@@ -1,33 +1,16 @@
 {
   "id": "jobmonitoring",
-  "version": "1.0",
-  "specVersion": "0.8",
   "name": "Job Monitoring",
+  "version": "1.0",
   "description": "Monitor finished execution of a submitted job",
+  "specVersion": "0.8",
   "start": "SubmitJob",
-  "functions": [
+  "states": [
     {
-      "name": "submitJob",
-      "operation": "http://myapis.org/monitorapi.json#doSubmit"
-    },
-    {
-      "name": "checkJobStatus",
-      "operation": "http://myapis.org/monitorapi.json#checkStatus"
-    },
-    {
-      "name": "reportJobSuceeded",
-      "operation": "http://myapis.org/monitorapi.json#reportSucceeded"
-    },
-    {
-      "name": "reportJobFailed",
-      "operation": "http://myapis.org/monitorapi.json#reportFailure"
-    }
-  ],
-  "states":[
-    {
-      "type":"operation",
-      "name":"SubmitJob",
-      "actions":[
+      "name": "SubmitJob",
+      "type": "operation",
+      "actionMode": "sequential",
+      "actions": [
         {
           "functionRef": {
             "refName": "submitJob",
@@ -46,15 +29,16 @@
       "transition": "WaitForCompletion"
     },
     {
-      "type": "sleep",
       "name": "WaitForCompletion",
+      "type": "sleep",
       "duration": "PT5S",
       "transition": "GetJobStatus"
     },
     {
-      "type":"operation",
-      "name":"GetJobStatus",
-      "actions":[
+      "name": "GetJobStatus",
+      "type": "operation",
+      "actionMode": "sequential",
+      "actions": [
         {
           "functionRef": {
             "refName": "checkJobStatus",
@@ -73,8 +57,8 @@
       "transition": "DetermineCompletion"
     },
     {
-      "type":"switch",
-      "name":"DetermineCompletion",
+      "name": "DetermineCompletion",
+      "type": "switch",
       "dataConditions": [
         {
           "condition": "${ .jobStatus == \"SUCCEEDED\" }",
@@ -90,9 +74,10 @@
       }
     },
     {
-      "type":"operation",
-      "name":"JobSucceeded",
-      "actions":[
+      "name": "JobSucceeded",
+      "type": "operation",
+      "actionMode": "sequential",
+      "actions": [
         {
           "functionRef": {
             "refName": "reportJobSuceeded",
@@ -105,9 +90,10 @@
       "end": true
     },
     {
-      "type":"operation",
-      "name":"JobFailed",
-      "actions":[
+      "name": "JobFailed",
+      "type": "operation",
+      "actionMode": "sequential",
+      "actions": [
         {
           "functionRef": {
             "refName": "reportJobFailed",
@@ -118,6 +104,24 @@
         }
       ],
       "end": true
+    }
+  ],
+  "functions": [
+    {
+      "name": "submitJob",
+      "operation": "http://myapis.org/monitorapi.json#doSubmit"
+    },
+    {
+      "name": "checkJobStatus",
+      "operation": "http://myapis.org/monitorapi.json#checkStatus"
+    },
+    {
+      "name": "reportJobSuceeded",
+      "operation": "http://myapis.org/monitorapi.json#reportSucceeded"
+    },
+    {
+      "name": "reportJobFailed",
+      "operation": "http://myapis.org/monitorapi.json#reportFailure"
     }
   ]
 }

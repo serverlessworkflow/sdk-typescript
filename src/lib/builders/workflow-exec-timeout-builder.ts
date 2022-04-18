@@ -29,7 +29,7 @@ function workflowExecTimeoutBuildingFn(
   return () => {
     const model = new Specification.WorkflowExecTimeout(data);
 
-    validate('WorkflowExecTimeout', model);
+    validate('WorkflowExecTimeout', model.normalize());
     return model;
   };
 }

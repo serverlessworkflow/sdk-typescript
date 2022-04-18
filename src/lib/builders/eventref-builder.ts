@@ -27,7 +27,7 @@ function eventrefBuildingFn(data: Specification.Eventref): () => Specification.E
   return () => {
     const model = new Specification.Eventref(data);
 
-    validate('Eventref', model);
+    validate('Eventref', model.normalize());
     return model;
   };
 }

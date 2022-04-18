@@ -14,18 +14,10 @@
  * limitations under the License.
  */
 import { Produceeventdef } from './produceeventdef';
-import { normalizeCompensate, overwriteProduceEvents } from './utils';
+import { cleanSourceModelProperty, normalizeCompensate, overwriteProduceEvents } from './utils';
 
 export class Transition {
-  constructor(model: any) {
-    const defaultModel = {
-      compensate: false,
-    };
-    Object.assign(this, defaultModel, model);
-
-    overwriteProduceEvents(this);
-  }
-
+  sourceModel?: Transition;
   /**
    * Name of state to transition to
    */
@@ -39,6 +31,17 @@ export class Transition {
    */
   compensate?: boolean;
 
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = {
+      compensate: false,
+    };
+    Object.assign(this, defaultModel, model);
+
+    overwriteProduceEvents(this);
+  }
+
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Transition} without deleted properties.
@@ -46,8 +49,9 @@ export class Transition {
   normalize = (): Transition => {
     const clone = new Transition(this);
 
-    normalizeCompensate(clone);
+    normalizeCompensate(clone, this.sourceModel);
 
+    cleanSourceModelProperty(clone);
     return clone;
   };
 }

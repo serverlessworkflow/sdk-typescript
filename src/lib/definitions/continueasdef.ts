@@ -16,15 +16,15 @@
  */
 
 import { WorkflowExecTimeout } from './workflowExecTimeout';
-import { normalizeWorkflowExecTimeout, overwritePropertyAsPlainType, overwriteWorkflowExecTimeout } from './utils';
+import {
+  cleanSourceModelProperty,
+  normalizeWorkflowExecTimeout,
+  overwritePropertyAsPlainType,
+  overwriteWorkflowExecTimeout,
+} from './utils';
 
 export class Continueasdef {
-  constructor(model: any) {
-    Object.assign(this, model);
-    overwriteWorkflowExecTimeout(this);
-    overwritePropertyAsPlainType('data', this);
-  }
-
+  sourceModel?: Continueasdef;
   /**
    * Unique id of the workflow to continue execution as
    */
@@ -46,6 +46,14 @@ export class Continueasdef {
    */
   workflowExecTimeout?: WorkflowExecTimeout;
 
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    Object.assign(this, model);
+    overwriteWorkflowExecTimeout(this);
+    overwritePropertyAsPlainType('data', this);
+  }
+
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Exectimeout} without deleted properties.
@@ -53,6 +61,9 @@ export class Continueasdef {
   normalize = (): Continueasdef => {
     const clone = new Continueasdef(this);
     normalizeWorkflowExecTimeout(clone);
+
+    cleanSourceModelProperty(clone);
+
     return clone;
   };
 }

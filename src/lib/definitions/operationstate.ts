@@ -20,42 +20,27 @@ import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
+  cleanSourceModelProperty,
   normalizeActionMode,
   normalizeActions,
-  normalizeEndIfObject,
+  normalizeEnd,
   normalizeOnErrors,
-  normalizeTransitionIfObject,
+  normalizeTransition,
   normalizeUsedForCompensation,
   overwriteActions,
-  overwriteEndIfObject,
+  overwriteEnd,
   overwriteMetadata,
   overwriteOnErrors,
   overwriteStateDataFilter,
-  overwriteTransitionIfObject,
-  setEndValueIfNoTransition,
   overwriteTimeoutWithStateExecTimeout,
+  overwriteTransition,
+  setEndValueIfNoTransition,
 } from './utils';
 import { ActionExecTimeout } from './types';
 import { StateExecTimeout } from './stateExecTimeout';
 
 export class Operationstate {
-  constructor(model: any) {
-    const defaultModel = {
-      type: 'operation',
-      actionMode: 'sequential',
-      usedForCompensation: false,
-    };
-    Object.assign(this, defaultModel, model);
-
-    overwriteEndIfObject(this);
-    overwriteStateDataFilter(this);
-    overwriteActions(this);
-    overwriteTimeoutWithStateExecTimeout(this);
-    overwriteOnErrors(this);
-    overwriteTransitionIfObject(this);
-    overwriteMetadata(this);
-  }
-
+  sourceModel?: Operationstate;
   /**
    * Unique State id
    */
@@ -109,6 +94,27 @@ export class Operationstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = {
+      id: undefined,
+      name: undefined,
+      type: 'operation',
+      actionMode: 'sequential',
+      usedForCompensation: false,
+    };
+    Object.assign(this, defaultModel, model);
+
+    overwriteEnd(this);
+    overwriteStateDataFilter(this);
+    overwriteActions(this);
+    overwriteTimeoutWithStateExecTimeout(this);
+    overwriteOnErrors(this);
+    overwriteTransition(this);
+    overwriteMetadata(this);
+  }
+
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Operationstate} without deleted properties.
@@ -116,13 +122,17 @@ export class Operationstate {
   normalize = (): Operationstate => {
     const clone = new Operationstate(this);
 
-    normalizeEndIfObject(clone);
-    normalizeActionMode(clone);
+    normalizeEnd(clone);
+
+    normalizeActionMode(clone, this.sourceModel);
+
     normalizeActions(clone);
     normalizeOnErrors(clone);
-    normalizeTransitionIfObject(clone);
-    normalizeUsedForCompensation(clone);
+    normalizeTransition(clone);
+    normalizeUsedForCompensation(clone, this.sourceModel);
     setEndValueIfNoTransition(clone);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

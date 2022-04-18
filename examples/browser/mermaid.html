@@ -4,19 +4,19 @@
     <meta charset="utf-8">
     <title>Serveless Workflow JS SDK</title>
     <base href="/">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
 </head>
 <body>
 <!--
-  Run http-server from the project root then navigate to http://localhost:8080/examples/browser/index.html
+  Run http-server from the project root then navigate to http://localhost:8080/examples/browser/mermaid.html
 -->
-<div id="mermaid"  class="mermaid"></div>
+<div class="mermaid" id="mermaid"></div>
 <script src="../../dist/umd/index.umd.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-<script>mermaid.initialize({startOnLoad:true});</script>
+<script>mermaid.initialize({startOnLoad: true});</script>
 <script type="text/javascript">
     (() => {
-        const { workflowBuilder, injectstateBuilder, MermaidDiagram } = serverWorkflowSdk;
+        const {workflowBuilder, injectstateBuilder, MermaidDiagram} = serverWorkflowSdk;
         const mermaidDiv = document.getElementById('mermaid');
         const workflow = workflowBuilder()
             .id("helloworld")
@@ -40,7 +40,6 @@
         mermaidDiv.innerHTML = mermaidSourceCode;
     })();
 </script>
-
 
 
 </body>

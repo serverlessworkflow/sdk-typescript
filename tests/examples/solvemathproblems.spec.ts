@@ -18,9 +18,9 @@ import {
   actionBuilder,
   foreachstateBuilder,
   functionBuilder,
+  functionrefBuilder,
   statedatafilterBuilder,
   workflowBuilder,
-  functionrefBuilder,
 } from '../../src';
 
 describe('solvemathproblems workflow example', () => {
@@ -44,7 +44,6 @@ describe('solvemathproblems workflow example', () => {
           .inputCollection('${ .expressions }')
           .iterationParam('singleexpression')
           .outputCollection('${ .results }')
-          .usedForCompensation(false)
           .actions([
             actionBuilder()
               .functionRef(

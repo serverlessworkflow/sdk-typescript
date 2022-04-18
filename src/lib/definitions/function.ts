@@ -13,16 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { normalizeType, overwriteMetadata } from './utils';
+import { cleanSourceModelProperty, normalizeType, overwriteMetadata } from './utils';
 
 import { Metadata } from './metadata';
-export class Function {
-  constructor(model: any) {
-    const defaultModel = { type: 'rest' };
-    Object.assign(this, defaultModel, model);
-    overwriteMetadata(this);
-  }
 
+export class Function {
+  sourceModel?: Function;
   /**
    * Unique function name
    */
@@ -41,6 +37,14 @@ export class Function {
   authRef?: string;
   metadata?: /* Metadata information */ Metadata;
 
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = { type: 'rest' };
+    Object.assign(this, defaultModel, model);
+    overwriteMetadata(this);
+  }
+
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Function} without deleted properties.
@@ -49,7 +53,9 @@ export class Function {
   normalize = (): Function => {
     const clone = new Function(this);
 
-    normalizeType(clone);
+    normalizeType(clone, this.sourceModel);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

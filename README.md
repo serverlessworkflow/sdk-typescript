@@ -139,30 +139,31 @@ The sdk provides a way to validate if a workflow object is compliant with the se
 - `validate(): boolean`
 
 ```typescript
-import { WorkflowValidator, Specification } from '@severlessworkflow/sdk-typescript';
+import {WorkflowValidator, Specification} from '@severlessworkflow/sdk-typescript';
+import {Workflow} from "./workflow";
 
-const workflow: Specification.Workflow = {
-  id: 'helloworld',
-  version: '1.0',
-  specVersion: '0.8',
-  name: 'Hello World Workflow',
-  description: 'Inject Hello World',
-  start: 'Hello State',
-  states: [
-    {
-      type: 'inject',
-      name: 'Hello State',
-      end: true,
-      data: {
-        result: "Hello World!"
-      }
-    } as Specification.Injectstate
-  ]
+const workflow = {
+    id: 'helloworld',
+    version: '1.0',
+    specVersion: '0.3',
+    name: 'Hello World Workflow',
+    description: 'Inject Hello World',
+    start: 'Hello State',
+    states: [
+        {
+            type: 'inject',
+            name: 'Hello State',
+            end: true,
+            data: {
+                result: "Hello World!"
+            }
+        }
+    ]
 };
 
-const workflowValidator: WorkflowValidator = new WorkflowValidator(workflow);
+const workflowValidator: WorkflowValidator = new WorkflowValidator(Workflow.fromSource(JSON.stringify(workflow)));
 if (!workflowValidator.isValid) {
-  workflowValidator.errors.forEach(error => console.error((error as ValidationError).message));
+    workflowValidator.errors.forEach(error => console.error((error as ValidationError).message));
 }
 ```
 

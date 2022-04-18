@@ -1,32 +1,16 @@
 {
   "id": "provisionorders",
-  "version": "1.0",
-  "specVersion": "0.8",
   "name": "Provision Orders",
+  "version": "1.0",
   "description": "Provision Orders and handle errors thrown",
+  "specVersion": "0.8",
   "start": "ProvisionOrder",
-  "functions": [
+  "states": [
     {
-      "name": "provisionOrderFunction",
-      "operation": "http://myapis.org/provisioningapi.json#doProvision"
-    }
-  ],
-  "errors": [
-    {
-      "name": "Missing order id"
-    },
-    {
-      "name": "Missing order item"
-    },
-    {
-      "name": "Missing order quantity"
-    }
-  ],
-  "states":[
-    {
-      "type":"operation",
-      "name":"ProvisionOrder",
-      "actions":[
+      "name": "ProvisionOrder",
+      "type": "operation",
+      "actionMode": "sequential",
+      "actions": [
         {
           "functionRef": {
             "refName": "provisionOrderFunction",
@@ -56,8 +40,8 @@
       ]
     },
     {
-      "type": "operation",
       "name": "MissingId",
+      "type": "operation",
       "actions": [
         {
           "subFlowRef": "handleMissingIdExceptionWorkflow"
@@ -66,8 +50,8 @@
       "end": true
     },
     {
-      "type": "operation",
       "name": "MissingItem",
+      "type": "operation",
       "actions": [
         {
           "subFlowRef": "handleMissingItemExceptionWorkflow"
@@ -76,8 +60,8 @@
       "end": true
     },
     {
-      "type": "operation",
       "name": "MissingQuantity",
+      "type": "operation",
       "actions": [
         {
           "subFlowRef": "handleMissingQuantityExceptionWorkflow"
@@ -86,14 +70,31 @@
       "end": true
     },
     {
-      "type": "operation",
       "name": "ApplyOrder",
+      "type": "operation",
       "actions": [
         {
           "subFlowRef": "applyOrderWorkflowId"
         }
       ],
       "end": true
+    }
+  ],
+  "functions": [
+    {
+      "name": "provisionOrderFunction",
+      "operation": "http://myapis.org/provisioningapi.json#doProvision"
+    }
+  ],
+  "errors": [
+    {
+      "name": "Missing order id"
+    },
+    {
+      "name": "Missing order item"
+    },
+    {
+      "name": "Missing order quantity"
     }
   ]
 }

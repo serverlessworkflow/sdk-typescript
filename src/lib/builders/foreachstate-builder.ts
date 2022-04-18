@@ -30,7 +30,7 @@ function foreachstateBuildingFn(data: Specification.Foreachstate): () => Specifi
 
     setEndValueIfNoTransition(model);
 
-    validate('Foreachstate', model);
+    validate('Foreachstate', model.normalize());
     return model;
   };
 }

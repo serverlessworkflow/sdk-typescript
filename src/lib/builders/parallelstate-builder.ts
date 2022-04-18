@@ -30,7 +30,7 @@ function parallelstateBuildingFn(data: Specification.Parallelstate): () => Speci
 
     setEndValueIfNoTransition(model);
 
-    validate('Parallelstate', model);
+    validate('Parallelstate', model.normalize());
     return model;
   };
 }

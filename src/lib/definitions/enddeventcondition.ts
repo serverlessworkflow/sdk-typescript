@@ -16,17 +16,16 @@
 import { End } from './end';
 import { Eventdatafilter } from './eventdatafilter';
 import { Metadata } from './metadata';
-import { normalizeEndIfObject, overwriteEndIfObject, overwriteEventDataFilter, overwriteMetadata } from './utils';
+import {
+  cleanSourceModelProperty,
+  normalizeEnd,
+  overwriteEnd,
+  overwriteEventDataFilter,
+  overwriteMetadata,
+} from './utils';
 
 export class Enddeventcondition {
-  constructor(model: any) {
-    Object.assign(this, model);
-
-    overwriteEndIfObject(this);
-    overwriteEventDataFilter(this);
-    overwriteMetadata(this);
-  }
-
+  sourceModel?: Enddeventcondition;
   /**
    * Event condition name
    */
@@ -45,6 +44,16 @@ export class Enddeventcondition {
   eventDataFilter?: Eventdatafilter;
   metadata?: /* Metadata information */ Metadata;
 
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    Object.assign(this, model);
+
+    overwriteEnd(this);
+    overwriteEventDataFilter(this);
+    overwriteMetadata(this);
+  }
+
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Enddeventcondition} without deleted properties.
@@ -52,7 +61,9 @@ export class Enddeventcondition {
   normalize = (): Enddeventcondition => {
     const clone = new Enddeventcondition(this);
 
-    normalizeEndIfObject(clone);
+    normalizeEnd(clone);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

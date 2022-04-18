@@ -22,39 +22,27 @@ import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
+  cleanSourceModelProperty,
   normalizeAction,
-  normalizeEndIfObject,
+  normalizeEnd,
   normalizeOnErrors,
-  normalizeTransitionIfObject,
+  normalizeTransition,
   normalizeUsedForCompensation,
   overwriteAction,
-  overwriteEndIfObject,
+  overwriteEnd,
   overwriteEventDataFilter,
   overwriteMetadata,
   overwriteOnErrors,
   overwriteStateDataFilter,
   overwriteTimeoutWithStateExecTimeout,
-  overwriteTransitionIfObject,
+  overwriteTransition,
   setEndValueIfNoTransition,
 } from './utils';
 import { ActionExecTimeout, EventTimeout } from './types';
 import { StateExecTimeout } from './stateExecTimeout';
 
 export class Callbackstate {
-  constructor(model: any) {
-    const defaultModel = { type: 'callback', usedForCompensation: false };
-    Object.assign(this, defaultModel, model);
-
-    overwriteAction(this);
-    overwriteTimeoutWithStateExecTimeout(this);
-    overwriteEventDataFilter(this);
-    overwriteStateDataFilter(this);
-    overwriteOnErrors(this);
-    overwriteTransitionIfObject(this);
-    overwriteEndIfObject(this);
-    overwriteMetadata(this);
-  }
-
+  sourceModel?: Callbackstate;
   /**
    * Unique state id
    */
@@ -113,6 +101,27 @@ export class Callbackstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = {
+      id: undefined,
+      name: undefined,
+      type: 'callback',
+      usedForCompensation: false,
+    };
+    Object.assign(this, defaultModel, model);
+
+    overwriteAction(this);
+    overwriteTimeoutWithStateExecTimeout(this);
+    overwriteEventDataFilter(this);
+    overwriteStateDataFilter(this);
+    overwriteOnErrors(this);
+    overwriteTransition(this);
+    overwriteEnd(this);
+    overwriteMetadata(this);
+  }
+
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Callbackstate} without deleted properties.
@@ -122,10 +131,12 @@ export class Callbackstate {
 
     normalizeAction(clone);
     normalizeOnErrors(clone);
-    normalizeTransitionIfObject(clone);
-    normalizeEndIfObject(clone);
-    normalizeUsedForCompensation(clone);
+    normalizeTransition(clone);
+    normalizeEnd(clone);
+    normalizeUsedForCompensation(clone, this.sourceModel);
     setEndValueIfNoTransition(clone);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

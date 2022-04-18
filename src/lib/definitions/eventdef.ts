@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 import { Metadata } from './metadata';
-import { normalizeDataOnly, normalizeKind, overwriteCorrelation, overwriteMetadata } from './utils';
+import {
+  cleanSourceModelProperty,
+  normalizeDataOnly,
+  normalizeKind,
+  overwriteCorrelation,
+  overwriteMetadata,
+} from './utils';
 import { CorrelationDefs } from './types';
 
 export class Eventdef {
-  constructor(model: any) {
-    const defaultModel = {
-      kind: 'consumed',
-      dataOnly: true,
-    };
-    Object.assign(this, defaultModel, model);
-
-    overwriteCorrelation(this);
-    overwriteMetadata(this);
-  }
-
+  sourceModel?: Eventdef;
   /**
    * Unique event name
    */
@@ -49,7 +45,6 @@ export class Eventdef {
    * CloudEvent correlation definitions
    */
   correlation?: CorrelationDefs;
-
   /**
    * If `true`, only the Event payload is accessible to consuming Workflow states. If `false`, both event payload and context attributes should be accessible
    */
@@ -59,6 +54,19 @@ export class Eventdef {
    */
   metadata?: /* Metadata information */ Metadata;
 
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = {
+      kind: 'consumed',
+      dataOnly: true,
+    };
+    Object.assign(this, defaultModel, model);
+
+    overwriteCorrelation(this);
+    overwriteMetadata(this);
+  }
+
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Eventdef} without deleted properties.
@@ -66,9 +74,10 @@ export class Eventdef {
   normalize = (): Eventdef => {
     const clone = new Eventdef(this);
 
-    normalizeKind(clone);
-    normalizeDataOnly(clone);
+    normalizeKind(clone, this.sourceModel);
+    normalizeDataOnly(clone, this.sourceModel);
 
+    cleanSourceModelProperty(clone);
     return clone;
   };
 }

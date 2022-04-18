@@ -15,26 +15,17 @@
  */
 import { Produceeventdef } from './produceeventdef';
 import {
+  cleanSourceModelProperty,
   normalizeCompensate,
-  normalizeContinueAsIfObject,
+  normalizeContinueAs,
   normalizeTerminate,
-  overwriteContinueAsIfObject,
+  overwriteContinueAs,
   overwriteProduceEvents,
 } from './utils';
 import { Continueasdef } from './continueasdef';
 
 export class End {
-  constructor(model: any) {
-    const defaultModel = {
-      compensate: false,
-      terminate: false,
-    };
-    Object.assign(this, defaultModel, model);
-
-    overwriteProduceEvents(this);
-    overwriteContinueAsIfObject(this);
-  }
-
+  sourceModel?: End;
   /**
    * If true, completes all execution flows in the given workflow instance
    */
@@ -49,6 +40,19 @@ export class End {
   compensate?: boolean;
   continueAs?: string | Continueasdef;
 
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = {
+      compensate: false,
+      terminate: false,
+    };
+    Object.assign(this, defaultModel, model);
+
+    overwriteProduceEvents(this);
+    overwriteContinueAs(this);
+  }
+
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.End} without deleted properties.
@@ -56,10 +60,11 @@ export class End {
   normalize = (): End => {
     const clone = new End(this);
 
-    normalizeCompensate(clone);
-    normalizeTerminate(clone);
-    normalizeContinueAsIfObject(clone);
+    normalizeCompensate(clone, this.sourceModel);
+    normalizeTerminate(clone, this.sourceModel);
+    normalizeContinueAs(clone);
 
+    cleanSourceModelProperty(clone);
     return clone;
   };
 }

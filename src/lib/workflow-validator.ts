@@ -34,10 +34,12 @@ export class WorkflowValidator {
    */
   constructor(private workflow: Specification.Workflow) {
     const validateFn = validators.get('Workflow') as ValidateFunction<Specification.Workflow>;
-    validateFn(this.workflow);
+    const normalizedWf = this.workflow.normalize();
+    validateFn(JSON.parse(JSON.stringify(normalizedWf)));
     if (validateFn.errors) {
       this.errors = validateFn.errors.map((error) => {
-        const message = `invalid: ${error.instancePath} | ${error.schemaPath} | ${error.message}`;
+        const message = `Workflow is invalid: ${error.instancePath} | ${error.schemaPath} | ${error.message}
+        data: ${JSON.stringify(normalizedWf, null, 4)}`;
         return new ValidationError(message);
       });
     }

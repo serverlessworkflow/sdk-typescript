@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-import { normalizeInvoke, normalizeOnParentComplete } from './utils';
+import { cleanSourceModelProperty, normalizeInvoke, normalizeOnParentComplete } from './utils';
 
 export class Subflowref {
-  constructor(model: any) {
-    Object.assign(this, model);
-  }
-
+  sourceModel?: Subflowref;
   /**
    * Unique id of the sub-workflow to be invoked
    */
@@ -37,6 +34,13 @@ export class Subflowref {
    * Specifies if the subflow should be invoked sync or async
    */
   invoke?: 'sync' | 'async';
+
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    Object.assign(this, model);
+  }
+
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Subflowref} without deleted properties.
@@ -44,9 +48,10 @@ export class Subflowref {
   normalize = (): Subflowref => {
     const clone = new Subflowref(this);
 
-    normalizeInvoke(clone);
-    normalizeOnParentComplete(clone);
+    normalizeInvoke(clone, this.sourceModel);
+    normalizeOnParentComplete(clone, this.sourceModel);
 
+    cleanSourceModelProperty(clone);
     return clone;
   };
 }

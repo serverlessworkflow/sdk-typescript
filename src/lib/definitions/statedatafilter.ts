@@ -15,10 +15,6 @@
  */
 
 export class Statedatafilter {
-  constructor(model: any) {
-    Object.assign(this, model);
-  }
-
   /**
    * Workflow expression to filter the state data input
    */
@@ -27,4 +23,8 @@ export class Statedatafilter {
    * Workflow expression that filters the state data output
    */
   output?: string;
+
+  constructor(model: any) {
+    Object.assign(this, model);
+  }
 }

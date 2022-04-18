@@ -18,12 +18,12 @@ import * as fs from 'fs';
 import {
   actionBuilder,
   databasedswitchstateBuilder,
+  defaultconditiondefBuilder,
   functionBuilder,
   functionrefBuilder,
   operationstateBuilder,
   transitiondataconditionBuilder,
   workflowBuilder,
-  defaultconditiondefBuilder,
 } from '../../src';
 
 describe('applicationrequest workflow example', () => {
@@ -58,7 +58,6 @@ describe('applicationrequest workflow example', () => {
           .build(),
         operationstateBuilder()
           .name('StartApplication')
-          .actionMode('sequential')
           .actions([actionBuilder().subFlowRef('startApplicationWorkflowId').build()])
           .build(),
         operationstateBuilder()

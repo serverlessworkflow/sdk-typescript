@@ -109,7 +109,7 @@ CheckApplication --> RejectApplication : \${ .applicants | .age < 18 }
 CheckApplication --> RejectApplication : default`);
   });
 
-  it('should create source code for data-based state with end condition', () => {
+  it('should create source code for data-based state with end = true ', () => {
     const databasedswitch = new Specification.Databasedswitchstate(
       JSON.parse(`{
       "type":"switch",
@@ -136,6 +136,34 @@ CheckApplication : Condition type = data-based
 CheckApplication --> StartApplication : \${ .applicants | .age >= 18 }
 CheckApplication --> [*] : \${ .applicants | .age < 18 }
 CheckApplication --> StartApplication : default`);
+  });
+
+  it('should create source code for operation state with end.terminate = true ', () => {
+    const databasedswitch = new Specification.Databasedswitchstate(
+      JSON.parse(`{
+      "name": "GreetPerson",
+      "type": "operation",
+      "actions": [
+        {
+          "name": "greetAction",
+          "functionRef": {
+            "refName": "greetFunction",
+            "arguments": {
+              "message": "$.greeting $.name"
+            }
+          }
+        }
+      ],
+      "end": {
+        "terminate": true
+      }
+    }`)
+    );
+    const mermaidState = new MermaidState(databasedswitch);
+    expect(mermaidState.sourceCode()).toBe(`GreetPerson : GreetPerson
+GreetPerson : type = Operation State
+GreetPerson : Num. of actions = 1
+GreetPerson --> [*]`);
   });
 
   it('should create source code for operation state', () => {

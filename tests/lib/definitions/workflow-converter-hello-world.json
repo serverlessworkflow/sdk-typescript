@@ -5,10 +5,10 @@
   "name": "Hello World Workflow",
   "description": "Inject Hello World",
   "start": "Hello State",
-  "states":[
+  "states": [
     {
-      "type":"inject",
-      "name":"Hello State",
+      "type": "inject",
+      "name": "Hello State",
       "data": {
         "result": "Hello World!"
       },

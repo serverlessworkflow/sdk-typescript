@@ -14,14 +14,10 @@
  * limitations under the License.
  */
 
-import { normalizeInterrupt } from './utils';
+import { cleanSourceModelProperty, normalizeInterrupt } from './utils';
 
 export class WorkflowExecTimeout {
-  constructor(model: any) {
-    const defaultModel = { interrupt: true };
-    Object.assign(this, defaultModel, model);
-  }
-
+  sourceModel?: WorkflowExecTimeout;
   /**
    * Workflow execution timeout duration (ISO 8601 duration format). If not specified should be 'unlimited'
    */
@@ -35,6 +31,13 @@ export class WorkflowExecTimeout {
    */
   runBefore?: string;
 
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = { interrupt: true };
+    Object.assign(this, defaultModel, model);
+  }
+
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.WorkflowExecTimeout} without deleted properties.
@@ -43,8 +46,9 @@ export class WorkflowExecTimeout {
   normalize = (): WorkflowExecTimeout => {
     const clone = new WorkflowExecTimeout(this);
 
-    normalizeInterrupt(clone);
+    normalizeInterrupt(clone, this.sourceModel);
 
+    cleanSourceModelProperty(clone);
     return clone;
   };
 }

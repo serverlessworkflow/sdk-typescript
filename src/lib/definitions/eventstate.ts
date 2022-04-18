@@ -20,37 +20,26 @@ import { Onevents } from './onevents';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
-  normalizeEndIfObject,
+  cleanSourceModelProperty,
+  normalizeEnd,
   normalizeExclusive,
   normalizeOnErrors,
   normalizeOnEvents,
-  normalizeTransitionIfObject,
-  overwriteEndIfObject,
+  normalizeTransition,
+  overwriteEnd,
   overwriteMetadata,
   overwriteOnErrors,
   overwriteOnEvents,
   overwriteStateDataFilter,
-  overwriteTransitionIfObject,
-  setEndValueIfNoTransition,
   overwriteTimeoutWithStateExecTimeout,
+  overwriteTransition,
+  setEndValueIfNoTransition,
 } from './utils';
 import { ActionExecTimeout, EventTimeout } from './types';
 import { StateExecTimeout } from './stateExecTimeout';
 
 export class Eventstate /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ {
-  constructor(model: any) {
-    const defaultModel = { type: 'event', exclusive: true };
-    Object.assign(this, defaultModel, model);
-
-    overwriteOnEvents(this);
-    overwriteTimeoutWithStateExecTimeout(this);
-    overwriteStateDataFilter(this);
-    overwriteOnErrors(this);
-    overwriteTransitionIfObject(this);
-    overwriteEndIfObject(this);
-    overwriteMetadata(this);
-  }
-
+  sourceModel?: Eventstate;
   /**
    * Unique State id
    */
@@ -92,6 +81,26 @@ export class Eventstate /* This state is used to wait for events from event sour
   compensatedBy?: string;
   metadata?: /* Metadata information */ Metadata;
 
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = {
+      id: undefined,
+      name: undefined,
+      type: 'event',
+      exclusive: true,
+    };
+    Object.assign(this, defaultModel, model);
+
+    overwriteOnEvents(this);
+    overwriteTimeoutWithStateExecTimeout(this);
+    overwriteStateDataFilter(this);
+    overwriteOnErrors(this);
+    overwriteTransition(this);
+    overwriteEnd(this);
+    overwriteMetadata(this);
+  }
+
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Eventstate} without deleted properties.
@@ -99,12 +108,14 @@ export class Eventstate /* This state is used to wait for events from event sour
   normalize = (): Eventstate => {
     const clone = new Eventstate(this);
 
-    normalizeExclusive(clone);
+    normalizeExclusive(clone, this.sourceModel);
     normalizeOnEvents(clone);
     normalizeOnErrors(clone);
-    normalizeTransitionIfObject(clone);
-    normalizeEndIfObject(clone);
+    normalizeTransition(clone);
+    normalizeEnd(clone);
     setEndValueIfNoTransition(clone);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

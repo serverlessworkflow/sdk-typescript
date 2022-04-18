@@ -15,10 +15,6 @@
  */
 
 export class Crondef {
-  constructor(model: any) {
-    Object.assign(this, model);
-  }
-
   /**
    * Repeating interval (cron expression) describing when the workflow instance should be created
    */
@@ -27,4 +23,8 @@ export class Crondef {
    * Specific date and time (ISO 8601 format) when the cron expression invocation is no longer valid
    */
   validUntil?: string;
+
+  constructor(model: any) {
+    Object.assign(this, model);
+  }
 }

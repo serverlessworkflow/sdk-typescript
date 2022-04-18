@@ -16,13 +16,13 @@
 import * as fs from 'fs';
 import {
   actionBuilder,
+  endBuilder,
   eventdefBuilder,
   foreachstateBuilder,
   functionBuilder,
+  functionrefBuilder,
   produceeventdefBuilder,
   workflowBuilder,
-  functionrefBuilder,
-  endBuilder,
 } from '../../src';
 
 describe('sendcloudevent workflow example', () => {
@@ -48,7 +48,6 @@ describe('sendcloudevent workflow example', () => {
           .inputCollection('${ .orders }')
           .iterationParam('singleorder')
           .outputCollection('${ .provisionedOrders }')
-          .usedForCompensation(false)
           .actions([
             actionBuilder()
               .functionRef(

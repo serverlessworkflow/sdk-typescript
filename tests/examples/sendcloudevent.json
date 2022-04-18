@@ -1,26 +1,13 @@
 {
   "id": "sendcloudeventonprovision",
+  "name": "Send CloudEvent on provision completion",
   "version": "1.0",
   "specVersion": "0.8",
-  "name": "Send CloudEvent on provision completion",
   "start": "ProvisionOrdersState",
-  "events": [
-    {
-      "kind": "produced",
-      "name": "provisioningCompleteEvent",
-      "type": "provisionCompleteType"
-    }
-  ],
-  "functions": [
-    {
-      "name": "provisionOrderFunction",
-      "operation": "http://myapis.org/provisioning.json#doProvision"
-    }
-  ],
   "states": [
     {
-      "type": "foreach",
       "name": "ProvisionOrdersState",
+      "type": "foreach",
       "inputCollection": "${ .orders }",
       "iterationParam": "singleorder",
       "outputCollection": "${ .provisionedOrders }",
@@ -35,11 +22,26 @@
         }
       ],
       "end": {
-        "produceEvents": [{
-          "eventRef": "provisioningCompleteEvent",
-          "data": "${ .provisionedOrders }"
-        }]
+        "produceEvents": [
+          {
+            "eventRef": "provisioningCompleteEvent",
+            "data": "${ .provisionedOrders }"
+          }
+        ]
       }
+    }
+  ],
+  "functions": [
+    {
+      "name": "provisionOrderFunction",
+      "operation": "http://myapis.org/provisioning.json#doProvision"
+    }
+  ],
+  "events": [
+    {
+      "kind": "produced",
+      "name": "provisioningCompleteEvent",
+      "type": "provisionCompleteType"
     }
   ]
 }

@@ -14,14 +14,10 @@
  * limitations under the License.
  */
 
-import { normalizeInvoke, overwritePropertyAsPlainType } from './utils';
+import { cleanSourceModelProperty, normalizeInvoke, overwritePropertyAsPlainType } from './utils';
 
 export class Functionref {
-  constructor(model: any) {
-    Object.assign(this, model);
-    overwritePropertyAsPlainType('arguments', this);
-  }
-
+  sourceModel?: Functionref;
   /**
    * Name of the referenced function
    */
@@ -41,6 +37,13 @@ export class Functionref {
    */
   invoke?: 'sync' | 'async';
 
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    Object.assign(this, model);
+    overwritePropertyAsPlainType('arguments', this);
+  }
+
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Functionref} without deleted properties.
@@ -48,7 +51,9 @@ export class Functionref {
   normalize = (): Functionref => {
     const clone = new Functionref(this);
 
-    normalizeInvoke(clone);
+    normalizeInvoke(clone, this.sourceModel);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

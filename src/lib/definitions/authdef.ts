@@ -14,16 +14,11 @@
  * limitations under the License.
  */
 
-import { normalizeScheme, overwritePropertiesIfObject } from './utils';
+import { cleanSourceModelProperty, normalizeScheme, overwriteProperties } from './utils';
 import { Properties } from './types';
 
 export class Authdef {
-  constructor(model: any) {
-    const defaultModel = { scheme: 'basic' };
-    Object.assign(this, defaultModel, model);
-
-    overwritePropertiesIfObject(this);
-  }
+  sourceModel?: Authdef;
   /**
    * Unique auth definition name
    */
@@ -34,6 +29,15 @@ export class Authdef {
   scheme?: 'basic' | 'bearer' | 'oauth2';
   properties: string | Properties;
 
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = { scheme: 'basic' };
+    Object.assign(this, defaultModel, model);
+
+    overwriteProperties(this);
+  }
+
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Authdef} without deleted properties.
@@ -41,7 +45,9 @@ export class Authdef {
   normalize = (): Authdef => {
     const clone = new Authdef(this);
 
-    normalizeScheme(clone);
+    normalizeScheme(clone, this.sourceModel);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

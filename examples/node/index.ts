@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { workflowBuilder, injectstateBuilder, Specification } from '../../dist';
+import { injectstateBuilder, Specification, workflowBuilder } from '../../dist';
+
 const workflow: Specification.Workflow = workflowBuilder()
   .id('helloworld')
   .version('1.0')

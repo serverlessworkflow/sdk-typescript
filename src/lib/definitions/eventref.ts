@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-import { normalizeInvoke, overwritePropertyAsPlainType } from './utils';
+import { cleanSourceModelProperty, normalizeInvoke, overwritePropertyAsPlainType } from './utils';
 
 export class Eventref {
-  constructor(model: any) {
-    Object.assign(this, model);
-    overwritePropertyAsPlainType('data', this);
-    overwritePropertyAsPlainType('contextAttributes', this);
-  }
-
+  sourceModel?: Eventref;
   /**
    * Reference to the unique name of a 'produced' event definition
    */
@@ -54,6 +49,14 @@ export class Eventref {
    */
   invoke?: 'sync' | 'async';
 
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    Object.assign(this, model);
+    overwritePropertyAsPlainType('data', this);
+    overwritePropertyAsPlainType('contextAttributes', this);
+  }
+
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Eventref} without deleted properties.
@@ -61,7 +64,9 @@ export class Eventref {
   normalize = (): Eventref => {
     const clone = new Eventref(this);
 
-    normalizeInvoke(clone);
+    normalizeInvoke(clone, this.sourceModel);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

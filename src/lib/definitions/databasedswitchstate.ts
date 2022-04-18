@@ -19,6 +19,7 @@ import { Error } from './error';
 import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import {
+  cleanSourceModelProperty,
   normalizeDataConditions,
   normalizeDefaultCondition,
   normalizeOnErrors,
@@ -34,18 +35,7 @@ import { Datacondition } from './types';
 import { StateExecTimeout } from './stateExecTimeout';
 
 export class Databasedswitchstate {
-  constructor(model: any) {
-    const defaultModel = { type: 'switch', usedForCompensation: false };
-    Object.assign(this, defaultModel, model);
-
-    overwriteStateDataFilter(this);
-    overwriteTimeoutWithStateExecTimeout(this);
-    overwriteDataConditions(this);
-    overwriteOnErrors(this);
-    overwriteDefaultCondition(this);
-    overwriteMetadata(this);
-  }
-
+  sourceModel?: Databasedswitchstate;
   /**
    * Unique State id
    */
@@ -90,6 +80,20 @@ export class Databasedswitchstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = { id: undefined, name: undefined, type: 'switch', usedForCompensation: false };
+    Object.assign(this, defaultModel, model);
+
+    overwriteStateDataFilter(this);
+    overwriteTimeoutWithStateExecTimeout(this);
+    overwriteDataConditions(this);
+    overwriteOnErrors(this);
+    overwriteDefaultCondition(this);
+    overwriteMetadata(this);
+  }
+
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Databasedswitch} without deleted properties.
@@ -100,7 +104,8 @@ export class Databasedswitchstate {
     normalizeDataConditions(clone);
     normalizeOnErrors(clone);
     normalizeDefaultCondition(clone);
-    normalizeUsedForCompensation(clone);
+    normalizeUsedForCompensation(clone, this.sourceModel);
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

@@ -14,30 +14,24 @@
  * limitations under the License.
  *
  */
-import { eventstateBuilder } from '../../../src/lib/builders/eventstate-builder';
-import { oneventsBuilder } from '../../../src/lib/builders/onevents-builder';
+import { actionBuilder, operationstateBuilder } from '../../../src';
 
-describe('eventstateBuilder ', () => {
-  it('should build an object', () => {
-    const object = eventstateBuilder()
-      .name('Book Lending Request')
-      .onEvents([oneventsBuilder().eventRefs(['Book Lending Request Event']).build()])
-      .transition('Get Book Status')
+describe('operationstateBuilder ', () => {
+  it('should build an object with default values', () => {
+    const object = operationstateBuilder()
+      .name('StartApplication')
+      .actions([actionBuilder().subFlowRef('startApplicationWorkflowId').build()])
       .build();
 
-    expect(object.exclusive).toBeTruthy();
+    expect(object.actionMode).toBe('sequential');
 
     const serializedObject = object.normalize();
     expect(JSON.stringify(serializedObject)).toBe(
       JSON.stringify({
-        name: 'Book Lending Request',
-        type: 'event',
-        onEvents: [
-          {
-            eventRefs: ['Book Lending Request Event'],
-          },
-        ],
-        transition: 'Get Book Status',
+        name: 'StartApplication',
+        type: 'operation',
+        actions: [{ subFlowRef: 'startApplicationWorkflowId' }],
+        end: true,
       })
     );
   });

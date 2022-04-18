@@ -18,6 +18,7 @@ import { promises as fsPromises } from 'fs';
 import * as path from 'path';
 import { fileHeader } from './consts';
 import { reset } from './utils';
+
 const { readFile, writeFile } = fsPromises;
 
 declare global {
@@ -32,6 +33,7 @@ interface BuilderExtension {
   import?: string;
   preValidate: string;
 }
+
 /** Stores additional code that needs to be added to builders depending on their type */
 const buildersExtensions: { [key: string]: BuilderExtension } = {
   Callbackstate: {
@@ -132,7 +134,7 @@ function ${camelType}BuildingFn(data: Specification.${dataType}): (() => Specifi
 
     ${extension?.preValidate ? extension.preValidate : ''}
     
-    validate('${dataType}', model);
+    validate('${dataType}', model.normalize());
     return model;
   };
 }

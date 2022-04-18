@@ -15,16 +15,10 @@
  */
 import { End } from './end';
 import { Metadata } from './metadata';
-import { normalizeEndIfObject, overwriteEndIfObject, overwriteMetadata } from './utils';
+import { cleanSourceModelProperty, normalizeEnd, overwriteEnd, overwriteMetadata } from './utils';
 
 export class Enddatacondition {
-  constructor(model: any) {
-    Object.assign(this, model);
-
-    overwriteEndIfObject(this);
-    overwriteMetadata(this);
-  }
-
+  sourceModel?: Enddatacondition;
   /**
    * Data condition name
    */
@@ -39,6 +33,15 @@ export class Enddatacondition {
   end: boolean | End;
   metadata?: /* Metadata information */ Metadata;
 
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    Object.assign(this, model);
+
+    overwriteEnd(this);
+    overwriteMetadata(this);
+  }
+
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Enddatacondition} without deleted properties.
@@ -46,7 +49,9 @@ export class Enddatacondition {
   normalize = (): Enddatacondition => {
     const clone = new Enddatacondition(this);
 
-    normalizeEndIfObject(clone);
+    normalizeEnd(clone);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

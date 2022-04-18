@@ -30,7 +30,7 @@ function callbackstateBuildingFn(data: Specification.Callbackstate): () => Speci
 
     setEndValueIfNoTransition(model);
 
-    validate('Callbackstate', model);
+    validate('Callbackstate', model.normalize());
     return model;
   };
 }

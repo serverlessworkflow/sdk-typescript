@@ -15,17 +15,16 @@
  */
 import { Action } from './action';
 import { Eventdatafilter } from './eventdatafilter';
-import { normalizeActionMode, normalizeActions, overwriteActions, overwriteEventDataFilter } from './utils';
+import {
+  cleanSourceModelProperty,
+  normalizeActionMode,
+  normalizeActions,
+  overwriteActions,
+  overwriteEventDataFilter,
+} from './utils';
 
 export class Onevents {
-  constructor(model: any) {
-    const defaultModel = { actionMode: 'sequential' };
-    Object.assign(this, defaultModel, model);
-
-    overwriteActions(this);
-    overwriteEventDataFilter(this);
-  }
-
+  sourceModel?: Onevents;
   /**
    * References one or more unique event names in the defined workflow events
    */
@@ -43,6 +42,16 @@ export class Onevents {
    */
   eventDataFilter?: Eventdatafilter;
 
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = { actionMode: 'sequential' };
+    Object.assign(this, defaultModel, model);
+
+    overwriteActions(this);
+    overwriteEventDataFilter(this);
+  }
+
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Onevents} without deleted properties.
@@ -50,8 +59,10 @@ export class Onevents {
   normalize = (): Onevents => {
     const clone = new Onevents(this);
 
-    normalizeActionMode(clone);
+    normalizeActionMode(clone, this.sourceModel);
     normalizeActions(clone);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

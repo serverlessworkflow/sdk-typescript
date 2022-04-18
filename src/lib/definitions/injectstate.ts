@@ -19,32 +19,22 @@ import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
-  normalizeEndIfObject,
-  normalizeTransitionIfObject,
+  cleanSourceModelProperty,
+  normalizeEnd,
+  normalizeTransition,
   normalizeUsedForCompensation,
-  overwriteEndIfObject,
+  overwriteEnd,
   overwriteMetadata,
   overwritePropertyAsPlainType,
   overwriteStateDataFilter,
   overwriteTimeoutWithStateExecTimeout,
-  overwriteTransitionIfObject,
+  overwriteTransition,
   setEndValueIfNoTransition,
 } from './utils';
 import { StateExecTimeout } from './stateExecTimeout';
 
 export class Injectstate {
-  constructor(model: any) {
-    const defaultModel = { type: 'inject', usedForCompensation: false };
-    Object.assign(this, defaultModel, model);
-
-    overwriteEndIfObject(this);
-    overwritePropertyAsPlainType('data', this);
-    overwriteTimeoutWithStateExecTimeout(this);
-    overwriteStateDataFilter(this);
-    overwriteTransitionIfObject(this);
-    overwriteMetadata(this);
-  }
-
+  sourceModel?: Injectstate;
   /**
    * Unique state id
    */
@@ -91,6 +81,25 @@ export class Injectstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = {
+      id: undefined,
+      name: undefined,
+      type: 'inject',
+      usedForCompensation: false,
+    };
+    Object.assign(this, defaultModel, model);
+
+    overwriteEnd(this);
+    overwritePropertyAsPlainType('data', this);
+    overwriteTimeoutWithStateExecTimeout(this);
+    overwriteStateDataFilter(this);
+    overwriteTransition(this);
+    overwriteMetadata(this);
+  }
+
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Injectstate} without deleted properties.
@@ -98,10 +107,12 @@ export class Injectstate {
   normalize = (): Injectstate => {
     const clone = new Injectstate(this);
 
-    normalizeEndIfObject(clone);
-    normalizeTransitionIfObject(clone);
-    normalizeUsedForCompensation(clone);
+    normalizeEnd(clone);
+    normalizeTransition(clone);
+    normalizeUsedForCompensation(clone, this.sourceModel);
     setEndValueIfNoTransition(clone);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

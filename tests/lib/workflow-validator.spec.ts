@@ -16,30 +16,33 @@
  */
 import { ValidationError, WorkflowValidator } from '../../src';
 import { Workflow } from '../../src/lib/definitions/workflow';
-
-const validWorkflow = {
-  id: 'helloworld',
-  version: '1.0',
-  specVersion: '0.8',
-  name: 'Hello World Workflow',
-  description: 'Inject Hello World',
-  start: 'Hello State',
-  states: [
-    {
-      name: 'Hello State',
-      type: 'inject',
-      data: {
-        result: 'Hello World!',
-      },
-      end: true,
-    },
-  ],
-};
+import * as fs from 'fs';
 
 describe('workflow-validator, invalid state', () => {
+  const validWorkflow = {
+    id: 'helloworld',
+    version: '1.0',
+    specVersion: '0.8',
+    name: 'Hello World Workflow',
+    description: 'Inject Hello World',
+    start: 'Hello State',
+    states: [
+      {
+        name: 'Hello State',
+        type: 'inject',
+        data: {
+          result: 'Hello World!',
+        },
+        end: true,
+      },
+    ],
+  };
+
   it('should return errors instance of ValidationError if the workflow provided is not valid', () => {
+    const workflowWithEmptyStates = Workflow.fromSource(JSON.stringify(validWorkflow));
+
     // @ts-ignore
-    const workflowWithEmptyStates = Object.assign({ ...validWorkflow }, { states: [] }) as Workflow;
+    workflowWithEmptyStates.states = [];
 
     const workflowValidator = new WorkflowValidator(workflowWithEmptyStates);
 
@@ -49,8 +52,8 @@ describe('workflow-validator, invalid state', () => {
   });
 
   it('should check if specVersion match the supported sdk version', () => {
-    // @ts-ignore
-    const workflowWithInvalidSpecVersion = Object.assign({ ...validWorkflow }, { specVersion: '0.1' }) as Workflow;
+    const workflowWithInvalidSpecVersion = Workflow.fromSource(JSON.stringify(validWorkflow));
+    workflowWithInvalidSpecVersion.specVersion = '0.1';
 
     const workflowValidator = new WorkflowValidator(workflowWithInvalidSpecVersion);
 
@@ -70,12 +73,18 @@ describe('workflow-validator, invalid state', () => {
 });
 
 describe('workflow-validator, valid state', () => {
-  it('should have no errors if the workflow is valid', () => {
-    // @ts-ignore
-    const workflow = validWorkflow as Workflow;
+  it('should have no errors', () => {
+    const testFolder = './tests/examples/';
 
-    const workflowValidator = new WorkflowValidator(workflow);
-    expect(workflowValidator.errors.length).toBe(0);
-    expect(workflowValidator.isValid);
+    const jsonFiles = fs.readdirSync(testFolder).filter((f) => f.endsWith('.json'));
+
+    expect(jsonFiles.length).toBe(9);
+
+    jsonFiles.forEach((f) => {
+      const file = testFolder + f;
+      const workflow = Workflow.fromSource(fs.readFileSync(file, 'utf8'));
+      const workflowValidator = new WorkflowValidator(workflow);
+      expect(workflowValidator.errors.length).toBe(0);
+    });
   });
 });

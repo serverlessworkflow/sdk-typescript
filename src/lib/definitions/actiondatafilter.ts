@@ -15,10 +15,6 @@
  */
 
 export class Actiondatafilter {
-  constructor(model: any) {
-    Object.assign(this, model);
-  }
-
   /**
    * Workflow expression that selects state data that the state action can use
    */
@@ -35,4 +31,8 @@ export class Actiondatafilter {
    * Workflow expression that selects a state data element to which the action results should be added/merged into. If not specified, denote, the top-level state data element
    */
   toStateData?: string;
+
+  constructor(model: any) {
+    Object.assign(this, model);
+  }
 }

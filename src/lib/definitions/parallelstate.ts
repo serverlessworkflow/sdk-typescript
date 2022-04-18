@@ -21,42 +21,27 @@ import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
+  cleanSourceModelProperty,
   normalizeBranches,
   normalizeCompletionType,
-  normalizeEndIfObject,
+  normalizeEnd,
   normalizeOnErrors,
-  normalizeTransitionIfObject,
+  normalizeTransition,
   normalizeUsedForCompensation,
   overwriteBranches,
-  overwriteEndIfObject,
+  overwriteEnd,
   overwriteMetadata,
   overwriteOnErrors,
   overwriteStateDataFilter,
-  overwriteTransitionIfObject,
-  setEndValueIfNoTransition,
   overwriteTimeoutWithStateExecTimeout,
+  overwriteTransition,
+  setEndValueIfNoTransition,
 } from './utils';
 import { BranchExecTimeout } from './types';
 import { StateExecTimeout } from './stateExecTimeout';
 
 export class Parallelstate {
-  constructor(model: any) {
-    const defaultModel = {
-      type: 'parallel',
-      completionType: 'allOf',
-      usedForCompensation: false,
-    };
-    Object.assign(this, defaultModel, model);
-
-    overwriteEndIfObject(this);
-    overwriteStateDataFilter(this);
-    overwriteTimeoutWithStateExecTimeout(this);
-    overwriteBranches(this);
-    overwriteOnErrors(this);
-    overwriteTransitionIfObject(this);
-    overwriteMetadata(this);
-  }
-
+  sourceModel?: Parallelstate;
   /**
    * Unique State id
    */
@@ -114,6 +99,27 @@ export class Parallelstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = {
+      id: undefined,
+      name: undefined,
+      type: 'parallel',
+      completionType: 'allOf',
+      usedForCompensation: false,
+    };
+    Object.assign(this, defaultModel, model);
+
+    overwriteEnd(this);
+    overwriteStateDataFilter(this);
+    overwriteTimeoutWithStateExecTimeout(this);
+    overwriteBranches(this);
+    overwriteOnErrors(this);
+    overwriteTransition(this);
+    overwriteMetadata(this);
+  }
+
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Parallelstate} without deleted properties.
@@ -121,13 +127,15 @@ export class Parallelstate {
   normalize = (): Parallelstate => {
     const clone = new Parallelstate(this);
 
-    normalizeEndIfObject(clone);
+    normalizeEnd(clone);
     normalizeBranches(clone);
-    normalizeCompletionType(clone);
+    normalizeCompletionType(clone, this.sourceModel);
     normalizeOnErrors(clone);
-    normalizeTransitionIfObject(clone);
-    normalizeUsedForCompensation(clone);
+    normalizeTransition(clone);
+    normalizeUsedForCompensation(clone, this.sourceModel);
     setEndValueIfNoTransition(clone);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

@@ -30,7 +30,7 @@ function errorBuildingFn(data: Specification.Error): () => Specification.Error {
 
     setEndValueIfNoTransition(model);
 
-    validate('Error', model);
+    validate('Error', model.normalize());
     return model;
   };
 }

@@ -23,13 +23,14 @@ import { Specification } from '.';
 
 import { validate } from '../utils';
 import {
+  cleanSourceModelProperty,
   normalizeAuth,
   normalizeEvents,
   normalizeExpressionLang,
   normalizeFunctions,
   normalizeKeepActive,
   normalizeStates,
-  normalizeTimeoutsIfObject,
+  normalizeTimeouts,
   overwriteAuth,
   overwriteErrors,
   overwriteEvents,
@@ -37,33 +38,14 @@ import {
   overwriteMetadata,
   overwritePropertyAsPlainType,
   overwriteRetries,
-  overwriteStartIfObject,
+  overwriteStart,
   overwriteStates,
-  overwriteTimeoutsIfObject,
+  overwriteTimeouts,
 } from './utils';
 import { Auth, Errors, Events, Functions, Retries, Secrets, States } from './types';
 
 export class Workflow {
-  constructor(model: any) {
-    const defaultModel = {
-      expressionLang: 'jq',
-      keepActive: true,
-    } as Specification.Workflow;
-
-    Object.assign(this, defaultModel, model);
-
-    overwritePropertyAsPlainType('dataInputSchema', this);
-    overwritePropertyAsPlainType('constants', this);
-    overwriteStartIfObject(this);
-    overwriteTimeoutsIfObject(this);
-    overwriteErrors(this);
-    overwriteMetadata(this);
-    overwriteEvents(this);
-    overwriteFunctions(this);
-    overwriteRetries(this);
-    overwriteAuth(this);
-    overwriteStates(this);
-  }
+  sourceModel?: Workflow;
   /**
    * Workflow unique identifier
    */
@@ -134,23 +116,40 @@ export class Workflow {
    * State definitions
    */
   states: States;
-  /**
-   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Workflow} without deleted properties.
-   */
-  normalize = (): Workflow => {
-    const clone = new Workflow(this);
 
-    normalizeExpressionLang(clone);
-    normalizeTimeoutsIfObject(clone);
-    normalizeKeepActive(clone);
-    normalizeEvents(clone);
-    normalizeFunctions(clone);
-    normalizeAuth(clone);
-    normalizeStates(clone);
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
 
-    return clone;
-  };
+    const defaultModel = {
+      id: undefined,
+      name: undefined,
+      version: undefined,
+      description: undefined,
+      specVersion: undefined,
+      start: undefined,
+      states: undefined,
+      functions: undefined,
+      events: undefined,
+      retries: undefined,
+      timeouts: undefined,
+      expressionLang: 'jq',
+      keepActive: true,
+    };
+
+    Object.assign(this, defaultModel, model);
+
+    overwritePropertyAsPlainType('dataInputSchema', this);
+    overwritePropertyAsPlainType('constants', this);
+    overwriteStart(this);
+    overwriteTimeouts(this);
+    overwriteErrors(this);
+    overwriteMetadata(this);
+    overwriteEvents(this);
+    overwriteFunctions(this);
+    overwriteRetries(this);
+    overwriteAuth(this);
+    overwriteStates(this);
+  }
 
   /**
    * Parses the provided string as Workflow
@@ -172,7 +171,7 @@ export class Workflow {
    * @returns {string} The workflow as JSON
    */
   static toJson(workflow: Workflow): string {
-    validate('Workflow', workflow);
+    validate('Workflow', workflow.normalize());
     return JSON.stringify(workflow.normalize());
   }
 
@@ -182,7 +181,26 @@ export class Workflow {
    * @returns {string} The workflow as YAML
    */
   static toYaml(workflow: Workflow): string {
-    validate('Workflow', workflow);
+    validate('Workflow', workflow.normalize());
     return yaml.dump(JSON.parse(JSON.stringify(workflow.normalize())));
   }
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Workflow} without deleted properties.
+   */
+  normalize = (): Workflow => {
+    const clone = new Workflow(this);
+
+    normalizeExpressionLang(clone, this.sourceModel);
+    normalizeTimeouts(clone);
+    normalizeKeepActive(clone, this.sourceModel);
+    normalizeEvents(clone);
+    normalizeFunctions(clone);
+    normalizeAuth(clone);
+    normalizeStates(clone);
+
+    cleanSourceModelProperty(clone);
+    return clone;
+  };
 }

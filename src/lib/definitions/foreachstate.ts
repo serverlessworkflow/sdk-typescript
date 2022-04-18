@@ -20,38 +20,27 @@ import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
+  cleanSourceModelProperty,
   normalizeActions,
-  normalizeEndIfObject,
+  normalizeEnd,
+  normalizeMode,
   normalizeOnErrors,
-  normalizeTransitionIfObject,
+  normalizeTransition,
   normalizeUsedForCompensation,
   overwriteActions,
-  overwriteEndIfObject,
+  overwriteEnd,
   overwriteMetadata,
   overwriteOnErrors,
   overwriteStateDataFilter,
-  overwriteTransitionIfObject,
-  setEndValueIfNoTransition,
-  normalizeMode,
   overwriteTimeoutWithStateExecTimeout,
+  overwriteTransition,
+  setEndValueIfNoTransition,
 } from './utils';
 import { ActionExecTimeout } from './types';
 import { StateExecTimeout } from './stateExecTimeout';
 
 export class Foreachstate {
-  constructor(model: any) {
-    const defaultModel = { type: 'foreach', usedForCompensation: false, mode: 'parallel' };
-    Object.assign(this, defaultModel, model);
-
-    overwriteEndIfObject(this);
-    overwriteActions(this);
-    overwriteTimeoutWithStateExecTimeout(this);
-    overwriteStateDataFilter(this);
-    overwriteOnErrors(this);
-    overwriteTransitionIfObject(this);
-    overwriteMetadata(this);
-  }
-
+  sourceModel?: Foreachstate;
   /**
    * Unique State id
    */
@@ -115,12 +104,32 @@ export class Foreachstate {
    * If true, this state is used to compensate another state. Default is false
    */
   usedForCompensation?: boolean;
-
   /**
    * Specifies how iterations are to be performed (sequentially or in parallel)
    */
   mode?: 'sequential' | 'parallel';
   metadata?: /* Metadata information */ Metadata;
+
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = {
+      id: undefined,
+      name: undefined,
+      type: 'foreach',
+      usedForCompensation: false,
+      mode: 'parallel',
+    };
+    Object.assign(this, defaultModel, model);
+
+    overwriteEnd(this);
+    overwriteActions(this);
+    overwriteTimeoutWithStateExecTimeout(this);
+    overwriteStateDataFilter(this);
+    overwriteOnErrors(this);
+    overwriteTransition(this);
+    overwriteMetadata(this);
+  }
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
@@ -129,13 +138,15 @@ export class Foreachstate {
   normalize = (): Foreachstate => {
     const clone = new Foreachstate(this);
 
-    normalizeEndIfObject(clone);
+    normalizeEnd(clone);
     normalizeActions(clone);
     normalizeOnErrors(clone);
-    normalizeTransitionIfObject(clone);
-    normalizeUsedForCompensation(clone);
-    normalizeMode(clone);
+    normalizeTransition(clone);
+    normalizeUsedForCompensation(clone, this.sourceModel);
+    normalizeMode(clone, this.sourceModel);
     setEndValueIfNoTransition(clone);
+
+    cleanSourceModelProperty(clone);
 
     return clone;
   };

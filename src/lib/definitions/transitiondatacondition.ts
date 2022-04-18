@@ -15,16 +15,10 @@
  */
 import { Metadata } from './metadata';
 import { Transition } from './transition';
-import { normalizeTransitionIfObject, overwriteMetadata, overwriteTransitionIfObject } from './utils';
+import { cleanSourceModelProperty, normalizeTransition, overwriteMetadata, overwriteTransition } from './utils';
 
 export class Transitiondatacondition {
-  constructor(model: any) {
-    Object.assign(this, model);
-
-    overwriteTransitionIfObject(this);
-    overwriteMetadata(this);
-  }
-
+  sourceModel?: Transitiondatacondition;
   /**
    * Data condition name
    */
@@ -39,6 +33,15 @@ export class Transitiondatacondition {
   transition: string | Transition;
   metadata?: /* Metadata information */ Metadata;
 
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    Object.assign(this, model);
+
+    overwriteTransition(this);
+    overwriteMetadata(this);
+  }
+
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Transitiondatacondition} without deleted properties.
@@ -46,8 +49,9 @@ export class Transitiondatacondition {
   normalize = (): Transitiondatacondition => {
     const clone = new Transitiondatacondition(this);
 
-    normalizeTransitionIfObject(clone);
+    normalizeTransition(clone);
 
+    cleanSourceModelProperty(clone);
     return clone;
   };
 }

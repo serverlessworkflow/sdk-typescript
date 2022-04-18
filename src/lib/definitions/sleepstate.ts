@@ -20,36 +20,23 @@ import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
-  normalizeEndIfObject,
+  cleanSourceModelProperty,
+  normalizeEnd,
   normalizeOnErrors,
-  normalizeTransitionIfObject,
+  normalizeTransition,
   normalizeUsedForCompensation,
-  overwriteEndIfObject,
+  overwriteEnd,
   overwriteMetadata,
   overwriteOnErrors,
   overwriteStateDataFilter,
   overwriteTimeoutWithStateExecTimeout,
-  overwriteTransitionIfObject,
+  overwriteTransition,
   setEndValueIfNoTransition,
 } from './utils';
 import { StateExecTimeout } from './stateExecTimeout';
 
 export class Sleepstate {
-  constructor(model: any) {
-    const defaultModel = {
-      type: 'sleep',
-      usedForCompensation: false,
-    };
-    Object.assign(this, defaultModel, model);
-
-    overwriteEndIfObject(this);
-    overwriteStateDataFilter(this);
-    overwriteTimeoutWithStateExecTimeout(this);
-    overwriteOnErrors(this);
-    overwriteTransitionIfObject(this);
-    overwriteMetadata(this);
-  }
-
+  sourceModel?: Sleepstate;
   /**
    * Unique State id
    */
@@ -98,6 +85,25 @@ export class Sleepstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = {
+      id: undefined,
+      name: undefined,
+      type: 'sleep',
+      usedForCompensation: false,
+    };
+    Object.assign(this, defaultModel, model);
+
+    overwriteEnd(this);
+    overwriteStateDataFilter(this);
+    overwriteTimeoutWithStateExecTimeout(this);
+    overwriteOnErrors(this);
+    overwriteTransition(this);
+    overwriteMetadata(this);
+  }
+
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Delaystate} without deleted properties.
@@ -105,11 +111,14 @@ export class Sleepstate {
   normalize = (): Sleepstate => {
     const clone = new Sleepstate(this);
 
-    normalizeEndIfObject(clone);
+    normalizeEnd(clone);
     normalizeOnErrors(clone);
-    normalizeTransitionIfObject(clone);
-    normalizeUsedForCompensation(clone);
+    normalizeTransition(clone);
+    normalizeUsedForCompensation(clone, this.sourceModel);
     setEndValueIfNoTransition(clone);
+
+    cleanSourceModelProperty(clone);
+
     return clone;
   };
 }

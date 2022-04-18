@@ -113,15 +113,15 @@ describe('workflow ', () => {
     expect(jsonWorkflow).toBe(
       '{' +
         '"id":"helloworld",' +
-        '"version":"1.0",' +
-        '"specVersion":"0.8",' +
         '"name":"Hello World Workflow",' +
+        '"version":"1.0",' +
         '"description":"Inject Hello World",' +
+        '"specVersion":"0.8",' +
         '"start":"Hello State",' +
         '"states":[' +
         '{' +
-        '"type":"inject",' +
         '"name":"Hello State",' +
+        '"type":"inject",' +
         '"data":{' +
         '"result":"Hello World!"' +
         '},' +
@@ -154,14 +154,14 @@ describe('workflow ', () => {
     );
     expect(yamlWorkflow).toBe(
       'id: helloworld\n' +
-        "version: '1.0'\n" +
-        "specVersion: '0.8'\n" +
         'name: Hello World Workflow\n' +
+        "version: '1.0'\n" +
         'description: Inject Hello World\n' +
+        "specVersion: '0.8'\n" +
         'start: Hello State\n' +
         'states:\n' +
-        '  - type: inject\n' +
-        '    name: Hello State\n' +
+        '  - name: Hello State\n' +
+        '    type: inject\n' +
         '    data:\n' +
         '      result: Hello World!\n' +
         '    end: true\n'

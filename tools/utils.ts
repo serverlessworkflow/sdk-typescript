@@ -19,6 +19,7 @@ import { promises as fsPromises } from 'fs';
 import * as path from 'path';
 import rimraf from 'rimraf';
 import { readMeDisclaimer } from './consts';
+
 const { writeFile, mkdir } = fsPromises;
 
 /**

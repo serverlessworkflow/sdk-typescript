@@ -16,7 +16,7 @@
  */
 
 import {
-  overwritePropertiesIfObject,
+  overwriteProperties,
   overwritePropertyAsPlainType,
   overwriteTimeoutWithStateExecTimeout,
 } from '../../../src/lib/definitions/utils';
@@ -75,7 +75,7 @@ describe('Util ', () => {
     });
   });
 
-  describe('overwritePropertiesIfObject  ', () => {
+  describe('overwriteProperties  ', () => {
     class HasProperties {
       properties: string | Properties;
     }
@@ -89,7 +89,7 @@ describe('Util ', () => {
       } as HasProperties;
 
       const target = Object.assign({}, source);
-      overwritePropertiesIfObject(target);
+      overwriteProperties(target);
       expect(target.properties.constructor.name).toBe('Basicpropsdef');
     });
 
@@ -101,7 +101,7 @@ describe('Util ', () => {
       } as HasProperties;
 
       const target = Object.assign({}, source);
-      overwritePropertiesIfObject(target);
+      overwriteProperties(target);
       expect(target.properties.constructor.name).toBe('Bearerpropsdef');
     });
 
@@ -114,7 +114,7 @@ describe('Util ', () => {
       } as HasProperties;
 
       const target = Object.assign({}, source);
-      overwritePropertiesIfObject(target);
+      overwriteProperties(target);
       expect(target.properties.constructor.name).toBe('Oauth2propsdef');
     });
 
@@ -124,7 +124,7 @@ describe('Util ', () => {
       } as HasProperties;
 
       const target = Object.assign({}, source);
-      overwritePropertiesIfObject(target);
+      overwriteProperties(target);
       expect(target.properties.constructor.name).toBe('String');
     });
   });

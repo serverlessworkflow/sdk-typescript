@@ -29,7 +29,7 @@ function defaultconditiondefBuildingFn(
   return () => {
     const model = new Specification.Defaultconditiondef(data);
 
-    validate('Defaultconditiondef', model);
+    validate('Defaultconditiondef', model.normalize());
     return model;
   };
 }

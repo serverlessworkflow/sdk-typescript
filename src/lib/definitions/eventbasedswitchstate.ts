@@ -19,6 +19,7 @@ import { Error } from './error';
 import { Metadata } from './metadata';
 import { Statedatafilter } from './statedatafilter';
 import {
+  cleanSourceModelProperty,
   normalizeDefaultCondition,
   normalizeEventConditions,
   normalizeOnErrors,
@@ -34,21 +35,7 @@ import { Eventcondition, EventTimeout } from './types';
 import { StateExecTimeout } from './stateExecTimeout';
 
 export class Eventbasedswitchstate {
-  constructor(model: any) {
-    const defaultModel = {
-      type: 'switch',
-      usedForCompensation: false,
-    };
-    Object.assign(this, defaultModel, model);
-
-    overwriteStateDataFilter(this);
-    overwriteTimeoutWithStateExecTimeout(this);
-    overwriteEventConditions(this);
-    overwriteOnErrors(this);
-    overwriteDefaultCondition(this);
-    overwriteMetadata(this);
-  }
-
+  sourceModel?: Eventbasedswitchstate;
   /**
    * Unique State id
    */
@@ -94,6 +81,20 @@ export class Eventbasedswitchstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 
+  constructor(model: any) {
+    this.sourceModel = Object.assign({}, model);
+
+    const defaultModel = { id: undefined, name: undefined, type: 'switch', usedForCompensation: false };
+    Object.assign(this, defaultModel, model);
+
+    overwriteStateDataFilter(this);
+    overwriteTimeoutWithStateExecTimeout(this);
+    overwriteEventConditions(this);
+    overwriteOnErrors(this);
+    overwriteDefaultCondition(this);
+    overwriteMetadata(this);
+  }
+
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
    * @returns {Specification.Eventbasedswitch} without deleted properties.
@@ -104,8 +105,9 @@ export class Eventbasedswitchstate {
     normalizeEventConditions(clone);
     normalizeOnErrors(clone);
     normalizeDefaultCondition(clone);
-    normalizeUsedForCompensation(clone);
+    normalizeUsedForCompensation(clone, this.sourceModel);
 
+    cleanSourceModelProperty(clone);
     return clone;
   };
 }

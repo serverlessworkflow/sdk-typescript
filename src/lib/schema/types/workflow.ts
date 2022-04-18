@@ -302,6 +302,7 @@ export type Action =
  * Single actions definition execution timeout duration (ISO 8601 duration format)
  */
 export type ActionExecTimeout = string;
+
 export interface Actiondatafilter {
   /**
    * Workflow expression that selects state data that the state action can use
@@ -320,7 +321,9 @@ export interface Actiondatafilter {
    */
   toStateData?: string;
 }
+
 export type Auth = string /* uri */ | [Authdef, ...Authdef[]];
+
 export interface Authdef {
   /**
    * Unique auth definition name
@@ -332,6 +335,7 @@ export interface Authdef {
   scheme?: 'basic' | 'bearer' | 'oauth2';
   properties: string | Basicpropsdef | Bearerpropsdef | Oauth2propsdef;
 }
+
 export type Basicpropsdef =
   | string
   | {
@@ -354,6 +358,7 @@ export type Bearerpropsdef =
       token: string;
       metadata?: /* Metadata information */ Metadata;
     };
+
 /**
  * Branch Definition
  */
@@ -374,10 +379,12 @@ export interface Branch {
    */
   actions: Action[];
 }
+
 /**
  * Single branch execution timeout duration (ISO 8601 duration format)
  */
 export type BranchExecTimeout = string;
+
 /**
  * This state performs an action, then waits for the callback event that denotes completion of the action
  */
@@ -440,6 +447,7 @@ export interface Callbackstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
+
 export type Continueasdef =
   | string
   | {
@@ -464,6 +472,7 @@ export type Continueasdef =
        */
       workflowExecTimeout?: WorkflowExecTimeout;
     };
+
 /**
  * CloudEvent correlation definition
  */
@@ -477,6 +486,7 @@ export interface CorrelationDef {
    */
   contextAttributeValue?: string;
 }
+
 export type Crondef =
   | string
   | {
@@ -489,6 +499,7 @@ export type Crondef =
        */
       validUntil?: string;
     };
+
 /**
  * Permits transitions to other states based on data conditions
  */
@@ -537,6 +548,7 @@ export interface Databasedswitchstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
+
 export type Datacondition /* Switch state data based condition */ =
   | Transitiondatacondition
   | /* Switch state data based condition */ Enddatacondition;
@@ -569,6 +581,7 @@ export type End =
       compensate?: boolean;
       continueAs?: Continueasdef;
     };
+
 /**
  * Switch state data based condition
  */
@@ -587,6 +600,7 @@ export interface Enddatacondition {
   end: End;
   metadata?: /* Metadata information */ Metadata;
 }
+
 /**
  * Switch state data event condition
  */
@@ -609,6 +623,7 @@ export interface Enddeventcondition {
   eventDataFilter?: Eventdatafilter;
   metadata?: /* Metadata information */ Metadata;
 }
+
 export type Error =
   | {
       /**
@@ -658,6 +673,7 @@ export type Error =
       transition?: Transition;
       end: End;
     };
+
 export interface Errordef {
   /**
    * Domain-specific error name
@@ -672,11 +688,13 @@ export interface Errordef {
    */
   description?: string;
 }
+
 export type Errors = string /* uri */ | [Errordef, ...Errordef[]];
 /**
  * Timeout duration to wait for consuming defined events (ISO 8601 duration format)
  */
 export type EventTimeout = string;
+
 /**
  * Permits transitions to other states based on events
  */
@@ -726,9 +744,11 @@ export interface Eventbasedswitchstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
+
 export type Eventcondition /* Switch state data event condition */ =
   | Transitioneventcondition
   | /* Switch state data event condition */ Enddeventcondition;
+
 export interface Eventdatafilter {
   /**
    * If set to false, event payload is not added/merged to state data. In this case 'data' and 'toStateData' should be ignored. Default is true.
@@ -743,6 +763,7 @@ export interface Eventdatafilter {
    */
   toStateData?: string;
 }
+
 export interface Eventdef {
   /**
    * Unique event name
@@ -776,6 +797,7 @@ export interface Eventdef {
    */
   metadata?: /* Metadata information */ Metadata;
 }
+
 /**
  * Event References
  */
@@ -811,6 +833,7 @@ export interface Eventref {
    */
   invoke?: 'sync' | 'async';
 }
+
 export type Events = string /* uri */ | [Eventdef, ...Eventdef[]];
 /**
  * This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel
@@ -901,6 +924,7 @@ export type Eventstate =
       compensatedBy?: string;
       metadata?: /* Metadata information */ Metadata;
     };
+
 /**
  * Execute a set of defined actions or workflows for each element of a data array
  */
@@ -974,6 +998,7 @@ export interface Foreachstate {
   mode?: 'sequential' | 'parallel';
   metadata?: /* Metadata information */ Metadata;
 }
+
 export interface Function {
   /**
    * Unique function name
@@ -993,6 +1018,7 @@ export interface Function {
   authRef?: string;
   metadata?: /* Metadata information */ Metadata;
 }
+
 export type Functionref =
   | string
   | {
@@ -1016,6 +1042,7 @@ export type Functionref =
       invoke?: 'sync' | 'async';
     };
 export type Functions = string /* uri */ | [Function, ...Function[]];
+
 /**
  * Inject static data into state data. Does not perform any actions
  */
@@ -1066,12 +1093,14 @@ export interface Injectstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
+
 /**
  * Metadata information
  */
 export interface Metadata {
   [name: string]: string;
 }
+
 export type Oauth2propsdef =
   | string
   | {
@@ -1121,6 +1150,7 @@ export type Oauth2propsdef =
       requestedIssuer?: string;
       metadata?: /* Metadata information */ Metadata;
     };
+
 export interface Onevents {
   /**
    * References one or more unique event names in the defined workflow events
@@ -1139,6 +1169,7 @@ export interface Onevents {
    */
   eventDataFilter?: Eventdatafilter;
 }
+
 /**
  * Defines actions be performed. Does not wait for incoming events
  */
@@ -1196,6 +1227,7 @@ export interface Operationstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
+
 /**
  * Consists of a number of states that are executed in parallel
  */
@@ -1257,6 +1289,7 @@ export interface Parallelstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
+
 /**
  * Produce an event and set its data
  */
@@ -1280,7 +1313,9 @@ export interface Produceeventdef {
     [name: string]: string;
   };
 }
+
 export type Retries = string /* uri */ | [Retrydef, ...Retrydef[]];
+
 export interface Retrydef {
   /**
    * Unique retry strategy name
@@ -1311,6 +1346,7 @@ export interface Retrydef {
    */
   jitter?: number | string;
 }
+
 export type Schedule =
   | string
   | /* Start state schedule definition */ (
@@ -1369,6 +1405,7 @@ export type Sleep =
        */
       after: string;
     };
+
 /**
  * Causes the workflow execution to sleep for a specified duration
  */
@@ -1421,6 +1458,7 @@ export interface Sleepstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
+
 export type Startdef =
   | string
   | {
@@ -1445,6 +1483,7 @@ export type StateExecTimeout =
        */
       total: string;
     };
+
 export interface Statedatafilter {
   /**
    * Workflow expression to filter the state data input
@@ -1455,6 +1494,7 @@ export interface Statedatafilter {
    */
   output?: string;
 }
+
 export type Subflowref =
   | string
   | {
@@ -1503,6 +1543,7 @@ export type Transition =
        */
       compensate?: boolean;
     };
+
 /**
  * Switch state data based condition
  */
@@ -1521,6 +1562,7 @@ export interface Transitiondatacondition {
   transition: Transition;
   metadata?: /* Metadata information */ Metadata;
 }
+
 /**
  * Switch state data event condition
  */
@@ -1543,6 +1585,7 @@ export interface Transitioneventcondition {
   eventDataFilter?: Eventdatafilter;
   metadata?: /* Metadata information */ Metadata;
 }
+
 export type WorkflowExecTimeout =
   | string
   | {

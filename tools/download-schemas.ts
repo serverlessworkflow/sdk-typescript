@@ -20,6 +20,7 @@ import { URL } from 'url';
 import yargs from 'yargs';
 import { schemaVersion } from '../package.json';
 import { mergeDefinitions, mergeSchemas, reset } from './utils';
+
 const { writeFile, mkdir } = fsPromises;
 
 /**
