@@ -263,15 +263,15 @@ export function overwriteProperties(object: { properties: string | Specification
     const properties: any = object.properties;
 
     if (properties.username && properties.password) {
-      object.properties = new Specification.Basicpropsdef(object);
+      object.properties = new Specification.Basicpropsdef(object.properties);
     }
 
     if (properties.token) {
-      object.properties = new Specification.Bearerpropsdef(object);
+      object.properties = new Specification.Bearerpropsdef(object.properties);
     }
 
     if (properties.grantType) {
-      object.properties = new Specification.Oauth2propsdef(object);
+      object.properties = new Specification.Oauth2propsdef(object.properties);
     }
   }
 }
