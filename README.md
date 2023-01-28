@@ -134,7 +134,7 @@ const workflow: Specification.Workflow = workflowBuilder()
     //...
     .build()
 
-const workflowAsYaml: string = Workflow.toYaml(workflow);
+const workflowAsYaml: string = Specification.Workflow.toYaml(workflow);
 ```
 
 
