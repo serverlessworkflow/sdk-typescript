@@ -118,15 +118,23 @@ You can convert it to its string representation in JSON or YAML format
 by using the static methods `Workflow.toJson` or `Workflow.toYaml` respectively:
 
 ```typescript
-import { Workflow } from '../src/lib/definitions/workflow';
+import {Specification, workflowBuilder} from "@severlessworkflow/sdk-typescript";
 
-const workflowAsJson: string = Workflow.toJson(workflow);
+const workflow: Specification.Workflow = workflowBuilder()
+    //...
+    .build()
+
+const workflowAsJson: string = Specification.Workflow.toJson(workflow);
 ```
 
 ```typescript
-import { Workflow } from '../src/lib/definitions/workflow';
+import {Specification, workflowBuilder} from "@severlessworkflow/sdk-typescript";
 
-const workflowAsYaml: string = Workflow.toYaml(workflow);
+const workflow: Specification.Workflow = workflowBuilder()
+    //...
+    .build()
+
+const workflowAsYaml: string = Specification.Workflow.toYaml(workflow);
 ```
 
 
