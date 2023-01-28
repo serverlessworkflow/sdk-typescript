@@ -37,16 +37,25 @@ npm install && npm run build && npm run test
 
 #### Install
 
-For the latest stable version:
 
+##### Version  >= 4.0.0
+Note: Version 4.0.0 has not been released yet.
+```sh
+npm i @serverlessworkflow/sdk-typescript
+```
+
+
+##### Version  < 4.0.0
 ```sh
 npm i @severlessworkflow/sdk-typescript
 ```
 
+
+
 #### Create Workflow using builder API
 
 ```typescript
-import { workflowBuilder, injectstateBuilder, Specification } from '@severlessworkflow/sdk-typescript';
+import { workflowBuilder, injectstateBuilder, Specification } from '@serverlessworkflow/sdk-typescript';
 
 const workflow: Specification.Workflow = workflowBuilder()
   .id("helloworld")
@@ -69,7 +78,7 @@ const workflow: Specification.Workflow = workflowBuilder()
 #### Create Workflow from JSON/YAML source
 
 ```typescript
-import { Specification, Workflow } from '@severlessworkflow/sdk-typescript';
+import { Specification, Workflow } from '@serverlessworkflow/sdk-typescript';
 
 const source = `id: helloworld
 version: '1.0'
@@ -93,7 +102,7 @@ Where `source` can be in both JSON or YAML format.
 Having the following workflow instance:
 
 ```typescript
-import { workflowBuilder, injectstateBuilder, Specification } from '@severlessworkflow/sdk-typescript';
+import { workflowBuilder, injectstateBuilder, Specification } from '@serverlessworkflow/sdk-typescript';
 
 const workflow: Specification.Workflow = workflowBuilder()
   .id("helloworld")
@@ -147,7 +156,7 @@ The sdk provides a way to validate if a workflow object is compliant with the se
 - `validate(): boolean`
 
 ```typescript
-import {WorkflowValidator, Specification} from '@severlessworkflow/sdk-typescript';
+import {WorkflowValidator, Specification} from '@serverlessworkflow/sdk-typescript';
 import {Workflow} from "./workflow";
 
 const workflow = {
@@ -179,7 +188,7 @@ You can also validate parts of a workflow using `validators`:
 
 ```typescript
 import { ValidateFunction } from 'ajv';
-import { validators, Specification } from '@severlessworkflow/sdk-typescript';
+import { validators, Specification } from '@serverlessworkflow/sdk-typescript';
 
 const injectionState: Specification.Injectstate = workflow.states[0];
 const injectionStateValidator: ValidateFunction<Specification.Injectstate> = validators.get('Injectstate');

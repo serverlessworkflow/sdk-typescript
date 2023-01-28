@@ -1,5 +1,5 @@
 {
-  "name": "@severlessworkflow/sdk-typescript",
+  "name": "@serverlessworkflow/sdk-typescript",
   "version": "4.0.0",
   "schemaVersion": "0.8",
   "description": "Typescript SDK for Serverless Workflow Specification",
