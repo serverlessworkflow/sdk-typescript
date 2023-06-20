@@ -33,19 +33,14 @@ import {
   overwriteMetadata,
   overwriteOnErrors,
   overwriteStateDataFilter,
-  overwriteTimeoutWithStateExecTimeout,
+  overwritePropertyAsPlainType,
   overwriteTransition,
   setEndValueIfNoTransition,
 } from './utils';
-import { BranchExecTimeout } from './types';
-import { StateExecTimeout } from './stateExecTimeout';
+import { BranchExecTimeout, StateExecTimeout } from './types';
 
 export class Parallelstate {
   sourceModel?: Parallelstate;
-  /**
-   * Unique State id
-   */
-  id?: string;
   /**
    * State name
    */
@@ -66,8 +61,8 @@ export class Parallelstate {
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: StateExecTimeout;
-    branchExecTimeout?: /* Single branch execution timeout duration (ISO 8601 duration format) */ BranchExecTimeout;
+    stateExecTimeout?: /* Workflow state execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    branchExecTimeout?: /* Branch execution timeout duration (ISO 8601 duration format) */ BranchExecTimeout;
   };
   /**
    * Branch Definitions
@@ -113,7 +108,7 @@ export class Parallelstate {
 
     overwriteEnd(this);
     overwriteStateDataFilter(this);
-    overwriteTimeoutWithStateExecTimeout(this);
+    overwritePropertyAsPlainType('timeouts', this);
     overwriteBranches(this);
     overwriteOnErrors(this);
     overwriteTransition(this);

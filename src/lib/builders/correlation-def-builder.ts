@@ -27,7 +27,7 @@ function correlationDefBuildingFn(data: Specification.CorrelationDef): () => Spe
   return () => {
     const model = new Specification.CorrelationDef(data);
 
-    validate('CorrelationDef', model);
+    validate('CorrelationDef', model.normalize());
     return model;
   };
 }

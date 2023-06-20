@@ -14,17 +14,4 @@
  * limitations under the License.
  */
 
-export class StateExecTimeout {
-  /**
-   * Single state execution timeout, not including retries (ISO 8601 duration format)
-   */
-  single?: string;
-  /**
-   * Total state execution timeout, including retries (ISO 8601 duration format)
-   */
-  total: string;
-
-  constructor(model: any) {
-    Object.assign(this, model);
-  }
-}
+export * as Specification from './workflow';

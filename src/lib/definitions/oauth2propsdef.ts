@@ -68,4 +68,13 @@ export class Oauth2propsdef {
     Object.assign(this, model);
     overwriteMetadata(this);
   }
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Oauth2propsdef} without deleted properties.
+   */
+  normalize = (): Oauth2propsdef => {
+    const clone = new Oauth2propsdef(this);
+    return clone;
+  };
 }

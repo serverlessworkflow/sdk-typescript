@@ -27,6 +27,10 @@ import {
 
 export class Defaultconditiondef /* DefaultCondition definition. Can be either a transition or end definition */ {
   sourceModel?: Defaultconditiondef;
+  /**
+   * The optional name of the default condition, used solely for display purposes
+   */
+  name?: string;
   transition: string | Transition;
   end?: boolean | End;
 

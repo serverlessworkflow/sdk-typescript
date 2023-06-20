@@ -24,8 +24,8 @@ import {
   overwriteMetadata,
 } from './utils';
 
-export class Enddeventcondition {
-  sourceModel?: Enddeventcondition;
+export class Endeventcondition {
+  sourceModel?: Endeventcondition;
   /**
    * Event condition name
    */
@@ -56,10 +56,10 @@ export class Enddeventcondition {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Enddeventcondition} without deleted properties.
+   * @returns {Specification.Endeventcondition} without deleted properties.
    */
-  normalize = (): Enddeventcondition => {
-    const clone = new Enddeventcondition(this);
+  normalize = (): Endeventcondition => {
+    const clone = new Endeventcondition(this);
 
     normalizeEnd(clone);
 

@@ -12,27 +12,28 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
-import { Schedule } from '../../../src/lib/definitions/schedule';
+export class Extension {
+  /**
+   * Unique extension id
+   */
+  extensionId: string;
+  /**
+   * URI to a resource containing this workflow extension definitions (json or yaml)
+   */
+  resource: string;
 
-describe('schedule ', () => {
-  it('should convert non-primitive properties to the desired class', () => {
-    const data = {
-      cron: { expression: '* * * ? * *' },
-    };
+  constructor(model: any) {
+    Object.assign(this, model);
+  }
 
-    const model = new Schedule(data);
-    expect(model.cron!.constructor.name).toBe('Crondef');
-  });
-
-  it('should not convert primitive properties', () => {
-    const data = {
-      cron: '* * * ? * *',
-    };
-
-    const model = new Schedule(data);
-    expect(typeof model.cron).toBe(typeof '');
-  });
-});
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Extension} without deleted properties.
+   */
+  normalize = (): Extension => {
+    const clone = new Extension(this);
+    return clone;
+  };
+}

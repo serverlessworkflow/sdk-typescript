@@ -19,9 +19,21 @@ import { promises as fsPromises } from 'fs';
 import * as path from 'path';
 import rimraf from 'rimraf';
 import { readMeDisclaimer } from './consts';
+<<<<<<< HEAD
 import {URL} from "url";
 import yargs from "yargs";
 import {schemaVersion} from "../package.json";
+=======
+<<<<<<< HEAD
+import { URL } from 'url';
+import yargs from 'yargs';
+import { schemaVersion } from '../package.json';
+=======
+import {URL} from "url";
+import yargs from "yargs";
+import {schemaVersion} from "../package.json";
+>>>>>>> main
+>>>>>>> update-spec-062023
 
 const { writeFile, mkdir } = fsPromises;
 
@@ -180,12 +192,11 @@ export const reset = async (destDir: string) =>
     .then(() => writeFile(path.resolve(destDir, 'README.md'), readMeDisclaimer));
 
 
-/** Schemas directory */
+    /** Schemas directory */
 export const schemaDir = path.resolve(process.cwd(), 'src/lib/schema');
-
 
 /** The URL to download the schema from */
 export const schemaUrl: URL = new URL(
-    (yargs(process.argv.slice(2)).argv.url as string) ||
-    `https://raw.githubusercontent.com/serverlessworkflow/specification/${schemaVersion}.x/schema/workflow.json`
+  (yargs(process.argv.slice(2)).argv.url as string) ||
+  `https://raw.githubusercontent.com/serverlessworkflow/specification/${schemaVersion}.x/schema/workflow.json`
 );

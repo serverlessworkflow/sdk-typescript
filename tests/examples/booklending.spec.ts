@@ -35,7 +35,7 @@ describe('booklending workflow example', () => {
     const workflow = workflowBuilder()
       .id('booklending')
       .name('Book Lending Workflow')
-      .version('1.0')
+      .version('1.0.0')
       .specVersion('0.8')
       .start('Book Lending Request')
       .states([

@@ -27,4 +27,12 @@ export class Statedatafilter {
   constructor(model: any) {
     Object.assign(this, model);
   }
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Statedatafilter} without deleted properties.
+   */
+  normalize = (): Statedatafilter => {
+    const clone = new Statedatafilter(this);
+    return clone;
+  };
 }

@@ -27,7 +27,7 @@ function bearerpropsdefBuildingFn(data: Specification.Bearerpropsdef): () => Spe
   return () => {
     const model = new Specification.Bearerpropsdef(data);
 
-    validate('Bearerpropsdef', model);
+    validate('Bearerpropsdef', model.normalize());
     return model;
   };
 }

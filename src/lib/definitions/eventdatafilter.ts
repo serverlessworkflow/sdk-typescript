@@ -31,4 +31,13 @@ export class Eventdatafilter {
   constructor(model: any) {
     Object.assign(this, model);
   }
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Eventdatafilter} without deleted properties.
+   */
+  normalize = (): Eventdatafilter => {
+    const clone = new Eventdatafilter(this);
+    return clone;
+  };
 }

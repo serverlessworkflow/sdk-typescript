@@ -20,7 +20,7 @@ export class Startdef {
   /**
    * Name of the starting workflow state
    */
-  stateName: string;
+  stateName?: string;
   /**
    * Define the time/repeating intervals or cron at which workflow instances should be automatically started.
    */
@@ -31,4 +31,13 @@ export class Startdef {
 
     overwriteSchedule(this);
   }
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Startdef} without deleted properties.
+   */
+  normalize = (): Startdef => {
+    const clone = new Startdef(this);
+    return clone;
+  };
 }

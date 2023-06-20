@@ -2004,6 +2004,29 @@
       "additionalProperties": false,
       "required": []
     },
+    "errordef": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Domain-specific error name",
+          "minLength": 1
+        },
+        "code": {
+          "type": "string",
+          "description": "Error code. Can be used in addition to the name to help runtimes resolve to technical errors/exceptions. Should not be defined if error is set to '*'",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "Error description"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ]
+    },
     "retrydef": {
       "type": "object",
       "properties": {
@@ -2059,48 +2082,6 @@
         "maxAttempts"
       ]
     },
-    "function": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Unique function name",
-          "minLength": 1
-        },
-        "operation": {
-          "type": "string",
-          "description": "If type is `rest`, <path_to_openapi_definition>#<operation_id>. If type is `asyncapi`, <path_to_asyncapi_definition>#<operation_id>. If type is `rpc`, <path_to_grpc_proto_file>#<service_name>#<service_method>. If type is `graphql`, <url_to_graphql_endpoint>#<literal \\\"mutation\\\" or \\\"query\\\">#<query_or_mutation_name>. If type is `odata`, <URI_to_odata_service>#<Entity_Set_Name>. If type is `expression`, defines the workflow expression.",
-          "minLength": 1
-        },
-        "type": {
-          "type": "string",
-          "description": "Defines the function type. Is either `rest`, `asyncapi, `rpc`, `graphql`, `odata`, `expression`, or `custom`. Default is `rest`",
-          "enum": [
-            "rest",
-            "asyncapi",
-            "rpc",
-            "graphql",
-            "odata",
-            "expression",
-            "custom"
-          ],
-          "default": "rest"
-        },
-        "authRef": {
-          "type": "string",
-          "description": "References an auth definition name to be used to access to resource defined in the operation parameter",
-          "minLength": 1
-        },
-        "metadata": {
-          "$ref": "#/definitions/metadata"
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "name",
-        "operation"
-      ]
-    },
     "metadata": {
       "type": "object",
       "description": "Metadata information",
@@ -2153,150 +2134,168 @@
       ]
     },
     "basicpropsdef": {
-      "oneOf": [
-        {
+      "type": "object",
+      "description": "Basic auth information",
+      "properties": {
+        "username": {
           "type": "string",
-          "description": "Expression referencing a workflow secret that contains all needed basic auth info"
+          "description": "String or a workflow expression. Contains the user name",
+          "minLength": 1
         },
-        {
-          "type": "object",
-          "description": "Basic auth information",
-          "properties": {
-            "username": {
-              "type": "string",
-              "description": "String or a workflow expression. Contains the user name",
-              "minLength": 1
-            },
-            "password": {
-              "type": "string",
-              "description": "String or a workflow expression. Contains the user password",
-              "minLength": 1
-            },
-            "metadata": {
-              "$ref": "#/definitions/metadata"
-            }
-          },
-          "required": [
-            "username",
-            "password"
-          ],
-          "additionalProperties": false
+        "password": {
+          "type": "string",
+          "description": "String or a workflow expression. Contains the user password",
+          "minLength": 1
+        },
+        "metadata": {
+          "$ref": "#/definitions/metadata"
         }
-      ]
+      },
+      "required": [
+        "username",
+        "password"
+      ],
+      "additionalProperties": false
     },
     "bearerpropsdef": {
-      "oneOf": [
-        {
+      "type": "object",
+      "description": "Bearer auth information",
+      "properties": {
+        "token": {
           "type": "string",
-          "description": "Expression referencing a workflow secret that contains all needed bearer auth info"
+          "description": "String or a workflow expression. Contains the token",
+          "minLength": 1
         },
-        {
-          "type": "object",
-          "description": "Bearer auth information",
-          "properties": {
-            "token": {
-              "type": "string",
-              "description": "String or a workflow expression. Contains the token",
-              "minLength": 1
-            },
-            "metadata": {
-              "$ref": "#/definitions/metadata"
-            }
-          },
-          "required": [
-            "token"
-          ],
-          "additionalProperties": false
+        "metadata": {
+          "$ref": "#/definitions/metadata"
         }
-      ]
+      },
+      "required": [
+        "token"
+      ],
+      "additionalProperties": false
     },
     "oauth2propsdef": {
-      "oneOf": [
-        {
+      "type": "object",
+      "description": "OAuth2 information",
+      "properties": {
+        "authority": {
           "type": "string",
-          "description": "Expression referencing a workflow secret that contains all needed OAuth2 auth info"
+          "description": "String or a workflow expression. Contains the authority information",
+          "minLength": 1
         },
-        {
-          "type": "object",
-          "description": "OAuth2 information",
-          "properties": {
-            "authority": {
-              "type": "string",
-              "description": "String or a workflow expression. Contains the authority information",
-              "minLength": 1
-            },
-            "grantType": {
-              "type": "string",
-              "description": "Defines the grant type",
-              "enum": [
-                "password",
-                "clientCredentials",
-                "tokenExchange"
-              ],
-              "additionalItems": false
-            },
-            "clientId": {
-              "type": "string",
-              "description": "String or a workflow expression. Contains the client identifier",
-              "minLength": 1
-            },
-            "clientSecret": {
-              "type": "string",
-              "description": "Workflow secret or a workflow expression. Contains the client secret",
-              "minLength": 1
-            },
-            "scopes": {
-              "type": "array",
-              "description": "Array containing strings or workflow expressions. Contains the OAuth2 scopes",
-              "items": {
-                "type": "string"
-              },
-              "minItems": 1,
-              "additionalItems": false
-            },
-            "username": {
-              "type": "string",
-              "description": "String or a workflow expression. Contains the user name. Used only if grantType is 'resourceOwner'",
-              "minLength": 1
-            },
-            "password": {
-              "type": "string",
-              "description": "String or a workflow expression. Contains the user password. Used only if grantType is 'resourceOwner'",
-              "minLength": 1
-            },
-            "audiences": {
-              "type": "array",
-              "description": "Array containing strings or workflow expressions. Contains the OAuth2 audiences",
-              "items": {
-                "type": "string"
-              },
-              "minItems": 1,
-              "additionalItems": false
-            },
-            "subjectToken": {
-              "type": "string",
-              "description": "String or a workflow expression. Contains the subject token",
-              "minLength": 1
-            },
-            "requestedSubject": {
-              "type": "string",
-              "description": "String or a workflow expression. Contains the requested subject",
-              "minLength": 1
-            },
-            "requestedIssuer": {
-              "type": "string",
-              "description": "String or a workflow expression. Contains the requested issuer",
-              "minLength": 1
-            },
-            "metadata": {
-              "$ref": "#/definitions/metadata"
-            }
+        "grantType": {
+          "type": "string",
+          "description": "Defines the grant type",
+          "enum": [
+            "password",
+            "clientCredentials",
+            "tokenExchange"
+          ],
+          "additionalItems": false
+        },
+        "clientId": {
+          "type": "string",
+          "description": "String or a workflow expression. Contains the client identifier",
+          "minLength": 1
+        },
+        "clientSecret": {
+          "type": "string",
+          "description": "Workflow secret or a workflow expression. Contains the client secret",
+          "minLength": 1
+        },
+        "scopes": {
+          "type": "array",
+          "description": "Array containing strings or workflow expressions. Contains the OAuth2 scopes",
+          "items": {
+            "type": "string"
           },
-          "required": [
-            "grantType",
-            "clientId"
-          ]
+          "minItems": 1,
+          "additionalItems": false
+        },
+        "username": {
+          "type": "string",
+          "description": "String or a workflow expression. Contains the user name. Used only if grantType is 'resourceOwner'",
+          "minLength": 1
+        },
+        "password": {
+          "type": "string",
+          "description": "String or a workflow expression. Contains the user password. Used only if grantType is 'resourceOwner'",
+          "minLength": 1
+        },
+        "audiences": {
+          "type": "array",
+          "description": "Array containing strings or workflow expressions. Contains the OAuth2 audiences",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "additionalItems": false
+        },
+        "subjectToken": {
+          "type": "string",
+          "description": "String or a workflow expression. Contains the subject token",
+          "minLength": 1
+        },
+        "requestedSubject": {
+          "type": "string",
+          "description": "String or a workflow expression. Contains the requested subject",
+          "minLength": 1
+        },
+        "requestedIssuer": {
+          "type": "string",
+          "description": "String or a workflow expression. Contains the requested issuer",
+          "minLength": 1
+        },
+        "metadata": {
+          "$ref": "#/definitions/metadata"
         }
+      },
+      "required": [
+        "grantType",
+        "clientId"
+      ]
+    },
+    "function": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique function name",
+          "minLength": 1
+        },
+        "operation": {
+          "type": "string",
+          "description": "If type is `rest`, <path_to_openapi_definition>#<operation_id>. If type is `asyncapi`, <path_to_asyncapi_definition>#<operation_id>. If type is `rpc`, <path_to_grpc_proto_file>#<service_name>#<service_method>. If type is `graphql`, <url_to_graphql_endpoint>#<literal \\\"mutation\\\" or \\\"query\\\">#<query_or_mutation_name>. If type is `odata`, <URI_to_odata_service>#<Entity_Set_Name>. If type is `expression`, defines the workflow expression.",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "description": "Defines the function type. Is either `rest`, `asyncapi, `rpc`, `graphql`, `odata`, `expression`, or `custom`. Default is `rest`",
+          "enum": [
+            "rest",
+            "asyncapi",
+            "rpc",
+            "graphql",
+            "odata",
+            "expression",
+            "custom"
+          ],
+          "default": "rest"
+        },
+        "authRef": {
+          "type": "string",
+          "description": "References an auth definition name to be used to access to resource defined in the operation parameter",
+          "minLength": 1
+        },
+        "metadata": {
+          "$ref": "#/definitions/metadata"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "operation"
       ]
     },
     "workflowExecTimeout": {
@@ -2461,29 +2460,6 @@
       "additionalProperties": false,
       "required": [
         "contextAttributeName"
-      ]
-    },
-    "errordef": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Domain-specific error name",
-          "minLength": 1
-        },
-        "code": {
-          "type": "string",
-          "description": "Error code. Can be used in addition to the name to help runtimes resolve to technical errors/exceptions. Should not be defined if error is set to '*'",
-          "minLength": 1
-        },
-        "description": {
-          "type": "string",
-          "description": "Error description"
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "name"
       ]
     },
     "secrets": {

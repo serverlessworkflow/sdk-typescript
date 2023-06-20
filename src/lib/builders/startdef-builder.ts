@@ -27,7 +27,7 @@ function startdefBuildingFn(data: Specification.Startdef): () => Specification.S
   return () => {
     const model = new Specification.Startdef(data);
 
-    validate('Startdef', model);
+    validate('Startdef', model.normalize());
     return model;
   };
 }

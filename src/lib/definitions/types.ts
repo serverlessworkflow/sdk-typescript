@@ -21,7 +21,7 @@ import { Function } from './function';
 import { Databasedswitchstate } from './databasedswitchstate';
 import { Eventbasedswitchstate } from './eventbasedswitchstate';
 import { Transitioneventcondition } from './transitioneventcondition';
-import { Enddeventcondition } from './enddeventcondition';
+import { Endeventcondition } from './endeventcondition';
 import { Eventstate } from './eventstate';
 import { Operationstate } from './operationstate';
 import { Parallelstate } from './parallelstate';
@@ -33,6 +33,7 @@ import { Sleepstate } from './sleepstate';
 import { Authdef } from './authdef';
 import { Errordef } from './errordef';
 import { Specification } from './index';
+import { Extension } from './extension';
 
 export type CorrelationDefs = [
   /* CloudEvent correlation definition */ CorrelationDef,
@@ -53,7 +54,7 @@ export type Switchstate /* Permits transitions to other states based on data con
 
 export type Eventcondition /* Switch state data event condition */ =
   | Transitioneventcondition
-  | /* Switch state data event condition */ Enddeventcondition;
+  | /* Switch state data event condition */ Endeventcondition;
 
 export type States = [
   (
@@ -79,12 +80,12 @@ export type States = [
 ];
 
 /**
- * Single branch execution timeout duration (ISO 8601 duration format)
+ * Branch execution timeout duration (ISO 8601 duration format)
  */
 export type BranchExecTimeout = string;
 
 /**
- * Single actions definition execution timeout duration (ISO 8601 duration format)
+ * Action execution timeout duration (ISO 8601 duration format)
  */
 export type ActionExecTimeout = string;
 
@@ -102,3 +103,10 @@ export type Auth = string /* uri */ | [Authdef, ...Authdef[]];
 export type Errors = string /* uri */ | [Errordef, ...Errordef[]];
 
 export type Properties = Specification.Basicpropsdef | Specification.Bearerpropsdef | Specification.Oauth2propsdef;
+
+export type Extensions = string /* uri */ | [Extension, ...Extension[]];
+
+/**
+ * Workflow state execution timeout duration (ISO 8601 duration format)
+ */
+export type StateExecTimeout = string;

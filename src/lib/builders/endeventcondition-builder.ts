@@ -20,22 +20,22 @@ import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.StateExecTimeout} data The underlying object
- * @returns {Specification.StateExecTimeout} The validated underlying object
+ * @param {Specification.Endeventcondition} data The underlying object
+ * @returns {Specification.Endeventcondition} The validated underlying object
  */
-function stateExecTimeoutBuildingFn(data: Specification.StateExecTimeout): () => Specification.StateExecTimeout {
+function endeventconditionBuildingFn(data: Specification.Endeventcondition): () => Specification.Endeventcondition {
   return () => {
-    const model = new Specification.StateExecTimeout(data);
+    const model = new Specification.Endeventcondition(data);
 
-    validate('StateExecTimeout', model);
+    validate('Endeventcondition', model.normalize());
     return model;
   };
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.StateExecTimeout`
- * @returns {Specification.StateExecTimeout} A builder for `Specification.StateExecTimeout`
+ * A factory to create a builder proxy for the type `Specification.Endeventcondition`
+ * @returns {Specification.Endeventcondition} A builder for `Specification.Endeventcondition`
  */
-export function stateExecTimeoutBuilder(): Builder<Specification.StateExecTimeout> {
-  return builder<Specification.StateExecTimeout>(stateExecTimeoutBuildingFn);
+export function endeventconditionBuilder(): Builder<Specification.Endeventcondition> {
+  return builder<Specification.Endeventcondition>(endeventconditionBuildingFn);
 }

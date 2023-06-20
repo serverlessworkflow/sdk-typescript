@@ -26,7 +26,8 @@
     "version": {
       "type": "string",
       "description": "Workflow version",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
     },
     "annotations": {
       "type": "array",
@@ -49,9 +50,18 @@
           "description": "Workflow data input schema definition",
           "properties": {
             "schema": {
-              "type": "string",
-              "description": "URI of the JSON Schema used to validate the workflow data input",
-              "minLength": 1
+              "oneof": [
+                {
+                  "type": "string",
+                  "description": "URI of the JSON Schema used to validate the workflow data input",
+                  "minLength": 1
+                },
+                {
+                  "type": "object",
+                  "description": "The JSON Schema object used to validate the workflow data input",
+                  "$schema": "http://json-schema.org/draft-07/schema#"
+                }
+              ]
             },
             "failOnValidationErrors": {
               "type": "boolean",
@@ -61,8 +71,7 @@
           },
           "additionalProperties": false,
           "required": [
-            "schema",
-            "failOnValidationErrors"
+            "schema"
           ]
         }
       ]
@@ -127,6 +136,9 @@
     },
     "auth": {
       "$ref": "auth.json#/auth"
+    },
+    "extensions": {
+      "$ref": "workflowextensions.json#/extensions"
     },
     "states": {
       "type": "array",
@@ -200,7 +212,7 @@
           "description": "Amount of time (ISO 8601 duration format) to sleep after function/subflow invocation. Does not apply if 'eventRef' is defined."
         }
       },
-      "oneOf": [
+      "anyOf": [
         {
           "required": [
             "before"
@@ -263,7 +275,8 @@
             "version": {
               "type": "string",
               "description": "Version of the workflow to continue execution as",
-              "minLength": 1
+              "minLength": 1,
+              "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
             },
             "data": {
               "type": [
@@ -419,10 +432,6 @@
     "action": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique action identifier"
-        },
         "name": {
           "type": "string",
           "description": "Unique action definition name"
@@ -432,7 +441,7 @@
           "$ref": "#/definitions/functionref"
         },
         "eventRef": {
-          "description": "References a 'trigger' and 'result' reusable event definitions",
+          "description": "References a `produce` and `consume` reusable event definitions",
           "$ref": "#/definitions/eventref"
         },
         "subFlowRef": {
@@ -538,15 +547,15 @@
       "type": "object",
       "description": "Event References",
       "properties": {
-        "triggerEventRef": {
+        "produceEventRef": {
           "type": "string",
           "description": "Reference to the unique name of a 'produced' event definition"
         },
-        "resultEventRef": {
+        "consumeEventRef": {
           "type": "string",
           "description": "Reference to the unique name of a 'consumed' event definition"
         },
-        "resultEventTimeout": {
+        "consumeEventTimeout": {
           "type": "string",
           "description": "Maximum amount of time (ISO 8601 format) to wait for the result event. If not defined it should default to the actionExecutionTimeout"
         },
@@ -555,7 +564,7 @@
             "string",
             "object"
           ],
-          "description": "If string type, an expression which selects parts of the states data output to become the data (payload) of the event referenced by 'triggerEventRef'. If object type, a custom object to become the data (payload) of the event referenced by 'triggerEventRef'."
+          "description": "If string type, an expression which selects parts of the states data output to become the data (payload) of the event referenced by 'produceEventRef'. If object type, a custom object to become the data (payload) of the event referenced by 'produceEventRef'."
         },
         "contextAttributes": {
           "type": "object",
@@ -563,21 +572,11 @@
           "additionalProperties": {
             "type": "string"
           }
-        },
-        "invoke": {
-          "type": "string",
-          "enum": [
-            "sync",
-            "async"
-          ],
-          "description": "Specifies if the function should be invoked sync or async. Default is sync.",
-          "default": "sync"
         }
       },
       "additionalProperties": false,
       "required": [
-        "triggerEventRef",
-        "resultEventRef"
+        "produceEventRef"
       ]
     },
     "subflowref": {
@@ -598,7 +597,8 @@
             "version": {
               "type": "string",
               "description": "Version of the sub-workflow to be invoked",
-              "minLength": 1
+              "minLength": 1,
+              "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
             },
             "onParentComplete": {
               "type": "string",
@@ -666,11 +666,6 @@
       "type": "object",
       "description": "Causes the workflow execution to sleep for a specified duration",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique State id",
-          "minLength": 1
-        },
         "name": {
           "type": "string",
           "description": "State name"
@@ -684,99 +679,42 @@
           "$ref": "#/definitions/end",
           "description": "State end definition"
         },
-        "stateDataFilter": {
-          "description": "State data filter",
-          "$ref": "#/definitions/statedatafilter"
-        },
         "duration": {
           "type": "string",
           "description": "Duration (ISO 8601 duration format) to sleep"
         },
-        "timeouts": {
-          "type": "object",
-          "description": "State specific timeouts",
-          "properties": {
-            "stateExecTimeout": {
-              "$ref": "timeouts.json#/definitions/stateExecTimeout"
-            }
-          },
-          "required": []
-        },
-        "onErrors": {
-          "type": "array",
-          "description": "States error handling definitions",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/error"
-          },
-          "additionalItems": false
-        },
         "transition": {
           "description": "Next transition of the workflow after the workflow sleep",
           "$ref": "#/definitions/transition"
-        },
-        "compensatedBy": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Unique Name of a workflow state which is responsible for compensation of this state"
-        },
-        "usedForCompensation": {
-          "type": "boolean",
-          "default": false,
-          "description": "If true, this state is used to compensate another state. Default is false"
         },
         "metadata": {
           "$ref": "common.json#/definitions/metadata"
         }
       },
       "additionalProperties": false,
-      "if": {
-        "properties": {
-          "usedForCompensation": {
-            "const": true
-          }
+      "oneOf": [
+        {
+          "required": [
+            "name",
+            "type",
+            "duration",
+            "end"
+          ]
         },
-        "required": [
-          "usedForCompensation"
-        ]
-      },
-      "then": {
-        "required": [
-          "name",
-          "type",
-          "duration"
-        ]
-      },
-      "else": {
-        "oneOf": [
-          {
-            "required": [
-              "name",
-              "type",
-              "duration",
-              "end"
-            ]
-          },
-          {
-            "required": [
-              "name",
-              "type",
-              "duration",
-              "transition"
-            ]
-          }
-        ]
-      }
+        {
+          "required": [
+            "name",
+            "type",
+            "duration",
+            "transition"
+          ]
+        }
+      ]
     },
     "eventstate": {
       "type": "object",
       "description": "This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique State id",
-          "minLength": 1
-        },
         "name": {
           "type": "string",
           "description": "State name"
@@ -870,11 +808,6 @@
       "type": "object",
       "description": "Defines actions be performed. Does not wait for incoming events",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique State id",
-          "minLength": 1
-        },
         "name": {
           "type": "string",
           "description": "State name"
@@ -992,11 +925,6 @@
       "type": "object",
       "description": "Consists of a number of states that are executed in parallel",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique State id",
-          "minLength": 1
-        },
         "name": {
           "type": "string",
           "description": "State name"
@@ -1134,11 +1062,6 @@
       "type": "object",
       "description": "Permits transitions to other states based on events",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique State id",
-          "minLength": 1
-        },
         "name": {
           "type": "string",
           "description": "State name"
@@ -1213,11 +1136,6 @@
       "type": "object",
       "description": "Permits transitions to other states based on data conditions",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique State id",
-          "minLength": 1
-        },
         "name": {
           "type": "string",
           "description": "State name"
@@ -1289,6 +1207,10 @@
       "type": "object",
       "description": "DefaultCondition definition. Can be either a transition or end definition",
       "properties": {
+        "name": {
+          "type": "string",
+          "description": "The optional name of the default condition, used solely for display purposes"
+        },
         "transition": {
           "$ref": "#/definitions/transition"
         },
@@ -1316,7 +1238,7 @@
           "$ref": "#/definitions/transitioneventcondition"
         },
         {
-          "$ref": "#/definitions/enddeventcondition"
+          "$ref": "#/definitions/endeventcondition"
         }
       ]
     },
@@ -1350,7 +1272,7 @@
         "transition"
       ]
     },
-    "enddeventcondition": {
+    "endeventcondition": {
       "type": "object",
       "description": "Switch state data event condition",
       "properties": {
@@ -1446,11 +1368,6 @@
       "type": "object",
       "description": "Inject static data into state data. Does not perform any actions",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique state id",
-          "minLength": 1
-        },
         "name": {
           "type": "string",
           "description": "State name"
@@ -1467,16 +1384,6 @@
         "data": {
           "type": "object",
           "description": "JSON object which can be set as states data input and can be manipulated via filters"
-        },
-        "timeouts": {
-          "type": "object",
-          "description": "State specific timeouts",
-          "properties": {
-            "stateExecTimeout": {
-              "$ref": "timeouts.json#/definitions/stateExecTimeout"
-            }
-          },
-          "required": []
         },
         "stateDataFilter": {
           "description": "State data filter",
@@ -1543,11 +1450,6 @@
       "type": "object",
       "description": "Execute a set of defined actions or workflows for each element of a data array",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique State id",
-          "minLength": 1
-        },
         "name": {
           "type": "string",
           "description": "State name"
@@ -1690,11 +1592,6 @@
       "type": "object",
       "description": "This state performs an action, then waits for the callback event that denotes completion of the action",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique state id",
-          "minLength": 1
-        },
         "name": {
           "type": "string",
           "description": "State name"
@@ -1832,7 +1729,6 @@
           },
           "additionalProperties": false,
           "required": [
-            "stateName",
             "schedule"
           ]
         }

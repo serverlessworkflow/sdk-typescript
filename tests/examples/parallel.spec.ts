@@ -21,7 +21,7 @@ describe('parallel workflow example', () => {
   it('should generate Workflow object', function () {
     const workflow = workflowBuilder()
       .id('parallelexec')
-      .version('1.0')
+      .version('1.0.0')
       .specVersion('0.8')
       .name('Parallel Execution Workflow')
       .description('Executes two branches in parallel')

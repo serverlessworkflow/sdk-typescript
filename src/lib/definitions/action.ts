@@ -33,10 +33,6 @@ import { Sleep } from './sleep';
 export class Action {
   sourceModel?: Action;
   /**
-   * Unique action identifier
-   */
-  id?: string;
-  /**
    * Unique action definition name
    */
   name?: string;

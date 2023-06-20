@@ -27,7 +27,7 @@ function crondefBuildingFn(data: Specification.Crondef): () => Specification.Cro
   return () => {
     const model = new Specification.Crondef(data);
 
-    validate('Crondef', model);
+    validate('Crondef', model.normalize());
     return model;
   };
 }

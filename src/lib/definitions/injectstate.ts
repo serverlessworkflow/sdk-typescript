@@ -25,20 +25,14 @@ import {
   normalizeUsedForCompensation,
   overwriteEnd,
   overwriteMetadata,
-  overwritePropertyAsPlainType,
   overwriteStateDataFilter,
-  overwriteTimeoutWithStateExecTimeout,
+  overwritePropertyAsPlainType,
   overwriteTransition,
   setEndValueIfNoTransition,
 } from './utils';
-import { StateExecTimeout } from './stateExecTimeout';
 
 export class Injectstate {
   sourceModel?: Injectstate;
-  /**
-   * Unique state id
-   */
-  id?: string;
   /**
    * State name
    */
@@ -56,12 +50,6 @@ export class Injectstate {
    */
   data?: {
     [key: string]: any;
-  };
-  /**
-   * State specific timeouts
-   */
-  timeouts?: {
-    stateExecTimeout?: StateExecTimeout;
   };
   /**
    * State data filter
@@ -94,7 +82,6 @@ export class Injectstate {
 
     overwriteEnd(this);
     overwritePropertyAsPlainType('data', this);
-    overwriteTimeoutWithStateExecTimeout(this);
     overwriteStateDataFilter(this);
     overwriteTransition(this);
     overwriteMetadata(this);

@@ -30,7 +30,7 @@ describe('provisionorder workflow example', () => {
   it('should generate Workflow object', function () {
     const workflow = workflowBuilder()
       .id('provisionorders')
-      .version('1.0')
+      .version('1.0.0')
       .specVersion('0.8')
       .name('Provision Orders')
       .description('Provision Orders and handle errors thrown')

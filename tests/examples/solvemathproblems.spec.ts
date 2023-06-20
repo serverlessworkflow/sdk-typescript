@@ -27,7 +27,7 @@ describe('solvemathproblems workflow example', () => {
   it('should generate Workflow object', function () {
     const workflow = workflowBuilder()
       .id('solvemathproblems')
-      .version('1.0')
+      .version('1.0.0')
       .specVersion('0.8')
       .name('Solve Math Problems Workflow')
       .description('Solve math problems')

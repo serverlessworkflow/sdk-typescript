@@ -27,7 +27,7 @@ function errordefBuildingFn(data: Specification.Errordef): () => Specification.E
   return () => {
     const model = new Specification.Errordef(data);
 
-    validate('Errordef', model);
+    validate('Errordef', model.normalize());
     return model;
   };
 }

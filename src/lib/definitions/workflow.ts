@@ -27,6 +27,7 @@ import {
   normalizeAuth,
   normalizeEvents,
   normalizeExpressionLang,
+  normalizeExtensions,
   normalizeFunctions,
   normalizeKeepActive,
   normalizeStates,
@@ -34,6 +35,7 @@ import {
   overwriteAuth,
   overwriteErrors,
   overwriteEvents,
+  overwriteExtensions,
   overwriteFunctions,
   overwriteMetadata,
   overwritePropertyAsPlainType,
@@ -42,7 +44,7 @@ import {
   overwriteStates,
   overwriteTimeouts,
 } from './utils';
-import { Auth, Errors, Events, Functions, Retries, Secrets, States } from './types';
+import { Auth, Errors, Events, Extensions, Functions, Retries, Secrets, States } from './types';
 
 export class Workflow {
   sourceModel?: Workflow;
@@ -65,7 +67,7 @@ export class Workflow {
   /**
    * Workflow version
    */
-  version?: string;
+  version?: string; // ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$
   /**
    * List of helpful terms describing the workflows intended purpose, subject areas, or other important qualities
    */
@@ -73,14 +75,11 @@ export class Workflow {
   dataInputSchema?:
     | string
     | {
-        /**
-         * URI of the JSON Schema used to validate the workflow data input
-         */
-        schema: string;
+        schema: any;
         /**
          * Determines if workflow execution should continue if there are validation errors
          */
-        failOnValidationErrors: boolean;
+        failOnValidationErrors?: boolean;
       };
   secrets?: Secrets;
   constants?:
@@ -112,6 +111,7 @@ export class Workflow {
   autoRetries?: boolean;
   retries?: Retries;
   auth?: Auth;
+  extensions?: Extensions;
   /**
    * State definitions
    */
@@ -147,6 +147,7 @@ export class Workflow {
     overwriteEvents(this);
     overwriteFunctions(this);
     overwriteRetries(this);
+    overwriteExtensions(this);
     overwriteAuth(this);
     overwriteStates(this);
   }
@@ -198,6 +199,7 @@ export class Workflow {
     normalizeEvents(clone);
     normalizeFunctions(clone);
     normalizeAuth(clone);
+    normalizeExtensions(clone);
     normalizeStates(clone);
 
     cleanSourceModelProperty(clone);

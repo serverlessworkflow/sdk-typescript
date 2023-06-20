@@ -76,7 +76,7 @@ export function overwriteDefaultCondition(object: { defaultCondition?: Specifica
 
 /**
  * Modify the provided object, set the value to 'eventConditions' property as an instance of Specification.Eventcondition[] class
- * Throws an error if provided value is neither a Transitioneventcondition nor a Enddeventcondition
+ * Throws an error if provided value is neither a Transitioneventcondition nor a Endeventcondition
  * @param object to set/overwrite the property
  */
 export function overwriteEventConditions(object: { eventConditions: Specification.Eventcondition[] }): void {
@@ -87,11 +87,11 @@ export function overwriteEventConditions(object: { eventConditions: Specificatio
       }
 
       if (eventCondition.end) {
-        return new Specification.Enddeventcondition(eventCondition);
+        return new Specification.Endeventcondition(eventCondition);
       }
 
       throw new Error(
-        `Provided value is neither Transitioneventcondition nor Enddeventcondition \n data= ${eventCondition} `
+        `Provided value is neither Transitioneventcondition nor Endeventcondition \n data= ${eventCondition} `
       );
     });
   }
@@ -187,6 +187,18 @@ export function overwriteErrors(object: { errors?: Specification.Errors }) {
     object.errors = (object.errors as Specification.Errordef[]).map(
       (f) => new Specification.Errordef(f)
     ) as Specification.Errors;
+  }
+}
+
+/**
+ * Modify the provided object, set the value to 'extensions' property as an instance of Specification.Auth class
+ * @param object to set/overwrite the property
+ */
+export function overwriteExtensions(object: { extensions?: Specification.Extensions }) {
+  if (Array.isArray(object.extensions)) {
+    object.extensions = (object.extensions as Specification.Extension[]).map(
+      (f) => new Specification.Extension(f)
+    ) as Specification.Extensions;
   }
 }
 
@@ -305,14 +317,6 @@ export function overwriteWorkflowExecTimeout(object: {
 }): void {
   object.workflowExecTimeout =
     object.workflowExecTimeout && new Specification.WorkflowExecTimeout(object.workflowExecTimeout);
-}
-
-/**
- * Modify the provided object, set the value to 'stateExecTimeout' property as an instance of Specification.StateExecTimeout class
- * @param object to set/overwrite the property
- */
-export function overwriteStateExecTimeout(object: { stateExecTimeout?: Specification.StateExecTimeout }): void {
-  object.stateExecTimeout = object.stateExecTimeout && new Specification.StateExecTimeout(object.stateExecTimeout);
 }
 
 /**
@@ -438,24 +442,6 @@ export function normalizeEnd(object: { end?: boolean | Specification.End }) {
 export function overwritePropertyAsPlainType(property: string, object: any): void {
   if (isObject(object[property])) {
     Object.assign(object, { [property]: JSON.parse(JSON.stringify(object[property])) });
-  }
-}
-
-/**
- * Modify the provided object, set the value to 'timeouts.stateExecTimeout' property as an instance of Specification.StateExecTimeout class,
- * for the rest of the properties the value is cloned
- * @param object to set/overwrite the property
- */
-export function overwriteTimeoutWithStateExecTimeout(object: {
-  timeouts?: {
-    stateExecTimeout?: Specification.StateExecTimeout;
-  };
-}): void {
-  overwritePropertyAsPlainType('timeouts', object);
-
-  const timeouts = object.timeouts!;
-  if (timeouts && isObject(timeouts.stateExecTimeout)) {
-    timeouts.stateExecTimeout = new Specification.StateExecTimeout(timeouts.stateExecTimeout);
   }
 }
 
@@ -592,6 +578,18 @@ export function normalizeStates(object: { states: Specification.States }) {
 }
 
 /**
+ * Modify the provided object by normalizing the 'extensions' property.
+ * @param object to be modified
+ */
+export function normalizeExtensions(object: { extensions?: Specification.Extensions }) {
+  if (Array.isArray(object.extensions)) {
+    object.extensions = object.extensions.map((extension) => {
+      return extension.normalize();
+    }) as Specification.Extensions;
+  }
+}
+
+/**
  * Modify the provided object by normalizing the 'auth' property.
  * @param object to be modified
  */
@@ -659,7 +657,8 @@ export function normalizeFunctionRef(object: { functionRef?: string | Specificat
 
 /**
  * Modify the provided object by normalizing the 'actionMode' property.
- * @param object to be modified
+ * @param target to be modified
+ * @param source
  */
 export function normalizeActionMode(target: { actionMode?: string }, source?: { actionMode?: string }) {
   if (!source?.actionMode) {
@@ -670,6 +669,7 @@ export function normalizeActionMode(target: { actionMode?: string }, source?: { 
 /**
  * Modify the provided object by normalizing the 'completionType' property.
  * @param object to be modified
+ * @param source
  */
 export function normalizeCompletionType(object: { completionType?: string }, source?: { completionType?: string }) {
   if (!source?.completionType) {
@@ -680,6 +680,7 @@ export function normalizeCompletionType(object: { completionType?: string }, sou
 /**
  * Modify the provided object by normalizing the 'usedForCompensation' property.
  * @param object to be modified
+ * @param source
  */
 export function normalizeUsedForCompensation(
   object: { usedForCompensation?: boolean },
@@ -693,6 +694,7 @@ export function normalizeUsedForCompensation(
 /**
  * Modify the provided object by normalizing the 'mode' property.
  * @param object to be modified
+ * @param source
  */
 export function normalizeMode(object: { mode?: string }, source?: { mode?: string }) {
   if (!source?.mode) {
@@ -703,6 +705,7 @@ export function normalizeMode(object: { mode?: string }, source?: { mode?: strin
 /**
  * Modify the provided object by normalizing the 'compensate' property.
  * @param object to be modified
+ * @param source
  */
 export function normalizeCompensate(object: { compensate?: boolean }, source?: { compensate?: boolean }) {
   if (source?.compensate === undefined) {
@@ -713,6 +716,7 @@ export function normalizeCompensate(object: { compensate?: boolean }, source?: {
 /**
  * Modify the provided object by normalizing the 'scheme' property.
  * @param object to be modified
+ * @param source
  */
 export function normalizeScheme(object: { scheme?: string }, source?: { scheme?: string }) {
   if (!source?.scheme) {
@@ -723,6 +727,7 @@ export function normalizeScheme(object: { scheme?: string }, source?: { scheme?:
 /**
  * Modify the provided object by normalizing the 'terminate' property.
  * @param object to be modified
+ * @param source
  */
 export function normalizeTerminate(object: { terminate?: boolean }, source?: { terminate?: boolean }) {
   if (source?.terminate === undefined) {
@@ -733,6 +738,7 @@ export function normalizeTerminate(object: { terminate?: boolean }, source?: { t
 /**
  * Modify the provided object by normalizing the 'exclusive' property.
  * @param object to be modified
+ * @param source
  */
 export function normalizeExclusive(object: { exclusive?: boolean }, source?: { exclusive?: boolean }) {
   if (source?.exclusive === undefined) {
@@ -743,6 +749,7 @@ export function normalizeExclusive(object: { exclusive?: boolean }, source?: { e
 /**
  * Modify the provided object by normalizing the 'keepActive' property.
  * @param object to be modified
+ * @param source
  */
 export function normalizeKeepActive(object: { keepActive?: boolean }, source?: { keepActive?: boolean }) {
   if (source?.keepActive === undefined) {
@@ -753,6 +760,7 @@ export function normalizeKeepActive(object: { keepActive?: boolean }, source?: {
 /**
  * Modify the provided object by normalizing the 'expressionLang' property.
  * @param object to be modified
+ * @param source
  */
 export function normalizeExpressionLang(object: { expressionLang?: string }, source?: { expressionLang?: string }) {
   if (!source?.expressionLang) {
@@ -763,6 +771,7 @@ export function normalizeExpressionLang(object: { expressionLang?: string }, sou
 /**
  * Modify the provided object by normalizing the 'interrupt' property.
  * @param object to be modified
+ * @param source
  */
 export function normalizeInterrupt(object: { interrupt?: boolean }, source?: { interrupt?: boolean }) {
   if (source?.interrupt === undefined) {
@@ -773,6 +782,7 @@ export function normalizeInterrupt(object: { interrupt?: boolean }, source?: { i
 /**
  * Modify the provided object by normalizing the 'type' property.
  * @param object to be modified
+ * @param source
  */
 export function normalizeType(object: { type?: string }, source?: { type?: string }) {
   if (!source?.type) {
@@ -783,6 +793,7 @@ export function normalizeType(object: { type?: string }, source?: { type?: strin
 /**
  * Modify the provided object by normalizing the 'invoke' property.
  * @param object to be modified
+ * @param source
  */
 export function normalizeInvoke(object: { invoke?: string }, source?: { invoke?: string }) {
   if (!source?.invoke) {
@@ -793,6 +804,7 @@ export function normalizeInvoke(object: { invoke?: string }, source?: { invoke?:
 /**
  * Modify the provided object by normalizing the 'onParentComplete' property.
  * @param object to be modified
+ * @param source
  */
 export function normalizeOnParentComplete(
   object: { onParentComplete?: 'continue' | 'terminate' },
@@ -806,6 +818,7 @@ export function normalizeOnParentComplete(
 /**
  * Modify the provided object by normalizing the 'kind' property.
  * @param object to be modified
+ * @param source
  */
 export function normalizeKind(object: { kind?: string }, source?: { kind?: string }) {
   if (!source?.kind) {
@@ -816,6 +829,7 @@ export function normalizeKind(object: { kind?: string }, source?: { kind?: strin
 /**
  * Modify the provided object by normalizing the 'dataOnly' property.
  * @param object to be modified
+ * @param source
  */
 export function normalizeDataOnly(object: { dataOnly?: boolean }, source?: { dataOnly?: boolean }) {
   if (source?.dataOnly === undefined) {

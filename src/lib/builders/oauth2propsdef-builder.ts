@@ -27,7 +27,7 @@ function oauth2propsdefBuildingFn(data: Specification.Oauth2propsdef): () => Spe
   return () => {
     const model = new Specification.Oauth2propsdef(data);
 
-    validate('Oauth2propsdef', model);
+    validate('Oauth2propsdef', model.normalize());
     return model;
   };
 }

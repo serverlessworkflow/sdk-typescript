@@ -21,7 +21,7 @@ import * as fs from 'fs';
 describe('workflow-validator, invalid state', () => {
   const validWorkflow = {
     id: 'helloworld',
-    version: '1.0',
+    version: '1.0.0',
     specVersion: '0.8',
     name: 'Hello World Workflow',
     description: 'Inject Hello World',

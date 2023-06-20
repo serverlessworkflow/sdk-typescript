@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-import { cleanSourceModelProperty, normalizeInvoke, overwritePropertyAsPlainType } from './utils';
+import { cleanSourceModelProperty, overwritePropertyAsPlainType } from './utils';
 
 export class Eventref {
   sourceModel?: Eventref;
   /**
    * Reference to the unique name of a 'produced' event definition
    */
-  triggerEventRef: string;
+  produceEventRef: string;
   /**
    * Reference to the unique name of a 'consumed' event definition
    */
-  resultEventRef: string;
+  consumeEventRef?: string;
   /**
    * Maximum amount of time (ISO 8601 format) to wait for the result event. If not defined it should default to the actionExecutionTimeout
    */
-  resultEventTimeout?: string;
+  consumeEventTimeout?: string;
   /**
-   * If string type, an expression which selects parts of the states data output to become the data (payload) of the event referenced by 'triggerEventRef'. If object type, a custom object to become the data (payload) of the event referenced by 'triggerEventRef'.
+   * If string type, an expression which selects parts of the states data output to become the data (payload) of the event referenced by 'produceEventRef'. If object type, a custom object to become the data (payload) of the event referenced by 'produceEventRef'.
    */
   data?:
     | string
@@ -44,11 +44,6 @@ export class Eventref {
   contextAttributes?: {
     [name: string]: string;
   };
-  /**
-   * Specifies if the function should be invoked sync or async. Default is sync.
-   */
-  invoke?: 'sync' | 'async';
-
   constructor(model: any) {
     this.sourceModel = Object.assign({}, model);
 
@@ -63,8 +58,6 @@ export class Eventref {
    */
   normalize = (): Eventref => {
     const clone = new Eventref(this);
-
-    normalizeInvoke(clone, this.sourceModel);
 
     cleanSourceModelProperty(clone);
 

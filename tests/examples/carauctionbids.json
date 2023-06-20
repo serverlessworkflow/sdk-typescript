@@ -1,7 +1,7 @@
 {
   "id": "handleCarAuctionBid",
   "name": "Car Auction Bidding Workflow",
-  "version": "1.0",
+  "version": "1.0.0",
   "description": "Store a single bid whole the car auction is active",
   "specVersion": "0.8",
   "start": {

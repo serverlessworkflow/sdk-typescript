@@ -28,8 +28,8 @@ export class Branch /* Branch Definition */ {
    * State specific timeouts
    */
   timeouts?: {
-    actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
-    branchExecTimeout?: /* Single branch execution timeout duration (ISO 8601 duration format) */ BranchExecTimeout;
+    actionExecTimeout?: /* Action execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+    branchExecTimeout?: /* Branch execution timeout duration (ISO 8601 duration format) */ BranchExecTimeout;
   };
   /**
    * Actions to be executed in this branch
