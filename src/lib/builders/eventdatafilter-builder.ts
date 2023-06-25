@@ -27,7 +27,7 @@ function eventdatafilterBuildingFn(data: Specification.Eventdatafilter): () => S
   return () => {
     const model = new Specification.Eventdatafilter(data);
 
-    validate('Eventdatafilter', model);
+    validate('Eventdatafilter', model.normalize());
     return model;
   };
 }

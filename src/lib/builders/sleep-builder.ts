@@ -27,7 +27,7 @@ function sleepBuildingFn(data: Specification.Sleep): () => Specification.Sleep {
   return () => {
     const model = new Specification.Sleep(data);
 
-    validate('Sleep', model);
+    validate('Sleep', model.normalize());
     return model;
   };
 }

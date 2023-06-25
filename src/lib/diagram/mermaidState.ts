@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Specification} from '../definitions';
-import {isObject} from '../utils';
+import { Specification } from '../definitions';
+import { isObject } from '../utils';
 
 export class MermaidState {
   constructor(
@@ -114,7 +114,7 @@ export class MermaidState {
           ...this.naturalTransition(stateName, transitionEventCondition.transition, transitionEventCondition.eventRef)
         );
 
-        const endEventCondition = eventCondition as Specification.Enddeventcondition;
+        const endEventCondition = eventCondition as Specification.Endeventcondition;
         if (endEventCondition.end) {
           transitions.push(this.transitionDescription(stateName, '[*]'));
         }

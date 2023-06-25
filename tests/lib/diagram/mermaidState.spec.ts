@@ -111,7 +111,7 @@ CheckApplication --> RejectApplication : default`);
 
   it('should create source code for data-based state with end = true ', () => {
     const databasedswitch = new Specification.Databasedswitchstate(
-        JSON.parse(`{
+      JSON.parse(`{
       "type":"switch",
       "name":"CheckApplication",
       "dataConditions": [
@@ -138,10 +138,9 @@ CheckApplication --> [*] : \${ .applicants | .age < 18 }
 CheckApplication --> StartApplication : default`);
   });
 
-
   it('should create source code for operation state with end.terminate = true ', () => {
     const databasedswitch = new Specification.Databasedswitchstate(
-        JSON.parse(`{
+      JSON.parse(`{
       "name": "GreetPerson",
       "type": "operation",
       "actions": [

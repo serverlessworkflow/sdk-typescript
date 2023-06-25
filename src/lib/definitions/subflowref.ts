@@ -25,7 +25,7 @@ export class Subflowref {
   /**
    * Version of the sub-workflow to be invoked
    */
-  version?: string;
+  version?: string; // ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$
   /**
    * If invoke is 'async', specifies how subflow execution should behave when parent workflow completes. Default is 'terminate'
    */

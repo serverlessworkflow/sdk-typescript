@@ -27,7 +27,7 @@ function produceeventdefBuildingFn(data: Specification.Produceeventdef): () => S
   return () => {
     const model = new Specification.Produceeventdef(data);
 
-    validate('Produceeventdef', model);
+    validate('Produceeventdef', model.normalize());
     return model;
   };
 }

@@ -94,7 +94,7 @@ describe('workflow ', () => {
     const jsonWorkflow: string = Workflow.toJson(
       workflowBuilder()
         .id('helloworld')
-        .version('1.0')
+        .version('1.0.0')
         .specVersion('0.8')
         .name('Hello World Workflow')
         .description('Inject Hello World')
@@ -114,7 +114,7 @@ describe('workflow ', () => {
       '{' +
         '"id":"helloworld",' +
         '"name":"Hello World Workflow",' +
-        '"version":"1.0",' +
+        '"version":"1.0.0",' +
         '"description":"Inject Hello World",' +
         '"specVersion":"0.8",' +
         '"start":"Hello State",' +
@@ -136,7 +136,7 @@ describe('workflow ', () => {
     const yamlWorkflow: string = Workflow.toYaml(
       workflowBuilder()
         .id('helloworld')
-        .version('1.0')
+        .version('1.0.0')
         .specVersion('0.8')
         .name('Hello World Workflow')
         .description('Inject Hello World')
@@ -155,7 +155,7 @@ describe('workflow ', () => {
     expect(yamlWorkflow).toBe(
       'id: helloworld\n' +
         'name: Hello World Workflow\n' +
-        "version: '1.0'\n" +
+        'version: 1.0.0\n' +
         'description: Inject Hello World\n' +
         "specVersion: '0.8'\n" +
         'start: Hello State\n' +

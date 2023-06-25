@@ -32,4 +32,13 @@ export class Schedule {
 
     overwriteCron(this);
   }
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Schedule} without deleted properties.
+   */
+  normalize = (): Schedule => {
+    const clone = new Schedule(this);
+    return clone;
+  };
 }

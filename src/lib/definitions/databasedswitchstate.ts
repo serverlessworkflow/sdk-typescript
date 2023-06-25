@@ -29,17 +29,12 @@ import {
   overwriteMetadata,
   overwriteOnErrors,
   overwriteStateDataFilter,
-  overwriteTimeoutWithStateExecTimeout,
+  overwritePropertyAsPlainType,
 } from './utils';
-import { Datacondition } from './types';
-import { StateExecTimeout } from './stateExecTimeout';
+import { Datacondition, StateExecTimeout } from './types';
 
 export class Databasedswitchstate {
   sourceModel?: Databasedswitchstate;
-  /**
-   * Unique State id
-   */
-  id?: string;
   /**
    * State name
    */
@@ -56,7 +51,7 @@ export class Databasedswitchstate {
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: StateExecTimeout;
+    stateExecTimeout?: /* Workflow state execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
   };
   /**
    * Defines conditions evaluated against state data
@@ -87,7 +82,7 @@ export class Databasedswitchstate {
     Object.assign(this, defaultModel, model);
 
     overwriteStateDataFilter(this);
-    overwriteTimeoutWithStateExecTimeout(this);
+    overwritePropertyAsPlainType('timeouts', this);
     overwriteDataConditions(this);
     overwriteOnErrors(this);
     overwriteDefaultCondition(this);

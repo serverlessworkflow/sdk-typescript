@@ -27,7 +27,7 @@ function actiondatafilterBuildingFn(data: Specification.Actiondatafilter): () =>
   return () => {
     const model = new Specification.Actiondatafilter(data);
 
-    validate('Actiondatafilter', model);
+    validate('Actiondatafilter', model.normalize());
     return model;
   };
 }

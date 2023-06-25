@@ -23,7 +23,9 @@ import functionsSchema from './schema/functions.json';
 import retriesSchema from './schema/retries.json';
 import secretsSchema from './schema/secrets.json';
 import timeoutsSchema from './schema/timeouts.json';
+import odataSchema from './schema/odata.json';
 import workflowSchema from './schema/workflow.json';
+import workflowExtensionsSchema from './schema/workflowextensions.json';
 import { validatorsPaths } from './validation/validators-paths';
 
 const schemas: any[] = [
@@ -32,10 +34,12 @@ const schemas: any[] = [
   eventsSchema,
   errorsSchema,
   functionsSchema,
+  odataSchema,
   retriesSchema,
   secretsSchema,
   timeoutsSchema,
   workflowSchema,
+  workflowExtensionsSchema,
 ];
 const strict: boolean = false;
 const ajv = new Ajv({ schemas, strict });

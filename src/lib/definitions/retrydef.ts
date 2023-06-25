@@ -47,4 +47,13 @@ export class Retrydef {
   constructor(model: any) {
     Object.assign(this, model);
   }
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Retrydef} without deleted properties.
+   */
+  normalize = (): Retrydef => {
+    const clone = new Retrydef(this);
+    return clone;
+  };
 }

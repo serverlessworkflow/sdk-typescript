@@ -32,19 +32,14 @@ import {
   overwriteMetadata,
   overwriteOnErrors,
   overwriteStateDataFilter,
-  overwriteTimeoutWithStateExecTimeout,
+  overwritePropertyAsPlainType,
   overwriteTransition,
   setEndValueIfNoTransition,
 } from './utils';
-import { ActionExecTimeout } from './types';
-import { StateExecTimeout } from './stateExecTimeout';
+import { ActionExecTimeout, StateExecTimeout } from './types';
 
 export class Foreachstate {
   sourceModel?: Foreachstate;
-  /**
-   * Unique State id
-   */
-  id?: string;
   /**
    * State name
    */
@@ -81,8 +76,8 @@ export class Foreachstate {
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: StateExecTimeout;
-    actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+    stateExecTimeout?: /* Workflow state execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    actionExecTimeout?: /* Action execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
   };
   /**
    * State data filter
@@ -124,7 +119,7 @@ export class Foreachstate {
 
     overwriteEnd(this);
     overwriteActions(this);
-    overwriteTimeoutWithStateExecTimeout(this);
+    overwritePropertyAsPlainType('timeouts', this);
     overwriteStateDataFilter(this);
     overwriteOnErrors(this);
     overwriteTransition(this);

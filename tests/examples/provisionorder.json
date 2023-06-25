@@ -1,7 +1,7 @@
 {
   "id": "provisionorders",
   "name": "Provision Orders",
-  "version": "1.0",
+  "version": "1.0.0",
   "description": "Provision Orders and handle errors thrown",
   "specVersion": "0.8",
   "start": "ProvisionOrder",

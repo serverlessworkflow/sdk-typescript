@@ -27,7 +27,7 @@ function retrydefBuildingFn(data: Specification.Retrydef): () => Specification.R
   return () => {
     const model = new Specification.Retrydef(data);
 
-    validate('Retrydef', model);
+    validate('Retrydef', model.normalize());
     return model;
   };
 }

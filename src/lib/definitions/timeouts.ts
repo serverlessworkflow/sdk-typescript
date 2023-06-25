@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 import { WorkflowExecTimeout } from './workflowExecTimeout';
-import { ActionExecTimeout, BranchExecTimeout, EventTimeout } from './types';
-import {
-  cleanSourceModelProperty,
-  normalizeWorkflowExecTimeout,
-  overwriteStateExecTimeout,
-  overwriteWorkflowExecTimeout,
-} from './utils';
-import { StateExecTimeout } from './stateExecTimeout';
+import { ActionExecTimeout, BranchExecTimeout, EventTimeout, StateExecTimeout } from './types';
+import { cleanSourceModelProperty, normalizeWorkflowExecTimeout, overwriteWorkflowExecTimeout } from './utils';
 
 export class Timeouts {
   sourceModel?: Timeouts;
   workflowExecTimeout?: WorkflowExecTimeout;
-  stateExecTimeout?: StateExecTimeout;
-  actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
-  branchExecTimeout?: /* Single branch execution timeout duration (ISO 8601 duration format) */ BranchExecTimeout;
+  stateExecTimeout?: /* Workflow state execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+  actionExecTimeout?: /* Action execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+  branchExecTimeout?: /* Branch execution timeout duration (ISO 8601 duration format) */ BranchExecTimeout;
   eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
 
   constructor(model: any) {
@@ -36,7 +30,6 @@ export class Timeouts {
 
     Object.assign(this, model);
     overwriteWorkflowExecTimeout(this);
-    overwriteStateExecTimeout(this);
   }
 
   /**

@@ -33,7 +33,7 @@ describe('jobmonitoring workflow example', () => {
   it('should generate Workflow object', function () {
     const workflow = workflowBuilder()
       .id('jobmonitoring')
-      .version('1.0')
+      .version('1.0.0')
       .specVersion('0.8')
       .name('Job Monitoring')
       .description('Monitor finished execution of a submitted job')

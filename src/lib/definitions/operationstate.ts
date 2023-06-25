@@ -32,19 +32,14 @@ import {
   overwriteMetadata,
   overwriteOnErrors,
   overwriteStateDataFilter,
-  overwriteTimeoutWithStateExecTimeout,
+  overwritePropertyAsPlainType,
   overwriteTransition,
   setEndValueIfNoTransition,
 } from './utils';
-import { ActionExecTimeout } from './types';
-import { StateExecTimeout } from './stateExecTimeout';
+import { ActionExecTimeout, StateExecTimeout } from './types';
 
 export class Operationstate {
   sourceModel?: Operationstate;
-  /**
-   * Unique State id
-   */
-  id?: string;
   /**
    * State name
    */
@@ -73,8 +68,8 @@ export class Operationstate {
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: StateExecTimeout;
-    actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+    stateExecTimeout?: /* Workflow state execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    actionExecTimeout?: /* Action execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
   };
   /**
    * States error handling definitions
@@ -109,7 +104,7 @@ export class Operationstate {
     overwriteEnd(this);
     overwriteStateDataFilter(this);
     overwriteActions(this);
-    overwriteTimeoutWithStateExecTimeout(this);
+    overwritePropertyAsPlainType('timeouts', this);
     overwriteOnErrors(this);
     overwriteTransition(this);
     overwriteMetadata(this);

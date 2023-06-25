@@ -19,8 +19,7 @@ import { Eventdef } from '../../../src/lib/definitions/eventdef';
 
 describe('Eventdef ', () => {
   it('should convert non-primitive properties to the desired class', () => {
-    // @ts-ignore
-    const data: Eventdef = {
+    const data = {
       correlation: [{ contextAttributeName: 'contextAttributeName' }],
       metadata: { key: 'value' },
     };

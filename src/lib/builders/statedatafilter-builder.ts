@@ -27,7 +27,7 @@ function statedatafilterBuildingFn(data: Specification.Statedatafilter): () => S
   return () => {
     const model = new Specification.Statedatafilter(data);
 
-    validate('Statedatafilter', model);
+    validate('Statedatafilter', model.normalize());
     return model;
   };
 }

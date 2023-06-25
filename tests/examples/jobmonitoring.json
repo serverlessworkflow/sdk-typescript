@@ -1,7 +1,7 @@
 {
   "id": "jobmonitoring",
   "name": "Job Monitoring",
-  "version": "1.0",
+  "version": "1.0.0",
   "description": "Monitor finished execution of a submitted job",
   "specVersion": "0.8",
   "start": "SubmitJob",

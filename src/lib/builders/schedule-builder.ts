@@ -27,7 +27,7 @@ function scheduleBuildingFn(data: Specification.Schedule): () => Specification.S
   return () => {
     const model = new Specification.Schedule(data);
 
-    validate('Schedule', model);
+    validate('Schedule', model.normalize());
     return model;
   };
 }

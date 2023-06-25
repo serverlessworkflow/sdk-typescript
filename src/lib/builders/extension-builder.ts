@@ -20,22 +20,22 @@ import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Enddeventcondition} data The underlying object
- * @returns {Specification.Enddeventcondition} The validated underlying object
+ * @param {Specification.Extension} data The underlying object
+ * @returns {Specification.Extension} The validated underlying object
  */
-function enddeventconditionBuildingFn(data: Specification.Enddeventcondition): () => Specification.Enddeventcondition {
+function extensionBuildingFn(data: Specification.Extension): () => Specification.Extension {
   return () => {
-    const model = new Specification.Enddeventcondition(data);
+    const model = new Specification.Extension(data);
 
-    validate('Enddeventcondition', model.normalize());
+    validate('Extension', model.normalize());
     return model;
   };
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.Enddeventcondition`
- * @returns {Specification.Enddeventcondition} A builder for `Specification.Enddeventcondition`
+ * A factory to create a builder proxy for the type `Specification.Extension`
+ * @returns {Specification.Extension} A builder for `Specification.Extension`
  */
-export function enddeventconditionBuilder(): Builder<Specification.Enddeventcondition> {
-  return builder<Specification.Enddeventcondition>(enddeventconditionBuildingFn);
+export function extensionBuilder(): Builder<Specification.Extension> {
+  return builder<Specification.Extension>(extensionBuildingFn);
 }

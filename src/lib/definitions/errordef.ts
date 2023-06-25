@@ -31,4 +31,13 @@ export class Errordef {
   constructor(model: any) {
     Object.assign(this, model);
   }
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Errordef} without deleted properties.
+   */
+  normalize = (): Errordef => {
+    const clone = new Errordef(this);
+    return clone;
+  };
 }

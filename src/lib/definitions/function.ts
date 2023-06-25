@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { cleanSourceModelProperty, normalizeType, overwriteMetadata } from './utils';
+import { cleanSourceModelProperty, normalizeType, overwriteMetadata, overwritePropertyAsPlainType } from './utils';
 
 import { Metadata } from './metadata';
 
@@ -31,10 +31,18 @@ export class Function {
    * Defines the function type. Is either `rest`, `asyncapi, `rpc`, `graphql`, `odata`, `expression`, or `custom`. Default is `rest`
    */
   type?: 'rest' | 'asyncapi' | 'rpc' | 'graphql' | 'odata' | 'expression' | 'custom';
-  /**
-   * References an auth definition name to be used to access to resource defined in the operation parameter
-   */
-  authRef?: string;
+  authRef?:
+    | string
+    | {
+        /**
+         * References an auth definition to be used to access the resource defined in the operation parameter
+         */
+        resource: string;
+        /**
+         * References an auth definition to be used to invoke the operation
+         */
+        invocation?: string;
+      };
   metadata?: /* Metadata information */ Metadata;
 
   constructor(model: any) {
@@ -42,6 +50,7 @@ export class Function {
 
     const defaultModel = { type: 'rest' };
     Object.assign(this, defaultModel, model);
+    overwritePropertyAsPlainType('authRef', this);
     overwriteMetadata(this);
   }
 

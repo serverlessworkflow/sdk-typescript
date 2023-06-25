@@ -31,19 +31,14 @@ import {
   overwriteOnErrors,
   overwriteOnEvents,
   overwriteStateDataFilter,
-  overwriteTimeoutWithStateExecTimeout,
+  overwritePropertyAsPlainType,
   overwriteTransition,
   setEndValueIfNoTransition,
 } from './utils';
-import { ActionExecTimeout, EventTimeout } from './types';
-import { StateExecTimeout } from './stateExecTimeout';
+import { ActionExecTimeout, EventTimeout, StateExecTimeout } from './types';
 
 export class Eventstate /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ {
   sourceModel?: Eventstate;
-  /**
-   * Unique State id
-   */
-  id?: string;
   /**
    * State name
    */
@@ -64,8 +59,8 @@ export class Eventstate /* This state is used to wait for events from event sour
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: StateExecTimeout;
-    actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+    stateExecTimeout?: /* Workflow state execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    actionExecTimeout?: /* Action execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
     eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
   };
   stateDataFilter?: Statedatafilter;
@@ -93,7 +88,7 @@ export class Eventstate /* This state is used to wait for events from event sour
     Object.assign(this, defaultModel, model);
 
     overwriteOnEvents(this);
-    overwriteTimeoutWithStateExecTimeout(this);
+    overwritePropertyAsPlainType('timeouts', this);
     overwriteStateDataFilter(this);
     overwriteOnErrors(this);
     overwriteTransition(this);

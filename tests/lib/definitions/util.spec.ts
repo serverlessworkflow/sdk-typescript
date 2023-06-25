@@ -15,13 +15,8 @@
  *
  */
 
-import {
-  overwriteProperties,
-  overwritePropertyAsPlainType,
-  overwriteTimeoutWithStateExecTimeout,
-} from '../../../src/lib/definitions/utils';
+import { overwriteProperties, overwritePropertyAsPlainType } from '../../../src/lib/definitions/utils';
 import { Properties } from '../../../src/lib/definitions/types';
-import { StateExecTimeout } from '../../../src/lib/definitions/stateExecTimeout';
 
 describe('Util ', () => {
   describe('overwritePropertyAsPlainType  ', () => {
@@ -126,34 +121,6 @@ describe('Util ', () => {
       const target = Object.assign({}, source);
       overwriteProperties(target);
       expect(target.properties.constructor.name).toBe('String');
-    });
-  });
-
-  describe('overwriteTimeoutWithStateExecTimeout  ', () => {
-    it('should create an instance of StateExecTimeout only for stateExecTimeout property ', () => {
-      class HasStateExecTimeout {
-        timeouts?: {
-          stateExecTimeout?: StateExecTimeout;
-          eventTimeout?: string;
-        };
-      }
-
-      const source = {
-        timeouts: {
-          stateExecTimeout: {
-            total: 'P3Y6M4DT12H30M5S',
-          },
-          eventTimeout: 'eventTimeoutValue',
-        },
-      } as HasStateExecTimeout;
-
-      const target = Object.assign({}, source);
-      overwriteTimeoutWithStateExecTimeout(target);
-      expect(target.timeouts!.stateExecTimeout!.constructor.name).toBe('StateExecTimeout');
-
-      expect(target.timeouts!.eventTimeout).toBe('eventTimeoutValue');
-      source.timeouts!.eventTimeout = 'eventTimeoutValue2';
-      expect(target.timeouts!.eventTimeout).toBe('eventTimeoutValue');
     });
   });
 });

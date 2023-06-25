@@ -27,7 +27,7 @@ function basicpropsdefBuildingFn(data: Specification.Basicpropsdef): () => Speci
   return () => {
     const model = new Specification.Basicpropsdef(data);
 
-    validate('Basicpropsdef', model);
+    validate('Basicpropsdef', model.normalize());
     return model;
   };
 }

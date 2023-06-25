@@ -41,4 +41,13 @@ export class Produceeventdef {
     overwritePropertyAsPlainType('data', this);
     overwritePropertyAsPlainType('contextAttributes', this);
   }
+
+  /**
+   * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
+   * @returns {Specification.Produceeventdef} without deleted properties.
+   */
+  normalize = (): Produceeventdef => {
+    const clone = new Produceeventdef(this);
+    return clone;
+  };
 }

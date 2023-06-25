@@ -38,7 +38,7 @@ export type Workflow /* Serverless Workflow specification - workflow schema */ =
       /**
        * Workflow version
        */
-      version?: string;
+      version?: string; // ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$
       /**
        * List of helpful terms describing the workflows intended purpose, subject areas, or other important qualities
        */
@@ -46,14 +46,11 @@ export type Workflow /* Serverless Workflow specification - workflow schema */ =
       dataInputSchema?:
         | string
         | {
-            /**
-             * URI of the JSON Schema used to validate the workflow data input
-             */
-            schema: string;
+            schema: any;
             /**
              * Determines if workflow execution should continue if there are validation errors
              */
-            failOnValidationErrors: boolean;
+            failOnValidationErrors?: boolean;
           };
       secrets?: Secrets;
       constants?:
@@ -85,6 +82,7 @@ export type Workflow /* Serverless Workflow specification - workflow schema */ =
       autoRetries?: boolean;
       retries?: Retries;
       auth?: Auth;
+      extensions?: Extensions;
       /**
        * State definitions
        */
@@ -131,7 +129,7 @@ export type Workflow /* Serverless Workflow specification - workflow schema */ =
       /**
        * Workflow version
        */
-      version?: string;
+      version?: string; // ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$
       /**
        * List of helpful terms describing the workflows intended purpose, subject areas, or other important qualities
        */
@@ -139,14 +137,11 @@ export type Workflow /* Serverless Workflow specification - workflow schema */ =
       dataInputSchema?:
         | string
         | {
-            /**
-             * URI of the JSON Schema used to validate the workflow data input
-             */
-            schema: string;
+            schema: any;
             /**
              * Determines if workflow execution should continue if there are validation errors
              */
-            failOnValidationErrors: boolean;
+            failOnValidationErrors?: boolean;
           };
       secrets?: Secrets;
       constants?:
@@ -178,6 +173,7 @@ export type Workflow /* Serverless Workflow specification - workflow schema */ =
       autoRetries?: boolean;
       retries?: Retries;
       auth?: Auth;
+      extensions?: Extensions;
       /**
        * State definitions
        */
@@ -207,10 +203,6 @@ export type Workflow /* Serverless Workflow specification - workflow schema */ =
 export type Action =
   | {
       /**
-       * Unique action identifier
-       */
-      id?: string;
-      /**
        * Unique action definition name
        */
       name?: string;
@@ -237,10 +229,6 @@ export type Action =
       condition?: string;
     }
   | {
-      /**
-       * Unique action identifier
-       */
-      id?: string;
       /**
        * Unique action definition name
        */
@@ -269,10 +257,6 @@ export type Action =
     }
   | {
       /**
-       * Unique action identifier
-       */
-      id?: string;
-      /**
        * Unique action definition name
        */
       name?: string;
@@ -299,10 +283,9 @@ export type Action =
       condition?: string;
     };
 /**
- * Single actions definition execution timeout duration (ISO 8601 duration format)
+ * Action execution timeout duration (ISO 8601 duration format)
  */
 export type ActionExecTimeout = string;
-
 export interface Actiondatafilter {
   /**
    * Workflow expression that selects state data that the state action can use
@@ -321,9 +304,7 @@ export interface Actiondatafilter {
    */
   toStateData?: string;
 }
-
 export type Auth = string /* uri */ | [Authdef, ...Authdef[]];
-
 export interface Authdef {
   /**
    * Unique auth definition name
@@ -333,32 +314,36 @@ export interface Authdef {
    * Defines the auth type
    */
   scheme?: 'basic' | 'bearer' | 'oauth2';
-  properties: string | Basicpropsdef | Bearerpropsdef | Oauth2propsdef;
+  properties:
+    | string
+    | /* Basic auth information */ Basicpropsdef
+    | /* Bearer auth information */ Bearerpropsdef
+    | /* OAuth2 information */ Oauth2propsdef;
 }
-
-export type Basicpropsdef =
-  | string
-  | {
-      /**
-       * String or a workflow expression. Contains the user name
-       */
-      username: string;
-      /**
-       * String or a workflow expression. Contains the user password
-       */
-      password: string;
-      metadata?: /* Metadata information */ Metadata;
-    };
-export type Bearerpropsdef =
-  | string
-  | {
-      /**
-       * String or a workflow expression. Contains the token
-       */
-      token: string;
-      metadata?: /* Metadata information */ Metadata;
-    };
-
+/**
+ * Basic auth information
+ */
+export interface Basicpropsdef {
+  /**
+   * String or a workflow expression. Contains the user name
+   */
+  username: string;
+  /**
+   * String or a workflow expression. Contains the user password
+   */
+  password: string;
+  metadata?: /* Metadata information */ Metadata;
+}
+/**
+ * Bearer auth information
+ */
+export interface Bearerpropsdef {
+  /**
+   * String or a workflow expression. Contains the token
+   */
+  token: string;
+  metadata?: /* Metadata information */ Metadata;
+}
 /**
  * Branch Definition
  */
@@ -371,28 +356,22 @@ export interface Branch {
    * State specific timeouts
    */
   timeouts?: {
-    actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
-    branchExecTimeout?: /* Single branch execution timeout duration (ISO 8601 duration format) */ BranchExecTimeout;
+    actionExecTimeout?: /* Action execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+    branchExecTimeout?: /* Branch execution timeout duration (ISO 8601 duration format) */ BranchExecTimeout;
   };
   /**
    * Actions to be executed in this branch
    */
   actions: Action[];
 }
-
 /**
- * Single branch execution timeout duration (ISO 8601 duration format)
+ * Branch execution timeout duration (ISO 8601 duration format)
  */
 export type BranchExecTimeout = string;
-
 /**
  * This state performs an action, then waits for the callback event that denotes completion of the action
  */
 export interface Callbackstate {
-  /**
-   * Unique state id
-   */
-  id?: string;
   /**
    * State name
    */
@@ -413,8 +392,8 @@ export interface Callbackstate {
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: StateExecTimeout;
-    actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+    stateExecTimeout?: /* Workflow state execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    actionExecTimeout?: /* Action execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
     eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
   };
   /**
@@ -447,7 +426,6 @@ export interface Callbackstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
-
 export type Continueasdef =
   | string
   | {
@@ -458,7 +436,7 @@ export type Continueasdef =
       /**
        * Version of the workflow to continue execution as
        */
-      version?: string;
+      version?: string; // ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$
       /**
        * If string type, an expression which selects parts of the states data output to become the workflow data input of continued execution. If object type, a custom object to become the workflow data input of the continued execution
        */
@@ -472,7 +450,6 @@ export type Continueasdef =
        */
       workflowExecTimeout?: WorkflowExecTimeout;
     };
-
 /**
  * CloudEvent correlation definition
  */
@@ -486,7 +463,6 @@ export interface CorrelationDef {
    */
   contextAttributeValue?: string;
 }
-
 export type Crondef =
   | string
   | {
@@ -499,15 +475,10 @@ export type Crondef =
        */
       validUntil?: string;
     };
-
 /**
  * Permits transitions to other states based on data conditions
  */
 export interface Databasedswitchstate {
-  /**
-   * Unique State id
-   */
-  id?: string;
   /**
    * State name
    */
@@ -524,7 +495,7 @@ export interface Databasedswitchstate {
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: StateExecTimeout;
+    stateExecTimeout?: /* Workflow state execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
   };
   /**
    * Defines conditions evaluated against state data
@@ -548,7 +519,6 @@ export interface Databasedswitchstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
-
 export type Datacondition /* Switch state data based condition */ =
   | Transitiondatacondition
   | /* Switch state data based condition */ Enddatacondition;
@@ -557,10 +527,18 @@ export type Datacondition /* Switch state data based condition */ =
  */
 export type Defaultconditiondef /* DefaultCondition definition. Can be either a transition or end definition */ =
   | {
+      /**
+       * The optional name of the default condition, used solely for display purposes
+       */
+      name?: string;
       transition: Transition;
       end?: End;
     }
   | {
+      /**
+       * The optional name of the default condition, used solely for display purposes
+       */
+      name?: string;
       transition?: Transition;
       end: End;
     };
@@ -581,7 +559,6 @@ export type End =
       compensate?: boolean;
       continueAs?: Continueasdef;
     };
-
 /**
  * Switch state data based condition
  */
@@ -600,11 +577,10 @@ export interface Enddatacondition {
   end: End;
   metadata?: /* Metadata information */ Metadata;
 }
-
 /**
  * Switch state data event condition
  */
-export interface Enddeventcondition {
+export interface Endeventcondition {
   /**
    * Event condition name
    */
@@ -623,7 +599,6 @@ export interface Enddeventcondition {
   eventDataFilter?: Eventdatafilter;
   metadata?: /* Metadata information */ Metadata;
 }
-
 export type Error =
   | {
       /**
@@ -673,7 +648,6 @@ export type Error =
       transition?: Transition;
       end: End;
     };
-
 export interface Errordef {
   /**
    * Domain-specific error name
@@ -688,21 +662,15 @@ export interface Errordef {
    */
   description?: string;
 }
-
 export type Errors = string /* uri */ | [Errordef, ...Errordef[]];
 /**
  * Timeout duration to wait for consuming defined events (ISO 8601 duration format)
  */
 export type EventTimeout = string;
-
 /**
  * Permits transitions to other states based on events
  */
 export interface Eventbasedswitchstate {
-  /**
-   * Unique State id
-   */
-  id?: string;
   /**
    * State name
    */
@@ -719,7 +687,7 @@ export interface Eventbasedswitchstate {
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: StateExecTimeout;
+    stateExecTimeout?: /* Workflow state execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
     eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
   };
   /**
@@ -744,11 +712,9 @@ export interface Eventbasedswitchstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
-
 export type Eventcondition /* Switch state data event condition */ =
   | Transitioneventcondition
-  | /* Switch state data event condition */ Enddeventcondition;
-
+  | /* Switch state data event condition */ Endeventcondition;
 export interface Eventdatafilter {
   /**
    * If set to false, event payload is not added/merged to state data. In this case 'data' and 'toStateData' should be ignored. Default is true.
@@ -763,7 +729,6 @@ export interface Eventdatafilter {
    */
   toStateData?: string;
 }
-
 export interface Eventdef {
   /**
    * Unique event name
@@ -797,7 +762,6 @@ export interface Eventdef {
    */
   metadata?: /* Metadata information */ Metadata;
 }
-
 /**
  * Event References
  */
@@ -805,17 +769,17 @@ export interface Eventref {
   /**
    * Reference to the unique name of a 'produced' event definition
    */
-  triggerEventRef: string;
+  produceEventRef: string;
   /**
    * Reference to the unique name of a 'consumed' event definition
    */
-  resultEventRef: string;
+  consumeEventRef?: string;
   /**
    * Maximum amount of time (ISO 8601 format) to wait for the result event. If not defined it should default to the actionExecutionTimeout
    */
-  resultEventTimeout?: string;
+  consumeEventTimeout?: string;
   /**
-   * If string type, an expression which selects parts of the states data output to become the data (payload) of the event referenced by 'triggerEventRef'. If object type, a custom object to become the data (payload) of the event referenced by 'triggerEventRef'.
+   * If string type, an expression which selects parts of the states data output to become the data (payload) of the event referenced by 'produceEventRef'. If object type, a custom object to become the data (payload) of the event referenced by 'produceEventRef'.
    */
   data?:
     | string
@@ -828,12 +792,7 @@ export interface Eventref {
   contextAttributes?: {
     [name: string]: string;
   };
-  /**
-   * Specifies if the function should be invoked sync or async. Default is sync.
-   */
-  invoke?: 'sync' | 'async';
 }
-
 export type Events = string /* uri */ | [Eventdef, ...Eventdef[]];
 /**
  * This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel
@@ -841,10 +800,6 @@ export type Events = string /* uri */ | [Eventdef, ...Eventdef[]];
 export type Eventstate =
   /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */
   | {
-      /**
-       * Unique State id
-       */
-      id?: string;
       /**
        * State name
        */
@@ -865,8 +820,8 @@ export type Eventstate =
        * State specific timeouts
        */
       timeouts?: {
-        stateExecTimeout?: StateExecTimeout;
-        actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+        stateExecTimeout?: /* Workflow state execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+        actionExecTimeout?: /* Action execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
         eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
       };
       stateDataFilter?: Statedatafilter;
@@ -884,10 +839,6 @@ export type Eventstate =
     }
   | {
       /**
-       * Unique State id
-       */
-      id?: string;
-      /**
        * State name
        */
       name: string;
@@ -907,8 +858,8 @@ export type Eventstate =
        * State specific timeouts
        */
       timeouts?: {
-        stateExecTimeout?: StateExecTimeout;
-        actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+        stateExecTimeout?: /* Workflow state execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+        actionExecTimeout?: /* Action execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
         eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
       };
       stateDataFilter?: Statedatafilter;
@@ -924,15 +875,21 @@ export type Eventstate =
       compensatedBy?: string;
       metadata?: /* Metadata information */ Metadata;
     };
-
+export interface Extension {
+  /**
+   * Unique extension id
+   */
+  extensionId: string;
+  /**
+   * URI to a resource containing this workflow extension definitions (json or yaml)
+   */
+  resource: string;
+}
+export type Extensions = string /* uri */ | [Extension, ...Extension[]];
 /**
  * Execute a set of defined actions or workflows for each element of a data array
  */
 export interface Foreachstate {
-  /**
-   * Unique State id
-   */
-  id?: string;
   /**
    * State name
    */
@@ -969,8 +926,8 @@ export interface Foreachstate {
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: StateExecTimeout;
-    actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+    stateExecTimeout?: /* Workflow state execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    actionExecTimeout?: /* Action execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
   };
   /**
    * State data filter
@@ -998,7 +955,6 @@ export interface Foreachstate {
   mode?: 'sequential' | 'parallel';
   metadata?: /* Metadata information */ Metadata;
 }
-
 export interface Function {
   /**
    * Unique function name
@@ -1012,13 +968,20 @@ export interface Function {
    * Defines the function type. Is either `rest`, `asyncapi, `rpc`, `graphql`, `odata`, `expression`, or `custom`. Default is `rest`
    */
   type?: 'rest' | 'asyncapi' | 'rpc' | 'graphql' | 'odata' | 'expression' | 'custom';
-  /**
-   * References an auth definition name to be used to access to resource defined in the operation parameter
-   */
-  authRef?: string;
+  authRef?:
+    | string
+    | {
+        /**
+         * References an auth definition to be used to access the resource defined in the operation parameter
+         */
+        resource: string;
+        /**
+         * References an auth definition to be used to invoke the operation
+         */
+        invocation?: string;
+      };
   metadata?: /* Metadata information */ Metadata;
 }
-
 export type Functionref =
   | string
   | {
@@ -1042,15 +1005,10 @@ export type Functionref =
       invoke?: 'sync' | 'async';
     };
 export type Functions = string /* uri */ | [Function, ...Function[]];
-
 /**
  * Inject static data into state data. Does not perform any actions
  */
 export interface Injectstate {
-  /**
-   * Unique state id
-   */
-  id?: string;
   /**
    * State name
    */
@@ -1070,12 +1028,6 @@ export interface Injectstate {
     [key: string]: any;
   };
   /**
-   * State specific timeouts
-   */
-  timeouts?: {
-    stateExecTimeout?: StateExecTimeout;
-  };
-  /**
    * State data filter
    */
   stateDataFilter?: Statedatafilter;
@@ -1093,64 +1045,62 @@ export interface Injectstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
-
 /**
  * Metadata information
  */
 export interface Metadata {
   [name: string]: string;
 }
-
-export type Oauth2propsdef =
-  | string
-  | {
-      /**
-       * String or a workflow expression. Contains the authority information
-       */
-      authority?: string;
-      /**
-       * Defines the grant type
-       */
-      grantType: 'password' | 'clientCredentials' | 'tokenExchange';
-      /**
-       * String or a workflow expression. Contains the client identifier
-       */
-      clientId: string;
-      /**
-       * Workflow secret or a workflow expression. Contains the client secret
-       */
-      clientSecret?: string;
-      /**
-       * Array containing strings or workflow expressions. Contains the OAuth2 scopes
-       */
-      scopes?: [string, ...string[]];
-      /**
-       * String or a workflow expression. Contains the user name. Used only if grantType is 'resourceOwner'
-       */
-      username?: string;
-      /**
-       * String or a workflow expression. Contains the user password. Used only if grantType is 'resourceOwner'
-       */
-      password?: string;
-      /**
-       * Array containing strings or workflow expressions. Contains the OAuth2 audiences
-       */
-      audiences?: [string, ...string[]];
-      /**
-       * String or a workflow expression. Contains the subject token
-       */
-      subjectToken?: string;
-      /**
-       * String or a workflow expression. Contains the requested subject
-       */
-      requestedSubject?: string;
-      /**
-       * String or a workflow expression. Contains the requested issuer
-       */
-      requestedIssuer?: string;
-      metadata?: /* Metadata information */ Metadata;
-    };
-
+/**
+ * OAuth2 information
+ */
+export interface Oauth2propsdef {
+  /**
+   * String or a workflow expression. Contains the authority information
+   */
+  authority?: string;
+  /**
+   * Defines the grant type
+   */
+  grantType: 'password' | 'clientCredentials' | 'tokenExchange';
+  /**
+   * String or a workflow expression. Contains the client identifier
+   */
+  clientId: string;
+  /**
+   * Workflow secret or a workflow expression. Contains the client secret
+   */
+  clientSecret?: string;
+  /**
+   * Array containing strings or workflow expressions. Contains the OAuth2 scopes
+   */
+  scopes?: [string, ...string[]];
+  /**
+   * String or a workflow expression. Contains the user name. Used only if grantType is 'resourceOwner'
+   */
+  username?: string;
+  /**
+   * String or a workflow expression. Contains the user password. Used only if grantType is 'resourceOwner'
+   */
+  password?: string;
+  /**
+   * Array containing strings or workflow expressions. Contains the OAuth2 audiences
+   */
+  audiences?: [string, ...string[]];
+  /**
+   * String or a workflow expression. Contains the subject token
+   */
+  subjectToken?: string;
+  /**
+   * String or a workflow expression. Contains the requested subject
+   */
+  requestedSubject?: string;
+  /**
+   * String or a workflow expression. Contains the requested issuer
+   */
+  requestedIssuer?: string;
+  metadata?: /* Metadata information */ Metadata;
+}
 export interface Onevents {
   /**
    * References one or more unique event names in the defined workflow events
@@ -1169,15 +1119,10 @@ export interface Onevents {
    */
   eventDataFilter?: Eventdatafilter;
 }
-
 /**
  * Defines actions be performed. Does not wait for incoming events
  */
 export interface Operationstate {
-  /**
-   * Unique State id
-   */
-  id?: string;
   /**
    * State name
    */
@@ -1206,8 +1151,8 @@ export interface Operationstate {
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: StateExecTimeout;
-    actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+    stateExecTimeout?: /* Workflow state execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    actionExecTimeout?: /* Action execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
   };
   /**
    * States error handling definitions
@@ -1227,15 +1172,10 @@ export interface Operationstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
-
 /**
  * Consists of a number of states that are executed in parallel
  */
 export interface Parallelstate {
-  /**
-   * Unique State id
-   */
-  id?: string;
   /**
    * State name
    */
@@ -1256,8 +1196,8 @@ export interface Parallelstate {
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: StateExecTimeout;
-    branchExecTimeout?: /* Single branch execution timeout duration (ISO 8601 duration format) */ BranchExecTimeout;
+    stateExecTimeout?: /* Workflow state execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+    branchExecTimeout?: /* Branch execution timeout duration (ISO 8601 duration format) */ BranchExecTimeout;
   };
   /**
    * Branch Definitions
@@ -1289,7 +1229,6 @@ export interface Parallelstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
-
 /**
  * Produce an event and set its data
  */
@@ -1313,9 +1252,7 @@ export interface Produceeventdef {
     [name: string]: string;
   };
 }
-
 export type Retries = string /* uri */ | [Retrydef, ...Retrydef[]];
-
 export interface Retrydef {
   /**
    * Unique retry strategy name
@@ -1346,7 +1283,6 @@ export interface Retrydef {
    */
   jitter?: number | string;
 }
-
 export type Schedule =
   | string
   | /* Start state schedule definition */ (
@@ -1405,85 +1341,60 @@ export type Sleep =
        */
       after: string;
     };
-
 /**
  * Causes the workflow execution to sleep for a specified duration
  */
-export interface Sleepstate {
-  /**
-   * Unique State id
-   */
-  id?: string;
-  /**
-   * State name
-   */
-  name?: string;
-  /**
-   * State type
-   */
-  type?: 'sleep';
-  /**
-   * State end definition
-   */
-  end?: End;
-  /**
-   * State data filter
-   */
-  stateDataFilter?: Statedatafilter;
-  /**
-   * Duration (ISO 8601 duration format) to sleep
-   */
-  duration?: string;
-  /**
-   * State specific timeouts
-   */
-  timeouts?: {
-    stateExecTimeout?: StateExecTimeout;
-  };
-  /**
-   * States error handling definitions
-   */
-  onErrors?: Error[];
-  /**
-   * Next transition of the workflow after the workflow sleep
-   */
-  transition?: Transition;
-  /**
-   * Unique Name of a workflow state which is responsible for compensation of this state
-   */
-  compensatedBy?: string;
-  /**
-   * If true, this state is used to compensate another state. Default is false
-   */
-  usedForCompensation?: boolean;
-  metadata?: /* Metadata information */ Metadata;
-}
-
+export type Sleepstate /* Causes the workflow execution to sleep for a specified duration */ =
+  | {
+      /**
+       * State name
+       */
+      name: string;
+      /**
+       * State type
+       */
+      type: 'sleep';
+      end: End;
+      /**
+       * Duration (ISO 8601 duration format) to sleep
+       */
+      duration: string;
+      transition?: Transition;
+      metadata?: /* Metadata information */ Metadata;
+    }
+  | {
+      /**
+       * State name
+       */
+      name: string;
+      /**
+       * State type
+       */
+      type: 'sleep';
+      end?: End;
+      /**
+       * Duration (ISO 8601 duration format) to sleep
+       */
+      duration: string;
+      transition: Transition;
+      metadata?: /* Metadata information */ Metadata;
+    };
 export type Startdef =
   | string
   | {
       /**
        * Name of the starting workflow state
        */
-      stateName: string;
+      stateName?: string;
       /**
        * Define the time/repeating intervals or cron at which workflow instances should be automatically started.
        */
       schedule: Schedule;
     };
-export type StateExecTimeout =
-  | string
-  | {
-      /**
-       * Single state execution timeout, not including retries (ISO 8601 duration format)
-       */
-      single?: string;
-      /**
-       * Total state execution timeout, including retries (ISO 8601 duration format)
-       */
-      total: string;
-    };
-
+/**
+ * Workflow state execution timeout duration (ISO 8601 duration format)
+ */
+export type StateExecTimeout = string;
 export interface Statedatafilter {
   /**
    * Workflow expression to filter the state data input
@@ -1494,7 +1405,6 @@ export interface Statedatafilter {
    */
   output?: string;
 }
-
 export type Subflowref =
   | string
   | {
@@ -1505,7 +1415,7 @@ export type Subflowref =
       /**
        * Version of the sub-workflow to be invoked
        */
-      version?: string;
+      version?: string; // ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$
       /**
        * If invoke is 'async', specifies how subflow execution should behave when parent workflow completes. Default is 'terminate'
        */
@@ -1522,9 +1432,9 @@ export type Timeouts =
   | string /* uri */
   | {
       workflowExecTimeout?: WorkflowExecTimeout;
-      stateExecTimeout?: StateExecTimeout;
-      actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
-      branchExecTimeout?: /* Single branch execution timeout duration (ISO 8601 duration format) */ BranchExecTimeout;
+      stateExecTimeout?: /* Workflow state execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
+      actionExecTimeout?: /* Action execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+      branchExecTimeout?: /* Branch execution timeout duration (ISO 8601 duration format) */ BranchExecTimeout;
       eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
     };
 export type Transition =
@@ -1543,7 +1453,6 @@ export type Transition =
        */
       compensate?: boolean;
     };
-
 /**
  * Switch state data based condition
  */
@@ -1562,7 +1471,6 @@ export interface Transitiondatacondition {
   transition: Transition;
   metadata?: /* Metadata information */ Metadata;
 }
-
 /**
  * Switch state data event condition
  */
@@ -1585,7 +1493,6 @@ export interface Transitioneventcondition {
   eventDataFilter?: Eventdatafilter;
   metadata?: /* Metadata information */ Metadata;
 }
-
 export type WorkflowExecTimeout =
   | string
   | {

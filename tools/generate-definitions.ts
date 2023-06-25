@@ -96,7 +96,7 @@ const generate = async (source: string, dest: string, additionnalSchemas: string
     await reset(destDir);
     await writeFile(dest, fileHeader + generatedTS);
     await writeFile(path.resolve(destDir, 'index.ts'), fileHeader + "export * as Specification from './workflow';");
-    const validatorsDest = path.resolve(path.dirname(dest), '../validation/validators-paths.ts');
+    const validatorsDest = path.resolve(path.dirname(dest), '../../validation/validators-paths.ts');
     const $id = $refParser.schema.$id;
     const baseUrl = path.dirname($id);
     await createValidatorsPaths(validatorsDest, known$Refs, baseUrl);

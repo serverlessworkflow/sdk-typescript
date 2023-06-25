@@ -15,32 +15,20 @@
  */
 
 import { End } from './end';
-import { Error } from './error';
 import { Metadata } from './metadata';
-import { Statedatafilter } from './statedatafilter';
 import { Transition } from './transition';
 import {
   cleanSourceModelProperty,
   normalizeEnd,
-  normalizeOnErrors,
   normalizeTransition,
-  normalizeUsedForCompensation,
   overwriteEnd,
   overwriteMetadata,
-  overwriteOnErrors,
-  overwriteStateDataFilter,
-  overwriteTimeoutWithStateExecTimeout,
   overwriteTransition,
   setEndValueIfNoTransition,
 } from './utils';
-import { StateExecTimeout } from './stateExecTimeout';
 
 export class Sleepstate {
   sourceModel?: Sleepstate;
-  /**
-   * Unique State id
-   */
-  id?: string;
   /**
    * State name
    */
@@ -48,41 +36,15 @@ export class Sleepstate {
   /**
    * State type
    */
-  type?: 'sleep';
-  /**
-   * State end definition
-   */
-  end?: boolean | End;
-  /**
-   * State data filter
-   */
-  stateDataFilter?: Statedatafilter;
+  type: 'sleep';
+  end?: End;
   /**
    * Duration (ISO 8601 duration format) to sleep
    */
   duration?: string;
-  /**
-   * State specific timeouts
-   */
-  timeouts?: {
-    stateExecTimeout?: StateExecTimeout;
-  };
-  /**
-   * States error handling definitions
-   */
-  onErrors?: Error[];
-  /**
-   * Next transition of the workflow after the workflow sleep
-   */
+
   transition?: string | Transition;
-  /**
-   * Unique Name of a workflow state which is responsible for compensation of this state
-   */
-  compensatedBy?: string;
-  /**
-   * If true, this state is used to compensate another state. Default is false
-   */
-  usedForCompensation?: boolean;
+
   metadata?: /* Metadata information */ Metadata;
 
   constructor(model: any) {
@@ -92,14 +54,10 @@ export class Sleepstate {
       id: undefined,
       name: undefined,
       type: 'sleep',
-      usedForCompensation: false,
     };
     Object.assign(this, defaultModel, model);
 
     overwriteEnd(this);
-    overwriteStateDataFilter(this);
-    overwriteTimeoutWithStateExecTimeout(this);
-    overwriteOnErrors(this);
     overwriteTransition(this);
     overwriteMetadata(this);
   }
@@ -112,9 +70,7 @@ export class Sleepstate {
     const clone = new Sleepstate(this);
 
     normalizeEnd(clone);
-    normalizeOnErrors(clone);
     normalizeTransition(clone);
-    normalizeUsedForCompensation(clone, this.sourceModel);
     setEndValueIfNoTransition(clone);
 
     cleanSourceModelProperty(clone);

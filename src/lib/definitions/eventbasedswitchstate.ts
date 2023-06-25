@@ -29,17 +29,12 @@ import {
   overwriteMetadata,
   overwriteOnErrors,
   overwriteStateDataFilter,
-  overwriteTimeoutWithStateExecTimeout,
+  overwritePropertyAsPlainType,
 } from './utils';
-import { Eventcondition, EventTimeout } from './types';
-import { StateExecTimeout } from './stateExecTimeout';
+import { Eventcondition, EventTimeout, StateExecTimeout } from './types';
 
 export class Eventbasedswitchstate {
   sourceModel?: Eventbasedswitchstate;
-  /**
-   * Unique State id
-   */
-  id?: string;
   /**
    * State name
    */
@@ -56,7 +51,7 @@ export class Eventbasedswitchstate {
    * State specific timeouts
    */
   timeouts?: {
-    stateExecTimeout?: StateExecTimeout;
+    stateExecTimeout?: /* Workflow state execution timeout duration (ISO 8601 duration format) */ StateExecTimeout;
     eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
   };
   /**
@@ -88,7 +83,7 @@ export class Eventbasedswitchstate {
     Object.assign(this, defaultModel, model);
 
     overwriteStateDataFilter(this);
-    overwriteTimeoutWithStateExecTimeout(this);
+    overwritePropertyAsPlainType('timeouts', this);
     overwriteEventConditions(this);
     overwriteOnErrors(this);
     overwriteDefaultCondition(this);
