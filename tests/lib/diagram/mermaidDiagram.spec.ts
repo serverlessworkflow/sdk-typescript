@@ -22,38 +22,38 @@ describe('MermaidDiagram', () => {
     const jsonSource = fs.readFileSync('./tests/examples/jobmonitoring.json', 'utf8');
     const actual = new MermaidDiagram(Specification.Workflow.fromSource(jsonSource)).sourceCode();
     expect(actual).toBe(`stateDiagram-v2
-SubmitJob : SubmitJob
+SubmitJob : Submit Job
 SubmitJob : type = Operation State
 SubmitJob : Action mode = sequential
 SubmitJob : Num. of actions = 1
 [*] --> SubmitJob
 SubmitJob --> WaitForCompletion
 
-WaitForCompletion : WaitForCompletion
+WaitForCompletion : Wait For Completion
 WaitForCompletion : type = Sleep State
 WaitForCompletion : Duration = PT5S
 WaitForCompletion --> GetJobStatus
 
-GetJobStatus : GetJobStatus
+GetJobStatus : Get Job Status
 GetJobStatus : type = Operation State
 GetJobStatus : Action mode = sequential
 GetJobStatus : Num. of actions = 1
 GetJobStatus --> DetermineCompletion
 
-DetermineCompletion : DetermineCompletion
+DetermineCompletion : Determine Completion
 DetermineCompletion : type = Switch State
 DetermineCompletion : Condition type = data-based
 DetermineCompletion --> JobSucceeded : \${ .jobStatus == "SUCCEEDED" }
 DetermineCompletion --> JobFailed : \${ .jobStatus == "FAILED" }
 DetermineCompletion --> WaitForCompletion : default
 
-JobSucceeded : JobSucceeded
+JobSucceeded : Job Succeeded
 JobSucceeded : type = Operation State
 JobSucceeded : Action mode = sequential
 JobSucceeded : Num. of actions = 1
 JobSucceeded --> [*]
 
-JobFailed : JobFailed
+JobFailed : Job Failed
 JobFailed : type = Operation State
 JobFailed : Action mode = sequential
 JobFailed : Num. of actions = 1
@@ -65,22 +65,22 @@ JobFailed --> [*]`);
     const actual = new MermaidDiagram(Specification.Workflow.fromSource(jsonSource)).sourceCode();
 
     expect(actual).toBe(`stateDiagram-v2
-Item_Purchase : Item Purchase
-Item_Purchase : type = Event State
-[*] --> Item_Purchase
-Item_Purchase --> Cancel_Purchase : compensated by
-Item_Purchase --> [*]
+ItemPurchase : Item Purchase
+ItemPurchase : type = Event State
+[*] --> ItemPurchase
+ItemPurchase --> CancelPurchase : compensated by
+ItemPurchase --> [*]
 
-Cancel_Purchase : Cancel Purchase
-Cancel_Purchase : type = Operation State
-Cancel_Purchase : usedForCompensation
-Cancel_Purchase : Action mode = sequential
-Cancel_Purchase : Num. of actions = 1
-Cancel_Purchase --> Send_confirmation_purchase_cancelled
+CancelPurchase : Cancel Purchase
+CancelPurchase : type = Operation State
+CancelPurchase : usedForCompensation
+CancelPurchase : Action mode = sequential
+CancelPurchase : Num. of actions = 1
+CancelPurchase --> SendConfirmationPurchaseCancelled
 
-Send_confirmation_purchase_cancelled : Send confirmation purchase cancelled
-Send_confirmation_purchase_cancelled : type = Operation State
-Send_confirmation_purchase_cancelled : Action mode = sequential
-Send_confirmation_purchase_cancelled : Num. of actions = 1`);
+SendConfirmationPurchaseCancelled : Send Confirmation Purchase Cancelled
+SendConfirmationPurchaseCancelled : type = Operation State
+SendConfirmationPurchaseCancelled : Action mode = sequential
+SendConfirmationPurchaseCancelled : Num. of actions = 1`);
   });
 });

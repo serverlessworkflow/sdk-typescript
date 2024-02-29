@@ -43,7 +43,7 @@ describe('mermaidState', () => {
             }`)
         )
       ).sourceCode()
-    ).toBe(`ParallelExec : ParallelExec
+    ).toBe(`ParallelExec : Parallel Exec
 ParallelExec : type = Parallel State
 ParallelExec : Completion type = allOf
 ParallelExec : Num. of branches = 2
@@ -72,7 +72,7 @@ ParallelExec --> [*]`);
         }`)
     );
     const mermaidState = new MermaidState(eventbasedswitch);
-    expect(mermaidState.sourceCode()).toBe(`CheckVisaStatus : CheckVisaStatus
+    expect(mermaidState.sourceCode()).toBe(`CheckVisaStatus : Check Visa Status
 CheckVisaStatus : type = Switch State
 CheckVisaStatus : Condition type = event-based
 CheckVisaStatus --> HandleApprovedVisa : visaApprovedEvent
@@ -101,7 +101,7 @@ CheckVisaStatus --> HandleNoVisaDecision : default`);
         }`)
     );
     const mermaidState = new MermaidState(databasedswitch);
-    expect(mermaidState.sourceCode()).toBe(`CheckApplication : CheckApplication
+    expect(mermaidState.sourceCode()).toBe(`CheckApplication : Check Application
 CheckApplication : type = Switch State
 CheckApplication : Condition type = data-based
 CheckApplication --> StartApplication : \${ .applicants | .age >= 18 }
@@ -130,7 +130,7 @@ CheckApplication --> RejectApplication : default`);
     }`)
     );
     const mermaidState = new MermaidState(databasedswitch);
-    expect(mermaidState.sourceCode()).toBe(`CheckApplication : CheckApplication
+    expect(mermaidState.sourceCode()).toBe(`CheckApplication : Check Application
 CheckApplication : type = Switch State
 CheckApplication : Condition type = data-based
 CheckApplication --> StartApplication : \${ .applicants | .age >= 18 }
@@ -160,7 +160,7 @@ CheckApplication --> StartApplication : default`);
     }`)
     );
     const mermaidState = new MermaidState(databasedswitch);
-    expect(mermaidState.sourceCode()).toBe(`GreetPerson : GreetPerson
+    expect(mermaidState.sourceCode()).toBe(`GreetPerson : Greet Person
 GreetPerson : type = Operation State
 GreetPerson : Num. of actions = 1
 GreetPerson --> [*]`);
@@ -191,7 +191,7 @@ GreetPerson --> [*]`);
     }`)
     );
     const mermaidState = new MermaidState(states);
-    expect(mermaidState.sourceCode()).toBe(`SubmitJob : SubmitJob
+    expect(mermaidState.sourceCode()).toBe(`SubmitJob : Submit Job
 SubmitJob : type = Operation State
 SubmitJob : Action mode = sequential
 SubmitJob : Num. of actions = 1
@@ -208,7 +208,7 @@ SubmitJob --> WaitForCompletion`);
     }`)
     );
     const mermaidState = new MermaidState(states);
-    expect(mermaidState.sourceCode()).toBe(`WaitForCompletion : WaitForCompletion
+    expect(mermaidState.sourceCode()).toBe(`WaitForCompletion : Wait For Completion
 WaitForCompletion : type = Sleep State
 WaitForCompletion : Duration = PT5S
 WaitForCompletion --> GetJobStatus`);
@@ -241,7 +241,7 @@ WaitForCompletion --> GetJobStatus`);
     }`)
     );
     const mermaidState = new MermaidState(states, true);
-    expect(mermaidState.sourceCode()).toBe(`ProvisionOrdersState : ProvisionOrdersState
+    expect(mermaidState.sourceCode()).toBe(`ProvisionOrdersState : Provision Orders State
 ProvisionOrdersState : type = Foreach State
 ProvisionOrdersState : Input collection = \${ .orders }
 ProvisionOrdersState : Num. of actions = 1
@@ -270,7 +270,7 @@ ProvisionOrdersState --> [*] : Produced event = [provisioningCompleteEvent]`);
         }`)
     );
     const mermaidState = new MermaidState(states, true);
-    expect(mermaidState.sourceCode()).toBe(`CheckCredit : CheckCredit
+    expect(mermaidState.sourceCode()).toBe(`CheckCredit : Check Credit
 CheckCredit : type = Callback State
 CheckCredit : Callback function = callCreditCheckMicroservice
 CheckCredit : Callback event = CreditCheckCompletedEvent
@@ -287,12 +287,12 @@ CheckCredit --> EvaluateDecision`);
         }`)
     );
     const mermaidState = new MermaidState(states);
-    expect(mermaidState.sourceCode()).toBe(`CheckCredit : CheckCredit
+    expect(mermaidState.sourceCode()).toBe(`CheckCredit : Check Credit
 CheckCredit : type = Callback State
 CheckCredit --> EvaluateDecision`);
   });
 
-  it(`should convert white spaces with underscore to create the state key`, () => {
+  it(`should remove white spaces when creating the state key`, () => {
     const databasedswitch = new Specification.Databasedswitchstate(
       JSON.parse(`{
       "type":"switch",
@@ -313,11 +313,40 @@ CheckCredit --> EvaluateDecision`);
     }`)
     );
     const mermaidState = new MermaidState(databasedswitch);
-    expect(mermaidState.sourceCode()).toBe(`Check_Application : Check Application
-Check_Application : type = Switch State
-Check_Application : Condition type = data-based
-Check_Application --> Start_Application : \${ .applicants | .age >= 18 }
-Check_Application --> [*] : \${ .applicants | .age < 18 }
-Check_Application --> Start_Application : default`);
+    expect(mermaidState.sourceCode()).toBe(`CheckApplication : Check Application
+CheckApplication : type = Switch State
+CheckApplication : Condition type = data-based
+CheckApplication --> StartApplication : \${ .applicants | .age >= 18 }
+CheckApplication --> [*] : \${ .applicants | .age < 18 }
+CheckApplication --> StartApplication : default`);
+  });
+
+  it(`should remove dashes when creating the state key`, () => {
+    const databasedswitch = new Specification.Databasedswitchstate(
+      JSON.parse(`{
+      "type":"switch",
+      "name":"check-application",
+      "dataConditions": [
+        {
+          "condition": "\${ .applicants | .age >= 18 }",
+          "transition": "start-application"
+        },
+        {
+          "condition": "\${ .applicants | .age < 18 }",
+          "end": true
+        }
+      ],
+      "defaultCondition": {
+        "transition": "start-application"
+      }
+    }`)
+    );
+    const mermaidState = new MermaidState(databasedswitch);
+    expect(mermaidState.sourceCode()).toBe(`CheckApplication : Check Application
+CheckApplication : type = Switch State
+CheckApplication : Condition type = data-based
+CheckApplication --> StartApplication : \${ .applicants | .age >= 18 }
+CheckApplication --> [*] : \${ .applicants | .age < 18 }
+CheckApplication --> StartApplication : default`);
   });
 });
