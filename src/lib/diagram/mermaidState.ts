@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { Specification } from '../definitions';
-import { isObject } from '../utils';
+import { humanCase, isObject, pascalCase } from '../utils';
 
 export class MermaidState {
   constructor(
@@ -65,7 +65,7 @@ export class MermaidState {
   }
 
   private stateKeyDiagram(name: string | undefined) {
-    return name?.replace(/ /g, '_');
+    return pascalCase(name || '');
   }
 
   private startTransition() {
@@ -373,7 +373,9 @@ export class MermaidState {
   }
 
   private definitionName() {
-    return this.stateKeyDiagram(this.state.name) + ' : ' + this.state.name;
+    const key = this.stateKeyDiagram(this.state.name);
+    const label = humanCase(key, true);
+    return key + ' : ' + label;
   }
 
   private transitionDescription(

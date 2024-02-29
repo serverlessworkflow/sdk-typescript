@@ -49,3 +49,94 @@ export const isObject = (value: any): boolean => {
   const type = typeof value;
   return type === 'object';
 };
+
+/**
+ * Represents the options used to convert string to pascal case or camel case
+ */
+export interface CaseConvertionOptions {
+  /** Keep dashes (-) characters */
+  keepDashes: boolean;
+  /** Capitalize after dashes (-) characters, if kept */
+  capitalizeAfterDashes: boolean;
+  /** Keep underscores (_) characters */
+  keepUnderscores: boolean;
+  /** Capitalize after underscores (_) characters, if kept */
+  capitalizeAfterUnderscores: boolean;
+  /** Keep dots (.) characters */
+  keepDots: boolean;
+  /** Capitalize after dots (.) characters, if kept */
+  capitalizeAfterDots: boolean;
+}
+
+/**
+ * Holds default convertion options
+ */
+export const defaultConvertionOptions = {
+  keepDashes: false,
+  capitalizeAfterDashes: false,
+  keepUnderscores: false,
+  capitalizeAfterUnderscores: false,
+  keepDots: true,
+  capitalizeAfterDots: true,
+} as CaseConvertionOptions;
+
+/**
+ * Converts a string to pascal case (PascalCase)
+ * @param source string The string to convert to pascal case
+ * @param convertionOptions CaseConvertionOptions Defaults: keepDashes: false, capitalizeAfterDashes: false, keepUnderscores: false, capitalizeAfterUnderscores: false, keepDots: true, capitalizeAfterDots: true
+ * @returns string The pascal case string
+ */
+export const pascalCase = (
+  source: string,
+  convertionOptions: CaseConvertionOptions = defaultConvertionOptions
+): string => {
+  if (!source) return '';
+  let delimiter = '';
+  if (!convertionOptions.keepDashes) {
+    source = source.replace(/-+/g, ' ');
+  } else if (convertionOptions.capitalizeAfterDashes) {
+    delimiter += '-';
+  }
+  if (!convertionOptions.keepUnderscores) {
+    source = source.replace(/_+/g, ' ');
+  } else if (convertionOptions.capitalizeAfterUnderscores) {
+    delimiter += '_';
+  }
+  if (!convertionOptions.keepDots) {
+    source = source.replace(/\.+/g, ' ');
+  } else if (convertionOptions.capitalizeAfterDots) {
+    delimiter += '\\.';
+  }
+  if (delimiter) {
+    source = source.replace(
+      new RegExp('([' + delimiter + '])+(.)(\\w+)', 'g'),
+      ($1, $2, $3, $4) => `${$2}${$3.toUpperCase()}${$4.toLowerCase()}`
+    );
+  }
+  return source
+    .replace(/\s+(.)(\w+)/g, ($1, $2, $3) => `${$2.toUpperCase()}${$3.toLowerCase()}`)
+    .replace(/\s/g, '')
+    .replace(/\w/, (s) => s.toUpperCase());
+};
+
+/**
+ * Converts a PasalCase/camelCase string into a human readable string
+ * @param source string The string to convert
+ * @param keepCapitalLetters boolean If capital letters should be kept
+ * @returns string The converted string
+ */
+export const humanCase = (source: string, keepCapitalLetters: boolean = false): string => {
+  if (!source) return '';
+  let transformable = source.trim();
+  transformable =
+    transformable[0].toUpperCase() +
+    transformable
+      .slice(1)
+      .replace(/([A-Z])/g, ' $1')
+      .replace(/\s+/g, ' ');
+  if (keepCapitalLetters) {
+    return transformable;
+  } else {
+    return transformable.toLowerCase();
+  }
+};
