@@ -1,1904 +1,1594 @@
 {
-  "$id": "https://serverlessworkflow.io/schemas/0.8/workflow.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Serverless Workflow specification - workflow schema",
+  "$id": "https://serverlessworkflow.io/schemas/1.0.0-alpha2/workflow.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Serverless Workflow DSL - Workflow Schema",
   "type": "object",
   "properties": {
-    "id": {
-      "type": "string",
-      "description": "Workflow unique identifier",
-      "minLength": 1
-    },
-    "key": {
-      "type": "string",
-      "description": "Domain-specific workflow identifier",
-      "minLength": 1
-    },
-    "name": {
-      "type": "string",
-      "description": "Workflow name",
-      "minLength": 1
-    },
-    "description": {
-      "type": "string",
-      "description": "Workflow description"
-    },
-    "version": {
-      "type": "string",
-      "description": "Workflow version",
-      "minLength": 1,
-      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
-    },
-    "annotations": {
-      "type": "array",
-      "description": "List of helpful terms describing the workflows intended purpose, subject areas, or other important qualities",
-      "minItems": 1,
-      "items": {
-        "type": "string"
-      },
-      "additionalItems": false
-    },
-    "dataInputSchema": {
-      "oneOf": [
-        {
-          "type": "string",
-          "description": "URI of the JSON Schema used to validate the workflow data input",
-          "minLength": 1
-        },
-        {
-          "type": "object",
-          "description": "Workflow data input schema definition",
-          "properties": {
-            "schema": {
-              "oneof": [
-                {
-                  "type": "string",
-                  "description": "URI of the JSON Schema used to validate the workflow data input",
-                  "minLength": 1
-                },
-                {
-                  "type": "object",
-                  "description": "The JSON Schema object used to validate the workflow data input",
-                  "$schema": "http://json-schema.org/draft-07/schema#"
-                }
-              ]
-            },
-            "failOnValidationErrors": {
-              "type": "boolean",
-              "default": true,
-              "description": "Determines if workflow execution should continue if there are validation errors"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "schema"
-          ]
-        }
-      ]
-    },
-    "secrets": {
-      "$ref": "secrets.json#/secrets"
-    },
-    "constants": {
-      "oneOf": [
-        {
-          "type": "string",
-          "format": "uri",
-          "description": "URI to a resource containing constants data (json or yaml)"
-        },
-        {
-          "type": "object",
-          "description": "Workflow constants data (object type)"
-        }
-      ]
-    },
-    "start": {
-      "$ref": "#/definitions/startdef"
-    },
-    "specVersion": {
-      "type": "string",
-      "description": "Serverless Workflow schema version",
-      "minLength": 1
-    },
-    "expressionLang": {
-      "type": "string",
-      "description": "Identifies the expression language used for workflow expressions. Default is 'jq'",
-      "default": "jq",
-      "minLength": 1
-    },
-    "timeouts": {
-      "$ref": "timeouts.json#/timeouts"
-    },
-    "errors": {
-      "$ref": "errors.json#/errors"
-    },
-    "keepActive": {
-      "type": "boolean",
-      "default": false,
-      "description": "If 'true', workflow instances is not terminated when there are no active execution paths. Instance can be terminated via 'terminate end definition' or reaching defined 'workflowExecTimeout'"
-    },
-    "metadata": {
-      "$ref": "common.json#/definitions/metadata"
-    },
-    "events": {
-      "$ref": "events.json#/events"
-    },
-    "functions": {
-      "$ref": "functions.json#/functions"
-    },
-    "autoRetries": {
-      "type": "boolean",
-      "default": false,
-      "description": "If set to true, actions should automatically be retried on unchecked errors. Default is false"
-    },
-    "retries": {
-      "$ref": "retries.json#/retries"
-    },
-    "auth": {
-      "$ref": "auth.json#/auth"
-    },
-    "extensions": {
-      "$ref": "workflowextensions.json#/extensions"
-    },
-    "states": {
-      "type": "array",
-      "description": "State definitions",
-      "items": {
-        "anyOf": [
-          {
-            "title": "Sleep State",
-            "$ref": "#/definitions/sleepstate"
-          },
-          {
-            "title": "Event State",
-            "$ref": "#/definitions/eventstate"
-          },
-          {
-            "title": "Operation State",
-            "$ref": "#/definitions/operationstate"
-          },
-          {
-            "title": "Parallel State",
-            "$ref": "#/definitions/parallelstate"
-          },
-          {
-            "title": "Switch State",
-            "$ref": "#/definitions/switchstate"
-          },
-          {
-            "title": "Inject State",
-            "$ref": "#/definitions/injectstate"
-          },
-          {
-            "title": "ForEach State",
-            "$ref": "#/definitions/foreachstate"
-          },
-          {
-            "title": "Callback State",
-            "$ref": "#/definitions/callbackstate"
-          }
-        ]
-      },
-      "additionalItems": false,
-      "minItems": 1
-    }
-  },
-  "oneOf": [
-    {
-      "required": [
-        "id",
-        "specVersion",
-        "states"
-      ]
-    },
-    {
-      "required": [
-        "key",
-        "specVersion",
-        "states"
-      ]
-    }
-  ],
-  "definitions": {
-    "sleep": {
+    "document": {
       "type": "object",
       "properties": {
-        "before": {
+        "dsl": {
           "type": "string",
-          "description": "Amount of time (ISO 8601 duration format) to sleep before function/subflow invocation. Does not apply if 'eventRef' is defined."
+          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+          "description": "The version of the DSL used by the workflow."
         },
-        "after": {
+        "namespace": {
           "type": "string",
-          "description": "Amount of time (ISO 8601 duration format) to sleep after function/subflow invocation. Does not apply if 'eventRef' is defined."
+          "pattern": "^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$",
+          "description": "The workflow's namespace."
+        },
+        "name": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$",
+          "description": "The workflow's name."
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+          "description": "The workflow's semantic version."
+        },
+        "title": {
+          "type": "string",
+          "description": "The workflow's title."
+        },
+        "summary": {
+          "type": "string",
+          "description": "The workflow's Markdown summary."
+        },
+        "tags": {
+          "type": "object",
+          "description": "A key/value mapping of the workflow's tags, if any.",
+          "additionalProperties": true
         }
       },
+      "required": [
+        "dsl",
+        "namespace",
+        "name",
+        "version"
+      ],
+      "description": "Documents the workflow"
+    },
+    "input": {
+      "$ref": "#/$defs/input",
+      "description": "Configures the workflow's input."
+    },
+    "use": {
+      "type": "object",
+      "properties": {
+        "authentications": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/authenticationPolicy"
+          },
+          "description": "The workflow's reusable authentication policies."
+        },
+        "errors": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/error"
+          },
+          "description": "The workflow's reusable errors."
+        },
+        "extensions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "minProperties": 1,
+            "maxProperties": 1,
+            "additionalProperties": {
+              "$ref": "#/$defs/extension"
+            }
+          },
+          "description": "The workflow's extensions."
+        },
+        "functions": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/task"
+          },
+          "description": "The workflow's reusable functions."
+        },
+        "retries": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/retryPolicy"
+          },
+          "description": "The workflow's reusable retry policies."
+        },
+        "secrets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The workflow's secrets."
+        }
+      },
+      "description": "Defines the workflow's reusable components."
+    },
+    "do": {
+      "description": "Defines the task(s) the workflow must perform",
+      "$ref": "#/$defs/taskList"
+    },
+    "timeout": {
+      "$ref": "#/$defs/timeout",
+      "description": "The workflow's timeout configuration, if any."
+    },
+    "output": {
+      "$ref": "#/$defs/output",
+      "description": "Configures the workflow's output."
+    },
+    "schedule": {
+      "type": "object",
+      "properties": {
+        "every": {
+          "$ref": "#/$defs/duration",
+          "description": "Specifies the duration of the interval at which the workflow should be executed."
+        },
+        "cron": {
+          "type": "string",
+          "description": "Specifies the schedule using a cron expression, e.g., '0 0 * * *' for daily at midnight.\""
+        },
+        "after": {
+          "$ref": "#/$defs/duration",
+          "description": "Specifies a delay duration that the workflow must wait before starting again after it completes."
+        },
+        "on": {
+          "$ref": "#/$defs/eventConsumptionStrategy",
+          "description": "Specifies the events that trigger the workflow execution."
+        }
+      },
+      "description": "Schedules the workflow"
+    }
+  },
+  "$defs": {
+    "taskList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "minProperties": 1,
+        "maxProperties": 1,
+        "additionalProperties": {
+          "$ref": "#/$defs/task"
+        }
+      }
+    },
+    "taskBase": {
+      "type": "object",
+      "properties": {
+        "if": {
+          "type": "string",
+          "description": "A runtime expression, if any, used to determine whether or not the task should be run."
+        },
+        "input": {
+          "$ref": "#/$defs/input",
+          "description": "Configure the task's input."
+        },
+        "output": {
+          "$ref": "#/$defs/output",
+          "description": "Configure the task's output."
+        },
+        "export": {
+          "$ref": "#/$defs/export",
+          "description": "Export task output to context."
+        },
+        "timeout": {
+          "$ref": "#/$defs/timeout",
+          "description": "The task's timeout configuration, if any."
+        },
+        "then": {
+          "$ref": "#/$defs/flowDirective",
+          "description": "The flow directive to be performed upon completion of the task."
+        }
+      }
+    },
+    "task": {
+      "unevaluatedProperties": false,
+      "oneOf": [
+        {
+          "$ref": "#/$defs/callTask"
+        },
+        {
+          "$ref": "#/$defs/doTask"
+        },
+        {
+          "$ref": "#/$defs/forkTask"
+        },
+        {
+          "$ref": "#/$defs/emitTask"
+        },
+        {
+          "$ref": "#/$defs/forTask"
+        },
+        {
+          "$ref": "#/$defs/listenTask"
+        },
+        {
+          "$ref": "#/$defs/raiseTask"
+        },
+        {
+          "$ref": "#/$defs/runTask"
+        },
+        {
+          "$ref": "#/$defs/setTask"
+        },
+        {
+          "$ref": "#/$defs/switchTask"
+        },
+        {
+          "$ref": "#/$defs/tryTask"
+        },
+        {
+          "$ref": "#/$defs/waitTask"
+        }
+      ]
+    },
+    "callTask": {
+      "oneOf": [
+        {
+          "title": "CallAsyncAPI",
+          "$ref": "#/$defs/taskBase",
+          "type": "object",
+          "required": [
+            "call",
+            "with"
+          ],
+          "unevaluatedProperties": false,
+          "properties": {
+            "call": {
+              "type": "string",
+              "const": "asyncapi"
+            },
+            "with": {
+              "type": "object",
+              "properties": {
+                "document": {
+                  "$ref": "#/$defs/externalResource",
+                  "description": "The document that defines the AsyncAPI operation to call."
+                },
+                "operationRef": {
+                  "type": "string",
+                  "description": "A reference to the AsyncAPI operation to call."
+                },
+                "server": {
+                  "type": "string",
+                  "description": "A a reference to the server to call the specified AsyncAPI operation on. If not set, default to the first server matching the operation's channel."
+                },
+                "message": {
+                  "type": "string",
+                  "description": "The name of the message to use. If not set, defaults to the first message defined by the operation."
+                },
+                "binding": {
+                  "type": "string",
+                  "description": "The name of the binding to use. If not set, defaults to the first binding defined by the operation."
+                },
+                "payload": {
+                  "type": "object",
+                  "description": "The payload to call the AsyncAPI operation with, if any."
+                },
+                "authentication": {
+                  "description": "The authentication policy, if any, to use when calling the AsyncAPI operation.",
+                  "oneOf": [
+                    {
+                      "$ref": "#/$defs/authenticationPolicy"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "document",
+                "operationRef"
+              ],
+              "additionalProperties": false,
+              "description": "Defines the AsyncAPI call to perform."
+            }
+          }
+        },
+        {
+          "title": "CallGRPC",
+          "$ref": "#/$defs/taskBase",
+          "type": "object",
+          "unevaluatedProperties": false,
+          "required": [
+            "call",
+            "with"
+          ],
+          "properties": {
+            "call": {
+              "type": "string",
+              "const": "grpc"
+            },
+            "with": {
+              "type": "object",
+              "properties": {
+                "proto": {
+                  "$ref": "#/$defs/externalResource",
+                  "description": "The proto resource that describes the GRPC service to call."
+                },
+                "service": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "The name of the GRPC service to call."
+                    },
+                    "host": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$",
+                      "description": "The hostname of the GRPC service to call."
+                    },
+                    "port": {
+                      "type": "integer",
+                      "min": 0,
+                      "max": 65535,
+                      "description": "The port number of the GRPC service to call."
+                    },
+                    "authentication": {
+                      "description": "The endpoint's authentication policy, if any.",
+                      "oneOf": [
+                        {
+                          "$ref": "#/$defs/authenticationPolicy"
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "host"
+                  ]
+                },
+                "method": {
+                  "type": "string",
+                  "description": "The name of the method to call on the defined GRPC service."
+                },
+                "arguments": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "description": "The arguments, if any, to call the method with."
+                }
+              },
+              "required": [
+                "proto",
+                "service",
+                "method"
+              ],
+              "additionalProperties": false,
+              "description": "Defines the GRPC call to perform."
+            }
+          }
+        },
+        {
+          "title": "CallHTTP",
+          "$ref": "#/$defs/taskBase",
+          "type": "object",
+          "unevaluatedProperties": false,
+          "required": [
+            "call",
+            "with"
+          ],
+          "properties": {
+            "call": {
+              "type": "string",
+              "const": "http"
+            },
+            "with": {
+              "type": "object",
+              "properties": {
+                "method": {
+                  "type": "string",
+                  "description": "The HTTP method of the HTTP request to perform."
+                },
+                "endpoint": {
+                  "description": "The HTTP endpoint to send the request to.",
+                  "oneOf": [
+                    {
+                      "$ref": "#/$defs/endpoint"
+                    },
+                    {
+                      "type": "string",
+                      "format": "uri-template"
+                    }
+                  ]
+                },
+                "headers": {
+                  "type": "object",
+                  "description": "A name/value mapping of the headers, if any, of the HTTP request to perform."
+                },
+                "body": {
+                  "description": "The body, if any, of the HTTP request to perform."
+                },
+                "output": {
+                  "type": "string",
+                  "enum": [
+                    "raw",
+                    "content",
+                    "response"
+                  ],
+                  "description": "The http call output format. Defaults to 'content'."
+                }
+              },
+              "required": [
+                "method",
+                "endpoint"
+              ],
+              "additionalProperties": false,
+              "description": "Defines the HTTP call to perform."
+            }
+          }
+        },
+        {
+          "title": "CallOpenAPI",
+          "$ref": "#/$defs/taskBase",
+          "type": "object",
+          "unevaluatedProperties": false,
+          "required": [
+            "call",
+            "with"
+          ],
+          "properties": {
+            "call": {
+              "type": "string",
+              "const": "openapi"
+            },
+            "with": {
+              "type": "object",
+              "properties": {
+                "document": {
+                  "$ref": "#/$defs/externalResource",
+                  "description": "The document that defines the OpenAPI operation to call."
+                },
+                "operationId": {
+                  "type": "string",
+                  "description": "The id of the OpenAPI operation to call."
+                },
+                "parameters": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "description": "A name/value mapping of the parameters of the OpenAPI operation to call."
+                },
+                "authentication": {
+                  "description": "The authentication policy, if any, to use when calling the OpenAPI operation.",
+                  "oneOf": [
+                    {
+                      "$ref": "#/$defs/authenticationPolicy"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "output": {
+                  "type": "string",
+                  "enum": [
+                    "raw",
+                    "content",
+                    "response"
+                  ],
+                  "description": "The http call output format. Defaults to 'content'."
+                }
+              },
+              "required": [
+                "document",
+                "operationId"
+              ],
+              "additionalProperties": false,
+              "description": "Defines the OpenAPI call to perform."
+            }
+          }
+        },
+        {
+          "title": "CallFunction",
+          "$ref": "#/$defs/taskBase",
+          "type": "object",
+          "unevaluatedProperties": false,
+          "required": [
+            "call"
+          ],
+          "properties": {
+            "call": {
+              "type": "string",
+              "not": {
+                "enum": [
+                  "asyncapi",
+                  "grpc",
+                  "http",
+                  "openapi"
+                ]
+              },
+              "description": "The name of the function to call."
+            },
+            "with": {
+              "type": "object",
+              "additionalProperties": true,
+              "description": "A name/value mapping of the parameters, if any, to call the function with."
+            }
+          }
+        }
+      ]
+    },
+    "forkTask": {
+      "description": "Allows workflows to execute multiple tasks concurrently and optionally race them against each other, with a single possible winner, which sets the task's output.",
+      "$ref": "#/$defs/taskBase",
+      "type": "object",
+      "unevaluatedProperties": false,
+      "required": [
+        "fork"
+      ],
+      "properties": {
+        "fork": {
+          "type": "object",
+          "required": [
+            "branches"
+          ],
+          "properties": {
+            "branches": {
+              "$ref": "#/$defs/taskList"
+            },
+            "compete": {
+              "description": "Indicates whether or not the concurrent tasks are racing against each other, with a single possible winner, which sets the composite task's output.",
+              "type": "boolean",
+              "default": false
+            }
+          }
+        }
+      }
+    },
+    "doTask": {
+      "description": "Allows to execute a list of tasks in sequence",
+      "$ref": "#/$defs/taskBase",
+      "type": "object",
+      "unevaluatedProperties": false,
+      "required": [
+        "do"
+      ],
+      "properties": {
+        "do": {
+          "$ref": "#/$defs/taskList"
+        }
+      }
+    },
+    "emitTask": {
+      "description": "Allows workflows to publish events to event brokers or messaging systems, facilitating communication and coordination between different components and services.",
+      "$ref": "#/$defs/taskBase",
+      "type": "object",
+      "required": [
+        "emit"
+      ],
+      "unevaluatedProperties": false,
+      "properties": {
+        "emit": {
+          "type": "object",
+          "properties": {
+            "event": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The event's unique identifier"
+                },
+                "source": {
+                  "type": "string",
+                  "format": "uri",
+                  "description": "Identifies the context in which an event happened"
+                },
+                "type": {
+                  "type": "string",
+                  "description": "This attribute contains a value describing the type of event related to the originating occurrence."
+                },
+                "time": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "subject": {
+                  "type": "string"
+                },
+                "datacontenttype": {
+                  "type": "string",
+                  "description": "Content type of data value. This attribute enables data to carry any type of content, whereby format and encoding might differ from that of the chosen event format."
+                },
+                "dataschema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              },
+              "required": [
+                "source",
+                "type"
+              ],
+              "additionalProperties": true
+            }
+          },
+          "required": [
+            "event"
+          ]
+        }
+      }
+    },
+    "forTask": {
+      "description": "Allows workflows to iterate over a collection of items, executing a defined set of subtasks for each item in the collection. This task type is instrumental in handling scenarios such as batch processing, data transformation, and repetitive operations across datasets.",
+      "$ref": "#/$defs/taskBase",
+      "type": "object",
+      "required": [
+        "for",
+        "do"
+      ],
+      "unevaluatedProperties": false,
+      "properties": {
+        "for": {
+          "type": "object",
+          "properties": {
+            "each": {
+              "type": "string",
+              "description": "The name of the variable used to store the current item being enumerated.",
+              "default": "item"
+            },
+            "in": {
+              "type": "string",
+              "description": "A runtime expression used to get the collection to enumerate."
+            },
+            "at": {
+              "type": "string",
+              "description": "The name of the variable used to store the index of the current item being enumerated.",
+              "default": "index"
+            }
+          },
+          "required": [
+            "in"
+          ]
+        },
+        "while": {
+          "type": "string",
+          "description": "A runtime expression that represents the condition, if any, that must be met for the iteration to continue."
+        },
+        "do": {
+          "$ref": "#/$defs/taskList"
+        }
+      }
+    },
+    "listenTask": {
+      "description": "Provides a mechanism for workflows to await and react to external events, enabling event-driven behavior within workflow systems.",
+      "$ref": "#/$defs/taskBase",
+      "type": "object",
+      "required": [
+        "listen"
+      ],
+      "unevaluatedProperties": false,
+      "properties": {
+        "listen": {
+          "type": "object",
+          "properties": {
+            "to": {
+              "$ref": "#/$defs/eventConsumptionStrategy",
+              "description": "Defines the event(s) to listen to."
+            }
+          },
+          "required": [
+            "to"
+          ]
+        }
+      }
+    },
+    "raiseTask": {
+      "description": "Intentionally triggers and propagates errors.",
+      "$ref": "#/$defs/taskBase",
+      "type": "object",
+      "required": [
+        "raise"
+      ],
+      "unevaluatedProperties": false,
+      "properties": {
+        "raise": {
+          "type": "object",
+          "properties": {
+            "error": {
+              "$ref": "#/$defs/error",
+              "description": "Defines the error to raise."
+            }
+          },
+          "required": [
+            "error"
+          ]
+        }
+      }
+    },
+    "runTask": {
+      "description": "Provides the capability to execute external containers, shell commands, scripts, or workflows.",
+      "$ref": "#/$defs/taskBase",
+      "type": "object",
+      "required": [
+        "run"
+      ],
+      "unevaluatedProperties": false,
+      "properties": {
+        "run": {
+          "type": "object",
+          "oneOf": [
+            {
+              "properties": {
+                "container": {
+                  "type": "object",
+                  "properties": {
+                    "image": {
+                      "type": "string",
+                      "description": "The name of the container image to run."
+                    },
+                    "command": {
+                      "type": "string",
+                      "description": "The command, if any, to execute on the container"
+                    },
+                    "ports": {
+                      "type": "object",
+                      "description": "The container's port mappings, if any."
+                    },
+                    "volumes": {
+                      "type": "object",
+                      "description": "The container's volume mappings, if any."
+                    },
+                    "environment": {
+                      "type": "object",
+                      "description": "A key/value mapping of the environment variables, if any, to use when running the configured process."
+                    }
+                  },
+                  "required": [
+                    "image"
+                  ]
+                }
+              },
+              "required": [
+                "container"
+              ],
+              "description": "Enables the execution of external processes encapsulated within a containerized environment."
+            },
+            {
+              "properties": {
+                "script": {
+                  "type": "object",
+                  "properties": {
+                    "language": {
+                      "type": "string",
+                      "description": "The language of the script to run."
+                    },
+                    "environment": {
+                      "type": "object",
+                      "additionalProperties": true,
+                      "description": "A key/value mapping of the environment variables, if any, to use when running the configured process."
+                    }
+                  },
+                  "oneOf": [
+                    {
+                      "properties": {
+                        "code": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "code"
+                      ],
+                      "description": "The script's code."
+                    },
+                    {
+                      "properties": {
+                        "source": {
+                          "$ref": "#/$defs/externalResource"
+                        }
+                      },
+                      "description": "The script's resource.",
+                      "required": [
+                        "source"
+                      ]
+                    }
+                  ],
+                  "required": [
+                    "language"
+                  ]
+                }
+              },
+              "required": [
+                "script"
+              ],
+              "description": "Enables the execution of custom scripts or code within a workflow, empowering workflows to perform specialized logic, data processing, or integration tasks by executing user-defined scripts written in various programming languages."
+            },
+            {
+              "properties": {
+                "shell": {
+                  "type": "object",
+                  "properties": {
+                    "command": {
+                      "type": "string",
+                      "description": "The shell command to run."
+                    },
+                    "arguments": {
+                      "type": "object",
+                      "additionalProperties": true,
+                      "description": "A list of the arguments of the shell command to run."
+                    },
+                    "environment": {
+                      "type": "object",
+                      "additionalProperties": true,
+                      "description": "A key/value mapping of the environment variables, if any, to use when running the configured process."
+                    }
+                  },
+                  "required": [
+                    "command"
+                  ]
+                }
+              },
+              "required": [
+                "shell"
+              ],
+              "description": "Enables the execution of shell commands within a workflow, enabling workflows to interact with the underlying operating system and perform system-level operations, such as file manipulation, environment configuration, or system administration tasks."
+            },
+            {
+              "properties": {
+                "workflow": {
+                  "type": "object",
+                  "properties": {
+                    "namespace": {
+                      "type": "string",
+                      "description": "The namespace the workflow to run belongs to."
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "The name of the workflow to run."
+                    },
+                    "version": {
+                      "type": "string",
+                      "default": "latest",
+                      "description": "The version of the workflow to run. Defaults to latest"
+                    },
+                    "input": {
+                      "type": "object",
+                      "additionalProperties": true,
+                      "description": "The data, if any, to pass as input to the workflow to execute. The value should be validated against the target workflow's input schema, if specified."
+                    }
+                  },
+                  "required": [
+                    "namespace",
+                    "name",
+                    "version"
+                  ]
+                }
+              },
+              "required": [
+                "workflow"
+              ],
+              "description": "Enables the invocation and execution of nested workflows within a parent workflow, facilitating modularization, reusability, and abstraction of complex logic or business processes by encapsulating them into standalone workflow units."
+            }
+          ]
+        }
+      }
+    },
+    "setTask": {
+      "description": "A task used to set data",
+      "$ref": "#/$defs/taskBase",
+      "type": "object",
+      "required": [
+        "set"
+      ],
+      "unevaluatedProperties": false,
+      "properties": {
+        "set": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": true,
+          "description": "The data to set"
+        }
+      }
+    },
+    "switchTask": {
+      "description": "Enables conditional branching within workflows, allowing them to dynamically select different paths based on specified conditions or criteria",
+      "$ref": "#/$defs/taskBase",
+      "type": "object",
+      "required": [
+        "switch"
+      ],
+      "unevaluatedProperties": false,
+      "properties": {
+        "switch": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "minProperties": 1,
+            "maxProperties": 1,
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The case's name."
+                },
+                "when": {
+                  "type": "string",
+                  "description": "A runtime expression used to determine whether or not the case matches."
+                },
+                "then": {
+                  "$ref": "#/$defs/flowDirective",
+                  "description": "The flow directive to execute when the case matches."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "tryTask": {
+      "description": "Serves as a mechanism within workflows to handle errors gracefully, potentially retrying failed tasks before proceeding with alternate ones.",
+      "$ref": "#/$defs/taskBase",
+      "type": "object",
+      "required": [
+        "try",
+        "catch"
+      ],
+      "unevaluatedProperties": false,
+      "properties": {
+        "try": {
+          "description": "The task(s) to perform.",
+          "$ref": "#/$defs/taskList"
+        },
+        "catch": {
+          "type": "object",
+          "properties": {
+            "errors": {
+              "type": "object"
+            },
+            "as": {
+              "type": "string",
+              "description": "The name of the runtime expression variable to save the error as. Defaults to 'error'."
+            },
+            "when": {
+              "type": "string",
+              "description": "A runtime expression used to determine whether or not to catch the filtered error"
+            },
+            "exceptWhen": {
+              "type": "string",
+              "description": "A runtime expression used to determine whether or not to catch the filtered error"
+            },
+            "retry": {
+              "$ref": "#/$defs/retryPolicy",
+              "description": "The retry policy to use, if any, when catching errors."
+            },
+            "do": {
+              "description": "The definition of the task(s) to run when catching an error.",
+              "$ref": "#/$defs/taskList"
+            }
+          }
+        }
+      }
+    },
+    "waitTask": {
+      "description": "Allows workflows to pause or delay their execution for a specified period of time.",
+      "$ref": "#/$defs/taskBase",
+      "type": "object",
+      "required": [
+        "wait"
+      ],
+      "unevaluatedProperties": false,
+      "properties": {
+        "wait": {
+          "description": "The amount of time to wait.",
+          "$ref": "#/$defs/duration"
+        }
+      }
+    },
+    "flowDirective": {
+      "additionalProperties": false,
       "anyOf": [
         {
-          "required": [
-            "before"
-          ]
+          "type": "string",
+          "enum": [
+            "continue",
+            "exit",
+            "end"
+          ],
+          "default": "continue"
         },
         {
-          "required": [
-            "after"
-          ]
-        },
-        {
-          "required": [
-            "before",
-            "after"
-          ]
+          "type": "string"
         }
       ]
     },
-    "crondef": {
+    "authenticationPolicy": {
+      "type": "object",
       "oneOf": [
         {
-          "type": "string",
-          "description": "Cron expression defining when workflow instances should be created (automatically)",
-          "minLength": 1
-        },
-        {
-          "type": "object",
           "properties": {
-            "expression": {
-              "type": "string",
-              "description": "Repeating interval (cron expression) describing when the workflow instance should be created",
-              "minLength": 1
-            },
-            "validUntil": {
-              "type": "string",
-              "description": "Specific date and time (ISO 8601 format) when the cron expression invocation is no longer valid"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "expression"
-          ]
-        }
-      ]
-    },
-    "continueasdef": {
-      "oneOf": [
-        {
-          "type": "string",
-          "description": "Unique id of the workflow to be continue execution as. Entire state data is passed as data input to next execution",
-          "minLength": 1
-        },
-        {
-          "type": "object",
-          "properties": {
-            "workflowId": {
-              "type": "string",
-              "description": "Unique id of the workflow to continue execution as"
-            },
-            "version": {
-              "type": "string",
-              "description": "Version of the workflow to continue execution as",
-              "minLength": 1,
-              "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
-            },
-            "data": {
-              "type": [
-                "string",
-                "object"
-              ],
-              "description": "If string type, an expression which selects parts of the states data output to become the workflow data input of continued execution. If object type, a custom object to become the workflow data input of the continued execution"
-            },
-            "workflowExecTimeout": {
-              "$ref": "timeouts.json#/definitions/workflowExecTimeout",
-              "description": "Workflow execution timeout to be used by the workflow continuing execution. Overwrites any specific settings set by that workflow"
-            }
-          },
-          "required": [
-            "workflowId"
-          ]
-        }
-      ]
-    },
-    "transition": {
-      "oneOf": [
-        {
-          "type": "string",
-          "description": "Name of state to transition to",
-          "minLength": 1
-        },
-        {
-          "type": "object",
-          "description": "Function Reference",
-          "properties": {
-            "nextState": {
-              "type": "string",
-              "description": "Name of state to transition to",
-              "minLength": 1
-            },
-            "produceEvents": {
-              "type": "array",
-              "description": "Array of events to be produced before the transition happens",
-              "items": {
-                "type": "object",
-                "$ref": "#/definitions/produceeventdef"
+            "basic": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "description": "The username to use."
+                },
+                "password": {
+                  "type": "string",
+                  "description": "The password to use."
+                }
               },
-              "additionalItems": false
-            },
-            "compensate": {
-              "type": "boolean",
-              "default": false,
-              "description": "If set to true, triggers workflow compensation when before this transition is taken. Default is false"
+              "required": [
+                "username",
+                "password"
+              ]
             }
           },
-          "additionalProperties": false,
           "required": [
-            "nextState"
-          ]
+            "basic"
+          ],
+          "description": "Use basic authentication."
+        },
+        {
+          "properties": {
+            "bearer": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "type": "string",
+                  "description": "The bearer token to use."
+                }
+              },
+              "required": [
+                "token"
+              ]
+            }
+          },
+          "required": [
+            "bearer"
+          ],
+          "description": "Use bearer authentication."
+        },
+        {
+          "properties": {
+            "oauth2": {
+              "type": "object",
+              "properties": {
+                "authority": {
+                  "type": "string",
+                  "format": "uri",
+                  "description": "The URI that references the OAuth2 authority to use."
+                },
+                "grant": {
+                  "type": "string",
+                  "description": "The grant type to use."
+                },
+                "client": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "The client id to use."
+                    },
+                    "secret": {
+                      "type": "string",
+                      "description": "The client secret to use, if any."
+                    }
+                  },
+                  "required": [
+                    "id"
+                  ]
+                },
+                "scopes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "The scopes, if any, to request the token for."
+                },
+                "audiences": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "The audiences, if any, to request the token for."
+                },
+                "username": {
+                  "type": "string",
+                  "description": "The username to use. Used only if the grant type is Password."
+                },
+                "password": {
+                  "type": "string",
+                  "description": "The password to use. Used only if the grant type is Password."
+                },
+                "subject": {
+                  "$ref": "#/$defs/oauth2Token",
+                  "description": "The security token that represents the identity of the party on behalf of whom the request is being made."
+                },
+                "actor": {
+                  "$ref": "#/$defs/oauth2Token",
+                  "description": "The security token that represents the identity of the acting party."
+                }
+              },
+              "required": [
+                "authority",
+                "grant",
+                "client"
+              ]
+            }
+          },
+          "required": [
+            "oauth2"
+          ],
+          "description": "Use OAUTH2 authentication."
         }
+      ],
+      "description": "Defines an authentication policy."
+    },
+    "oauth2Token": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string",
+          "description": "The security token to use to use."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the security token to use to use."
+        }
+      },
+      "required": [
+        "token",
+        "type"
       ]
+    },
+    "duration": {
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "days": {
+          "type": "integer",
+          "description": "Number of days, if any."
+        },
+        "hours": {
+          "type": "integer",
+          "description": "Number of days, if any."
+        },
+        "minutes": {
+          "type": "integer",
+          "description": "Number of minutes, if any."
+        },
+        "seconds": {
+          "type": "integer",
+          "description": "Number of seconds, if any."
+        },
+        "milliseconds": {
+          "type": "integer",
+          "description": "Number of milliseconds, if any."
+        }
+      },
+      "description": "The definition of a duration."
     },
     "error": {
       "type": "object",
       "properties": {
-        "errorRef": {
+        "type": {
           "type": "string",
-          "description": "Reference to a unique workflow error definition. Used of errorRefs is not used",
-          "minLength": 1
+          "format": "uri",
+          "description": "A URI reference that identifies the error type."
         },
-        "errorRefs": {
-          "type": "array",
-          "description": "References one or more workflow error definitions. Used if errorRef is not used",
-          "minItems": 1,
-          "items": {
-            "type": "string"
-          },
-          "additionalItems": false
+        "status": {
+          "type": "integer",
+          "description": "The status code generated by the origin for this occurrence of the error."
         },
-        "transition": {
-          "description": "Transition to next state to handle the error.",
-          "$ref": "#/definitions/transition"
+        "instance": {
+          "type": "string",
+          "format": "json-pointer",
+          "description": "A JSON Pointer used to reference the component the error originates from."
         },
-        "end": {
-          "description": "End workflow execution in case of this error.",
-          "$ref": "#/definitions/end"
+        "title": {
+          "type": "string",
+          "description": "A short, human-readable summary of the error."
+        },
+        "detail": {
+          "type": "string",
+          "description": "A human-readable explanation specific to this occurrence of the error."
         }
       },
-      "additionalProperties": false,
-      "oneOf": [
-        {
-          "required": [
-            "errorRef",
-            "transition"
-          ]
-        },
-        {
-          "required": [
-            "errorRef",
-            "end"
-          ]
-        },
-        {
-          "required": [
-            "errorRefs",
-            "transition"
-          ]
-        },
-        {
-          "required": [
-            "errorRefs",
-            "end"
-          ]
-        }
-      ]
-    },
-    "onevents": {
-      "type": "object",
-      "properties": {
-        "eventRefs": {
-          "type": "array",
-          "description": "References one or more unique event names in the defined workflow events",
-          "minItems": 1,
-          "items": {
-            "type": "string"
-          },
-          "uniqueItems": true,
-          "additionalItems": false
-        },
-        "actionMode": {
-          "type": "string",
-          "enum": [
-            "sequential",
-            "parallel"
-          ],
-          "description": "Specifies how actions are to be performed (in sequence or in parallel)",
-          "default": "sequential"
-        },
-        "actions": {
-          "type": "array",
-          "description": "Actions to be performed if expression matches",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/action"
-          },
-          "additionalItems": false
-        },
-        "eventDataFilter": {
-          "description": "Event data filter",
-          "$ref": "#/definitions/eventdatafilter"
-        }
-      },
-      "additionalProperties": false,
       "required": [
-        "eventRefs"
-      ]
-    },
-    "action": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Unique action definition name"
-        },
-        "functionRef": {
-          "description": "References a function to be invoked",
-          "$ref": "#/definitions/functionref"
-        },
-        "eventRef": {
-          "description": "References a `produce` and `consume` reusable event definitions",
-          "$ref": "#/definitions/eventref"
-        },
-        "subFlowRef": {
-          "description": "References a sub-workflow to invoke",
-          "$ref": "#/definitions/subflowref"
-        },
-        "sleep": {
-          "description": "Defines time periods workflow execution should sleep before / after function execution",
-          "$ref": "#/definitions/sleep"
-        },
-        "retryRef": {
-          "type": "string",
-          "description": "References a defined workflow retry definition. If not defined the default retry policy is assumed"
-        },
-        "nonRetryableErrors": {
-          "type": "array",
-          "description": "List of unique references to defined workflow errors for which the action should not be retried. Used only when `autoRetries` is set to `true`",
-          "minItems": 1,
-          "items": {
-            "type": "string"
-          },
-          "additionalItems": false
-        },
-        "retryableErrors": {
-          "type": "array",
-          "description": "List of unique references to defined workflow errors for which the action should be retried. Used only when `autoRetries` is set to `false`",
-          "minItems": 1,
-          "items": {
-            "type": "string"
-          },
-          "additionalItems": false
-        },
-        "actionDataFilter": {
-          "description": "Action data filter",
-          "$ref": "#/definitions/actiondatafilter"
-        },
-        "condition": {
-          "description": "Expression, if defined, must evaluate to true for this action to be performed. If false, action is disregarded",
-          "type": "string",
-          "minLength": 1
-        }
-      },
-      "additionalProperties": false,
-      "oneOf": [
-        {
-          "required": [
-            "functionRef"
-          ]
-        },
-        {
-          "required": [
-            "eventRef"
-          ]
-        },
-        {
-          "required": [
-            "subFlowRef"
-          ]
-        }
-      ]
-    },
-    "functionref": {
-      "oneOf": [
-        {
-          "type": "string",
-          "description": "Name of the referenced function",
-          "minLength": 1
-        },
-        {
-          "type": "object",
-          "description": "Function Reference",
-          "properties": {
-            "refName": {
-              "type": "string",
-              "description": "Name of the referenced function"
-            },
-            "arguments": {
-              "type": "object",
-              "description": "Function arguments/inputs"
-            },
-            "selectionSet": {
-              "type": "string",
-              "description": "Only used if function type is 'graphql'. A string containing a valid GraphQL selection set"
-            },
-            "invoke": {
-              "type": "string",
-              "enum": [
-                "sync",
-                "async"
-              ],
-              "description": "Specifies if the function should be invoked sync or async",
-              "default": "sync"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "refName"
-          ]
-        }
-      ]
-    },
-    "eventref": {
-      "type": "object",
-      "description": "Event References",
-      "properties": {
-        "produceEventRef": {
-          "type": "string",
-          "description": "Reference to the unique name of a 'produced' event definition"
-        },
-        "consumeEventRef": {
-          "type": "string",
-          "description": "Reference to the unique name of a 'consumed' event definition"
-        },
-        "consumeEventTimeout": {
-          "type": "string",
-          "description": "Maximum amount of time (ISO 8601 format) to wait for the result event. If not defined it should default to the actionExecutionTimeout"
-        },
-        "data": {
-          "type": [
-            "string",
-            "object"
-          ],
-          "description": "If string type, an expression which selects parts of the states data output to become the data (payload) of the event referenced by 'produceEventRef'. If object type, a custom object to become the data (payload) of the event referenced by 'produceEventRef'."
-        },
-        "contextAttributes": {
-          "type": "object",
-          "description": "Add additional extension context attributes to the produced event",
-          "additionalProperties": {
-            "type": "string"
-          }
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "produceEventRef"
-      ]
-    },
-    "subflowref": {
-      "oneOf": [
-        {
-          "type": "string",
-          "description": "Unique id of the sub-workflow to be invoked",
-          "minLength": 1
-        },
-        {
-          "type": "object",
-          "description": "Specifies a sub-workflow to be invoked",
-          "properties": {
-            "workflowId": {
-              "type": "string",
-              "description": "Unique id of the sub-workflow to be invoked"
-            },
-            "version": {
-              "type": "string",
-              "description": "Version of the sub-workflow to be invoked",
-              "minLength": 1,
-              "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
-            },
-            "onParentComplete": {
-              "type": "string",
-              "enum": [
-                "continue",
-                "terminate"
-              ],
-              "description": "If invoke is 'async', specifies how subflow execution should behave when parent workflow completes. Default is 'terminate'",
-              "default": "terminate"
-            },
-            "invoke": {
-              "type": "string",
-              "enum": [
-                "sync",
-                "async"
-              ],
-              "description": "Specifies if the subflow should be invoked sync or async",
-              "default": "sync"
-            }
-          },
-          "required": [
-            "workflowId"
-          ]
-        }
-      ]
-    },
-    "branch": {
-      "type": "object",
-      "description": "Branch Definition",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Branch name"
-        },
-        "timeouts": {
-          "type": "object",
-          "description": "State specific timeouts",
-          "properties": {
-            "actionExecTimeout": {
-              "$ref": "timeouts.json#/definitions/actionExecTimeout"
-            },
-            "branchExecTimeout": {
-              "$ref": "timeouts.json#/definitions/branchExecTimeout"
-            }
-          },
-          "required": []
-        },
-        "actions": {
-          "type": "array",
-          "description": "Actions to be executed in this branch",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/action"
-          },
-          "additionalItems": false
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "name",
-        "actions"
-      ]
-    },
-    "sleepstate": {
-      "type": "object",
-      "description": "Causes the workflow execution to sleep for a specified duration",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "State name"
-        },
-        "type": {
-          "type": "string",
-          "const": "sleep",
-          "description": "State type"
-        },
-        "end": {
-          "$ref": "#/definitions/end",
-          "description": "State end definition"
-        },
-        "duration": {
-          "type": "string",
-          "description": "Duration (ISO 8601 duration format) to sleep"
-        },
-        "transition": {
-          "description": "Next transition of the workflow after the workflow sleep",
-          "$ref": "#/definitions/transition"
-        },
-        "metadata": {
-          "$ref": "common.json#/definitions/metadata"
-        }
-      },
-      "additionalProperties": false,
-      "oneOf": [
-        {
-          "required": [
-            "name",
-            "type",
-            "duration",
-            "end"
-          ]
-        },
-        {
-          "required": [
-            "name",
-            "type",
-            "duration",
-            "transition"
-          ]
-        }
-      ]
-    },
-    "eventstate": {
-      "type": "object",
-      "description": "This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "State name"
-        },
-        "type": {
-          "type": "string",
-          "const": "event",
-          "description": "State type"
-        },
-        "exclusive": {
-          "type": "boolean",
-          "default": true,
-          "description": "If true consuming one of the defined events causes its associated actions to be performed. If false all of the defined events must be consumed in order for actions to be performed"
-        },
-        "onEvents": {
-          "type": "array",
-          "description": "Define the events to be consumed and optional actions to be performed",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/onevents"
-          },
-          "additionalItems": false
-        },
-        "timeouts": {
-          "type": "object",
-          "description": "State specific timeouts",
-          "properties": {
-            "stateExecTimeout": {
-              "$ref": "timeouts.json#/definitions/stateExecTimeout"
-            },
-            "actionExecTimeout": {
-              "$ref": "timeouts.json#/definitions/actionExecTimeout"
-            },
-            "eventTimeout": {
-              "$ref": "timeouts.json#/definitions/eventTimeout"
-            }
-          },
-          "required": []
-        },
-        "stateDataFilter": {
-          "description": "State data filter",
-          "$ref": "#/definitions/statedatafilter"
-        },
-        "onErrors": {
-          "type": "array",
-          "description": "States error handling definitions",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/error"
-          },
-          "additionalItems": false
-        },
-        "transition": {
-          "description": "Next transition of the workflow after all the actions have been performed",
-          "$ref": "#/definitions/transition"
-        },
-        "end": {
-          "$ref": "#/definitions/end",
-          "description": "State end definition"
-        },
-        "compensatedBy": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Unique Name of a workflow state which is responsible for compensation of this state"
-        },
-        "metadata": {
-          "$ref": "common.json#/definitions/metadata"
-        }
-      },
-      "additionalProperties": false,
-      "oneOf": [
-        {
-          "required": [
-            "name",
-            "type",
-            "onEvents",
-            "end"
-          ]
-        },
-        {
-          "required": [
-            "name",
-            "type",
-            "onEvents",
-            "transition"
-          ]
-        }
-      ]
-    },
-    "operationstate": {
-      "type": "object",
-      "description": "Defines actions be performed. Does not wait for incoming events",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "State name"
-        },
-        "type": {
-          "type": "string",
-          "const": "operation",
-          "description": "State type"
-        },
-        "end": {
-          "$ref": "#/definitions/end",
-          "description": "State end definition"
-        },
-        "stateDataFilter": {
-          "description": "State data filter",
-          "$ref": "#/definitions/statedatafilter"
-        },
-        "actionMode": {
-          "type": "string",
-          "enum": [
-            "sequential",
-            "parallel"
-          ],
-          "description": "Specifies whether actions are performed in sequence or in parallel",
-          "default": "sequential"
-        },
-        "actions": {
-          "type": "array",
-          "description": "Actions to be performed",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/action"
-          }
-        },
-        "timeouts": {
-          "type": "object",
-          "description": "State specific timeouts",
-          "properties": {
-            "stateExecTimeout": {
-              "$ref": "timeouts.json#/definitions/stateExecTimeout"
-            },
-            "actionExecTimeout": {
-              "$ref": "timeouts.json#/definitions/actionExecTimeout"
-            }
-          },
-          "required": []
-        },
-        "onErrors": {
-          "type": "array",
-          "description": "States error handling definitions",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/error"
-          },
-          "additionalItems": false
-        },
-        "transition": {
-          "description": "Next transition of the workflow after all the actions have been performed",
-          "$ref": "#/definitions/transition"
-        },
-        "compensatedBy": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Unique Name of a workflow state which is responsible for compensation of this state"
-        },
-        "usedForCompensation": {
-          "type": "boolean",
-          "default": false,
-          "description": "If true, this state is used to compensate another state. Default is false"
-        },
-        "metadata": {
-          "$ref": "common.json#/definitions/metadata"
-        }
-      },
-      "additionalProperties": false,
-      "if": {
-        "properties": {
-          "usedForCompensation": {
-            "const": true
-          }
-        },
-        "required": [
-          "usedForCompensation"
-        ]
-      },
-      "then": {
-        "required": [
-          "name",
-          "type",
-          "actions"
-        ]
-      },
-      "else": {
-        "oneOf": [
-          {
-            "required": [
-              "name",
-              "type",
-              "actions",
-              "end"
-            ]
-          },
-          {
-            "required": [
-              "name",
-              "type",
-              "actions",
-              "transition"
-            ]
-          }
-        ]
-      }
-    },
-    "parallelstate": {
-      "type": "object",
-      "description": "Consists of a number of states that are executed in parallel",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "State name"
-        },
-        "type": {
-          "type": "string",
-          "const": "parallel",
-          "description": "State type"
-        },
-        "end": {
-          "$ref": "#/definitions/end",
-          "description": "State end definition"
-        },
-        "stateDataFilter": {
-          "description": "State data filter",
-          "$ref": "#/definitions/statedatafilter"
-        },
-        "timeouts": {
-          "type": "object",
-          "description": "State specific timeouts",
-          "properties": {
-            "stateExecTimeout": {
-              "$ref": "timeouts.json#/definitions/stateExecTimeout"
-            },
-            "branchExecTimeout": {
-              "$ref": "timeouts.json#/definitions/branchExecTimeout"
-            }
-          },
-          "required": []
-        },
-        "branches": {
-          "type": "array",
-          "description": "Branch Definitions",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/branch"
-          },
-          "additionalItems": false
-        },
-        "completionType": {
-          "type": "string",
-          "enum": [
-            "allOf",
-            "atLeast"
-          ],
-          "description": "Option types on how to complete branch execution.",
-          "default": "allOf"
-        },
-        "numCompleted": {
-          "type": [
-            "number",
-            "string"
-          ],
-          "minimum": 0,
-          "minLength": 0,
-          "description": "Used when completionType is set to 'atLeast' to specify the minimum number of branches that must complete before the state will transition."
-        },
-        "onErrors": {
-          "type": "array",
-          "description": "States error handling definitions",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/error"
-          },
-          "additionalItems": false
-        },
-        "transition": {
-          "description": "Next transition of the workflow after all branches have completed execution",
-          "$ref": "#/definitions/transition"
-        },
-        "compensatedBy": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Unique Name of a workflow state which is responsible for compensation of this state"
-        },
-        "usedForCompensation": {
-          "type": "boolean",
-          "default": false,
-          "description": "If true, this state is used to compensate another state. Default is false"
-        },
-        "metadata": {
-          "$ref": "common.json#/definitions/metadata"
-        }
-      },
-      "additionalProperties": false,
-      "if": {
-        "properties": {
-          "usedForCompensation": {
-            "const": true
-          }
-        },
-        "required": [
-          "usedForCompensation"
-        ]
-      },
-      "then": {
-        "required": [
-          "name",
-          "type",
-          "branches"
-        ]
-      },
-      "else": {
-        "oneOf": [
-          {
-            "required": [
-              "name",
-              "type",
-              "branches",
-              "end"
-            ]
-          },
-          {
-            "required": [
-              "name",
-              "type",
-              "branches",
-              "transition"
-            ]
-          }
-        ]
-      }
-    },
-    "switchstate": {
-      "oneOf": [
-        {
-          "$ref": "#/definitions/databasedswitchstate"
-        },
-        {
-          "$ref": "#/definitions/eventbasedswitchstate"
-        }
-      ]
-    },
-    "eventbasedswitchstate": {
-      "type": "object",
-      "description": "Permits transitions to other states based on events",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "State name"
-        },
-        "type": {
-          "type": "string",
-          "const": "switch",
-          "description": "State type"
-        },
-        "stateDataFilter": {
-          "description": "State data filter",
-          "$ref": "#/definitions/statedatafilter"
-        },
-        "timeouts": {
-          "type": "object",
-          "description": "State specific timeouts",
-          "properties": {
-            "stateExecTimeout": {
-              "$ref": "timeouts.json#/definitions/stateExecTimeout"
-            },
-            "eventTimeout": {
-              "$ref": "timeouts.json#/definitions/eventTimeout"
-            }
-          },
-          "required": []
-        },
-        "eventConditions": {
-          "type": "array",
-          "description": "Defines conditions evaluated against events",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/eventcondition"
-          },
-          "additionalItems": false
-        },
-        "onErrors": {
-          "type": "array",
-          "description": "States error handling definitions",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/error"
-          },
-          "additionalItems": false
-        },
-        "defaultCondition": {
-          "description": "Default transition of the workflow if there is no matching data conditions. Can include a transition or end definition",
-          "$ref": "#/definitions/defaultconditiondef"
-        },
-        "compensatedBy": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Unique Name of a workflow state which is responsible for compensation of this state"
-        },
-        "usedForCompensation": {
-          "type": "boolean",
-          "default": false,
-          "description": "If true, this state is used to compensate another state. Default is false"
-        },
-        "metadata": {
-          "$ref": "common.json#/definitions/metadata"
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "name",
         "type",
-        "eventConditions",
-        "defaultCondition"
+        "status",
+        "instance"
       ]
     },
-    "databasedswitchstate": {
+    "endpoint": {
       "type": "object",
-      "description": "Permits transitions to other states based on data conditions",
       "properties": {
-        "name": {
+        "uri": {
           "type": "string",
-          "description": "State name"
-        },
-        "type": {
-          "type": "string",
-          "const": "switch",
-          "description": "State type"
-        },
-        "stateDataFilter": {
-          "description": "State data filter",
-          "$ref": "#/definitions/statedatafilter"
-        },
-        "timeouts": {
-          "type": "object",
-          "description": "State specific timeouts",
-          "properties": {
-            "stateExecTimeout": {
-              "$ref": "timeouts.json#/definitions/stateExecTimeout"
-            }
-          },
-          "required": []
-        },
-        "dataConditions": {
-          "type": "array",
-          "description": "Defines conditions evaluated against state data",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/datacondition"
-          },
-          "additionalItems": false
-        },
-        "onErrors": {
-          "type": "array",
-          "description": "States error handling definitions",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/error"
-          },
-          "additionalItems": false
-        },
-        "defaultCondition": {
-          "description": "Default transition of the workflow if there is no matching data conditions. Can include a transition or end definition",
-          "$ref": "#/definitions/defaultconditiondef"
-        },
-        "compensatedBy": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Unique Name of a workflow state which is responsible for compensation of this state"
-        },
-        "usedForCompensation": {
-          "type": "boolean",
-          "default": false,
-          "description": "If true, this state is used to compensate another state. Default is false"
-        },
-        "metadata": {
-          "$ref": "common.json#/definitions/metadata"
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "name",
-        "type",
-        "dataConditions",
-        "defaultCondition"
-      ]
-    },
-    "defaultconditiondef": {
-      "type": "object",
-      "description": "DefaultCondition definition. Can be either a transition or end definition",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "The optional name of the default condition, used solely for display purposes"
-        },
-        "transition": {
-          "$ref": "#/definitions/transition"
-        },
-        "end": {
-          "$ref": "#/definitions/end"
-        }
-      },
-      "additionalProperties": false,
-      "oneOf": [
-        {
-          "required": [
-            "transition"
-          ]
-        },
-        {
-          "required": [
-            "end"
-          ]
-        }
-      ]
-    },
-    "eventcondition": {
-      "oneOf": [
-        {
-          "$ref": "#/definitions/transitioneventcondition"
-        },
-        {
-          "$ref": "#/definitions/endeventcondition"
-        }
-      ]
-    },
-    "transitioneventcondition": {
-      "type": "object",
-      "description": "Switch state data event condition",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Event condition name"
-        },
-        "eventRef": {
-          "type": "string",
-          "description": "References an unique event name in the defined workflow events"
-        },
-        "transition": {
-          "description": "Next transition of the workflow if there is valid matches",
-          "$ref": "#/definitions/transition"
-        },
-        "eventDataFilter": {
-          "description": "Event data filter definition",
-          "$ref": "#/definitions/eventdatafilter"
-        },
-        "metadata": {
-          "$ref": "common.json#/definitions/metadata"
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "eventRef",
-        "transition"
-      ]
-    },
-    "endeventcondition": {
-      "type": "object",
-      "description": "Switch state data event condition",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Event condition name"
-        },
-        "eventRef": {
-          "type": "string",
-          "description": "References an unique event name in the defined workflow events"
-        },
-        "end": {
-          "$ref": "#/definitions/end",
-          "description": "Explicit transition to end"
-        },
-        "eventDataFilter": {
-          "description": "Event data filter definition",
-          "$ref": "#/definitions/eventdatafilter"
-        },
-        "metadata": {
-          "$ref": "common.json#/definitions/metadata"
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "eventRef",
-        "end"
-      ]
-    },
-    "datacondition": {
-      "oneOf": [
-        {
-          "$ref": "#/definitions/transitiondatacondition"
-        },
-        {
-          "$ref": "#/definitions/enddatacondition"
-        }
-      ]
-    },
-    "transitiondatacondition": {
-      "type": "object",
-      "description": "Switch state data based condition",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Data condition name"
-        },
-        "condition": {
-          "type": "string",
-          "description": "Workflow expression evaluated against state data. Must evaluate to true or false"
-        },
-        "transition": {
-          "description": "Workflow transition if condition is evaluated to true",
-          "$ref": "#/definitions/transition"
-        },
-        "metadata": {
-          "$ref": "common.json#/definitions/metadata"
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "condition",
-        "transition"
-      ]
-    },
-    "enddatacondition": {
-      "type": "object",
-      "description": "Switch state data based condition",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Data condition name"
-        },
-        "condition": {
-          "type": "string",
-          "description": "Workflow expression evaluated against state data. Must evaluate to true or false"
-        },
-        "end": {
-          "$ref": "#/definitions/end",
-          "description": "Workflow end definition"
-        },
-        "metadata": {
-          "$ref": "common.json#/definitions/metadata"
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "condition",
-        "end"
-      ]
-    },
-    "injectstate": {
-      "type": "object",
-      "description": "Inject static data into state data. Does not perform any actions",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "State name"
-        },
-        "type": {
-          "type": "string",
-          "const": "inject",
-          "description": "State type"
-        },
-        "end": {
-          "$ref": "#/definitions/end",
-          "description": "State end definition"
-        },
-        "data": {
-          "type": "object",
-          "description": "JSON object which can be set as states data input and can be manipulated via filters"
-        },
-        "stateDataFilter": {
-          "description": "State data filter",
-          "$ref": "#/definitions/statedatafilter"
-        },
-        "transition": {
-          "description": "Next transition of the workflow after injection has completed",
-          "$ref": "#/definitions/transition"
-        },
-        "compensatedBy": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Unique Name of a workflow state which is responsible for compensation of this state"
-        },
-        "usedForCompensation": {
-          "type": "boolean",
-          "default": false,
-          "description": "If true, this state is used to compensate another state. Default is false"
-        },
-        "metadata": {
-          "$ref": "common.json#/definitions/metadata"
-        }
-      },
-      "additionalProperties": false,
-      "if": {
-        "properties": {
-          "usedForCompensation": {
-            "const": true
-          }
-        },
-        "required": [
-          "usedForCompensation"
-        ]
-      },
-      "then": {
-        "required": [
-          "name",
-          "type",
-          "data"
-        ]
-      },
-      "else": {
-        "oneOf": [
-          {
-            "required": [
-              "name",
-              "type",
-              "data",
-              "end"
-            ]
-          },
-          {
-            "required": [
-              "name",
-              "type",
-              "data",
-              "transition"
-            ]
-          }
-        ]
-      }
-    },
-    "foreachstate": {
-      "type": "object",
-      "description": "Execute a set of defined actions or workflows for each element of a data array",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "State name"
-        },
-        "type": {
-          "type": "string",
-          "const": "foreach",
-          "description": "State type"
-        },
-        "end": {
-          "$ref": "#/definitions/end",
-          "description": "State end definition"
-        },
-        "inputCollection": {
-          "type": "string",
-          "description": "Workflow expression selecting an array element of the states data"
-        },
-        "outputCollection": {
-          "type": "string",
-          "description": "Workflow expression specifying an array element of the states data to add the results of each iteration"
-        },
-        "iterationParam": {
-          "type": "string",
-          "description": "Name of the iteration parameter that can be referenced in actions/workflow. For each parallel iteration, this param should contain an unique element of the inputCollection array"
-        },
-        "batchSize": {
-          "type": [
-            "number",
-            "string"
-          ],
-          "minimum": 0,
-          "minLength": 0,
-          "description": "Specifies how many iterations may run in parallel at the same time. Used if 'mode' property is set to 'parallel' (default)"
-        },
-        "actions": {
-          "type": "array",
-          "description": "Actions to be executed for each of the elements of inputCollection",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/action"
-          },
-          "additionalItems": false
-        },
-        "timeouts": {
-          "type": "object",
-          "description": "State specific timeouts",
-          "properties": {
-            "stateExecTimeout": {
-              "$ref": "timeouts.json#/definitions/stateExecTimeout"
-            },
-            "actionExecTimeout": {
-              "$ref": "timeouts.json#/definitions/actionExecTimeout"
-            }
-          },
-          "required": []
-        },
-        "stateDataFilter": {
-          "description": "State data filter",
-          "$ref": "#/definitions/statedatafilter"
-        },
-        "onErrors": {
-          "type": "array",
-          "description": "States error handling definitions",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/error"
-          },
-          "additionalItems": false
-        },
-        "transition": {
-          "description": "Next transition of the workflow after state has completed",
-          "$ref": "#/definitions/transition"
-        },
-        "compensatedBy": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Unique Name of a workflow state which is responsible for compensation of this state"
-        },
-        "usedForCompensation": {
-          "type": "boolean",
-          "default": false,
-          "description": "If true, this state is used to compensate another state. Default is false"
-        },
-        "mode": {
-          "type": "string",
-          "enum": [
-            "sequential",
-            "parallel"
-          ],
-          "description": "Specifies how iterations are to be performed (sequentially or in parallel)",
-          "default": "parallel"
-        },
-        "metadata": {
-          "$ref": "common.json#/definitions/metadata"
-        }
-      },
-      "additionalProperties": false,
-      "if": {
-        "properties": {
-          "usedForCompensation": {
-            "const": true
-          }
-        },
-        "required": [
-          "usedForCompensation"
-        ]
-      },
-      "then": {
-        "required": [
-          "name",
-          "type",
-          "inputCollection",
-          "actions"
-        ]
-      },
-      "else": {
-        "oneOf": [
-          {
-            "required": [
-              "name",
-              "type",
-              "inputCollection",
-              "actions",
-              "end"
-            ]
-          },
-          {
-            "required": [
-              "name",
-              "type",
-              "inputCollection",
-              "actions",
-              "transition"
-            ]
-          }
-        ]
-      }
-    },
-    "callbackstate": {
-      "type": "object",
-      "description": "This state performs an action, then waits for the callback event that denotes completion of the action",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "State name"
-        },
-        "type": {
-          "type": "string",
-          "const": "callback",
-          "description": "State type"
-        },
-        "action": {
-          "description": "Defines the action to be executed",
-          "$ref": "#/definitions/action"
-        },
-        "eventRef": {
-          "type": "string",
-          "description": "References an unique callback event name in the defined workflow events"
-        },
-        "timeouts": {
-          "type": "object",
-          "description": "State specific timeouts",
-          "properties": {
-            "stateExecTimeout": {
-              "$ref": "timeouts.json#/definitions/stateExecTimeout"
-            },
-            "actionExecTimeout": {
-              "$ref": "timeouts.json#/definitions/actionExecTimeout"
-            },
-            "eventTimeout": {
-              "$ref": "timeouts.json#/definitions/eventTimeout"
-            }
-          },
-          "required": []
-        },
-        "eventDataFilter": {
-          "description": "Event data filter",
-          "$ref": "#/definitions/eventdatafilter"
-        },
-        "stateDataFilter": {
-          "description": "State data filter",
-          "$ref": "#/definitions/statedatafilter"
-        },
-        "onErrors": {
-          "type": "array",
-          "description": "States error handling definitions",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/error"
-          },
-          "additionalItems": false
-        },
-        "transition": {
-          "description": "Next transition of the workflow after all the actions have been performed",
-          "$ref": "#/definitions/transition"
-        },
-        "end": {
-          "$ref": "#/definitions/end",
-          "description": "State end definition"
-        },
-        "compensatedBy": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Unique Name of a workflow state which is responsible for compensation of this state"
-        },
-        "usedForCompensation": {
-          "type": "boolean",
-          "default": false,
-          "description": "If true, this state is used to compensate another state. Default is false"
-        },
-        "metadata": {
-          "$ref": "common.json#/definitions/metadata"
-        }
-      },
-      "additionalProperties": false,
-      "if": {
-        "properties": {
-          "usedForCompensation": {
-            "const": true
-          }
-        },
-        "required": [
-          "usedForCompensation"
-        ]
-      },
-      "then": {
-        "required": [
-          "name",
-          "type",
-          "action",
-          "eventRef"
-        ]
-      },
-      "else": {
-        "oneOf": [
-          {
-            "required": [
-              "name",
-              "type",
-              "action",
-              "eventRef",
-              "end"
-            ]
-          },
-          {
-            "required": [
-              "name",
-              "type",
-              "action",
-              "eventRef",
-              "transition"
-            ]
-          }
-        ]
-      }
-    },
-    "startdef": {
-      "oneOf": [
-        {
-          "type": "string",
-          "description": "Name of the starting workflow state",
-          "minLength": 1
-        },
-        {
-          "type": "object",
-          "description": "Workflow start definition",
-          "properties": {
-            "stateName": {
-              "type": "string",
-              "description": "Name of the starting workflow state",
-              "minLength": 1
-            },
-            "schedule": {
-              "description": "Define the time/repeating intervals or cron at which workflow instances should be automatically started.",
-              "$ref": "#/definitions/schedule"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "schedule"
-          ]
-        }
-      ]
-    },
-    "schedule": {
-      "oneOf": [
-        {
-          "type": "string",
-          "description": "Time interval (must be repeating interval) described with ISO 8601 format. Declares when workflow instances will be automatically created.  (UTC timezone is assumed)",
-          "minLength": 1
-        },
-        {
-          "type": "object",
-          "description": "Start state schedule definition",
-          "properties": {
-            "interval": {
-              "type": "string",
-              "description": "Time interval (must be repeating interval) described with ISO 8601 format. Declares when workflow instances will be automatically created.",
-              "minLength": 1
-            },
-            "cron": {
-              "$ref": "#/definitions/crondef"
-            },
-            "timezone": {
-              "type": "string",
-              "description": "Timezone name used to evaluate the interval & cron-expression. (default: UTC)"
-            }
-          },
-          "additionalProperties": false,
+          "format": "uri-template",
+          "description": "The endpoint's URI."
+        },
+        "authentication": {
+          "description": "The authentication policy to use.",
           "oneOf": [
             {
-              "required": [
-                "interval"
-              ]
+              "$ref": "#/$defs/authenticationPolicy"
             },
             {
-              "required": [
-                "cron"
-              ]
+              "type": "string"
             }
+          ]
+        }
+      },
+      "required": [
+        "uri"
+      ]
+    },
+    "eventConsumptionStrategy": {
+      "type": "object",
+      "oneOf": [
+        {
+          "properties": {
+            "all": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/eventFilter"
+              },
+              "description": "A list containing all the events that must be consumed."
+            }
+          },
+          "required": [
+            "all"
+          ]
+        },
+        {
+          "properties": {
+            "any": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/eventFilter"
+              },
+              "description": "A list containing any of the events to consume."
+            }
+          },
+          "required": [
+            "any"
+          ]
+        },
+        {
+          "properties": {
+            "one": {
+              "$ref": "#/$defs/eventFilter",
+              "description": "The single event to consume."
+            }
+          },
+          "required": [
+            "one"
           ]
         }
       ]
     },
-    "end": {
-      "oneOf": [
-        {
-          "type": "boolean",
-          "description": "State end definition",
-          "default": true
-        },
-        {
+    "eventFilter": {
+      "type": "object",
+      "properties": {
+        "with": {
           "type": "object",
-          "description": "State end definition",
+          "minProperties": 1,
           "properties": {
-            "terminate": {
-              "type": "boolean",
-              "default": false,
-              "description": "If true, completes all execution flows in the given workflow instance"
+            "id": {
+              "type": "string",
+              "description": "The event's unique identifier"
             },
-            "produceEvents": {
-              "type": "array",
-              "description": "Defines events that should be produced",
-              "items": {
-                "type": "object",
-                "$ref": "#/definitions/produceeventdef"
-              },
-              "additionalItems": false
+            "source": {
+              "type": "string",
+              "description": "Identifies the context in which an event happened"
             },
-            "compensate": {
-              "type": "boolean",
-              "default": false,
-              "description": "If set to true, triggers workflow compensation. Default is false"
+            "type": {
+              "type": "string",
+              "description": "This attribute contains a value describing the type of event related to the originating occurrence."
             },
-            "continueAs": {
-              "$ref": "#/definitions/continueasdef"
+            "time": {
+              "type": "string"
+            },
+            "subject": {
+              "type": "string"
+            },
+            "datacontenttype": {
+              "type": "string",
+              "description": "Content type of data value. This attribute enables data to carry any type of content, whereby format and encoding might differ from that of the chosen event format."
+            },
+            "dataschema": {
+              "type": "string"
             }
           },
-          "additionalProperties": false,
-          "required": []
-        }
-      ]
-    },
-    "produceeventdef": {
-      "type": "object",
-      "description": "Produce an event and set its data",
-      "properties": {
-        "eventRef": {
-          "type": "string",
-          "description": "References a name of a defined event"
+          "additionalProperties": true,
+          "description": "An event filter is a mechanism used to selectively process or handle events based on predefined criteria, such as event type, source, or specific attributes."
         },
-        "data": {
-          "type": [
-            "string",
-            "object"
-          ],
-          "description": "If String, expression which selects parts of the states data output to become the data of the produced event. If object a custom object to become the data of produced event."
-        },
-        "contextAttributes": {
+        "correlate": {
           "type": "object",
-          "description": "Add additional event extension context attributes",
           "additionalProperties": {
-            "type": "string"
-          }
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "string",
+                "description": "A runtime expression used to extract the correlation value from the filtered event."
+              },
+              "expect": {
+                "type": "string",
+                "description": "A constant or a runtime expression, if any, used to determine whether or not the extracted correlation value matches expectations. If not set, the first extracted value will be used as the correlation's expectation."
+              }
+            },
+            "required": [
+              "from"
+            ]
+          },
+          "description": "A correlation is a link between events and data, established by mapping event attributes to specific data attributes, allowing for coordinated processing or handling based on event characteristics."
         }
       },
-      "additionalProperties": false,
       "required": [
-        "eventRef"
+        "with"
+      ],
+      "description": "An event filter is a mechanism used to selectively process or handle events based on predefined criteria, such as event type, source, or specific attributes."
+    },
+    "extension": {
+      "type": "object",
+      "properties": {
+        "extend": {
+          "type": "string",
+          "enum": [
+            "call",
+            "composite",
+            "emit",
+            "for",
+            "listen",
+            "raise",
+            "run",
+            "set",
+            "switch",
+            "try",
+            "wait",
+            "all"
+          ],
+          "description": "The type of task to extend."
+        },
+        "when": {
+          "type": "string",
+          "description": "A runtime expression, if any, used to determine whether or not the extension should apply in the specified context."
+        },
+        "before": {
+          "description": "The task(s) to execute before the extended task, if any.",
+          "$ref": "#/$defs/taskList"
+        },
+        "after": {
+          "description": "The task(s) to execute after the extended task, if any.",
+          "$ref": "#/$defs/taskList"
+        }
+      },
+      "required": [
+        "extend"
+      ],
+      "description": "The definition of a an extension."
+    },
+    "externalResource": {
+      "oneOf": [
+        {
+          "type": "string",
+          "format": "uri"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "uri": {
+              "type": "string",
+              "format": "uri",
+              "description": "The endpoint's URI."
+            },
+            "authentication": {
+              "description": "The authentication policy to use.",
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/authenticationPolicy"
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "name": {
+              "type": "string",
+              "description": "The external resource's name, if any."
+            }
+          },
+          "required": [
+            "uri"
+          ]
+        }
       ]
     },
-    "statedatafilter": {
+    "input": {
       "type": "object",
       "properties": {
-        "input": {
-          "type": "string",
-          "description": "Workflow expression to filter the state data input"
+        "schema": {
+          "$ref": "#/$defs/schema",
+          "description": "The schema used to describe and validate the input of the workflow or task."
         },
-        "output": {
+        "from": {
           "type": "string",
-          "description": "Workflow expression that filters the state data output"
+          "description": "A runtime expression, if any, used to mutate and/or filter the input of the workflow or task."
         }
       },
-      "additionalProperties": false,
-      "required": []
+      "description": "Configures the input of a workflow or task."
     },
-    "eventdatafilter": {
+    "output": {
       "type": "object",
       "properties": {
-        "useData": {
-          "type": "boolean",
-          "description": "If set to false, event payload is not added/merged to state data. In this case 'data' and 'toStateData' should be ignored. Default is true.",
-          "default": true
+        "schema": {
+          "$ref": "#/$defs/schema",
+          "description": "The schema used to describe and validate the output of the workflow or task."
         },
-        "data": {
+        "as": {
           "type": "string",
-          "description": "Workflow expression that filters the received event payload (default: '${ . }')"
-        },
-        "toStateData": {
-          "type": "string",
-          "description": " Workflow expression that selects a state data element to which the filtered event should be added/merged into. If not specified, denotes, the top-level state data element."
+          "description": "A runtime expression, if any, used to mutate and/or filter the output of the workflow or task."
         }
       },
-      "additionalProperties": false,
-      "required": []
+      "description": "Configures the output of a workflow or task."
     },
-    "actiondatafilter": {
+    "export": {
       "type": "object",
       "properties": {
-        "fromStateData": {
-          "type": "string",
-          "description": "Workflow expression that selects state data that the state action can use"
+        "schema": {
+          "$ref": "#/$defs/schema",
+          "description": "The schema used to describe and validate the workflow context."
         },
-        "useResults": {
-          "type": "boolean",
-          "description": "If set to false, action data results are not added/merged to state data. In this case 'results' and 'toStateData' should be ignored. Default is true.",
-          "default": true
-        },
-        "results": {
+        "as": {
           "type": "string",
-          "description": "Workflow expression that filters the actions data results"
-        },
-        "toStateData": {
-          "type": "string",
-          "description": "Workflow expression that selects a state data element to which the action results should be added/merged into. If not specified, denote, the top-level state data element"
+          "description": "A runtime expression, if any, used to export the output data to the context."
         }
       },
-      "additionalProperties": false,
-      "required": []
+      "description": "Set the content of the context."
+    },
+    "retryPolicy": {
+      "type": "object",
+      "properties": {
+        "when": {
+          "type": "string",
+          "description": "A runtime expression, if any, used to determine whether or not to retry running the task, in a given context."
+        },
+        "exceptWhen": {
+          "type": "string",
+          "description": "A runtime expression used to determine whether or not to retry running the task, in a given context."
+        },
+        "delay": {
+          "$ref": "#/$defs/duration",
+          "description": "The duration to wait between retry attempts."
+        },
+        "backoff": {
+          "type": "object",
+          "oneOf": [
+            {
+              "properties": {
+                "constant": {
+                  "type": "object",
+                  "description": "The definition of the constant backoff to use, if any."
+                }
+              },
+              "required": [
+                "constant"
+              ]
+            },
+            {
+              "properties": {
+                "exponential": {
+                  "type": "object",
+                  "description": "The definition of the exponential backoff to use, if any."
+                }
+              },
+              "required": [
+                "exponential"
+              ]
+            },
+            {
+              "properties": {
+                "linear": {
+                  "type": "object",
+                  "description": "The definition of the linear backoff to use, if any."
+                }
+              },
+              "required": [
+                "linear"
+              ]
+            }
+          ],
+          "description": "The retry duration backoff."
+        },
+        "limit": {
+          "type": "object",
+          "properties": {
+            "attempt": {
+              "type": "object",
+              "properties": {
+                "count": {
+                  "type": "integer",
+                  "description": "The maximum amount of retry attempts, if any."
+                },
+                "duration": {
+                  "$ref": "#/$defs/duration",
+                  "description": "The maximum duration for each retry attempt."
+                }
+              }
+            },
+            "duration": {
+              "$ref": "#/$defs/duration",
+              "description": "The duration limit, if any, for all retry attempts."
+            }
+          },
+          "description": "The retry limit, if any"
+        },
+        "jitter": {
+          "type": "object",
+          "properties": {
+            "from": {
+              "$ref": "#/$defs/duration",
+              "description": "The minimum duration of the jitter range"
+            },
+            "to": {
+              "$ref": "#/$defs/duration",
+              "description": "The maximum duration of the jitter range"
+            }
+          },
+          "required": [
+            "from",
+            "to"
+          ],
+          "description": "The parameters, if any, that control the randomness or variability of the delay between retry attempts."
+        }
+      },
+      "description": "Defines a retry policy."
+    },
+    "schema": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "type": "string",
+          "default": "json",
+          "description": "The schema's format. Defaults to 'json'. The (optional) version of the format can be set using `{format}:{version}`."
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "document": {
+              "description": "The schema's inline definition."
+            }
+          },
+          "required": [
+            "document"
+          ]
+        },
+        {
+          "properties": {
+            "resource": {
+              "$ref": "#/$defs/externalResource",
+              "description": "The schema's external resource."
+            }
+          },
+          "required": [
+            "resource"
+          ]
+        }
+      ],
+      "description": "Represents the definition of a schema."
+    },
+    "timeout": {
+      "type": "object",
+      "properties": {
+        "after": {
+          "$ref": "#/$defs/duration",
+          "description": "The duration after which to timeout."
+        }
+      },
+      "required": [
+        "after"
+      ],
+      "description": "The definition of a timeout."
     }
-  }
+  },
+  "required": [
+    "document",
+    "do"
+  ]
 }

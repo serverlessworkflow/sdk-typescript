@@ -196,5 +196,5 @@ const generate = async (source: string, destDir: string): Promise<void> => {
 };
 
 const buildersDir = path.resolve(process.cwd(), 'src/lib/builders');
-const definitionSrc = path.resolve(process.cwd(), 'src/lib/schema/types/workflow.ts');
+const definitionSrc = path.resolve(process.cwd(), 'src/lib/definitions/workflow.ts');
 generate(definitionSrc, buildersDir).then(console.log.bind(console)).catch(console.error.bind(console));

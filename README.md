@@ -1,4 +1,4 @@
-![Node CI](https://github.com/serverlessworkflow/sdk-typescript/workflows/Node%20CI/badge.svg) [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/serverlessworkflow/sdk-typescript)
+![Node CI](https://github.com/serverless-workflow/sdk/workflows/Node%20CI/badge.svg) [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/serverless-workflow/sdk)
 
 # Serverless Workflow Specification - Typescript SDK
 
@@ -14,9 +14,9 @@ With the SDK you can:
 
 | Latest Releases | Conformance to spec version |
 | :---: | :---: |
-| [v1.0.0](https://github.com/serverlessworkflow/sdk-typescript/releases/) | [v0.6](https://github.com/serverlessworkflow/specification/tree/0.6.x) |
-| [v2.0.0](https://github.com/serverlessworkflow/sdk-typescript/releases/) | [v0.7](https://github.com/serverlessworkflow/specification/tree/0.7.x) |
-| [v3.0.0](https://github.com/serverlessworkflow/sdk-typescript/releases/) | [v0.8](https://github.com/serverlessworkflow/specification/tree/0.8.x) |
+| [v1.0.0](https://github.com/serverless-workflow/sdk/releases/) | [v0.6](https://github.com/serverlessworkflow/specification/tree/0.6.x) |
+| [v2.0.0](https://github.com/serverless-workflow/sdk/releases/) | [v0.7](https://github.com/serverlessworkflow/specification/tree/0.7.x) |
+| [v3.0.0](https://github.com/serverless-workflow/sdk/releases/) | [v0.8](https://github.com/serverlessworkflow/specification/tree/0.8.x) |
 
 
 
@@ -27,7 +27,7 @@ With the SDK you can:
 To build the project and run tests locally:
 
 ```sh
-git clone https://github.com/serverlessworkflow/sdk-typescript.git
+git clone https://github.com/serverless-workflow/sdk.git
 cd sdk-typescript
 npm install && npm run build && npm run test
 ```
@@ -41,7 +41,7 @@ npm install && npm run build && npm run test
 ##### Version  >= 4.0.0
 Note: Version 4.0.0 has not been released yet.
 ```sh
-npm i @serverlessworkflow/sdk-typescript
+npm i @serverless-workflow/sdk
 ```
 
 
@@ -55,7 +55,7 @@ npm i @severlessworkflow/sdk-typescript
 #### Create Workflow using builder API
 
 ```typescript
-import { workflowBuilder, injectstateBuilder, Specification } from '@serverlessworkflow/sdk-typescript';
+import { workflowBuilder, injectstateBuilder, Specification } from '@serverless-workflow/sdk';
 
 const workflow: Specification.Workflow = workflowBuilder()
   .id("helloworld")
@@ -78,7 +78,7 @@ const workflow: Specification.Workflow = workflowBuilder()
 #### Create Workflow from JSON/YAML source
 
 ```typescript
-import { Specification, Workflow } from '@serverlessworkflow/sdk-typescript';
+import { Specification, Workflow } from '@serverless-workflow/sdk';
 
 const source = `id: helloworld
 version: '1.0'
@@ -102,7 +102,7 @@ Where `source` can be in both JSON or YAML format.
 Having the following workflow instance:
 
 ```typescript
-import { workflowBuilder, injectstateBuilder, Specification } from '@serverlessworkflow/sdk-typescript';
+import { workflowBuilder, injectstateBuilder, Specification } from '@serverless-workflow/sdk';
 
 const workflow: Specification.Workflow = workflowBuilder()
   .id("helloworld")
@@ -156,7 +156,7 @@ The sdk provides a way to validate if a workflow object is compliant with the se
 - `validate(): boolean`
 
 ```typescript
-import {WorkflowValidator, Specification} from '@serverlessworkflow/sdk-typescript';
+import {WorkflowValidator, Specification} from '@serverless-workflow/sdk';
 import {Workflow} from "./workflow";
 
 const workflow = {
@@ -188,7 +188,7 @@ You can also validate parts of a workflow using `validators`:
 
 ```typescript
 import { ValidateFunction } from 'ajv';
-import { validators, Specification } from '@serverlessworkflow/sdk-typescript';
+import { validators, Specification } from '@serverless-workflow/sdk';
 
 const injectionState: Specification.Injectstate = workflow.states[0];
 const injectionStateValidator: ValidateFunction<Specification.Injectstate> = validators.get('Injectstate');
