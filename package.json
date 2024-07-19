@@ -1,5 +1,5 @@
 {
-  "name": "@serverless-workflow/sdk",
+  "name": "@serverlessworkflow/sdk",
   "version": "1.0.0-alpha2.0",
   "schemaVersion": "1.0.0-alpha2",
   "description": "Typescript SDK for Serverless Workflow Specification",
@@ -64,6 +64,7 @@
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.36.0",
     "shx": "^0.3.4",
+    "ts-inference-check": "^0.3.0",
     "ts-jest": "^29.2.2",
     "ts-morph": "^23.0.0",
     "ts-node": "^10.9.2",

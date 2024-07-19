@@ -41,7 +41,7 @@ npm install && npm run build && npm run test
 ##### Version  >= 4.0.0
 Note: Version 4.0.0 has not been released yet.
 ```sh
-npm i @serverless-workflow/sdk
+npm i @serverlessworkflow/sdk
 ```
 
 
@@ -55,7 +55,7 @@ npm i @severlessworkflow/sdk-typescript
 #### Create Workflow using builder API
 
 ```typescript
-import { workflowBuilder, injectstateBuilder, Specification } from '@serverless-workflow/sdk';
+import { workflowBuilder, injectstateBuilder, Specification } from '@serverlessworkflow/sdk';
 
 const workflow: Specification.Workflow = workflowBuilder()
   .id("helloworld")
@@ -78,7 +78,7 @@ const workflow: Specification.Workflow = workflowBuilder()
 #### Create Workflow from JSON/YAML source
 
 ```typescript
-import { Specification, Workflow } from '@serverless-workflow/sdk';
+import { Specification, Workflow } from '@serverlessworkflow/sdk';
 
 const source = `id: helloworld
 version: '1.0'
@@ -102,7 +102,7 @@ Where `source` can be in both JSON or YAML format.
 Having the following workflow instance:
 
 ```typescript
-import { workflowBuilder, injectstateBuilder, Specification } from '@serverless-workflow/sdk';
+import { workflowBuilder, injectstateBuilder, Specification } from '@serverlessworkflow/sdk';
 
 const workflow: Specification.Workflow = workflowBuilder()
   .id("helloworld")
@@ -156,7 +156,7 @@ The sdk provides a way to validate if a workflow object is compliant with the se
 - `validate(): boolean`
 
 ```typescript
-import {WorkflowValidator, Specification} from '@serverless-workflow/sdk';
+import {WorkflowValidator, Specification} from '@serverlessworkflow/sdk';
 import {Workflow} from "./workflow";
 
 const workflow = {
@@ -188,7 +188,7 @@ You can also validate parts of a workflow using `validators`:
 
 ```typescript
 import { ValidateFunction } from 'ajv';
-import { validators, Specification } from '@serverless-workflow/sdk';
+import { validators, Specification } from '@serverlessworkflow/sdk';
 
 const injectionState: Specification.Injectstate = workflow.states[0];
 const injectionStateValidator: ValidateFunction<Specification.Injectstate> = validators.get('Injectstate');
