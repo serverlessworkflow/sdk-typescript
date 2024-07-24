@@ -21,6 +21,7 @@ import { readMeDisclaimer } from './consts';
 import { URL } from 'url';
 import yargs from 'yargs';
 import { schemaVersion } from '../package.json';
+import { Project, QuoteKind } from 'ts-morph';
 
 const { writeFile, mkdir } = fsPromises;
 
@@ -30,8 +31,64 @@ export const reset = async (destDir: string) =>
     .then(() => mkdir(destDir, { recursive: true }))
     .then(() => writeFile(path.resolve(destDir, 'README.md'), readMeDisclaimer));
 
+/**
+ * Check if the provided value is an object but not an array
+ * @param value The value to check
+ * @returns True if the value is an object
+ */
+export const isObject = (value: unknown): boolean => {
+  if (!value) return false;
+  return typeof value === 'object' && !Array.isArray(value);
+};
+
+/**
+ * Transforms a PascalCased string into a kebab-cased one
+ * @param source
+ * @returns
+ */
+export const toKebabCase = (source: string): string =>
+  source
+    .replace(/([A-Z])/g, ' $1')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/_+/g, '-')
+    .toLowerCase();
+
+/**
+ * Normalize to capitalize first letter only convention for know accronyms, eg HTTP -> Http
+ * @param source
+ * @returns
+ */
+export const normalizeKnownAllCaps = (source: string): string =>
+  source.replace('API', 'Api').replace('GRPC', 'Grpc').replace('HTTP', 'Http');
+
+/**
+ * Get the exported declarations of the provided TypeScript code
+ * @param tsSource The TypeScript code to parse
+ * @returns An array containing the name of the exported declarations
+ */
+export const getExportedDeclarations = (tsSource: string): Array<string> => {
+  const project = new Project({
+    useInMemoryFileSystem: true,
+    manipulationSettings: {
+      quoteKind: QuoteKind.Single,
+    },
+  });
+  const sourceFile = project.createSourceFile('declarations.ts', tsSource);
+  return Array.from(sourceFile.getExportedDeclarations()).map(([name, _]) => name);
+};
+
 /** Schemas directory */
-export const schemaDir = path.resolve(process.cwd(), 'src/lib/schema');
+export const schemaDir = path.resolve(process.cwd(), 'src/lib/generated/schema');
+/** Definitions directory */
+export const definitionsDir = path.resolve(process.cwd(), 'src/lib/generated/definitions');
+/** Vallidation directory */
+export const vallidationDir = path.resolve(process.cwd(), 'src/lib/generated/validation');
+/** Classes directory */
+export const classesDir = path.resolve(process.cwd(), 'src/lib/generated/classes');
+/** Builders directory */
+export const buildersDir = path.resolve(process.cwd(), 'src/lib/generated/builders');
 
 const argv = yargs(process.argv.slice(2))
   .options({

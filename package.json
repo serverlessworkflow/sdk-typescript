@@ -16,11 +16,12 @@
     "prettier": "npx prettier",
     "lint-staged": "npx lint-staged",
     "clean": "npx rimraf dist && rimraf out-tsc",
-    "tools:download-schemas": "npx ts-node --project ./tools/tsconfig.json ./tools/download-schemas.ts",
-    "tools:generate-merged_json": "npx ts-node --project ./tools/tsconfig.json ./tools/generate-merged_json.ts",
-    "tools:generate-definitions": "npx ts-node --project ./tools/tsconfig.json ./tools/generate-definitions.ts",
-    "tools:generate-builders": "npx ts-node --project ./tools/tsconfig.json ./tools/generate-builders.ts",
-    "update-code-base": "npm run tools:download-schemas && npm run tools:generate-definitions && npm run tools:generate-builders && npm run format && npm run test",
+    "tools:1_download-schemas": "npx ts-node --project ./tools/tsconfig.json ./tools/1_download-schemas.ts",
+    "tools:2_generate-definitions": "npx ts-node --project ./tools/tsconfig.json ./tools/2_generate-definitions.ts",
+    "tools:3_generate-validation-pointers": "npx ts-node --project ./tools/tsconfig.json ./tools/3_generate-validation-pointers.ts",
+    "tools:4_generate-classes": "npx ts-node --project ./tools/tsconfig.json ./tools/4_generate-classes.ts",
+    "tools:5_generate-builders": "npx ts-node --project ./tools/tsconfig.json ./tools/5_generate-builders.ts",
+    "update-code-base": "npm run tools:1_download-schemas && npm run tools:2_generate-definitions && npm run tools:3_generate-validation-pointers && npm run tools:4_generate-classes && npm run tools:5_generate-builders && npm run format && npm run test",
     "format": "npx prettier --write \"**/*.ts\"",
     "lint": "npx eslint . --ext .ts && npx prettier --check \"**/*.ts\"",
     "pretest": "npx rimraf out-tsc",
@@ -35,6 +36,7 @@
   },
   "dependencies": {
     "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
     "js-yaml": "^4.1.0"
   },
   "devDependencies": {
