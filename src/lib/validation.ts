@@ -1,6 +1,7 @@
 import Ajv, { ValidateFunction } from 'ajv/dist/2020';
 import addFormats from 'ajv-formats';
 import workflowSchema from './generated/schema/workflow.json';
+import internalWorkflowSchema from './generated/schema/__internal_workflow.json';
 import { validationPointers } from './generated/validation';
 
 const ajv = new Ajv({
@@ -9,12 +10,21 @@ const ajv = new Ajv({
 });
 addFormats(ajv);
 
+// uses an altered version of the JSON Schema, might introduce unwanted results
+const __internal_ajv = new Ajv({
+  schemas: [internalWorkflowSchema],
+  strict: false,
+});
+addFormats(__internal_ajv);
+
 /**
  * A Map of validation functions, where the key is the name of the schema to validate with
  */
 export const validators: Map<string, ValidateFunction> = new Map<string, ValidateFunction>(
   Object.entries(validationPointers).map(([typeName, jsonPointer]) => {
-    const validate = ajv.getSchema(jsonPointer);
+    if (!jsonPointer) throw `No JSON pointer provided for type '${typeName}'`;
+    let validate = ajv.getSchema(jsonPointer);
+    if (!validate) validate = __internal_ajv.getSchema(jsonPointer);
     if (!validate) throw `Unable to find schema '${jsonPointer}' for type '${typeName}'`;
     return [typeName, validate as ValidateFunction];
   }),

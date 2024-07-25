@@ -88,7 +88,8 @@ ${jsonPointers.reduce((src, [key, value]) => `${src}  ${key}: ${value ? `'${valu
   );
 }
 
-const schemaFile = path.resolve(schemaDir, 'workflow.json');
+const schemaFile = path.resolve(schemaDir, '__internal_workflow.json');
+//const schemaFile = path.resolve(schemaDir, 'workflow.json');
 const definitionFile = path.resolve(definitionsDir, 'specification.ts');
 const destFile = path.resolve(vallidationDir, 'validation-pointers.ts');
 

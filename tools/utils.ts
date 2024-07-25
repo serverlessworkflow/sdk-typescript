@@ -42,7 +42,7 @@ export const isObject = (value: unknown): boolean => {
 };
 
 /**
- * Transforms a PascalCased string into a kebab-cased one
+ * Transforms a PascalCased string or with space into a kebab-cased one
  * @param source
  * @returns
  */
@@ -56,12 +56,28 @@ export const toKebabCase = (source: string): string =>
     .toLowerCase();
 
 /**
+ * Converts a string to pascal case (PascalCase)
+ * @param source string The string to convert to pascal case
+ * @returns string The pascal case string
+ */
+export const toPascalCase = (source: string): string => {
+  if (!source) return '';
+  return source
+    .replace(/-+/g, ' ')
+    .replace(/_+/g, ' ')
+    .replace(/\.+/g, ' ')
+    .replace(/\s+(.)(\w+)/g, ($1, $2, $3) => `${$2.toUpperCase()}${$3.toLowerCase()}`)
+    .replace(/\s/g, '')
+    .replace(/\w/, (s) => s.toUpperCase());
+};
+
+/**
  * Normalize to capitalize first letter only convention for know accronyms, eg HTTP -> Http
  * @param source
  * @returns
  */
 export const normalizeKnownAllCaps = (source: string): string =>
-  source.replace('API', 'Api').replace('GRPC', 'Grpc').replace('HTTP', 'Http');
+  source.replace('API', 'Api').replace('GRPC', 'Grpc').replace('HTTP', 'Http').replace('OAuth2', 'Oauth2');
 
 /**
  * Get the exported declarations of the provided TypeScript code
@@ -76,7 +92,7 @@ export const getExportedDeclarations = (tsSource: string): Array<string> => {
     },
   });
   const sourceFile = project.createSourceFile('declarations.ts', tsSource);
-  return Array.from(sourceFile.getExportedDeclarations()).map(([name, _]) => name);
+  return Array.from(sourceFile.getExportedDeclarations()).map(([name]) => name);
 };
 
 /** Schemas directory */

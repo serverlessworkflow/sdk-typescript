@@ -23,31 +23,54 @@
 /**
  * Represents the definition of a schema.
  */
-export type Schema = SchemaInline | SchemaExternal;
-export type ExternalResource = string | ExternalResourceURI;
-export type ReferenceableAuthenticationPolicy = AuthenticationPolicyReference | ReferencedAuthenticationPolicy;
-/**
- * Defines an authentication policy.
- */
-export type ReferencedAuthenticationPolicy =
-  | BasicAuthenticationPolicy
-  | BearerAuthenticationPolicy
-  | OAuth2AuthenticationPolicy;
-/**
- * A runtime expression, if any, used to mutate and/or filter the input of the workflow or task.
- */
-export type InputFrom =
+export type Schema =
+  | {
+      /**
+       * The schema's inline definition.
+       */
+      document: {
+        [k: string]: unknown;
+      };
+      [k: string]: unknown;
+    }
+  | {
+      resource: ExternalResource;
+      [k: string]: unknown;
+    };
+export type ExternalResource =
   | string
   | {
+      /**
+       * The endpoint's URI.
+       */
+      uri: string;
+      authentication?: ExternalResourceAuthentication;
+      /**
+       * The external resource's name, if any.
+       */
+      name?: string;
       [k: string]: unknown;
     };
 /**
+ * The authentication policy to use.
+ */
+export type ExternalResourceAuthentication = AuthenticationPolicy | string;
+/**
  * Defines an authentication policy.
  */
-export type AuthenticationPolicy = BasicAuthenticationPolicy | BearerAuthenticationPolicy | OAuth2AuthenticationPolicy;
-/**
- * Defines all possible tasks
- */
+export type AuthenticationPolicy =
+  | {
+      basic: AuthenticationPolicyBasic;
+      [k: string]: unknown;
+    }
+  | {
+      bearer: AuthenticationPolicyBearer;
+      [k: string]: unknown;
+    }
+  | {
+      oauth2: AuthenticationPolicyOauth2;
+      [k: string]: unknown;
+    };
 export type Task =
   | CallTask
   | DoTask
@@ -61,36 +84,109 @@ export type Task =
   | SwitchTask
   | TryTask
   | WaitTask;
-/**
- * Enables the execution of a specified function within a workflow, allowing seamless integration with custom business logic or external services
- */
 export type CallTask = CallAsyncAPI | CallGRPC | CallHTTP | CallOpenAPI | CallFunction;
+export type CallAsyncAPI = TaskBase & {
+  call?: 'asyncapi';
+  with?: CallAsyncAPIWith;
+  [k: string]: unknown;
+};
+export type FlowDirective = ('continue' | 'exit' | 'end') | string;
+/**
+ * The authentication policy, if any, to use when calling the AsyncAPI operation.
+ */
+export type CallAsyncAPIWithAuthentication = AuthenticationPolicy | string;
+export type CallGRPC = TaskBase & {
+  call?: 'grpc';
+  with?: CallGRPCWith;
+  [k: string]: unknown;
+};
+/**
+ * The endpoint's authentication policy, if any.
+ */
+export type CallGRPCWithServiceAuthentication = AuthenticationPolicy | string;
+export type CallHTTP = TaskBase & {
+  call?: 'http';
+  with?: CallHTTPWith;
+  [k: string]: unknown;
+};
 /**
  * The HTTP endpoint to send the request to.
  */
 export type CallHTTPWithEndpoint = Endpoint | string;
 /**
- * A runtime expression, if any, used to mutate and/or filter the output of the workflow or task.
+ * The authentication policy to use.
  */
-export type OutputAs =
-  | string
-  | {
-      [k: string]: unknown;
-    };
+export type EndpointAuthentication = AuthenticationPolicy | string;
+export type CallOpenAPI = TaskBase & {
+  call?: 'openapi';
+  with?: CallOpenAPIWith;
+  [k: string]: unknown;
+};
 /**
- * A runtime expression, if any, used to export the output data to the context.
+ * The authentication policy, if any, to use when calling the OpenAPI operation.
  */
-export type ExportAs =
-  | string
+export type CallOpenAPIWithAuthentication = AuthenticationPolicy | string;
+export type CallFunction = TaskBase & {
+  /**
+   * The name of the function to call.
+   */
+  call?: string;
+  with?: CallFunctionWith;
+  [k: string]: unknown;
+};
+/**
+ * Allows to execute a list of tasks in sequence
+ */
+export type DoTask = TaskBase & {
+  do?: TaskList;
+  [k: string]: unknown;
+};
+/**
+ * Allows workflows to execute multiple tasks concurrently and optionally race them against each other, with a single possible winner, which sets the task's output.
+ */
+export type ForkTask = TaskBase & {
+  fork?: ForkTaskFork;
+  [k: string]: unknown;
+};
+/**
+ * Allows workflows to publish events to event brokers or messaging systems, facilitating communication and coordination between different components and services.
+ */
+export type EmitTask = TaskBase & {
+  emit?: EmitTaskEmit;
+  [k: string]: unknown;
+};
+/**
+ * Allows workflows to iterate over a collection of items, executing a defined set of subtasks for each item in the collection. This task type is instrumental in handling scenarios such as batch processing, data transformation, and repetitive operations across datasets.
+ */
+export type ForTask = TaskBase & {
+  for?: ForTaskFor;
+  /**
+   * A runtime expression that represents the condition, if any, that must be met for the iteration to continue.
+   */
+  while?: string;
+  do?: TaskList;
+  [k: string]: unknown;
+};
+/**
+ * Provides a mechanism for workflows to await and react to external events, enabling event-driven behavior within workflow systems.
+ */
+export type ListenTask = TaskBase & {
+  listen?: ListenTaskListen;
+  [k: string]: unknown;
+};
+export type EventConsumptionStrategy =
   | {
+      all: EventConsumptionStrategyAll;
+      [k: string]: unknown;
+    }
+  | {
+      any: EventConsumptionStrategyAny;
+      [k: string]: unknown;
+    }
+  | {
+      one: EventFilter;
       [k: string]: unknown;
     };
-export type FlowDirective = FlowDirectiveEnum | string;
-export type FlowDirectiveEnum = 'continue' | 'exit' | 'end';
-export type EventConsumptionStrategy =
-  | AllEventConsumptionStrategy
-  | AnyEventConsumptionStrategy
-  | OneEventConsumptionStrategy;
 /**
  * A list containing all the events that must be consumed.
  */
@@ -99,46 +195,166 @@ export type EventConsumptionStrategyAll = EventFilter[];
  * A list containing any of the events to consume.
  */
 export type EventConsumptionStrategyAny = EventFilter[];
-export type Run = RunContainer | RunScript | RunShell | RunWokflow;
-export type Script = ScriptInline | ScriptExternal;
+/**
+ * Intentionally triggers and propagates errors.
+ */
+export type RaiseTask = TaskBase & {
+  raise?: RaiseTaskRaise;
+  [k: string]: unknown;
+};
+/**
+ * Provides the capability to execute external containers, shell commands, scripts, or workflows.
+ */
+export type RunTask = TaskBase & {
+  run?: RunTaskRun;
+  [k: string]: unknown;
+};
+export type RunTaskRun =
+  | {
+      container: RunTaskRunContainer;
+      [k: string]: unknown;
+    }
+  | {
+      script: RunTaskRunScript;
+      [k: string]: unknown;
+    }
+  | {
+      shell: RunTaskRunShell;
+      [k: string]: unknown;
+    }
+  | {
+      workflow: RunTaskRunWorkflow;
+      [k: string]: unknown;
+    };
+export type RunTaskRunScript =
+  | {
+      code: string;
+      [k: string]: unknown;
+    }
+  | {
+      source: ExternalResource;
+      [k: string]: unknown;
+    };
+/**
+ * A task used to set data
+ */
+export type SetTask = TaskBase & {
+  set?: SetTaskSet;
+  [k: string]: unknown;
+};
+/**
+ * Enables conditional branching within workflows, allowing them to dynamically select different paths based on specified conditions or criteria
+ */
+export type SwitchTask = TaskBase & {
+  switch?: SwitchTaskSwitch;
+  [k: string]: unknown;
+};
 /**
  * @minItems 1
  */
-export type Switch = [SwitchItem, ...SwitchItem[]];
+export type SwitchTaskSwitch = [
+  {
+    [k: string]: {
+      /**
+       * The case's name.
+       */
+      name?: string;
+      /**
+       * A runtime expression used to determine whether or not the case matches.
+       */
+      when?: string;
+      then?: FlowDirective;
+      [k: string]: unknown;
+    };
+  },
+  ...{
+    [k: string]: {
+      /**
+       * The case's name.
+       */
+      name?: string;
+      /**
+       * A runtime expression used to determine whether or not the case matches.
+       */
+      when?: string;
+      then?: FlowDirective;
+      [k: string]: unknown;
+    };
+  }[],
+];
+/**
+ * Serves as a mechanism within workflows to handle errors gracefully, potentially retrying failed tasks before proceeding with alternate ones.
+ */
+export type TryTask = TaskBase & {
+  try?: TaskList;
+  catch?: TryTaskCatch;
+  [k: string]: unknown;
+};
 /**
  * The retry duration backoff.
  */
-export type RetryPolicyBackoff = ConstantBackoff | ExponentialBackOff | LinearBackoff;
+export type RetryPolicyBackoff =
+  | {
+      /**
+       * The definition of the constant backoff to use, if any.
+       */
+      constant: {
+        [k: string]: unknown;
+      };
+      [k: string]: unknown;
+    }
+  | {
+      /**
+       * The definition of the exponential backoff to use, if any.
+       */
+      exponential: {
+        [k: string]: unknown;
+      };
+      [k: string]: unknown;
+    }
+  | {
+      /**
+       * The definition of the linear backoff to use, if any.
+       */
+      linear: {
+        [k: string]: unknown;
+      };
+      [k: string]: unknown;
+    };
 /**
- * A name/value mapping of tasks
+ * Allows workflows to pause or delay their execution for a specified period of time.
  */
-export type TaskList = TaskItem[];
+export type WaitTask = TaskBase & {
+  wait?: Duration;
+  [k: string]: unknown;
+};
+export type TaskList = {
+  [k: string]: Task;
+}[];
 /**
  * The workflow's extensions.
  */
-export type WorkflowExtensions = ExtensionItem[];
-/**
- * The workflow's secrets.
- */
-export type WorkflowSecrets = string[];
+export type UseExtensions = {
+  [k: string]: Extension;
+}[];
 
 /**
  * Serverless Workflow DSL - Workflow Schema
  */
 export interface Workflow {
-  document: WorkflowDocument;
+  document: Document;
   input?: Input;
-  use?: WorkflowComponents;
+  use?: Use;
   do: TaskList;
   timeout?: Timeout;
   output?: Output;
-  schedule?: WorkflowSchedule;
+  schedule?: Schedule;
   [k: string]: unknown;
 }
 /**
  * Documents the workflow
  */
-export interface WorkflowDocument {
+export interface Document {
   /**
    * The version of the DSL used by the workflow.
    */
@@ -163,13 +379,13 @@ export interface WorkflowDocument {
    * The workflow's Markdown summary.
    */
   summary?: string;
-  tags?: WorkflowTags;
+  tags?: DocumentTags;
   [k: string]: unknown;
 }
 /**
  * A key/value mapping of the workflow's tags, if any.
  */
-export interface WorkflowTags {
+export interface DocumentTags {
   [k: string]: unknown;
 }
 /**
@@ -177,49 +393,13 @@ export interface WorkflowTags {
  */
 export interface Input {
   schema?: Schema;
-  from?: InputFrom;
-  [k: string]: unknown;
-}
-export interface SchemaInline {
   /**
-   * The schema's inline definition.
+   * A runtime expression, if any, used to mutate and/or filter the input of the workflow or task.
    */
-  document: {
-    [k: string]: unknown;
-  };
+  from?: string;
   [k: string]: unknown;
 }
-export interface SchemaExternal {
-  resource: ExternalResource;
-  [k: string]: unknown;
-}
-export interface ExternalResourceURI {
-  /**
-   * The endpoint's URI.
-   */
-  uri: string;
-  authentication?: ReferenceableAuthenticationPolicy;
-  /**
-   * The external resource's name, if any.
-   */
-  name?: string;
-  [k: string]: unknown;
-}
-export interface AuthenticationPolicyReference {
-  /**
-   * The name of the authentication policy to use
-   */
-  use: string;
-  [k: string]: unknown;
-}
-/**
- * Use basic authentication.
- */
-export interface BasicAuthenticationPolicy {
-  basic: ExplicitBasicAuthenticationPolicy | SecretBasedAuthenticationPolicy;
-  [k: string]: unknown;
-}
-export interface ExplicitBasicAuthenticationPolicy {
+export interface AuthenticationPolicyBasic {
   /**
    * The username to use.
    */
@@ -230,35 +410,14 @@ export interface ExplicitBasicAuthenticationPolicy {
   password: string;
   [k: string]: unknown;
 }
-export interface SecretBasedAuthenticationPolicy {
-  /**
-   * The name of the authentication policy to use
-   */
-  use: string;
-  [k: string]: unknown;
-}
-/**
- * Use bearer authentication.
- */
-export interface BearerAuthenticationPolicy {
-  bearer: ExplicitBearerAuthenticationPolicy | SecretBasedAuthenticationPolicy;
-  [k: string]: unknown;
-}
-export interface ExplicitBearerAuthenticationPolicy {
+export interface AuthenticationPolicyBearer {
   /**
    * The bearer token to use.
    */
   token: string;
   [k: string]: unknown;
 }
-/**
- * Use OAUTH2 authentication.
- */
-export interface OAuth2AuthenticationPolicy {
-  oauth2: ExplicitOAuth2AuthenticationPolicy | SecretBasedAuthenticationPolicy;
-  [k: string]: unknown;
-}
-export interface ExplicitOAuth2AuthenticationPolicy {
+export interface AuthenticationPolicyOauth2 {
   /**
    * The URI that references the OAuth2 authority to use.
    */
@@ -267,17 +426,7 @@ export interface ExplicitOAuth2AuthenticationPolicy {
    * The grant type to use.
    */
   grant: string;
-  client: {
-    /**
-     * The client id to use.
-     */
-    id: string;
-    /**
-     * The client secret to use, if any.
-     */
-    secret?: string;
-    [k: string]: unknown;
-  };
+  client: AuthenticationPolicyOauth2Client;
   /**
    * The scopes, if any, to request the token for.
    */
@@ -298,6 +447,17 @@ export interface ExplicitOAuth2AuthenticationPolicy {
   actor?: Oauth2Token;
   [k: string]: unknown;
 }
+export interface AuthenticationPolicyOauth2Client {
+  /**
+   * The client id to use.
+   */
+  id: string;
+  /**
+   * The client secret to use, if any.
+   */
+  secret?: string;
+  [k: string]: unknown;
+}
 export interface Oauth2Token {
   /**
    * The security token to use to use.
@@ -312,26 +472,17 @@ export interface Oauth2Token {
 /**
  * Defines the workflow's reusable components.
  */
-export interface WorkflowComponents {
-  authentications?: WorkflowAuthentications;
-  errors?: WorkflowErrors;
-  extensions?: WorkflowExtensions;
-  functions?: WorkflowFunctions;
-  retries?: WorkflowRetries;
-  secrets?: WorkflowSecrets;
+export interface Use {
+  authentications?: AuthenticationPolicy;
+  errors?: Error;
+  extensions?: UseExtensions;
+  functions?: Task;
+  retries?: RetryPolicy;
+  /**
+   * The workflow's secrets.
+   */
+  secrets?: string[];
   [k: string]: unknown;
-}
-/**
- * The workflow's reusable authentication policies.
- */
-export interface WorkflowAuthentications {
-  [k: string]: AuthenticationPolicy;
-}
-/**
- * The workflow's reusable errors.
- */
-export interface WorkflowErrors {
-  [k: string]: Error;
 }
 export interface Error {
   /**
@@ -355,9 +506,6 @@ export interface Error {
    */
   detail?: string;
   [k: string]: unknown;
-}
-export interface ExtensionItem {
-  [k: string]: Extension;
 }
 /**
  * The definition of a an extension.
@@ -387,204 +535,6 @@ export interface Extension {
   after?: TaskList;
   [k: string]: unknown;
 }
-export interface TaskItem {
-  [k: string]: Task;
-}
-/**
- * Enables workflows to interact with external services described by AsyncAPI.
- */
-export interface CallAsyncAPI {
-  call: 'asyncapi';
-  with: CallAsyncAPIWith;
-  [k: string]: unknown;
-}
-/**
- * Defines the AsyncAPI call to perform.
- */
-export interface CallAsyncAPIWith {
-  document: ExternalResource;
-  /**
-   * A reference to the AsyncAPI operation to call.
-   */
-  operationRef: string;
-  /**
-   * A a reference to the server to call the specified AsyncAPI operation on. If not set, default to the first server matching the operation's channel.
-   */
-  server?: string;
-  /**
-   * The name of the message to use. If not set, defaults to the first message defined by the operation.
-   */
-  message?: string;
-  /**
-   * The name of the binding to use. If not set, defaults to the first binding defined by the operation.
-   */
-  binding?: string;
-  /**
-   * The payload to call the AsyncAPI operation with, if any.
-   */
-  payload?: {
-    [k: string]: unknown;
-  };
-  authentication?: ReferenceableAuthenticationPolicy;
-}
-/**
- * The base definition shared by all tasks
- */
-export interface CallGRPC {
-  call: 'grpc';
-  with: CallGRPCWith;
-  [k: string]: unknown;
-}
-/**
- * Defines the GRPC call to perform.
- */
-export interface CallGRPCWith {
-  proto: ExternalResource;
-  service: CallGRPCWithService;
-  /**
-   * The name of the method to call on the defined GRPC service.
-   */
-  method: string;
-  arguments?: CallGRPCWithArguments;
-}
-export interface CallGRPCWithService {
-  /**
-   * The name of the GRPC service to call.
-   */
-  name: string;
-  /**
-   * The hostname of the GRPC service to call.
-   */
-  host: string;
-  /**
-   * The port number of the GRPC service to call.
-   */
-  port?: number;
-  authentication?: ReferenceableAuthenticationPolicy;
-  [k: string]: unknown;
-}
-/**
- * The arguments, if any, to call the method with.
- */
-export interface CallGRPCWithArguments {
-  [k: string]: unknown;
-}
-/**
- * The base definition shared by all tasks
- */
-export interface CallHTTP {
-  call: 'http';
-  with: CallHTTPWith;
-  [k: string]: unknown;
-}
-/**
- * Defines the HTTP call to perform.
- */
-export interface CallHTTPWith {
-  /**
-   * The HTTP method of the HTTP request to perform.
-   */
-  method: string;
-  endpoint: CallHTTPWithEndpoint;
-  headers?: CallHTTPWithHeaders;
-  body?: CallHTTPWithBody;
-  /**
-   * The http call output format. Defaults to 'content'.
-   */
-  output?: 'raw' | 'content' | 'response';
-}
-export interface Endpoint {
-  /**
-   * The endpoint's URI.
-   */
-  uri: string;
-  authentication?: ReferenceableAuthenticationPolicy;
-  [k: string]: unknown;
-}
-/**
- * A name/value mapping of the headers, if any, of the HTTP request to perform.
- */
-export interface CallHTTPWithHeaders {
-  [k: string]: unknown;
-}
-/**
- * The body, if any, of the HTTP request to perform.
- */
-export interface CallHTTPWithBody {
-  [k: string]: unknown;
-}
-/**
- * The base definition shared by all tasks
- */
-export interface CallOpenAPI {
-  call: 'openapi';
-  with: CallOpenAPIWith;
-  [k: string]: unknown;
-}
-/**
- * Defines the OpenAPI call to perform.
- */
-export interface CallOpenAPIWith {
-  document: ExternalResource;
-  /**
-   * The id of the OpenAPI operation to call.
-   */
-  operationId: string;
-  parameters?: CallOpenAPIWithParameters;
-  authentication?: ReferenceableAuthenticationPolicy;
-  /**
-   * The http call output format. Defaults to 'content'.
-   */
-  output?: 'raw' | 'content' | 'response';
-}
-/**
- * A name/value mapping of the parameters of the OpenAPI operation to call.
- */
-export interface CallOpenAPIWithParameters {
-  [k: string]: unknown;
-}
-/**
- * The base definition shared by all tasks
- */
-export interface CallFunction {
-  /**
-   * The name of the function to call.
-   */
-  call: string;
-  with?: CallFunctionWith;
-  [k: string]: unknown;
-}
-/**
- * A name/value mapping of the parameters, if any, to call the function with.
- */
-export interface CallFunctionWith {
-  [k: string]: unknown;
-}
-/**
- * Allows to execute a list of tasks in sequence
- */
-export interface DoTask {
-  do: TaskList;
-  [k: string]: unknown;
-}
-/**
- * Allows workflows to execute multiple tasks concurrently and optionally race them against each other, with a single possible winner, which sets the task's output.
- */
-export interface ForkTask {
-  fork: Fork;
-  [k: string]: TaskBase;
-}
-export interface Fork {
-  branches: TaskList;
-  /**
-   * Indicates whether or not the concurrent tasks are racing against each other, with a single possible winner, which sets the composite task's output.
-   */
-  compete?: boolean;
-  [k: string]: unknown;
-}
-/**
- * The base definition shared by all tasks
- */
 export interface TaskBase {
   /**
    * A runtime expression, if any, used to determine whether or not the task should be run.
@@ -602,7 +552,10 @@ export interface TaskBase {
  */
 export interface Output {
   schema?: Schema;
-  as?: OutputAs;
+  /**
+   * A runtime expression, if any, used to mutate and/or filter the output of the workflow or task.
+   */
+  as?: string;
   [k: string]: unknown;
 }
 /**
@@ -610,7 +563,10 @@ export interface Output {
  */
 export interface Export {
   schema?: Schema;
-  as?: ExportAs;
+  /**
+   * A runtime expression, if any, used to export the output data to the context.
+   */
+  as?: string;
   [k: string]: unknown;
 }
 /**
@@ -647,17 +603,143 @@ export interface Duration {
   [k: string]: unknown;
 }
 /**
- * Allows workflows to publish events to event brokers or messaging systems, facilitating communication and coordination between different components and services.
+ * Defines the AsyncAPI call to perform.
  */
-export interface EmitTask {
-  emit: Emit;
+export interface CallAsyncAPIWith {
+  document: ExternalResource;
+  /**
+   * A reference to the AsyncAPI operation to call.
+   */
+  operationRef: string;
+  /**
+   * A a reference to the server to call the specified AsyncAPI operation on. If not set, default to the first server matching the operation's channel.
+   */
+  server?: string;
+  /**
+   * The name of the message to use. If not set, defaults to the first message defined by the operation.
+   */
+  message?: string;
+  /**
+   * The name of the binding to use. If not set, defaults to the first binding defined by the operation.
+   */
+  binding?: string;
+  /**
+   * The payload to call the AsyncAPI operation with, if any.
+   */
+  payload?: {
+    [k: string]: unknown;
+  };
+  authentication?: CallAsyncAPIWithAuthentication;
+}
+/**
+ * Defines the GRPC call to perform.
+ */
+export interface CallGRPCWith {
+  proto: ExternalResource;
+  service: CallGRPCWithService;
+  /**
+   * The name of the method to call on the defined GRPC service.
+   */
+  method: string;
+  arguments?: CallGRPCWithArguments;
+}
+export interface CallGRPCWithService {
+  /**
+   * The name of the GRPC service to call.
+   */
+  name: string;
+  /**
+   * The hostname of the GRPC service to call.
+   */
+  host: string;
+  /**
+   * The port number of the GRPC service to call.
+   */
+  port?: number;
+  authentication?: CallGRPCWithServiceAuthentication;
   [k: string]: unknown;
 }
-export interface Emit {
-  event: EmitEvent;
+/**
+ * The arguments, if any, to call the method with.
+ */
+export interface CallGRPCWithArguments {
   [k: string]: unknown;
 }
-export interface EmitEvent {
+/**
+ * Defines the HTTP call to perform.
+ */
+export interface CallHTTPWith {
+  /**
+   * The HTTP method of the HTTP request to perform.
+   */
+  method: string;
+  endpoint: CallHTTPWithEndpoint;
+  /**
+   * A name/value mapping of the headers, if any, of the HTTP request to perform.
+   */
+  headers?: {
+    [k: string]: unknown;
+  };
+  /**
+   * The body, if any, of the HTTP request to perform.
+   */
+  body?: {
+    [k: string]: unknown;
+  };
+  /**
+   * The http call output format. Defaults to 'content'.
+   */
+  output?: 'raw' | 'content' | 'response';
+}
+export interface Endpoint {
+  /**
+   * The endpoint's URI.
+   */
+  uri: string;
+  authentication?: EndpointAuthentication;
+  [k: string]: unknown;
+}
+/**
+ * Defines the OpenAPI call to perform.
+ */
+export interface CallOpenAPIWith {
+  document: ExternalResource;
+  /**
+   * The id of the OpenAPI operation to call.
+   */
+  operationId: string;
+  parameters?: CallOpenAPIWithParameters;
+  authentication?: CallOpenAPIWithAuthentication;
+  /**
+   * The http call output format. Defaults to 'content'.
+   */
+  output?: 'raw' | 'content' | 'response';
+}
+/**
+ * A name/value mapping of the parameters of the OpenAPI operation to call.
+ */
+export interface CallOpenAPIWithParameters {
+  [k: string]: unknown;
+}
+/**
+ * A name/value mapping of the parameters, if any, to call the function with.
+ */
+export interface CallFunctionWith {
+  [k: string]: unknown;
+}
+export interface ForkTaskFork {
+  branches: TaskList;
+  /**
+   * Indicates whether or not the concurrent tasks are racing against each other, with a single possible winner, which sets the composite task's output.
+   */
+  compete?: boolean;
+  [k: string]: unknown;
+}
+export interface EmitTaskEmit {
+  event: EmitTaskEmitEvent;
+  [k: string]: unknown;
+}
+export interface EmitTaskEmitEvent {
   /**
    * The event's unique identifier
    */
@@ -679,19 +761,7 @@ export interface EmitEvent {
   dataschema?: string;
   [k: string]: unknown;
 }
-/**
- * Allows workflows to iterate over a collection of items, executing a defined set of subtasks for each item in the collection. This task type is instrumental in handling scenarios such as batch processing, data transformation, and repetitive operations across datasets.
- */
-export interface ForTask {
-  for: For;
-  /**
-   * A runtime expression that represents the condition, if any, that must be met for the iteration to continue.
-   */
-  while?: string;
-  do: TaskList;
-  [k: string]: unknown;
-}
-export interface For {
+export interface ForTaskFor {
   /**
    * The name of the variable used to store the current item being enumerated.
    */
@@ -706,33 +776,22 @@ export interface For {
   at?: string;
   [k: string]: unknown;
 }
-/**
- * Provides a mechanism for workflows to await and react to external events, enabling event-driven behavior within workflow systems.
- */
-export interface ListenTask {
-  listen: Listen;
-  [k: string]: unknown;
-}
-export interface Listen {
+export interface ListenTaskListen {
   to: EventConsumptionStrategy;
-  [k: string]: unknown;
-}
-export interface AllEventConsumptionStrategy {
-  all: EventConsumptionStrategyAll;
   [k: string]: unknown;
 }
 /**
  * An event filter is a mechanism used to selectively process or handle events based on predefined criteria, such as event type, source, or specific attributes.
  */
 export interface EventFilter {
-  with: WithEvent;
-  correlate?: Correlate;
+  with: EventFilterWith;
+  correlate?: EventFilterCorrelate;
   [k: string]: unknown;
 }
 /**
  * An event filter is a mechanism used to selectively process or handle events based on predefined criteria, such as event type, source, or specific attributes.
  */
-export interface WithEvent {
+export interface EventFilterWith {
   /**
    * The event's unique identifier
    */
@@ -757,7 +816,7 @@ export interface WithEvent {
 /**
  * A correlation is a link between events and data, established by mapping event attributes to specific data attributes, allowing for coordinated processing or handling based on event characteristics.
  */
-export interface Correlate {
+export interface EventFilterCorrelate {
   [k: string]: {
     /**
      * A runtime expression used to extract the correlation value from the filtered event.
@@ -770,40 +829,11 @@ export interface Correlate {
     [k: string]: unknown;
   };
 }
-export interface AnyEventConsumptionStrategy {
-  any: EventConsumptionStrategyAny;
-  [k: string]: unknown;
-}
-export interface OneEventConsumptionStrategy {
-  one: EventFilter;
-  [k: string]: unknown;
-}
-/**
- * Intentionally triggers and propagates errors.
- */
-export interface RaiseTask {
-  raise: Raise;
-  [k: string]: unknown;
-}
-export interface Raise {
+export interface RaiseTaskRaise {
   error: Error;
   [k: string]: unknown;
 }
-/**
- * Provides the capability to execute external containers, shell commands, scripts, or workflows.
- */
-export interface RunTask {
-  run: Run;
-  [k: string]: unknown;
-}
-/**
- * Enables the execution of external processes encapsulated within a containerized environment.
- */
-export interface RunContainer {
-  container: Container;
-  [k: string]: unknown;
-}
-export interface Container {
+export interface RunTaskRunContainer {
   /**
    * The name of the container image to run.
    */
@@ -824,72 +854,36 @@ export interface Container {
   volumes?: {
     [k: string]: unknown;
   };
-  environment?: ContainerEnvironment;
+  /**
+   * A key/value mapping of the environment variables, if any, to use when running the configured process.
+   */
+  environment?: {
+    [k: string]: unknown;
+  };
   [k: string]: unknown;
 }
-/**
- * A key/value mapping of the environment variables, if any, to use when running the configured process.
- */
-export interface ContainerEnvironment {
-  [k: string]: unknown;
-}
-/**
- * Enables the execution of custom scripts or code within a workflow, empowering workflows to perform specialized logic, data processing, or integration tasks by executing user-defined scripts written in various programming languages.
- */
-export interface RunScript {
-  script: Script;
-  [k: string]: unknown;
-}
-/**
- * The script's code.
- */
-export interface ScriptInline {
-  code: string;
-  [k: string]: unknown;
-}
-/**
- * The script's resource.
- */
-export interface ScriptExternal {
-  source: ExternalResource;
-  [k: string]: unknown;
-}
-/**
- * Enables the execution of shell commands within a workflow, enabling workflows to interact with the underlying operating system and perform system-level operations, such as file manipulation, environment configuration, or system administration tasks.
- */
-export interface RunShell {
-  shell: Shell;
-  [k: string]: unknown;
-}
-export interface Shell {
+export interface RunTaskRunShell {
   /**
    * The shell command to run.
    */
   command: string;
-  arguments?: ShellArguments;
-  environment?: ShellEnvironment;
+  arguments?: RunTaskRunShellArguments;
+  environment?: RunTaskRunShellEnvironment;
   [k: string]: unknown;
 }
 /**
  * A list of the arguments of the shell command to run.
  */
-export interface ShellArguments {
+export interface RunTaskRunShellArguments {
   [k: string]: unknown;
 }
 /**
  * A key/value mapping of the environment variables, if any, to use when running the configured process.
  */
-export interface ShellEnvironment {
+export interface RunTaskRunShellEnvironment {
   [k: string]: unknown;
 }
-/**
- * Enables the invocation and execution of nested workflows within a parent workflow, facilitating modularization, reusability, and abstraction of complex logic or business processes by encapsulating them into standalone workflow units.
- */
-export interface RunWokflow {
-  workflow: RunWorkflowDescriptor;
-  [k: string]: unknown;
-}
-export interface RunWorkflowDescriptor {
+export interface RunTaskRunWorkflow {
   /**
    * The namespace the workflow to run belongs to.
    */
@@ -902,56 +896,25 @@ export interface RunWorkflowDescriptor {
    * The version of the workflow to run. Defaults to latest
    */
   version: string;
-  input?: WorkflowInput;
+  input?: RunTaskRunWorkflowInput;
   [k: string]: unknown;
 }
 /**
  * The data, if any, to pass as input to the workflow to execute. The value should be validated against the target workflow's input schema, if specified.
  */
-export interface WorkflowInput {
-  [k: string]: unknown;
-}
-/**
- * A task used to set data
- */
-export interface SetTask {
-  set: Set;
+export interface RunTaskRunWorkflowInput {
   [k: string]: unknown;
 }
 /**
  * The data to set
  */
-export interface Set {
+export interface SetTaskSet {
   [k: string]: unknown;
 }
-/**
- * Enables conditional branching within workflows, allowing them to dynamically select different paths based on specified conditions or criteria
- */
-export interface SwitchTask {
-  switch: Switch;
-  [k: string]: unknown;
-}
-export interface SwitchItem {
-  [k: string]: SwitchCase;
-}
-export interface SwitchCase {
-  /**
-   * A runtime expression used to determine whether or not the case matches.
-   */
-  when?: string;
-  then: FlowDirective;
-  [k: string]: unknown;
-}
-/**
- * Serves as a mechanism within workflows to handle errors gracefully, potentially retrying failed tasks before proceeding with alternate ones.
- */
-export interface TryTask {
-  try: TaskList;
-  catch: Catch;
-  [k: string]: unknown;
-}
-export interface Catch {
-  errors?: CatchErrors;
+export interface TryTaskCatch {
+  errors?: {
+    [k: string]: unknown;
+  };
   /**
    * The name of the runtime expression variable to save the error as. Defaults to 'error'.
    */
@@ -966,9 +929,6 @@ export interface Catch {
   exceptWhen?: string;
   retry?: RetryPolicy;
   do?: TaskList;
-  [k: string]: unknown;
-}
-export interface CatchErrors {
   [k: string]: unknown;
 }
 /**
@@ -989,42 +949,15 @@ export interface RetryPolicy {
   jitter?: RetryPolicyJitter;
   [k: string]: unknown;
 }
-export interface ConstantBackoff {
-  /**
-   * The definition of the constant backoff to use, if any.
-   */
-  constant: {
-    [k: string]: unknown;
-  };
-  [k: string]: unknown;
-}
-export interface ExponentialBackOff {
-  /**
-   * The definition of the exponential backoff to use, if any.
-   */
-  exponential: {
-    [k: string]: unknown;
-  };
-  [k: string]: unknown;
-}
-export interface LinearBackoff {
-  /**
-   * The definition of the linear backoff to use, if any.
-   */
-  linear: {
-    [k: string]: unknown;
-  };
-  [k: string]: unknown;
-}
 /**
  * The retry limit, if any
  */
 export interface RetryPolicyLimit {
-  attempt?: RetryPolicyAttempt;
+  attempt?: RetryPolicyLimitAttempt;
   duration?: Duration;
   [k: string]: unknown;
 }
-export interface RetryPolicyAttempt {
+export interface RetryPolicyLimitAttempt {
   /**
    * The maximum amount of retry attempts, if any.
    */
@@ -1041,28 +974,9 @@ export interface RetryPolicyJitter {
   [k: string]: unknown;
 }
 /**
- * Allows workflows to pause or delay their execution for a specified period of time.
- */
-export interface WaitTask {
-  wait: Duration;
-  [k: string]: unknown;
-}
-/**
- * The workflow's reusable functions.
- */
-export interface WorkflowFunctions {
-  [k: string]: Task;
-}
-/**
- * The workflow's reusable retry policies.
- */
-export interface WorkflowRetries {
-  [k: string]: RetryPolicy;
-}
-/**
  * Schedules the workflow
  */
-export interface WorkflowSchedule {
+export interface Schedule {
   every?: Duration;
   /**
    * Specifies the schedule using a cron expression, e.g., '0 0 * * *' for daily at midnight."

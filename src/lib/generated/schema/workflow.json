@@ -1,7 +1,6 @@
 {
-  "$id": "https://serverlessworkflow.io/schemas/1.0.0-alpha1/workflow.yaml",
+  "$id": "https://serverlessworkflow.io/schemas/1.0.0-alpha2/workflow.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Workflow",
   "description": "Serverless Workflow DSL - Workflow Schema",
   "type": "object",
   "properties": {
@@ -38,8 +37,8 @@
         },
         "tags": {
           "type": "object",
-          "title": "WorkflowTags",
-          "description": "A key/value mapping of the workflow's tags, if any."
+          "description": "A key/value mapping of the workflow's tags, if any.",
+          "additionalProperties": true
         }
       },
       "required": [
@@ -48,12 +47,10 @@
         "name",
         "version"
       ],
-      "title": "WorkflowDocument",
       "description": "Documents the workflow"
     },
     "input": {
       "$ref": "#/$defs/input",
-      "title": "WorkflowInput",
       "description": "Configures the workflow's input."
     },
     "use": {
@@ -64,7 +61,6 @@
           "additionalProperties": {
             "$ref": "#/$defs/authenticationPolicy"
           },
-          "title": "WorkflowAuthentications",
           "description": "The workflow's reusable authentication policies."
         },
         "errors": {
@@ -72,21 +68,18 @@
           "additionalProperties": {
             "$ref": "#/$defs/error"
           },
-          "title": "WorkflowErrors",
           "description": "The workflow's reusable errors."
         },
         "extensions": {
           "type": "array",
           "items": {
             "type": "object",
-            "title": "ExtensionItem",
             "minProperties": 1,
             "maxProperties": 1,
             "additionalProperties": {
               "$ref": "#/$defs/extension"
             }
           },
-          "title": "WorkflowExtensions",
           "description": "The workflow's extensions."
         },
         "functions": {
@@ -94,7 +87,6 @@
           "additionalProperties": {
             "$ref": "#/$defs/task"
           },
-          "title": "WorkflowFunctions",
           "description": "The workflow's reusable functions."
         },
         "retries": {
@@ -102,7 +94,6 @@
           "additionalProperties": {
             "$ref": "#/$defs/retryPolicy"
           },
-          "title": "WorkflowRetries",
           "description": "The workflow's reusable retry policies."
         },
         "secrets": {
@@ -110,26 +101,21 @@
           "items": {
             "type": "string"
           },
-          "title": "WorkflowSecrets",
           "description": "The workflow's secrets."
         }
       },
-      "title": "WorkflowComponents",
       "description": "Defines the workflow's reusable components."
     },
     "do": {
-      "$ref": "#/$defs/taskList",
-      "title": "WorkflowTasks",
-      "description": "Defines the task(s) the workflow must perform"
+      "description": "Defines the task(s) the workflow must perform",
+      "$ref": "#/$defs/taskList"
     },
     "timeout": {
       "$ref": "#/$defs/timeout",
-      "title": "WorkflowTimeout",
       "description": "The workflow's timeout configuration, if any."
     },
     "output": {
       "$ref": "#/$defs/output",
-      "title": "WorkflowOutput",
       "description": "Configures the workflow's output."
     },
     "schedule": {
@@ -152,7 +138,6 @@
           "description": "Specifies the events that trigger the workflow execution."
         }
       },
-      "title": "WorkflowSchedule",
       "description": "Schedules the workflow"
     }
   },
@@ -161,15 +146,12 @@
       "type": "array",
       "items": {
         "type": "object",
-        "title": "TaskItem",
         "minProperties": 1,
         "maxProperties": 1,
         "additionalProperties": {
           "$ref": "#/$defs/task"
         }
-      },
-      "title": "TaskList",
-      "description": "A name/value mapping of tasks"
+      }
     },
     "taskBase": {
       "type": "object",
@@ -198,9 +180,7 @@
           "$ref": "#/$defs/flowDirective",
           "description": "The flow directive to be performed upon completion of the task."
         }
-      },
-      "title": "TaskBase",
-      "description": "The base definition shared by all tasks"
+      }
     },
     "task": {
       "unevaluatedProperties": false,
@@ -241,15 +221,12 @@
         {
           "$ref": "#/$defs/waitTask"
         }
-      ],
-      "title": "Task",
-      "description": "Defines all possible tasks"
+      ]
     },
     "callTask": {
       "oneOf": [
         {
           "title": "CallAsyncAPI",
-          "description": "Enables workflows to interact with external services described by AsyncAPI.",
           "$ref": "#/$defs/taskBase",
           "type": "object",
           "required": [
@@ -263,12 +240,10 @@
               "const": "asyncapi"
             },
             "with": {
-              "title": "CallAsyncAPIWith",
               "type": "object",
               "properties": {
                 "document": {
                   "$ref": "#/$defs/externalResource",
-                  "title": "CallAsyncAPIWithDocument",
                   "description": "The document that defines the AsyncAPI operation to call."
                 },
                 "operationRef": {
@@ -292,9 +267,15 @@
                   "description": "The payload to call the AsyncAPI operation with, if any."
                 },
                 "authentication": {
-                  "$ref": "#/$defs/referenceableAuthenticationPolicy",
-                  "title": "CallAsyncAPIWithAuthentication",
-                  "description": "The authentication policy, if any, to use when calling the AsyncAPI operation."
+                  "description": "The authentication policy, if any, to use when calling the AsyncAPI operation.",
+                  "oneOf": [
+                    {
+                      "$ref": "#/$defs/authenticationPolicy"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
                 }
               },
               "required": [
@@ -321,12 +302,10 @@
               "const": "grpc"
             },
             "with": {
-              "title": "CallGRPCWith",
               "type": "object",
               "properties": {
                 "proto": {
                   "$ref": "#/$defs/externalResource",
-                  "title": "CallGRPCWithProto",
                   "description": "The proto resource that describes the GRPC service to call."
                 },
                 "service": {
@@ -343,21 +322,26 @@
                     },
                     "port": {
                       "type": "integer",
-                      "minimum": 0,
-                      "maximum": 65535,
+                      "min": 0,
+                      "max": 65535,
                       "description": "The port number of the GRPC service to call."
                     },
                     "authentication": {
-                      "$ref": "#/$defs/referenceableAuthenticationPolicy",
-                      "title": "CallGRPCWithServiceAuthentication",
-                      "description": "The endpoint's authentication policy, if any."
+                      "description": "The endpoint's authentication policy, if any.",
+                      "oneOf": [
+                        {
+                          "$ref": "#/$defs/authenticationPolicy"
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ]
                     }
                   },
                   "required": [
                     "name",
                     "host"
-                  ],
-                  "title": "CallGRPCWithService"
+                  ]
                 },
                 "method": {
                   "type": "string",
@@ -366,7 +350,6 @@
                 "arguments": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "CallGRPCWithArguments",
                   "description": "The arguments, if any, to call the method with."
                 }
               },
@@ -395,7 +378,6 @@
               "const": "http"
             },
             "with": {
-              "title": "CallHTTPWith",
               "type": "object",
               "properties": {
                 "method": {
@@ -403,7 +385,6 @@
                   "description": "The HTTP method of the HTTP request to perform."
                 },
                 "endpoint": {
-                  "title": "CallHTTPWithEndpoint",
                   "description": "The HTTP endpoint to send the request to.",
                   "oneOf": [
                     {
@@ -417,11 +398,9 @@
                 },
                 "headers": {
                   "type": "object",
-                  "title": "CallHTTPWithHeaders",
                   "description": "A name/value mapping of the headers, if any, of the HTTP request to perform."
                 },
                 "body": {
-                  "title": "CallHTTPWithBody",
                   "description": "The body, if any, of the HTTP request to perform."
                 },
                 "output": {
@@ -458,12 +437,10 @@
               "const": "openapi"
             },
             "with": {
-              "title": "CallOpenAPIWith",
               "type": "object",
               "properties": {
                 "document": {
                   "$ref": "#/$defs/externalResource",
-                  "title": "CallOpenAPIWithDocument",
                   "description": "The document that defines the OpenAPI operation to call."
                 },
                 "operationId": {
@@ -473,13 +450,18 @@
                 "parameters": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "CallOpenAPIWithParameters",
                   "description": "A name/value mapping of the parameters of the OpenAPI operation to call."
                 },
                 "authentication": {
-                  "$ref": "#/$defs/referenceableAuthenticationPolicy",
-                  "title": "CallOpenAPIWithAuthentication",
-                  "description": "The authentication policy, if any, to use when calling the OpenAPI operation."
+                  "description": "The authentication policy, if any, to use when calling the OpenAPI operation.",
+                  "oneOf": [
+                    {
+                      "$ref": "#/$defs/authenticationPolicy"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
                 },
                 "output": {
                   "type": "string",
@@ -524,19 +506,15 @@
             "with": {
               "type": "object",
               "additionalProperties": true,
-              "title": "CallFunctionWith",
               "description": "A name/value mapping of the parameters, if any, to call the function with."
             }
           }
         }
-      ],
-      "title": "CallTask",
-      "description": "Enables the execution of a specified function within a workflow, allowing seamless integration with custom business logic or external services"
+      ]
     },
     "forkTask": {
-      "additionalProperties": {
-        "$ref": "#/$defs/taskBase"
-      },
+      "description": "Allows workflows to execute multiple tasks concurrently and optionally race them against each other, with a single possible winner, which sets the task's output.",
+      "$ref": "#/$defs/taskBase",
       "type": "object",
       "unevaluatedProperties": false,
       "required": [
@@ -550,23 +528,18 @@
           ],
           "properties": {
             "branches": {
-              "$ref": "#/$defs/taskList",
-              "title": "Branches"
+              "$ref": "#/$defs/taskList"
             },
             "compete": {
               "description": "Indicates whether or not the concurrent tasks are racing against each other, with a single possible winner, which sets the composite task's output.",
               "type": "boolean",
               "default": false
             }
-          },
-          "title": "Fork"
+          }
         }
-      },
-      "title": "ForkTask",
-      "description": "Allows workflows to execute multiple tasks concurrently and optionally race them against each other, with a single possible winner, which sets the task's output."
+      }
     },
     "doTask": {
-      "title": "DoTask",
       "description": "Allows to execute a list of tasks in sequence",
       "$ref": "#/$defs/taskBase",
       "type": "object",
@@ -576,13 +549,11 @@
       ],
       "properties": {
         "do": {
-          "$ref": "#/$defs/taskList",
-          "title": "Do"
+          "$ref": "#/$defs/taskList"
         }
       }
     },
     "emitTask": {
-      "title": "EmitTask",
       "description": "Allows workflows to publish events to event brokers or messaging systems, facilitating communication and coordination between different components and services.",
       "$ref": "#/$defs/taskBase",
       "type": "object",
@@ -630,19 +601,16 @@
                 "source",
                 "type"
               ],
-              "additionalProperties": true,
-              "title": "EmitEvent"
+              "additionalProperties": true
             }
           },
           "required": [
             "event"
-          ],
-          "title": "Emit"
+          ]
         }
       }
     },
     "forTask": {
-      "title": "ForTask",
       "description": "Allows workflows to iterate over a collection of items, executing a defined set of subtasks for each item in the collection. This task type is instrumental in handling scenarios such as batch processing, data transformation, and repetitive operations across datasets.",
       "$ref": "#/$defs/taskBase",
       "type": "object",
@@ -672,21 +640,18 @@
           },
           "required": [
             "in"
-          ],
-          "title": "For"
+          ]
         },
         "while": {
           "type": "string",
           "description": "A runtime expression that represents the condition, if any, that must be met for the iteration to continue."
         },
         "do": {
-          "$ref": "#/$defs/taskList",
-          "title": "DoEach"
+          "$ref": "#/$defs/taskList"
         }
       }
     },
     "listenTask": {
-      "title": "ListenTask",
       "description": "Provides a mechanism for workflows to await and react to external events, enabling event-driven behavior within workflow systems.",
       "$ref": "#/$defs/taskBase",
       "type": "object",
@@ -700,19 +665,16 @@
           "properties": {
             "to": {
               "$ref": "#/$defs/eventConsumptionStrategy",
-              "title": "ListenEventConsumptionStrategy",
               "description": "Defines the event(s) to listen to."
             }
           },
           "required": [
             "to"
-          ],
-          "title": "Listen"
+          ]
         }
       }
     },
     "raiseTask": {
-      "title": "RaiseTask",
       "description": "Intentionally triggers and propagates errors.",
       "$ref": "#/$defs/taskBase",
       "type": "object",
@@ -726,19 +688,16 @@
           "properties": {
             "error": {
               "$ref": "#/$defs/error",
-              "title": "RaiseError",
               "description": "Defines the error to raise."
             }
           },
           "required": [
             "error"
-          ],
-          "title": "Raise"
+          ]
         }
       }
     },
     "runTask": {
-      "title": "RunTask",
       "description": "Provides the capability to execute external containers, shell commands, scripts, or workflows.",
       "$ref": "#/$defs/taskBase",
       "type": "object",
@@ -751,7 +710,6 @@
           "type": "object",
           "oneOf": [
             {
-              "title": "RunContainer",
               "properties": {
                 "container": {
                   "type": "object",
@@ -773,15 +731,13 @@
                       "description": "The container's volume mappings, if any."
                     },
                     "environment": {
-                      "title": "ContainerEnvironment",
                       "type": "object",
                       "description": "A key/value mapping of the environment variables, if any, to use when running the configured process."
                     }
                   },
                   "required": [
                     "image"
-                  ],
-                  "title": "Container"
+                  ]
                 }
               },
               "required": [
@@ -790,7 +746,6 @@
               "description": "Enables the execution of external processes encapsulated within a containerized environment."
             },
             {
-              "title": "RunScript",
               "properties": {
                 "script": {
                   "type": "object",
@@ -800,7 +755,6 @@
                       "description": "The language of the script to run."
                     },
                     "environment": {
-                      "title": "ScriptEnvironment",
                       "type": "object",
                       "additionalProperties": true,
                       "description": "A key/value mapping of the environment variables, if any, to use when running the configured process."
@@ -808,7 +762,6 @@
                   },
                   "oneOf": [
                     {
-                      "title": "ScriptInline",
                       "properties": {
                         "code": {
                           "type": "string"
@@ -820,7 +773,6 @@
                       "description": "The script's code."
                     },
                     {
-                      "title": "ScriptExternal",
                       "properties": {
                         "source": {
                           "$ref": "#/$defs/externalResource"
@@ -834,8 +786,7 @@
                   ],
                   "required": [
                     "language"
-                  ],
-                  "title": "Script"
+                  ]
                 }
               },
               "required": [
@@ -844,7 +795,6 @@
               "description": "Enables the execution of custom scripts or code within a workflow, empowering workflows to perform specialized logic, data processing, or integration tasks by executing user-defined scripts written in various programming languages."
             },
             {
-              "title": "RunShell",
               "properties": {
                 "shell": {
                   "type": "object",
@@ -854,13 +804,11 @@
                       "description": "The shell command to run."
                     },
                     "arguments": {
-                      "title": "ShellArguments",
                       "type": "object",
                       "additionalProperties": true,
                       "description": "A list of the arguments of the shell command to run."
                     },
                     "environment": {
-                      "title": "ShellEnvironment",
                       "type": "object",
                       "additionalProperties": true,
                       "description": "A key/value mapping of the environment variables, if any, to use when running the configured process."
@@ -868,8 +816,7 @@
                   },
                   "required": [
                     "command"
-                  ],
-                  "title": "Shell"
+                  ]
                 }
               },
               "required": [
@@ -878,10 +825,8 @@
               "description": "Enables the execution of shell commands within a workflow, enabling workflows to interact with the underlying operating system and perform system-level operations, such as file manipulation, environment configuration, or system administration tasks."
             },
             {
-              "title": "RunWokflow",
               "properties": {
                 "workflow": {
-                  "title": "RunWorkflowDescriptor",
                   "type": "object",
                   "properties": {
                     "namespace": {
@@ -898,7 +843,6 @@
                       "description": "The version of the workflow to run. Defaults to latest"
                     },
                     "input": {
-                      "title": "WorkflowInput",
                       "type": "object",
                       "additionalProperties": true,
                       "description": "The data, if any, to pass as input to the workflow to execute. The value should be validated against the target workflow's input schema, if specified."
@@ -916,13 +860,11 @@
               ],
               "description": "Enables the invocation and execution of nested workflows within a parent workflow, facilitating modularization, reusability, and abstraction of complex logic or business processes by encapsulating them into standalone workflow units."
             }
-          ],
-          "title": "Run"
+          ]
         }
       }
     },
     "setTask": {
-      "title": "SetTask",
       "description": "A task used to set data",
       "$ref": "#/$defs/taskBase",
       "type": "object",
@@ -935,13 +877,11 @@
           "type": "object",
           "minProperties": 1,
           "additionalProperties": true,
-          "title": "Set",
           "description": "The data to set"
         }
       }
     },
     "switchTask": {
-      "title": "SwitchTask",
       "description": "Enables conditional branching within workflows, allowing them to dynamically select different paths based on specified conditions or criteria",
       "$ref": "#/$defs/taskBase",
       "type": "object",
@@ -957,14 +897,13 @@
             "type": "object",
             "minProperties": 1,
             "maxProperties": 1,
-            "title": "SwitchItem",
             "additionalProperties": {
               "type": "object",
-              "title": "SwitchCase",
-              "required": [
-                "then"
-              ],
               "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The case's name."
+                },
                 "when": {
                   "type": "string",
                   "description": "A runtime expression used to determine whether or not the case matches."
@@ -975,13 +914,11 @@
                 }
               }
             }
-          },
-          "title": "Switch"
+          }
         }
       }
     },
     "tryTask": {
-      "title": "TryTask",
       "description": "Serves as a mechanism within workflows to handle errors gracefully, potentially retrying failed tasks before proceeding with alternate ones.",
       "$ref": "#/$defs/taskBase",
       "type": "object",
@@ -992,16 +929,14 @@
       "unevaluatedProperties": false,
       "properties": {
         "try": {
-          "$ref": "#/$defs/taskList",
-          "title": "Try",
-          "description": "The task(s) to perform."
+          "description": "The task(s) to perform.",
+          "$ref": "#/$defs/taskList"
         },
         "catch": {
           "type": "object",
           "properties": {
             "errors": {
-              "type": "object",
-              "title": "CatchErrors"
+              "type": "object"
             },
             "as": {
               "type": "string",
@@ -1017,21 +952,17 @@
             },
             "retry": {
               "$ref": "#/$defs/retryPolicy",
-              "title": "CatchRetryPolicy",
               "description": "The retry policy to use, if any, when catching errors."
             },
             "do": {
-              "$ref": "#/$defs/taskList",
-              "title": "CatchDo",
-              "description": "The definition of the task(s) to run when catching an error."
+              "description": "The definition of the task(s) to run when catching an error.",
+              "$ref": "#/$defs/taskList"
             }
-          },
-          "title": "Catch"
+          }
         }
       }
     },
     "waitTask": {
-      "title": "WaitTask",
       "description": "Allows workflows to pause or delay their execution for a specified period of time.",
       "$ref": "#/$defs/taskBase",
       "type": "object",
@@ -1041,13 +972,13 @@
       "unevaluatedProperties": false,
       "properties": {
         "wait": {
-          "$ref": "#/$defs/duration",
-          "title": "Wait",
-          "description": "The amount of time to wait."
+          "description": "The amount of time to wait.",
+          "$ref": "#/$defs/duration"
         }
       }
     },
     "flowDirective": {
+      "additionalProperties": false,
       "anyOf": [
         {
           "type": "string",
@@ -1056,81 +987,33 @@
             "exit",
             "end"
           ],
-          "default": "continue",
-          "title": "FlowDirectiveEnum"
+          "default": "continue"
         },
         {
           "type": "string"
         }
-      ],
-      "title": "FlowDirective"
-    },
-    "referenceableAuthenticationPolicy": {
-      "type": "object",
-      "oneOf": [
-        {
-          "title": "AuthenticationPolicyReference",
-          "properties": {
-            "use": {
-              "type": "string",
-              "minLength": 1,
-              "description": "The name of the authentication policy to use"
-            }
-          },
-          "required": [
-            "use"
-          ]
-        },
-        {
-          "$ref": "#/$defs/authenticationPolicy",
-          "title": "ReferencedAuthenticationPolicy"
-        }
-      ],
-      "title": "ReferenceableAuthenticationPolicy"
-    },
-    "secretBasedAuthenticationPolicy": {
-      "type": "object",
-      "properties": {
-        "use": {
-          "type": "string",
-          "minLength": 1,
-          "description": "The name of the authentication policy to use"
-        }
-      },
-      "required": [
-        "use"
-      ],
-      "title": "SecretBasedAuthenticationPolicy"
+      ]
     },
     "authenticationPolicy": {
       "type": "object",
       "oneOf": [
         {
-          "title": "BasicAuthenticationPolicy",
           "properties": {
             "basic": {
               "type": "object",
-              "oneOf": [
-                {
-                  "properties": {
-                    "username": {
-                      "type": "string",
-                      "description": "The username to use."
-                    },
-                    "password": {
-                      "type": "string",
-                      "description": "The password to use."
-                    }
-                  },
-                  "required": [
-                    "username",
-                    "password"
-                  ],
-                  "title": "ExplicitBasicAuthenticationPolicy"
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "description": "The username to use."
                 },
-                {
-                  "$ref": "#/$defs/secretBasedAuthenticationPolicy"
+                "password": {
+                  "type": "string",
+                  "description": "The password to use."
                 }
+              },
+              "required": [
+                "username",
+                "password"
               ]
             }
           },
@@ -1140,26 +1023,17 @@
           "description": "Use basic authentication."
         },
         {
-          "title": "BearerAuthenticationPolicy",
           "properties": {
             "bearer": {
               "type": "object",
-              "oneOf": [
-                {
-                  "properties": {
-                    "token": {
-                      "type": "string",
-                      "description": "The bearer token to use."
-                    }
-                  },
-                  "required": [
-                    "token"
-                  ],
-                  "title": "ExplicitBearerAuthenticationPolicy"
-                },
-                {
-                  "$ref": "#/$defs/secretBasedAuthenticationPolicy"
+              "properties": {
+                "token": {
+                  "type": "string",
+                  "description": "The bearer token to use."
                 }
+              },
+              "required": [
+                "token"
               ]
             }
           },
@@ -1169,79 +1043,70 @@
           "description": "Use bearer authentication."
         },
         {
-          "title": "OAuth2AuthenticationPolicy",
           "properties": {
             "oauth2": {
               "type": "object",
-              "oneOf": [
-                {
+              "properties": {
+                "authority": {
+                  "type": "string",
+                  "format": "uri",
+                  "description": "The URI that references the OAuth2 authority to use."
+                },
+                "grant": {
+                  "type": "string",
+                  "description": "The grant type to use."
+                },
+                "client": {
+                  "type": "object",
                   "properties": {
-                    "authority": {
+                    "id": {
                       "type": "string",
-                      "format": "uri",
-                      "description": "The URI that references the OAuth2 authority to use."
+                      "description": "The client id to use."
                     },
-                    "grant": {
+                    "secret": {
                       "type": "string",
-                      "description": "The grant type to use."
-                    },
-                    "client": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string",
-                          "description": "The client id to use."
-                        },
-                        "secret": {
-                          "type": "string",
-                          "description": "The client secret to use, if any."
-                        }
-                      },
-                      "required": [
-                        "id"
-                      ]
-                    },
-                    "scopes": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "description": "The scopes, if any, to request the token for."
-                    },
-                    "audiences": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "description": "The audiences, if any, to request the token for."
-                    },
-                    "username": {
-                      "type": "string",
-                      "description": "The username to use. Used only if the grant type is Password."
-                    },
-                    "password": {
-                      "type": "string",
-                      "description": "The password to use. Used only if the grant type is Password."
-                    },
-                    "subject": {
-                      "$ref": "#/$defs/oauth2Token",
-                      "description": "The security token that represents the identity of the party on behalf of whom the request is being made."
-                    },
-                    "actor": {
-                      "$ref": "#/$defs/oauth2Token",
-                      "description": "The security token that represents the identity of the acting party."
+                      "description": "The client secret to use, if any."
                     }
                   },
                   "required": [
-                    "authority",
-                    "grant",
-                    "client"
-                  ],
-                  "title": "ExplicitOAuth2AuthenticationPolicy"
+                    "id"
+                  ]
                 },
-                {
-                  "$ref": "#/$defs/secretBasedAuthenticationPolicy"
+                "scopes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "The scopes, if any, to request the token for."
+                },
+                "audiences": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "The audiences, if any, to request the token for."
+                },
+                "username": {
+                  "type": "string",
+                  "description": "The username to use. Used only if the grant type is Password."
+                },
+                "password": {
+                  "type": "string",
+                  "description": "The password to use. Used only if the grant type is Password."
+                },
+                "subject": {
+                  "$ref": "#/$defs/oauth2Token",
+                  "description": "The security token that represents the identity of the party on behalf of whom the request is being made."
+                },
+                "actor": {
+                  "$ref": "#/$defs/oauth2Token",
+                  "description": "The security token that represents the identity of the acting party."
                 }
+              },
+              "required": [
+                "authority",
+                "grant",
+                "client"
               ]
             }
           },
@@ -1251,7 +1116,6 @@
           "description": "Use OAUTH2 authentication."
         }
       ],
-      "title": "AuthenticationPolicy",
       "description": "Defines an authentication policy."
     },
     "oauth2Token": {
@@ -1269,8 +1133,7 @@
       "required": [
         "token",
         "type"
-      ],
-      "title": "OAuth2Token"
+      ]
     },
     "duration": {
       "type": "object",
@@ -1297,7 +1160,6 @@
           "description": "Number of milliseconds, if any."
         }
       },
-      "title": "Duration",
       "description": "The definition of a duration."
     },
     "error": {
@@ -1326,7 +1188,6 @@
           "description": "A human-readable explanation specific to this occurrence of the error."
         }
       },
-      "title": "Error",
       "required": [
         "type",
         "status",
@@ -1342,12 +1203,17 @@
           "description": "The endpoint's URI."
         },
         "authentication": {
-          "$ref": "#/$defs/referenceableAuthenticationPolicy",
-          "title": "EndpointAuthentication",
-          "description": "The authentication policy to use."
+          "description": "The authentication policy to use.",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/authenticationPolicy"
+            },
+            {
+              "type": "string"
+            }
+          ]
         }
       },
-      "title": "Endpoint",
       "required": [
         "uri"
       ]
@@ -1356,14 +1222,12 @@
       "type": "object",
       "oneOf": [
         {
-          "title": "AllEventConsumptionStrategy",
           "properties": {
             "all": {
               "type": "array",
               "items": {
                 "$ref": "#/$defs/eventFilter"
               },
-              "title": "EventConsumptionStrategyAll",
               "description": "A list containing all the events that must be consumed."
             }
           },
@@ -1372,14 +1236,12 @@
           ]
         },
         {
-          "title": "AnyEventConsumptionStrategy",
           "properties": {
             "any": {
               "type": "array",
               "items": {
                 "$ref": "#/$defs/eventFilter"
               },
-              "title": "EventConsumptionStrategyAny",
               "description": "A list containing any of the events to consume."
             }
           },
@@ -1388,11 +1250,9 @@
           ]
         },
         {
-          "title": "OneEventConsumptionStrategy",
           "properties": {
             "one": {
               "$ref": "#/$defs/eventFilter",
-              "title": "EventConsumptionStrategyOne",
               "description": "The single event to consume."
             }
           },
@@ -1400,14 +1260,12 @@
             "one"
           ]
         }
-      ],
-      "title": "EventConsumptionStrategy"
+      ]
     },
     "eventFilter": {
       "type": "object",
       "properties": {
         "with": {
-          "title": "WithEvent",
           "type": "object",
           "minProperties": 1,
           "properties": {
@@ -1458,14 +1316,12 @@
               "from"
             ]
           },
-          "title": "Correlate",
           "description": "A correlation is a link between events and data, established by mapping event attributes to specific data attributes, allowing for coordinated processing or handling based on event characteristics."
         }
       },
       "required": [
         "with"
       ],
-      "title": "EventFilter",
       "description": "An event filter is a mechanism used to selectively process or handle events based on predefined criteria, such as event type, source, or specific attributes."
     },
     "extension": {
@@ -1494,20 +1350,17 @@
           "description": "A runtime expression, if any, used to determine whether or not the extension should apply in the specified context."
         },
         "before": {
-          "$ref": "#/$defs/taskList",
-          "title": "ExtensionBefore",
-          "description": "The task(s) to execute before the extended task, if any."
+          "description": "The task(s) to execute before the extended task, if any.",
+          "$ref": "#/$defs/taskList"
         },
         "after": {
-          "$ref": "#/$defs/taskList",
-          "title": "ExtensionAfter",
-          "description": "The task(s) to execute after the extended task, if any."
+          "description": "The task(s) to execute after the extended task, if any.",
+          "$ref": "#/$defs/taskList"
         }
       },
       "required": [
         "extend"
       ],
-      "title": "Extension",
       "description": "The definition of a an extension."
     },
     "externalResource": {
@@ -1517,7 +1370,6 @@
           "format": "uri"
         },
         {
-          "title": "ExternalResourceURI",
           "type": "object",
           "properties": {
             "uri": {
@@ -1526,8 +1378,15 @@
               "description": "The endpoint's URI."
             },
             "authentication": {
-              "$ref": "#/$defs/referenceableAuthenticationPolicy",
-              "description": "The authentication policy to use."
+              "description": "The authentication policy to use.",
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/authenticationPolicy"
+                },
+                {
+                  "type": "string"
+                }
+              ]
             },
             "name": {
               "type": "string",
@@ -1538,31 +1397,20 @@
             "uri"
           ]
         }
-      ],
-      "title": "ExternalResource"
+      ]
     },
     "input": {
       "type": "object",
       "properties": {
         "schema": {
           "$ref": "#/$defs/schema",
-          "title": "InputSchema",
           "description": "The schema used to describe and validate the input of the workflow or task."
         },
         "from": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "object"
-            }
-          ],
-          "title": "InputFrom",
+          "type": "string",
           "description": "A runtime expression, if any, used to mutate and/or filter the input of the workflow or task."
         }
       },
-      "title": "Input",
       "description": "Configures the input of a workflow or task."
     },
     "output": {
@@ -1570,23 +1418,13 @@
       "properties": {
         "schema": {
           "$ref": "#/$defs/schema",
-          "title": "OutputSchema",
           "description": "The schema used to describe and validate the output of the workflow or task."
         },
         "as": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "object"
-            }
-          ],
-          "title": "OutputAs",
+          "type": "string",
           "description": "A runtime expression, if any, used to mutate and/or filter the output of the workflow or task."
         }
       },
-      "title": "Output",
       "description": "Configures the output of a workflow or task."
     },
     "export": {
@@ -1594,23 +1432,13 @@
       "properties": {
         "schema": {
           "$ref": "#/$defs/schema",
-          "title": "ExportSchema",
           "description": "The schema used to describe and validate the workflow context."
         },
         "as": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "object"
-            }
-          ],
-          "title": "ExportAs",
+          "type": "string",
           "description": "A runtime expression, if any, used to export the output data to the context."
         }
       },
-      "title": "Export",
       "description": "Set the content of the context."
     },
     "retryPolicy": {
@@ -1626,15 +1454,12 @@
         },
         "delay": {
           "$ref": "#/$defs/duration",
-          "title": "RetryPolicyDelay",
           "description": "The duration to wait between retry attempts."
         },
         "backoff": {
           "type": "object",
-          "title": "RetryPolicyBackoff",
           "oneOf": [
             {
-              "title": "ConstantBackoff",
               "properties": {
                 "constant": {
                   "type": "object",
@@ -1646,7 +1471,6 @@
               ]
             },
             {
-              "title": "ExponentialBackOff",
               "properties": {
                 "exponential": {
                   "type": "object",
@@ -1658,7 +1482,6 @@
               ]
             },
             {
-              "title": "LinearBackoff",
               "properties": {
                 "linear": {
                   "type": "object",
@@ -1674,10 +1497,8 @@
         },
         "limit": {
           "type": "object",
-          "title": "RetryPolicyLimit",
           "properties": {
             "attempt": {
-              "title": "RetryPolicyAttempt",
               "type": "object",
               "properties": {
                 "count": {
@@ -1686,31 +1507,26 @@
                 },
                 "duration": {
                   "$ref": "#/$defs/duration",
-                  "title": "RetryPolicyAttemptDuration",
                   "description": "The maximum duration for each retry attempt."
                 }
               }
             },
             "duration": {
               "$ref": "#/$defs/duration",
-              "title": "RetryPolicyDuration",
               "description": "The duration limit, if any, for all retry attempts."
             }
           },
           "description": "The retry limit, if any"
         },
         "jitter": {
-          "title": "RetryPolicyJitter",
           "type": "object",
           "properties": {
             "from": {
               "$ref": "#/$defs/duration",
-              "title": "RetryPolicyJitterFrom",
               "description": "The minimum duration of the jitter range"
             },
             "to": {
               "$ref": "#/$defs/duration",
-              "title": "RetryPolicyJitterTo",
               "description": "The maximum duration of the jitter range"
             }
           },
@@ -1721,7 +1537,6 @@
           "description": "The parameters, if any, that control the randomness or variability of the delay between retry attempts."
         }
       },
-      "title": "RetryPolicy",
       "description": "Defines a retry policy."
     },
     "schema": {
@@ -1735,7 +1550,6 @@
       },
       "oneOf": [
         {
-          "title": "SchemaInline",
           "properties": {
             "document": {
               "description": "The schema's inline definition."
@@ -1746,7 +1560,6 @@
           ]
         },
         {
-          "title": "SchemaExternal",
           "properties": {
             "resource": {
               "$ref": "#/$defs/externalResource",
@@ -1758,7 +1571,6 @@
           ]
         }
       ],
-      "title": "Schema",
       "description": "Represents the definition of a schema."
     },
     "timeout": {
@@ -1772,7 +1584,6 @@
       "required": [
         "after"
       ],
-      "title": "Timeout",
       "description": "The definition of a timeout."
     }
   },

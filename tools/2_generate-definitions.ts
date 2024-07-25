@@ -17,68 +17,136 @@
 import { compile, JSONSchema, Options } from 'json-schema-to-typescript';
 import { promises as fsPromises } from 'fs';
 import * as path from 'path';
-import { Project, QuoteKind } from 'ts-morph';
 import { fileHeader } from './consts';
-import { definitionsDir, isObject, reset, schemaDir } from './utils';
+import { definitionsDir, isObject, reset, schemaDir, toPascalCase } from './utils';
 
 const { writeFile, readFile } = fsPromises;
 
+const structuralObjectProperties = [
+  '$defs',
+  'definitions',
+  'properties',
+  'patternProperties',
+  'additionalProperties',
+  'dependencies',
+  'dependentSchemas',
+  'if',
+  //'then', // creates a duplicate FlowDirective because of switch case then
+  'else',
+  'not',
+  'items',
+  'additionalItems',
+  'unevaluatedItems',
+  'contains',
+  'propertyNames',
+  'unevaluatedProperties',
+];
+const structuralArrayProperties = [
+  'allOf',
+  'anyOf',
+  'oneOf',
+  'items',
+  'enum',
+  'type',
+  'examples',
+  'required',
+  'dependentRequired',
+];
+
+const metadataProperties = ['title', 'description', 'default', 'type'];
+
 /**
- * Try to prevent type duplicate by removing metadata where $ref are used
- * see https://github.com/bcherny/json-schema-to-typescript/issues/193
- * @param schema The raw schema
- * @returns The schema without conflicting metadata
+ * Transforms the provided schema to increase its compatibility with json-schema-to-typescript
+ * - replaces `unevaluatedProperties` with `additionalProperties`
+ * - adds missing titles to objects
+ * - transforms `additionalProperties.$ref` (with no other props) as $ref
+ * - transforms inheritance via `$ref` or `additionalProperties.$ref` to `allOf.$ref`
+ * - removes metadata where only $ref is used
+ * @param schema
+ * @param path
+ * @returns
  */
-function removeConflictingMetadata(schema: any): any {
-  const blacklistedProperties = ['title', 'description', 'default'];
+function prepareSchema(schema: any, path: string[] = ['#'], parentTitle: string = ''): any {
   if (!isObject(schema) && !Array.isArray(schema)) {
     return schema;
   }
   if (Array.isArray(schema)) {
-    return schema.map((item) => removeConflictingMetadata(item));
+    return schema.map((item, i) => prepareSchema(item, [...path, i.toString()], parentTitle));
   }
-  return Object.entries(schema).reduce((outputSchema, [key, value]: [string, any]) => {
-    let newValue = JSON.parse(JSON.stringify(value));
-    if (!!newValue['$ref']) {
-      // leave only $ref if the definition only includes $ref and some metadata. If there are additionnal properties, leave it untouched
-      blacklistedProperties.forEach((prop) => delete newValue[prop]);
-      if (Object.keys(newValue).length > 1) {
-        newValue = JSON.parse(JSON.stringify(value));
+  const newSchema = JSON.parse(JSON.stringify(schema));
+  const parent = path.slice(-1)[0];
+  const schemaKeys = Object.keys(newSchema);
+  if (!structuralObjectProperties.includes(parent)) {
+    if (!newSchema.type) {
+      // not necessary ?
+      newSchema.type = 'object';
+      schemaKeys.push('type');
+    }
+    if (newSchema.title) {
+      parentTitle = newSchema.title;
+    }
+    if (
+      !newSchema.title &&
+      (newSchema.type === 'object' || newSchema.type === 'array') && // only naming object or array types
+      isNaN(parseInt(parent, 10)) && // it comes from a oneOf/anyOf/allOf, it should be titled manually
+      newSchema.items?.type !== 'string' && // if it's an array of string, it doesn't need to be named
+      newSchema.items?.type !== 'number' && // if it's an array of number, it doesn't need to be named
+      schemaKeys.filter((key) => !metadataProperties.includes(key)).length // if it's just a plain object, with nothing but a type an some description
+    ) {
+      if (parentTitle.trim()) {
+        newSchema.title = toPascalCase(`${parentTitle} ${parent}`);
+      } else {
+        newSchema.title = toPascalCase(
+          path
+            .slice(1)
+            .filter((part) => !structuralObjectProperties.includes(part) && !structuralArrayProperties.includes(part))
+            .join(' '),
+        );
+      }
+      schemaKeys.push('title');
+      parentTitle = newSchema.title;
+    }
+    if (newSchema.unevaluatedProperties != null) {
+      newSchema.additionalProperties = newSchema.unevaluatedProperties;
+      delete newSchema.unevaluatedProperties;
+      schemaKeys[schemaKeys.indexOf('unevaluatedProperties')] = 'additionalProperties';
+    }
+    if (
+      isObject(newSchema.additionalProperties) &&
+      Object.keys(newSchema.additionalProperties).every((key) => key === '$ref')
+    ) {
+      newSchema['$ref'] = newSchema.additionalProperties['$ref'];
+      delete newSchema.additionalProperties;
+      schemaKeys[schemaKeys.indexOf('additionalProperties')] = '$ref';
+    }
+    if (newSchema['$ref']) {
+      if (schemaKeys.filter((key) => !metadataProperties.includes(key)).length == 1) {
+        // only $ref
+        metadataProperties.forEach((prop) => delete newSchema[prop]);
+      } else if (newSchema.properties) {
+        const $ref = { $ref: newSchema['$ref'] };
+        const properties = {
+          properties: newSchema.properties,
+        } as any;
+        delete newSchema['$ref'];
+        delete newSchema.properties;
+        newSchema.allOf = [$ref, properties];
       }
     }
-    outputSchema[key] = removeConflictingMetadata(newValue);
+    // if (newSchema.additionalProperties?.['$ref'] && newSchema.properties) { // shouldn't happen as it has been migrated to $ref in most cases
+    //   const $ref = { $ref: newSchema.additionalProperties['$ref']};
+    //   const properties = {
+    //     properties: newSchema.properties
+    //   } as any;
+    //   delete newSchema.additionalProperties;
+    //   delete newSchema.properties;
+    //   newSchema.allOf = [$ref, properties];
+    // }
+  }
+  return Object.entries(newSchema).reduce((outputSchema, [key, value]: [string, any]) => {
+    outputSchema[key] = prepareSchema(value, [...path, key], parentTitle);
     return outputSchema;
   }, {} as any);
-}
-
-/**
- * Removes duplicate declarations from the provided TypeScript code
- * see https://github.com/bcherny/json-schema-to-typescript/issues/193
- * @param tsSource The TypeScript source code to remove the duplicates from
- * @returns The source code without duplicates
- */
-function removeDuplicateDeclarations(tsSource: string): string {
-  const project = new Project({
-    useInMemoryFileSystem: true,
-    manipulationSettings: {
-      quoteKind: QuoteKind.Single,
-    },
-  });
-  const sourceFile = project.createSourceFile('declarations.ts', tsSource);
-  const duplicates = Array.from(sourceFile.getExportedDeclarations())
-    .map(([name, _]) => name)
-    .filter((name) => name.match(/\d$/));
-  const newSource = duplicates.reduce(
-    (src, name) => src.replace(new RegExp(': ' + name, 'g'), ': ' + name.replace(/\d+$/g, '')),
-    tsSource,
-  );
-  sourceFile.replaceWithText(newSource);
-  for (const name of duplicates) {
-    const declaration = sourceFile.getTypeAlias(name) || sourceFile.getInterface(name);
-    declaration?.remove();
-  }
-  sourceFile.formatText();
-  return sourceFile.getFullText();
 }
 
 /**
@@ -100,17 +168,19 @@ async function generate(srcFile: string, destFile: string): Promise<void> {
    *****************************************************************************************/
   
   `,
+    style: {
+      singleQuote: true,
+    },
     //unreachableDefinitions: true,
   };
   const schemaText = await readFile(srcFile, { encoding: 'utf-8' });
-  const schema = removeConflictingMetadata(JSON.parse(schemaText));
-  //const schema = JSON.parse(schemaText);
+  const schema = prepareSchema(JSON.parse(schemaText));
   const declarations = await compile(schema, 'Workflow', options);
   const destDir = path.dirname(destFile);
   await reset(destDir);
+  await writeFile(srcFile.replace('workflow', '__internal_workflow'), JSON.stringify(schema, null, 2));
   await writeFile(destFile, declarations);
-  //await writeFile(destFile, removeDuplicateDeclarations(declarations));
-  await writeFile(path.resolve(destDir, 'index.ts'), fileHeader + "export * as Specification from './specification';");
+  await writeFile(path.resolve(destDir, 'index.ts'), `${fileHeader}export * as Specification from './specification';`);
 }
 
 const srcFile = path.resolve(schemaDir, 'workflow.json');
