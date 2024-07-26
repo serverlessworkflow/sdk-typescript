@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.Schedule} data The underlying object
  * @returns {Specification.Schedule} The validated underlying object
  */
-function buildingFn(data: Specification.Schedule): () => Specification.Schedule {
-  return () => {
-    const model = new Classes.Schedule();
-    Object.assign(model, data);
+function buildingFn(data: Specification.Schedule): Specification.Schedule {
+  const model = new Classes.Schedule();
+  Object.assign(model, data);
 
-    validate('Schedule', model);
-    return model as Specification.Schedule;
-  };
+  validate('Schedule', model);
+  return model as Specification.Schedule;
 }
 
 /**

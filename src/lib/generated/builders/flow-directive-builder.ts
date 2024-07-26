@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.FlowDirective} data The underlying object
  * @returns {Specification.FlowDirective} The validated underlying object
  */
-function buildingFn(data: Specification.FlowDirective): () => Specification.FlowDirective {
-  return () => {
-    const model = new Classes.FlowDirective();
-    Object.assign(model, data);
+function buildingFn(data: Specification.FlowDirective): Specification.FlowDirective {
+  const model = new Classes.FlowDirective();
+  Object.assign(model, data);
 
-    validate('FlowDirective', model);
-    return model as Specification.FlowDirective;
-  };
+  validate('FlowDirective', model);
+  return model as Specification.FlowDirective;
 }
 
 /**

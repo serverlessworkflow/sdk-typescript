@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.CallHTTPWith} data The underlying object
  * @returns {Specification.CallHTTPWith} The validated underlying object
  */
-function buildingFn(data: Specification.CallHTTPWith): () => Specification.CallHTTPWith {
-  return () => {
-    const model = new Classes.CallHTTPWith();
-    Object.assign(model, data);
+function buildingFn(data: Specification.CallHTTPWith): Specification.CallHTTPWith {
+  const model = new Classes.CallHTTPWith();
+  Object.assign(model, data);
 
-    validate('CallHTTPWith', model);
-    return model as Specification.CallHTTPWith;
-  };
+  validate('CallHTTPWith', model);
+  return model as Specification.CallHTTPWith;
 }
 
 /**

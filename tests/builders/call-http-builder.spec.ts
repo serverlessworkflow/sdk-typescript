@@ -6,7 +6,7 @@ describe('CallHTTP builder', () => {
     const endpoint = 'https://serverlessworkflow.io';
     const method = 'get';
     const callHttp = callHTTPBuilder()
-      .call('http')
+      .call('http') // should be set by the CallHTTP class
       .with({
         endpoint,
         method,
@@ -27,5 +27,12 @@ describe('CallHTTP builder', () => {
     expect(test).toThrow(Error);
     expect(test).toThrow(/'CallHTTP' is invalid/);
     expect(test).toThrow(/must have required property 'call'/);
+  });
+
+  it('should not validate', () => {
+    const test = () => {
+      callHTTPBuilder().build(false);
+    };
+    expect(test).not.toThrow();
   });
 });

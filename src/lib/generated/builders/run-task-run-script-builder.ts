@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.RunTaskRunScript} data The underlying object
  * @returns {Specification.RunTaskRunScript} The validated underlying object
  */
-function buildingFn(data: Specification.RunTaskRunScript): () => Specification.RunTaskRunScript {
-  return () => {
-    const model = new Classes.RunTaskRunScript();
-    Object.assign(model, data);
+function buildingFn(data: Specification.RunTaskRunScript): Specification.RunTaskRunScript {
+  const model = new Classes.RunTaskRunScript();
+  Object.assign(model, data);
 
-    validate('RunTaskRunScript', model);
-    return model as Specification.RunTaskRunScript;
-  };
+  validate('RunTaskRunScript', model);
+  return model as Specification.RunTaskRunScript;
 }
 
 /**

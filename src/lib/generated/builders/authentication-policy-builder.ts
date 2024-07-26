@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.AuthenticationPolicy} data The underlying object
  * @returns {Specification.AuthenticationPolicy} The validated underlying object
  */
-function buildingFn(data: Specification.AuthenticationPolicy): () => Specification.AuthenticationPolicy {
-  return () => {
-    const model = new Classes.AuthenticationPolicy();
-    Object.assign(model, data);
+function buildingFn(data: Specification.AuthenticationPolicy): Specification.AuthenticationPolicy {
+  const model = new Classes.AuthenticationPolicy();
+  Object.assign(model, data);
 
-    validate('AuthenticationPolicy', model);
-    return model as Specification.AuthenticationPolicy;
-  };
+  validate('AuthenticationPolicy', model);
+  return model as Specification.AuthenticationPolicy;
 }
 
 /**

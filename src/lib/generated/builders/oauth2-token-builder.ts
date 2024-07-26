@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.Oauth2Token} data The underlying object
  * @returns {Specification.Oauth2Token} The validated underlying object
  */
-function buildingFn(data: Specification.Oauth2Token): () => Specification.Oauth2Token {
-  return () => {
-    const model = new Classes.Oauth2Token();
-    Object.assign(model, data);
+function buildingFn(data: Specification.Oauth2Token): Specification.Oauth2Token {
+  const model = new Classes.Oauth2Token();
+  Object.assign(model, data);
 
-    validate('Oauth2Token', model);
-    return model as Specification.Oauth2Token;
-  };
+  validate('Oauth2Token', model);
+  return model as Specification.Oauth2Token;
 }
 
 /**

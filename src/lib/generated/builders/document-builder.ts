@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.Document} data The underlying object
  * @returns {Specification.Document} The validated underlying object
  */
-function buildingFn(data: Specification.Document): () => Specification.Document {
-  return () => {
-    const model = new Classes.Document();
-    Object.assign(model, data);
+function buildingFn(data: Specification.Document): Specification.Document {
+  const model = new Classes.Document();
+  Object.assign(model, data);
 
-    validate('Document', model);
-    return model as Specification.Document;
-  };
+  validate('Document', model);
+  return model as Specification.Document;
 }
 
 /**

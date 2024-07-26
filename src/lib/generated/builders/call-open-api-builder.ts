@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.CallOpenAPI} data The underlying object
  * @returns {Specification.CallOpenAPI} The validated underlying object
  */
-function buildingFn(data: Specification.CallOpenAPI): () => Specification.CallOpenAPI {
-  return () => {
-    const model = new Classes.CallOpenAPI();
-    Object.assign(model, data);
+function buildingFn(data: Specification.CallOpenAPI): Specification.CallOpenAPI {
+  const model = new Classes.CallOpenAPI();
+  Object.assign(model, data);
 
-    validate('CallOpenAPI', model);
-    return model as Specification.CallOpenAPI;
-  };
+  validate('CallOpenAPI', model);
+  return model as Specification.CallOpenAPI;
 }
 
 /**

@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.RaiseTaskRaise} data The underlying object
  * @returns {Specification.RaiseTaskRaise} The validated underlying object
  */
-function buildingFn(data: Specification.RaiseTaskRaise): () => Specification.RaiseTaskRaise {
-  return () => {
-    const model = new Classes.RaiseTaskRaise();
-    Object.assign(model, data);
+function buildingFn(data: Specification.RaiseTaskRaise): Specification.RaiseTaskRaise {
+  const model = new Classes.RaiseTaskRaise();
+  Object.assign(model, data);
 
-    validate('RaiseTaskRaise', model);
-    return model as Specification.RaiseTaskRaise;
-  };
+  validate('RaiseTaskRaise', model);
+  return model as Specification.RaiseTaskRaise;
 }
 
 /**

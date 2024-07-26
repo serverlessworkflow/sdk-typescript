@@ -19,7 +19,7 @@
  * Represents a fluent builder proxy
  */
 export type Builder<T> = {
-  build: () => T;
+  build: (validate?: boolean) => T;
 } & {
   [K in keyof T]-?: (arg: T[K]) => Builder<T>;
 };
@@ -29,8 +29,8 @@ export type Builder<T> = {
  * @param data The object to "build"
  * @returns
  */
-function defaultBuildingFn<T>(data: Partial<T>): () => T {
-  return () => data as T;
+function defaultBuildingFn<T>(data: Partial<T>): T {
+  return data as T;
 }
 
 /**
@@ -38,12 +38,12 @@ function defaultBuildingFn<T>(data: Partial<T>): () => T {
  * @param {Function} buildingFn The function used to validate and produce the object on build()
  * @returns {Builder} A fluent builder
  */
-export function builder<T>(buildingFn?: (data: Partial<T>) => () => T): Builder<T> {
+export function builder<T>(buildingFn?: (data: Partial<T>) => T): Builder<T> {
   const data: Partial<T> = {};
   const proxy = new Proxy({} as Builder<T>, {
     get: (_, prop) => {
       if (prop === 'build') {
-        return (buildingFn || defaultBuildingFn)(data);
+        return (validate: boolean = true) => (validate ? (buildingFn || defaultBuildingFn)(data) : data);
       }
       return (value: unknown): Builder<T> => {
         (data as any)[prop.toString()] = value;

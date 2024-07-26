@@ -61,6 +61,8 @@ import { AuthenticationPolicyOauth2 } from './authentication-policy-oauth2';
 import { AuthenticationPolicyOauth2Client } from './authentication-policy-oauth2-client';
 import { Oauth2Token } from './oauth2-token';
 import { Use } from './use';
+import { UseAuthentications } from './use-authentications';
+import { UseErrors } from './use-errors';
 import { Error } from './error';
 import { Extension } from './extension';
 import { TaskBase } from './task-base';
@@ -98,6 +100,8 @@ import { RetryPolicy } from './retry-policy';
 import { RetryPolicyLimit } from './retry-policy-limit';
 import { RetryPolicyLimitAttempt } from './retry-policy-limit-attempt';
 import { RetryPolicyJitter } from './retry-policy-jitter';
+import { UseFunctions } from './use-functions';
+import { UseRetries } from './use-retries';
 import { Schedule } from './schedule';
 
 export const Classes = {
@@ -148,6 +152,8 @@ export const Classes = {
   AuthenticationPolicyOauth2Client,
   Oauth2Token,
   Use,
+  UseAuthentications,
+  UseErrors,
   Error,
   Extension,
   TaskBase,
@@ -185,5 +191,7 @@ export const Classes = {
   RetryPolicyLimit,
   RetryPolicyLimitAttempt,
   RetryPolicyJitter,
+  UseFunctions,
+  UseRetries,
   Schedule,
 };

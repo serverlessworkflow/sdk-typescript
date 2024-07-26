@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.Export} data The underlying object
  * @returns {Specification.Export} The validated underlying object
  */
-function buildingFn(data: Specification.Export): () => Specification.Export {
-  return () => {
-    const model = new Classes.Export();
-    Object.assign(model, data);
+function buildingFn(data: Specification.Export): Specification.Export {
+  const model = new Classes.Export();
+  Object.assign(model, data);
 
-    validate('Export', model);
-    return model as Specification.Export;
-  };
+  validate('Export', model);
+  return model as Specification.Export;
 }
 
 /**

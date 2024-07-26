@@ -28,6 +28,19 @@ import {
 
 const { writeFile, readFile } = fsPromises;
 
+const getClassDeclaration = (className: string): string => `import { _Reflector } from "../../reflector";
+import { Specification } from "../definitions";
+
+class _${className} extends _Reflector<Specification.${className}> {
+    constructor(data?: Partial<Specification.${className}>) {
+        super(data);
+    }
+}
+
+export const ${className} = _${className} as ({
+    new (data?: Partial<Specification.${className}>): _${className} & Specification.${className}
+});`;
+
 /**
  * Generates empty classes. Used
  * @param definitionFile
@@ -38,7 +51,7 @@ async function generate(definitionFile: string, destDir: string): Promise<void> 
   const declarations = getExportedDeclarations(definitions);
   await reset(destDir);
   for (const declaration of declarations) {
-    const classSrc = `export class ${declaration} {}`;
+    const classSrc = getClassDeclaration(declaration);
     const destFile = path.resolve(destDir, toKebabCase(normalizeKnownAllCaps(declaration)) + '.ts');
     await writeFile(destFile, classSrc);
   }

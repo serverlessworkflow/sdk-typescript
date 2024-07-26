@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.SetTaskSet} data The underlying object
  * @returns {Specification.SetTaskSet} The validated underlying object
  */
-function buildingFn(data: Specification.SetTaskSet): () => Specification.SetTaskSet {
-  return () => {
-    const model = new Classes.SetTaskSet();
-    Object.assign(model, data);
+function buildingFn(data: Specification.SetTaskSet): Specification.SetTaskSet {
+  const model = new Classes.SetTaskSet();
+  Object.assign(model, data);
 
-    validate('SetTaskSet', model);
-    return model as Specification.SetTaskSet;
-  };
+  validate('SetTaskSet', model);
+  return model as Specification.SetTaskSet;
 }
 
 /**

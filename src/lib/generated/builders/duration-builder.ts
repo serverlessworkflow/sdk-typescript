@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.Duration} data The underlying object
  * @returns {Specification.Duration} The validated underlying object
  */
-function buildingFn(data: Specification.Duration): () => Specification.Duration {
-  return () => {
-    const model = new Classes.Duration();
-    Object.assign(model, data);
+function buildingFn(data: Specification.Duration): Specification.Duration {
+  const model = new Classes.Duration();
+  Object.assign(model, data);
 
-    validate('Duration', model);
-    return model as Specification.Duration;
-  };
+  validate('Duration', model);
+  return model as Specification.Duration;
 }
 
 /**

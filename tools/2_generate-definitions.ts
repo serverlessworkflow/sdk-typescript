@@ -41,6 +41,7 @@ const structuralObjectProperties = [
   'propertyNames',
   'unevaluatedProperties',
 ];
+
 const structuralArrayProperties = [
   'allOf',
   'anyOf',
@@ -56,15 +57,13 @@ const structuralArrayProperties = [
 const metadataProperties = ['title', 'description', 'default', 'type'];
 
 /**
- * Transforms the provided schema to increase its compatibility with json-schema-to-typescript
- * - replaces `unevaluatedProperties` with `additionalProperties`
+ * Embellishes the provided schema to increase its compatibility with json-schema-to-typescript, the resulting schema should keep the validation properties as the input one (phase 1)
+ * - adds missing type:object properties
  * - adds missing titles to objects
- * - transforms `additionalProperties.$ref` (with no other props) as $ref
- * - transforms inheritance via `$ref` or `additionalProperties.$ref` to `allOf.$ref`
- * - removes metadata where only $ref is used
- * @param schema
- * @param path
- * @returns
+ * @param schema The schema to embellish
+ * @param path The current path of the schema relative to the original schema
+ * @param parentTitle The title of the parent object, if any
+ * @returns An embellished schema with titles and types
  */
 function prepareSchema(schema: any, path: string[] = ['#'], parentTitle: string = ''): any {
   if (!isObject(schema) && !Array.isArray(schema)) {
@@ -77,7 +76,7 @@ function prepareSchema(schema: any, path: string[] = ['#'], parentTitle: string 
   const parent = path.slice(-1)[0];
   const schemaKeys = Object.keys(newSchema);
   if (!structuralObjectProperties.includes(parent)) {
-    if (!newSchema.type) {
+    if (!newSchema.type && !newSchema.oneOf && !newSchema.anyOf && !newSchema.allOf) {
       // not necessary ?
       newSchema.type = 'object';
       schemaKeys.push('type');
@@ -87,7 +86,7 @@ function prepareSchema(schema: any, path: string[] = ['#'], parentTitle: string 
     }
     if (
       !newSchema.title &&
-      (newSchema.type === 'object' || newSchema.type === 'array') && // only naming object or array types
+      (!newSchema.type || newSchema.type === 'object' || newSchema.type === 'array') && // only naming object or array types
       isNaN(parseInt(parent, 10)) && // it comes from a oneOf/anyOf/allOf, it should be titled manually
       newSchema.items?.type !== 'string' && // if it's an array of string, it doesn't need to be named
       newSchema.items?.type !== 'number' && // if it's an array of number, it doesn't need to be named
@@ -106,18 +105,37 @@ function prepareSchema(schema: any, path: string[] = ['#'], parentTitle: string 
       schemaKeys.push('title');
       parentTitle = newSchema.title;
     }
+  }
+  return Object.entries(newSchema).reduce((outputSchema, [key, value]: [string, any]) => {
+    outputSchema[key] = prepareSchema(value, [...path, key], parentTitle);
+    return outputSchema;
+  }, {} as any);
+}
+
+/**
+ * Transforms the provided schema to increase its compatibility with json-schema-to-typescript, the resulting schema **will** behave differently that the input one (phase 2)
+ * - replaces `unevaluatedProperties` with `additionalProperties`
+ * - transforms inheritance via `$ref` or `additionalProperties.$ref` to `allOf.$ref`
+ * - removes metadata where only $ref is used
+ * @param schema The schema to transform
+ * @param path The current path of the schema relative to the original schema
+ * @returns A mutated schema
+ */
+function mutateSchema(schema: any, path: string[] = ['#']): any {
+  if (!isObject(schema) && !Array.isArray(schema)) {
+    return schema;
+  }
+  if (Array.isArray(schema)) {
+    return schema.map((item, i) => mutateSchema(item, [...path, i.toString()]));
+  }
+  const newSchema = JSON.parse(JSON.stringify(schema));
+  const parent = path.slice(-1)[0];
+  const schemaKeys = Object.keys(newSchema);
+  if (!structuralObjectProperties.includes(parent)) {
     if (newSchema.unevaluatedProperties != null) {
       newSchema.additionalProperties = newSchema.unevaluatedProperties;
       delete newSchema.unevaluatedProperties;
       schemaKeys[schemaKeys.indexOf('unevaluatedProperties')] = 'additionalProperties';
-    }
-    if (
-      isObject(newSchema.additionalProperties) &&
-      Object.keys(newSchema.additionalProperties).every((key) => key === '$ref')
-    ) {
-      newSchema['$ref'] = newSchema.additionalProperties['$ref'];
-      delete newSchema.additionalProperties;
-      schemaKeys[schemaKeys.indexOf('additionalProperties')] = '$ref';
     }
     if (newSchema['$ref']) {
       if (schemaKeys.filter((key) => !metadataProperties.includes(key)).length == 1) {
@@ -133,18 +151,9 @@ function prepareSchema(schema: any, path: string[] = ['#'], parentTitle: string 
         newSchema.allOf = [$ref, properties];
       }
     }
-    // if (newSchema.additionalProperties?.['$ref'] && newSchema.properties) { // shouldn't happen as it has been migrated to $ref in most cases
-    //   const $ref = { $ref: newSchema.additionalProperties['$ref']};
-    //   const properties = {
-    //     properties: newSchema.properties
-    //   } as any;
-    //   delete newSchema.additionalProperties;
-    //   delete newSchema.properties;
-    //   newSchema.allOf = [$ref, properties];
-    // }
   }
   return Object.entries(newSchema).reduce((outputSchema, [key, value]: [string, any]) => {
-    outputSchema[key] = prepareSchema(value, [...path, key], parentTitle);
+    outputSchema[key] = mutateSchema(value, [...path, key]);
     return outputSchema;
   }, {} as any);
 }
@@ -174,11 +183,13 @@ async function generate(srcFile: string, destFile: string): Promise<void> {
     //unreachableDefinitions: true,
   };
   const schemaText = await readFile(srcFile, { encoding: 'utf-8' });
-  const schema = prepareSchema(JSON.parse(schemaText));
+  let schema = prepareSchema(JSON.parse(schemaText));
+  await writeFile(srcFile.replace('workflow', '__internal_workflow'), JSON.stringify(schema, null, 2));
+  schema = mutateSchema(schema);
+  //await writeFile(srcFile.replace('workflow', '__mutated_workflow'), JSON.stringify(schema, null, 2));
   const declarations = await compile(schema, 'Workflow', options);
   const destDir = path.dirname(destFile);
   await reset(destDir);
-  await writeFile(srcFile.replace('workflow', '__internal_workflow'), JSON.stringify(schema, null, 2));
   await writeFile(destFile, declarations);
   await writeFile(path.resolve(destDir, 'index.ts'), `${fileHeader}export * as Specification from './specification';`);
 }

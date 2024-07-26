@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.Timeout} data The underlying object
  * @returns {Specification.Timeout} The validated underlying object
  */
-function buildingFn(data: Specification.Timeout): () => Specification.Timeout {
-  return () => {
-    const model = new Classes.Timeout();
-    Object.assign(model, data);
+function buildingFn(data: Specification.Timeout): Specification.Timeout {
+  const model = new Classes.Timeout();
+  Object.assign(model, data);
 
-    validate('Timeout', model);
-    return model as Specification.Timeout;
-  };
+  validate('Timeout', model);
+  return model as Specification.Timeout;
 }
 
 /**

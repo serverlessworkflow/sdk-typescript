@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.RunTaskRunShellEnvironment} data The underlying object
  * @returns {Specification.RunTaskRunShellEnvironment} The validated underlying object
  */
-function buildingFn(data: Specification.RunTaskRunShellEnvironment): () => Specification.RunTaskRunShellEnvironment {
-  return () => {
-    const model = new Classes.RunTaskRunShellEnvironment();
-    Object.assign(model, data);
+function buildingFn(data: Specification.RunTaskRunShellEnvironment): Specification.RunTaskRunShellEnvironment {
+  const model = new Classes.RunTaskRunShellEnvironment();
+  Object.assign(model, data);
 
-    validate('RunTaskRunShellEnvironment', model);
-    return model as Specification.RunTaskRunShellEnvironment;
-  };
+  validate('RunTaskRunShellEnvironment', model);
+  return model as Specification.RunTaskRunShellEnvironment;
 }
 
 /**

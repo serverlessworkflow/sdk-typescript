@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.Workflow} data The underlying object
  * @returns {Specification.Workflow} The validated underlying object
  */
-function buildingFn(data: Specification.Workflow): () => Specification.Workflow {
-  return () => {
-    const model = new Classes.Workflow();
-    Object.assign(model, data);
+function buildingFn(data: Specification.Workflow): Specification.Workflow {
+  const model = new Classes.Workflow();
+  Object.assign(model, data);
 
-    validate('Workflow', model);
-    return model as Specification.Workflow;
-  };
+  validate('Workflow', model);
+  return model as Specification.Workflow;
 }
 
 /**

@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.CallGRPCWithService} data The underlying object
  * @returns {Specification.CallGRPCWithService} The validated underlying object
  */
-function buildingFn(data: Specification.CallGRPCWithService): () => Specification.CallGRPCWithService {
-  return () => {
-    const model = new Classes.CallGRPCWithService();
-    Object.assign(model, data);
+function buildingFn(data: Specification.CallGRPCWithService): Specification.CallGRPCWithService {
+  const model = new Classes.CallGRPCWithService();
+  Object.assign(model, data);
 
-    validate('CallGRPCWithService', model);
-    return model as Specification.CallGRPCWithService;
-  };
+  validate('CallGRPCWithService', model);
+  return model as Specification.CallGRPCWithService;
 }
 
 /**

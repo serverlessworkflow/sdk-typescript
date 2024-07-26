@@ -47,11 +47,11 @@ const buildersExtensions: { [key: string]: BuilderExtension } = {
  * @param {string} value A PascalCase string
  * @returns A camelCase string
  */
-const toCamelCase = (value: string): string => {
+function toCamelCase(value: string): string {
   if (!value) return '';
   const transformable = value.trim();
   return transformable[0].toLowerCase() + transformable.slice(1);
-};
+}
 
 /**
  * Creates a builder for the provided type
@@ -59,13 +59,12 @@ const toCamelCase = (value: string): string => {
  * @param {string} declaration The type to create the builder for
  * @returns {void}
  */
-const createBuilder = async (destDir: string, declaration: string): Promise<void> => {
-  try {
-    const camelType = toCamelCase(declaration);
-    const extension = buildersExtensions[declaration];
-    const builderCode =
-      fileHeader +
-      `import { builder, Builder } from "../../builder";
+async function createBuilder(destDir: string, declaration: string): Promise<void> {
+  const camelType = toCamelCase(declaration);
+  const extension = buildersExtensions[declaration];
+  const builderCode =
+    fileHeader +
+    `import { builder, Builder } from "../../builder";
 import { validate } from "../../validation";
 import { Classes } from "../classes";
 import { Specification } from "../definitions";
@@ -75,14 +74,12 @@ ${extension?.import ? extension.import + '\n' : ''}
  * @param {Specification.${declaration}} data The underlying object
  * @returns {Specification.${declaration}} The validated underlying object
  */
-function buildingFn(data: Specification.${declaration}): (() => Specification.${declaration}) {
-  return () => {
-    const model = new Classes.${declaration}();
-    Object.assign(model, data);
-    ${extension?.preValidate ? extension.preValidate : ''}    
-    validate('${declaration}', model);
-    return model as Specification.${declaration};
-  };
+function buildingFn(data: Specification.${declaration}): Specification.${declaration} {
+  const model = new Classes.${declaration}();
+  Object.assign(model, data);
+  ${extension?.preValidate || ''}    
+  validate('${declaration}', model);
+  return model as Specification.${declaration};
 }
 
 /**
@@ -90,15 +87,11 @@ function buildingFn(data: Specification.${declaration}): (() => Specification.${
  * @returns {Specification.${declaration}} A builder for \`Specification.${declaration}\`
  */
 export function ${camelType}Builder(): Builder<Specification.${declaration}> {
-  return builder<Specification.${declaration}>(buildingFn);
+return builder<Specification.${declaration}>(buildingFn);
 }`;
-    const destFile = path.resolve(destDir, toKebabCase(normalizeKnownAllCaps(declaration)) + '-builder.ts');
-    await writeFile(destFile, builderCode);
-    return Promise.resolve();
-  } catch (ex) {
-    return Promise.reject(ex);
-  }
-};
+  const destFile = path.resolve(destDir, toKebabCase(normalizeKnownAllCaps(declaration)) + '-builder.ts');
+  await writeFile(destFile, builderCode);
+}
 
 /**
  * Creates the builders index file
@@ -106,7 +99,7 @@ export function ${camelType}Builder(): Builder<Specification.${declaration}> {
  * @param declarations The list of types to create the index for
  * @returns
  */
-const createIndex = async (destDir: string, declarations: string[]): Promise<void> => {
+async function createIndex(destDir: string, declarations: string[]): Promise<void> {
   try {
     const indexCode: string =
       fileHeader +
@@ -121,7 +114,7 @@ const createIndex = async (destDir: string, declarations: string[]): Promise<voi
   } catch (ex) {
     return Promise.reject(ex);
   }
-};
+}
 
 /**
  * Generates builders
@@ -129,7 +122,7 @@ const createIndex = async (destDir: string, declarations: string[]): Promise<voi
  * @param destDir The output directory for builders
  * @returns
  */
-const generate = async (definitionFile: string, destDir: string): Promise<void> => {
+async function generate(definitionFile: string, destDir: string): Promise<void> {
   try {
     await reset(destDir);
     const definitions = await readFile(definitionFile, { encoding: 'utf-8' });
@@ -140,7 +133,7 @@ const generate = async (definitionFile: string, destDir: string): Promise<void> 
   } catch (ex) {
     return Promise.reject(ex);
   }
-};
+}
 
 const definitionFile = path.resolve(definitionsDir, 'specification.ts');
 generate(definitionFile, buildersDir).then(console.log.bind(console)).catch(console.error.bind(console));

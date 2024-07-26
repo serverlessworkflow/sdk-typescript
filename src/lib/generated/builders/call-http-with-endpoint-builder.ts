@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.CallHTTPWithEndpoint} data The underlying object
  * @returns {Specification.CallHTTPWithEndpoint} The validated underlying object
  */
-function buildingFn(data: Specification.CallHTTPWithEndpoint): () => Specification.CallHTTPWithEndpoint {
-  return () => {
-    const model = new Classes.CallHTTPWithEndpoint();
-    Object.assign(model, data);
+function buildingFn(data: Specification.CallHTTPWithEndpoint): Specification.CallHTTPWithEndpoint {
+  const model = new Classes.CallHTTPWithEndpoint();
+  Object.assign(model, data);
 
-    validate('CallHTTPWithEndpoint', model);
-    return model as Specification.CallHTTPWithEndpoint;
-  };
+  validate('CallHTTPWithEndpoint', model);
+  return model as Specification.CallHTTPWithEndpoint;
 }
 
 /**

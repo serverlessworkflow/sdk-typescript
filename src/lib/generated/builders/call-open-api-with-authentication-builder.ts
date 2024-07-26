@@ -24,16 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.CallOpenAPIWithAuthentication} data The underlying object
  * @returns {Specification.CallOpenAPIWithAuthentication} The validated underlying object
  */
-function buildingFn(
-  data: Specification.CallOpenAPIWithAuthentication,
-): () => Specification.CallOpenAPIWithAuthentication {
-  return () => {
-    const model = new Classes.CallOpenAPIWithAuthentication();
-    Object.assign(model, data);
+function buildingFn(data: Specification.CallOpenAPIWithAuthentication): Specification.CallOpenAPIWithAuthentication {
+  const model = new Classes.CallOpenAPIWithAuthentication();
+  Object.assign(model, data);
 
-    validate('CallOpenAPIWithAuthentication', model);
-    return model as Specification.CallOpenAPIWithAuthentication;
-  };
+  validate('CallOpenAPIWithAuthentication', model);
+  return model as Specification.CallOpenAPIWithAuthentication;
 }
 
 /**

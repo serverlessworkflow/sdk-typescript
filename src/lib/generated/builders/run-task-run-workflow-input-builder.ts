@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.RunTaskRunWorkflowInput} data The underlying object
  * @returns {Specification.RunTaskRunWorkflowInput} The validated underlying object
  */
-function buildingFn(data: Specification.RunTaskRunWorkflowInput): () => Specification.RunTaskRunWorkflowInput {
-  return () => {
-    const model = new Classes.RunTaskRunWorkflowInput();
-    Object.assign(model, data);
+function buildingFn(data: Specification.RunTaskRunWorkflowInput): Specification.RunTaskRunWorkflowInput {
+  const model = new Classes.RunTaskRunWorkflowInput();
+  Object.assign(model, data);
 
-    validate('RunTaskRunWorkflowInput', model);
-    return model as Specification.RunTaskRunWorkflowInput;
-  };
+  validate('RunTaskRunWorkflowInput', model);
+  return model as Specification.RunTaskRunWorkflowInput;
 }
 
 /**

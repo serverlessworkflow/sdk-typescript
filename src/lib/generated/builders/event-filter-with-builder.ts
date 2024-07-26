@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.EventFilterWith} data The underlying object
  * @returns {Specification.EventFilterWith} The validated underlying object
  */
-function buildingFn(data: Specification.EventFilterWith): () => Specification.EventFilterWith {
-  return () => {
-    const model = new Classes.EventFilterWith();
-    Object.assign(model, data);
+function buildingFn(data: Specification.EventFilterWith): Specification.EventFilterWith {
+  const model = new Classes.EventFilterWith();
+  Object.assign(model, data);
 
-    validate('EventFilterWith', model);
-    return model as Specification.EventFilterWith;
-  };
+  validate('EventFilterWith', model);
+  return model as Specification.EventFilterWith;
 }
 
 /**

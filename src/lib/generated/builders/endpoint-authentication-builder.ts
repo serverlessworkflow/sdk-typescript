@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.EndpointAuthentication} data The underlying object
  * @returns {Specification.EndpointAuthentication} The validated underlying object
  */
-function buildingFn(data: Specification.EndpointAuthentication): () => Specification.EndpointAuthentication {
-  return () => {
-    const model = new Classes.EndpointAuthentication();
-    Object.assign(model, data);
+function buildingFn(data: Specification.EndpointAuthentication): Specification.EndpointAuthentication {
+  const model = new Classes.EndpointAuthentication();
+  Object.assign(model, data);
 
-    validate('EndpointAuthentication', model);
-    return model as Specification.EndpointAuthentication;
-  };
+  validate('EndpointAuthentication', model);
+  return model as Specification.EndpointAuthentication;
 }
 
 /**

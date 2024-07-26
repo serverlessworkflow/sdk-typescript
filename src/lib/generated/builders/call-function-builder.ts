@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.CallFunction} data The underlying object
  * @returns {Specification.CallFunction} The validated underlying object
  */
-function buildingFn(data: Specification.CallFunction): () => Specification.CallFunction {
-  return () => {
-    const model = new Classes.CallFunction();
-    Object.assign(model, data);
+function buildingFn(data: Specification.CallFunction): Specification.CallFunction {
+  const model = new Classes.CallFunction();
+  Object.assign(model, data);
 
-    validate('CallFunction', model);
-    return model as Specification.CallFunction;
-  };
+  validate('CallFunction', model);
+  return model as Specification.CallFunction;
 }
 
 /**

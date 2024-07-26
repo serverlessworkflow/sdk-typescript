@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.WaitTask} data The underlying object
  * @returns {Specification.WaitTask} The validated underlying object
  */
-function buildingFn(data: Specification.WaitTask): () => Specification.WaitTask {
-  return () => {
-    const model = new Classes.WaitTask();
-    Object.assign(model, data);
+function buildingFn(data: Specification.WaitTask): Specification.WaitTask {
+  const model = new Classes.WaitTask();
+  Object.assign(model, data);
 
-    validate('WaitTask', model);
-    return model as Specification.WaitTask;
-  };
+  validate('WaitTask', model);
+  return model as Specification.WaitTask;
 }
 
 /**

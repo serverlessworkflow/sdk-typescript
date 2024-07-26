@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.SwitchTask} data The underlying object
  * @returns {Specification.SwitchTask} The validated underlying object
  */
-function buildingFn(data: Specification.SwitchTask): () => Specification.SwitchTask {
-  return () => {
-    const model = new Classes.SwitchTask();
-    Object.assign(model, data);
+function buildingFn(data: Specification.SwitchTask): Specification.SwitchTask {
+  const model = new Classes.SwitchTask();
+  Object.assign(model, data);
 
-    validate('SwitchTask', model);
-    return model as Specification.SwitchTask;
-  };
+  validate('SwitchTask', model);
+  return model as Specification.SwitchTask;
 }
 
 /**

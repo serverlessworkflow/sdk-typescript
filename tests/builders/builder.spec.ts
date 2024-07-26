@@ -27,15 +27,13 @@ type Person = {
 
 const darknessMyOldFriend = { name: 'Darkness', age: 999 };
 const isPerson = (data: Partial<Person>): data is Person => !!data.name && !!data.age;
-function personBuildingFn(data: Partial<Person>): () => Person {
-  return () => {
-    if (!isPerson(data)) {
-      throw new Error('The provided object is not a person');
-    }
-    return {
-      ...data,
-      friends: [...(data.friends || []), darknessMyOldFriend],
-    };
+function personBuildingFn(data: Partial<Person>): Person {
+  if (!isPerson(data)) {
+    throw new Error('The provided object is not a person');
+  }
+  return {
+    ...data,
+    friends: [...(data.friends || []), darknessMyOldFriend],
   };
 }
 const personBuilder = (): Builder<Person> => builder<Person>(personBuildingFn);

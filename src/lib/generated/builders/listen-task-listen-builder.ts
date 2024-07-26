@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.ListenTaskListen} data The underlying object
  * @returns {Specification.ListenTaskListen} The validated underlying object
  */
-function buildingFn(data: Specification.ListenTaskListen): () => Specification.ListenTaskListen {
-  return () => {
-    const model = new Classes.ListenTaskListen();
-    Object.assign(model, data);
+function buildingFn(data: Specification.ListenTaskListen): Specification.ListenTaskListen {
+  const model = new Classes.ListenTaskListen();
+  Object.assign(model, data);
 
-    validate('ListenTaskListen', model);
-    return model as Specification.ListenTaskListen;
-  };
+  validate('ListenTaskListen', model);
+  return model as Specification.ListenTaskListen;
 }
 
 /**

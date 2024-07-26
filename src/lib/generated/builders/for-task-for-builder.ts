@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.ForTaskFor} data The underlying object
  * @returns {Specification.ForTaskFor} The validated underlying object
  */
-function buildingFn(data: Specification.ForTaskFor): () => Specification.ForTaskFor {
-  return () => {
-    const model = new Classes.ForTaskFor();
-    Object.assign(model, data);
+function buildingFn(data: Specification.ForTaskFor): Specification.ForTaskFor {
+  const model = new Classes.ForTaskFor();
+  Object.assign(model, data);
 
-    validate('ForTaskFor', model);
-    return model as Specification.ForTaskFor;
-  };
+  validate('ForTaskFor', model);
+  return model as Specification.ForTaskFor;
 }
 
 /**

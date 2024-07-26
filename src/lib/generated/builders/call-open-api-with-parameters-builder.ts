@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.CallOpenAPIWithParameters} data The underlying object
  * @returns {Specification.CallOpenAPIWithParameters} The validated underlying object
  */
-function buildingFn(data: Specification.CallOpenAPIWithParameters): () => Specification.CallOpenAPIWithParameters {
-  return () => {
-    const model = new Classes.CallOpenAPIWithParameters();
-    Object.assign(model, data);
+function buildingFn(data: Specification.CallOpenAPIWithParameters): Specification.CallOpenAPIWithParameters {
+  const model = new Classes.CallOpenAPIWithParameters();
+  Object.assign(model, data);
 
-    validate('CallOpenAPIWithParameters', model);
-    return model as Specification.CallOpenAPIWithParameters;
-  };
+  validate('CallOpenAPIWithParameters', model);
+  return model as Specification.CallOpenAPIWithParameters;
 }
 
 /**

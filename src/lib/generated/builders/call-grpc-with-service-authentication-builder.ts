@@ -26,14 +26,12 @@ import { Specification } from '../definitions';
  */
 function buildingFn(
   data: Specification.CallGRPCWithServiceAuthentication,
-): () => Specification.CallGRPCWithServiceAuthentication {
-  return () => {
-    const model = new Classes.CallGRPCWithServiceAuthentication();
-    Object.assign(model, data);
+): Specification.CallGRPCWithServiceAuthentication {
+  const model = new Classes.CallGRPCWithServiceAuthentication();
+  Object.assign(model, data);
 
-    validate('CallGRPCWithServiceAuthentication', model);
-    return model as Specification.CallGRPCWithServiceAuthentication;
-  };
+  validate('CallGRPCWithServiceAuthentication', model);
+  return model as Specification.CallGRPCWithServiceAuthentication;
 }
 
 /**

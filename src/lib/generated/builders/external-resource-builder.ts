@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.ExternalResource} data The underlying object
  * @returns {Specification.ExternalResource} The validated underlying object
  */
-function buildingFn(data: Specification.ExternalResource): () => Specification.ExternalResource {
-  return () => {
-    const model = new Classes.ExternalResource();
-    Object.assign(model, data);
+function buildingFn(data: Specification.ExternalResource): Specification.ExternalResource {
+  const model = new Classes.ExternalResource();
+  Object.assign(model, data);
 
-    validate('ExternalResource', model);
-    return model as Specification.ExternalResource;
-  };
+  validate('ExternalResource', model);
+  return model as Specification.ExternalResource;
 }
 
 /**

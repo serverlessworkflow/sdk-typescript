@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.RetryPolicyLimitAttempt} data The underlying object
  * @returns {Specification.RetryPolicyLimitAttempt} The validated underlying object
  */
-function buildingFn(data: Specification.RetryPolicyLimitAttempt): () => Specification.RetryPolicyLimitAttempt {
-  return () => {
-    const model = new Classes.RetryPolicyLimitAttempt();
-    Object.assign(model, data);
+function buildingFn(data: Specification.RetryPolicyLimitAttempt): Specification.RetryPolicyLimitAttempt {
+  const model = new Classes.RetryPolicyLimitAttempt();
+  Object.assign(model, data);
 
-    validate('RetryPolicyLimitAttempt', model);
-    return model as Specification.RetryPolicyLimitAttempt;
-  };
+  validate('RetryPolicyLimitAttempt', model);
+  return model as Specification.RetryPolicyLimitAttempt;
 }
 
 /**

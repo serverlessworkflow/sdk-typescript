@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.RetryPolicy} data The underlying object
  * @returns {Specification.RetryPolicy} The validated underlying object
  */
-function buildingFn(data: Specification.RetryPolicy): () => Specification.RetryPolicy {
-  return () => {
-    const model = new Classes.RetryPolicy();
-    Object.assign(model, data);
+function buildingFn(data: Specification.RetryPolicy): Specification.RetryPolicy {
+  const model = new Classes.RetryPolicy();
+  Object.assign(model, data);
 
-    validate('RetryPolicy', model);
-    return model as Specification.RetryPolicy;
-  };
+  validate('RetryPolicy', model);
+  return model as Specification.RetryPolicy;
 }
 
 /**

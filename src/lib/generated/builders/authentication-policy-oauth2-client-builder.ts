@@ -26,14 +26,12 @@ import { Specification } from '../definitions';
  */
 function buildingFn(
   data: Specification.AuthenticationPolicyOauth2Client,
-): () => Specification.AuthenticationPolicyOauth2Client {
-  return () => {
-    const model = new Classes.AuthenticationPolicyOauth2Client();
-    Object.assign(model, data);
+): Specification.AuthenticationPolicyOauth2Client {
+  const model = new Classes.AuthenticationPolicyOauth2Client();
+  Object.assign(model, data);
 
-    validate('AuthenticationPolicyOauth2Client', model);
-    return model as Specification.AuthenticationPolicyOauth2Client;
-  };
+  validate('AuthenticationPolicyOauth2Client', model);
+  return model as Specification.AuthenticationPolicyOauth2Client;
 }
 
 /**

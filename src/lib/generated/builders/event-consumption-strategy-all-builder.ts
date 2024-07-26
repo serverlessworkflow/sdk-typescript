@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.EventConsumptionStrategyAll} data The underlying object
  * @returns {Specification.EventConsumptionStrategyAll} The validated underlying object
  */
-function buildingFn(data: Specification.EventConsumptionStrategyAll): () => Specification.EventConsumptionStrategyAll {
-  return () => {
-    const model = new Classes.EventConsumptionStrategyAll();
-    Object.assign(model, data);
+function buildingFn(data: Specification.EventConsumptionStrategyAll): Specification.EventConsumptionStrategyAll {
+  const model = new Classes.EventConsumptionStrategyAll();
+  Object.assign(model, data);
 
-    validate('EventConsumptionStrategyAll', model);
-    return model as Specification.EventConsumptionStrategyAll;
-  };
+  validate('EventConsumptionStrategyAll', model);
+  return model as Specification.EventConsumptionStrategyAll;
 }
 
 /**

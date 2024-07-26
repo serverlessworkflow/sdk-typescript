@@ -473,16 +473,28 @@ export interface Oauth2Token {
  * Defines the workflow's reusable components.
  */
 export interface Use {
-  authentications?: AuthenticationPolicy;
-  errors?: Error;
+  authentications?: UseAuthentications;
+  errors?: UseErrors;
   extensions?: UseExtensions;
-  functions?: Task;
-  retries?: RetryPolicy;
+  functions?: UseFunctions;
+  retries?: UseRetries;
   /**
    * The workflow's secrets.
    */
   secrets?: string[];
   [k: string]: unknown;
+}
+/**
+ * The workflow's reusable authentication policies.
+ */
+export interface UseAuthentications {
+  [k: string]: AuthenticationPolicy;
+}
+/**
+ * The workflow's reusable errors.
+ */
+export interface UseErrors {
+  [k: string]: Error;
 }
 export interface Error {
   /**
@@ -972,6 +984,18 @@ export interface RetryPolicyJitter {
   from: Duration;
   to: Duration;
   [k: string]: unknown;
+}
+/**
+ * The workflow's reusable functions.
+ */
+export interface UseFunctions {
+  [k: string]: Task;
+}
+/**
+ * The workflow's reusable retry policies.
+ */
+export interface UseRetries {
+  [k: string]: RetryPolicy;
 }
 /**
  * Schedules the workflow

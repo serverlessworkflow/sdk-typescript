@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.EmitTask} data The underlying object
  * @returns {Specification.EmitTask} The validated underlying object
  */
-function buildingFn(data: Specification.EmitTask): () => Specification.EmitTask {
-  return () => {
-    const model = new Classes.EmitTask();
-    Object.assign(model, data);
+function buildingFn(data: Specification.EmitTask): Specification.EmitTask {
+  const model = new Classes.EmitTask();
+  Object.assign(model, data);
 
-    validate('EmitTask', model);
-    return model as Specification.EmitTask;
-  };
+  validate('EmitTask', model);
+  return model as Specification.EmitTask;
 }
 
 /**

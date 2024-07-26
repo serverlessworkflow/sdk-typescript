@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.TaskBase} data The underlying object
  * @returns {Specification.TaskBase} The validated underlying object
  */
-function buildingFn(data: Specification.TaskBase): () => Specification.TaskBase {
-  return () => {
-    const model = new Classes.TaskBase();
-    Object.assign(model, data);
+function buildingFn(data: Specification.TaskBase): Specification.TaskBase {
+  const model = new Classes.TaskBase();
+  Object.assign(model, data);
 
-    validate('TaskBase', model);
-    return model as Specification.TaskBase;
-  };
+  validate('TaskBase', model);
+  return model as Specification.TaskBase;
 }
 
 /**

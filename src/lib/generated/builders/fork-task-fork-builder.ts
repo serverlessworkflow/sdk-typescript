@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.ForkTaskFork} data The underlying object
  * @returns {Specification.ForkTaskFork} The validated underlying object
  */
-function buildingFn(data: Specification.ForkTaskFork): () => Specification.ForkTaskFork {
-  return () => {
-    const model = new Classes.ForkTaskFork();
-    Object.assign(model, data);
+function buildingFn(data: Specification.ForkTaskFork): Specification.ForkTaskFork {
+  const model = new Classes.ForkTaskFork();
+  Object.assign(model, data);
 
-    validate('ForkTaskFork', model);
-    return model as Specification.ForkTaskFork;
-  };
+  validate('ForkTaskFork', model);
+  return model as Specification.ForkTaskFork;
 }
 
 /**

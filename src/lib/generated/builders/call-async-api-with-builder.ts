@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.CallAsyncAPIWith} data The underlying object
  * @returns {Specification.CallAsyncAPIWith} The validated underlying object
  */
-function buildingFn(data: Specification.CallAsyncAPIWith): () => Specification.CallAsyncAPIWith {
-  return () => {
-    const model = new Classes.CallAsyncAPIWith();
-    Object.assign(model, data);
+function buildingFn(data: Specification.CallAsyncAPIWith): Specification.CallAsyncAPIWith {
+  const model = new Classes.CallAsyncAPIWith();
+  Object.assign(model, data);
 
-    validate('CallAsyncAPIWith', model);
-    return model as Specification.CallAsyncAPIWith;
-  };
+  validate('CallAsyncAPIWith', model);
+  return model as Specification.CallAsyncAPIWith;
 }
 
 /**

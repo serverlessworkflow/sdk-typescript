@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.Error} data The underlying object
  * @returns {Specification.Error} The validated underlying object
  */
-function buildingFn(data: Specification.Error): () => Specification.Error {
-  return () => {
-    const model = new Classes.Error();
-    Object.assign(model, data);
+function buildingFn(data: Specification.Error): Specification.Error {
+  const model = new Classes.Error();
+  Object.assign(model, data);
 
-    validate('Error', model);
-    return model as Specification.Error;
-  };
+  validate('Error', model);
+  return model as Specification.Error;
 }
 
 /**

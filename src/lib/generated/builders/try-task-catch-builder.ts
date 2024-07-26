@@ -24,14 +24,12 @@ import { Specification } from '../definitions';
  * @param {Specification.TryTaskCatch} data The underlying object
  * @returns {Specification.TryTaskCatch} The validated underlying object
  */
-function buildingFn(data: Specification.TryTaskCatch): () => Specification.TryTaskCatch {
-  return () => {
-    const model = new Classes.TryTaskCatch();
-    Object.assign(model, data);
+function buildingFn(data: Specification.TryTaskCatch): Specification.TryTaskCatch {
+  const model = new Classes.TryTaskCatch();
+  Object.assign(model, data);
 
-    validate('TryTaskCatch', model);
-    return model as Specification.TryTaskCatch;
-  };
+  validate('TryTaskCatch', model);
+  return model as Specification.TryTaskCatch;
 }
 
 /**
