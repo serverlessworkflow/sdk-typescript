@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.EventFilterCorrelate} The validated underlying object
  */
 function buildingFn(data: Specification.EventFilterCorrelate): Specification.EventFilterCorrelate {
-  const model = new Classes.EventFilterCorrelate();
-  Object.assign(model, data);
+  const model = new Classes.EventFilterCorrelate(data);
 
   validate('EventFilterCorrelate', model);
   return model as Specification.EventFilterCorrelate;
@@ -36,6 +35,5 @@ function buildingFn(data: Specification.EventFilterCorrelate): Specification.Eve
  * A factory to create a builder proxy for the type `Specification.EventFilterCorrelate`
  * @returns {Specification.EventFilterCorrelate} A builder for `Specification.EventFilterCorrelate`
  */
-export function eventFilterCorrelateBuilder(): Builder<Specification.EventFilterCorrelate> {
-  return builder<Specification.EventFilterCorrelate>(buildingFn);
-}
+export const eventFilterCorrelateBuilder = (): Builder<Specification.EventFilterCorrelate> =>
+  builder<Specification.EventFilterCorrelate>(buildingFn);

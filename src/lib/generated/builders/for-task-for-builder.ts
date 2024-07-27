@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.ForTaskFor} The validated underlying object
  */
 function buildingFn(data: Specification.ForTaskFor): Specification.ForTaskFor {
-  const model = new Classes.ForTaskFor();
-  Object.assign(model, data);
+  const model = new Classes.ForTaskFor(data);
 
   validate('ForTaskFor', model);
   return model as Specification.ForTaskFor;
@@ -36,6 +35,4 @@ function buildingFn(data: Specification.ForTaskFor): Specification.ForTaskFor {
  * A factory to create a builder proxy for the type `Specification.ForTaskFor`
  * @returns {Specification.ForTaskFor} A builder for `Specification.ForTaskFor`
  */
-export function forTaskForBuilder(): Builder<Specification.ForTaskFor> {
-  return builder<Specification.ForTaskFor>(buildingFn);
-}
+export const forTaskForBuilder = (): Builder<Specification.ForTaskFor> => builder<Specification.ForTaskFor>(buildingFn);

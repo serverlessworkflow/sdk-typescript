@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.Duration} The validated underlying object
  */
 function buildingFn(data: Specification.Duration): Specification.Duration {
-  const model = new Classes.Duration();
-  Object.assign(model, data);
+  const model = new Classes.Duration(data);
 
   validate('Duration', model);
   return model as Specification.Duration;
@@ -36,6 +35,4 @@ function buildingFn(data: Specification.Duration): Specification.Duration {
  * A factory to create a builder proxy for the type `Specification.Duration`
  * @returns {Specification.Duration} A builder for `Specification.Duration`
  */
-export function durationBuilder(): Builder<Specification.Duration> {
-  return builder<Specification.Duration>(buildingFn);
-}
+export const durationBuilder = (): Builder<Specification.Duration> => builder<Specification.Duration>(buildingFn);

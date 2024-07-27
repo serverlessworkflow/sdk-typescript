@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.EventConsumptionStrategy} The validated underlying object
  */
 function buildingFn(data: Specification.EventConsumptionStrategy): Specification.EventConsumptionStrategy {
-  const model = new Classes.EventConsumptionStrategy();
-  Object.assign(model, data);
+  const model = new Classes.EventConsumptionStrategy(data);
 
   validate('EventConsumptionStrategy', model);
   return model as Specification.EventConsumptionStrategy;
@@ -36,6 +35,5 @@ function buildingFn(data: Specification.EventConsumptionStrategy): Specification
  * A factory to create a builder proxy for the type `Specification.EventConsumptionStrategy`
  * @returns {Specification.EventConsumptionStrategy} A builder for `Specification.EventConsumptionStrategy`
  */
-export function eventConsumptionStrategyBuilder(): Builder<Specification.EventConsumptionStrategy> {
-  return builder<Specification.EventConsumptionStrategy>(buildingFn);
-}
+export const eventConsumptionStrategyBuilder = (): Builder<Specification.EventConsumptionStrategy> =>
+  builder<Specification.EventConsumptionStrategy>(buildingFn);

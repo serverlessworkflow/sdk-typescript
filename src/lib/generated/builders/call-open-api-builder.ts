@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.CallOpenAPI} The validated underlying object
  */
 function buildingFn(data: Specification.CallOpenAPI): Specification.CallOpenAPI {
-  const model = new Classes.CallOpenAPI();
-  Object.assign(model, data);
+  const model = new Classes.CallOpenAPI(data);
 
   validate('CallOpenAPI', model);
   return model as Specification.CallOpenAPI;
@@ -36,6 +35,5 @@ function buildingFn(data: Specification.CallOpenAPI): Specification.CallOpenAPI 
  * A factory to create a builder proxy for the type `Specification.CallOpenAPI`
  * @returns {Specification.CallOpenAPI} A builder for `Specification.CallOpenAPI`
  */
-export function callOpenAPIBuilder(): Builder<Specification.CallOpenAPI> {
-  return builder<Specification.CallOpenAPI>(buildingFn);
-}
+export const callOpenAPIBuilder = (): Builder<Specification.CallOpenAPI> =>
+  builder<Specification.CallOpenAPI>(buildingFn);

@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.RunTaskRunWorkflow} The validated underlying object
  */
 function buildingFn(data: Specification.RunTaskRunWorkflow): Specification.RunTaskRunWorkflow {
-  const model = new Classes.RunTaskRunWorkflow();
-  Object.assign(model, data);
+  const model = new Classes.RunTaskRunWorkflow(data);
 
   validate('RunTaskRunWorkflow', model);
   return model as Specification.RunTaskRunWorkflow;
@@ -36,6 +35,5 @@ function buildingFn(data: Specification.RunTaskRunWorkflow): Specification.RunTa
  * A factory to create a builder proxy for the type `Specification.RunTaskRunWorkflow`
  * @returns {Specification.RunTaskRunWorkflow} A builder for `Specification.RunTaskRunWorkflow`
  */
-export function runTaskRunWorkflowBuilder(): Builder<Specification.RunTaskRunWorkflow> {
-  return builder<Specification.RunTaskRunWorkflow>(buildingFn);
-}
+export const runTaskRunWorkflowBuilder = (): Builder<Specification.RunTaskRunWorkflow> =>
+  builder<Specification.RunTaskRunWorkflow>(buildingFn);

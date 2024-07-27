@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.EventFilterWith} The validated underlying object
  */
 function buildingFn(data: Specification.EventFilterWith): Specification.EventFilterWith {
-  const model = new Classes.EventFilterWith();
-  Object.assign(model, data);
+  const model = new Classes.EventFilterWith(data);
 
   validate('EventFilterWith', model);
   return model as Specification.EventFilterWith;
@@ -36,6 +35,5 @@ function buildingFn(data: Specification.EventFilterWith): Specification.EventFil
  * A factory to create a builder proxy for the type `Specification.EventFilterWith`
  * @returns {Specification.EventFilterWith} A builder for `Specification.EventFilterWith`
  */
-export function eventFilterWithBuilder(): Builder<Specification.EventFilterWith> {
-  return builder<Specification.EventFilterWith>(buildingFn);
-}
+export const eventFilterWithBuilder = (): Builder<Specification.EventFilterWith> =>
+  builder<Specification.EventFilterWith>(buildingFn);

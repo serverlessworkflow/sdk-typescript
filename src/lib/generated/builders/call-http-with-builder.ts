@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.CallHTTPWith} The validated underlying object
  */
 function buildingFn(data: Specification.CallHTTPWith): Specification.CallHTTPWith {
-  const model = new Classes.CallHTTPWith();
-  Object.assign(model, data);
+  const model = new Classes.CallHTTPWith(data);
 
   validate('CallHTTPWith', model);
   return model as Specification.CallHTTPWith;
@@ -36,6 +35,5 @@ function buildingFn(data: Specification.CallHTTPWith): Specification.CallHTTPWit
  * A factory to create a builder proxy for the type `Specification.CallHTTPWith`
  * @returns {Specification.CallHTTPWith} A builder for `Specification.CallHTTPWith`
  */
-export function callHTTPWithBuilder(): Builder<Specification.CallHTTPWith> {
-  return builder<Specification.CallHTTPWith>(buildingFn);
-}
+export const callHTTPWithBuilder = (): Builder<Specification.CallHTTPWith> =>
+  builder<Specification.CallHTTPWith>(buildingFn);

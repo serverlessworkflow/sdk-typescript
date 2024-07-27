@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.ExternalResourceAuthentication} The validated underlying object
  */
 function buildingFn(data: Specification.ExternalResourceAuthentication): Specification.ExternalResourceAuthentication {
-  const model = new Classes.ExternalResourceAuthentication();
-  Object.assign(model, data);
+  const model = new Classes.ExternalResourceAuthentication(data);
 
   validate('ExternalResourceAuthentication', model);
   return model as Specification.ExternalResourceAuthentication;
@@ -36,6 +35,5 @@ function buildingFn(data: Specification.ExternalResourceAuthentication): Specifi
  * A factory to create a builder proxy for the type `Specification.ExternalResourceAuthentication`
  * @returns {Specification.ExternalResourceAuthentication} A builder for `Specification.ExternalResourceAuthentication`
  */
-export function externalResourceAuthenticationBuilder(): Builder<Specification.ExternalResourceAuthentication> {
-  return builder<Specification.ExternalResourceAuthentication>(buildingFn);
-}
+export const externalResourceAuthenticationBuilder = (): Builder<Specification.ExternalResourceAuthentication> =>
+  builder<Specification.ExternalResourceAuthentication>(buildingFn);

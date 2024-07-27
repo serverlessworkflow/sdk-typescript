@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.CallAsyncAPIWith} The validated underlying object
  */
 function buildingFn(data: Specification.CallAsyncAPIWith): Specification.CallAsyncAPIWith {
-  const model = new Classes.CallAsyncAPIWith();
-  Object.assign(model, data);
+  const model = new Classes.CallAsyncAPIWith(data);
 
   validate('CallAsyncAPIWith', model);
   return model as Specification.CallAsyncAPIWith;
@@ -36,6 +35,5 @@ function buildingFn(data: Specification.CallAsyncAPIWith): Specification.CallAsy
  * A factory to create a builder proxy for the type `Specification.CallAsyncAPIWith`
  * @returns {Specification.CallAsyncAPIWith} A builder for `Specification.CallAsyncAPIWith`
  */
-export function callAsyncAPIWithBuilder(): Builder<Specification.CallAsyncAPIWith> {
-  return builder<Specification.CallAsyncAPIWith>(buildingFn);
-}
+export const callAsyncAPIWithBuilder = (): Builder<Specification.CallAsyncAPIWith> =>
+  builder<Specification.CallAsyncAPIWith>(buildingFn);

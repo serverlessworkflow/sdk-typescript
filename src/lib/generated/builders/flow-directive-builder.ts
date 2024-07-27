@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.FlowDirective} The validated underlying object
  */
 function buildingFn(data: Specification.FlowDirective): Specification.FlowDirective {
-  const model = new Classes.FlowDirective();
-  Object.assign(model, data);
+  const model = new Classes.FlowDirective(data);
 
   validate('FlowDirective', model);
   return model as Specification.FlowDirective;
@@ -36,6 +35,5 @@ function buildingFn(data: Specification.FlowDirective): Specification.FlowDirect
  * A factory to create a builder proxy for the type `Specification.FlowDirective`
  * @returns {Specification.FlowDirective} A builder for `Specification.FlowDirective`
  */
-export function flowDirectiveBuilder(): Builder<Specification.FlowDirective> {
-  return builder<Specification.FlowDirective>(buildingFn);
-}
+export const flowDirectiveBuilder = (): Builder<Specification.FlowDirective> =>
+  builder<Specification.FlowDirective>(buildingFn);

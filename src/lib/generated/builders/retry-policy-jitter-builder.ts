@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.RetryPolicyJitter} The validated underlying object
  */
 function buildingFn(data: Specification.RetryPolicyJitter): Specification.RetryPolicyJitter {
-  const model = new Classes.RetryPolicyJitter();
-  Object.assign(model, data);
+  const model = new Classes.RetryPolicyJitter(data);
 
   validate('RetryPolicyJitter', model);
   return model as Specification.RetryPolicyJitter;
@@ -36,6 +35,5 @@ function buildingFn(data: Specification.RetryPolicyJitter): Specification.RetryP
  * A factory to create a builder proxy for the type `Specification.RetryPolicyJitter`
  * @returns {Specification.RetryPolicyJitter} A builder for `Specification.RetryPolicyJitter`
  */
-export function retryPolicyJitterBuilder(): Builder<Specification.RetryPolicyJitter> {
-  return builder<Specification.RetryPolicyJitter>(buildingFn);
-}
+export const retryPolicyJitterBuilder = (): Builder<Specification.RetryPolicyJitter> =>
+  builder<Specification.RetryPolicyJitter>(buildingFn);

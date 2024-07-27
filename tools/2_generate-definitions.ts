@@ -58,7 +58,7 @@ const metadataProperties = ['title', 'description', 'default', 'type'];
 
 /**
  * Embellishes the provided schema to increase its compatibility with json-schema-to-typescript, the resulting schema should keep the validation properties as the input one (phase 1)
- * - adds missing type:object properties
+ * - adds missing type:object properties // not necessary ?
  * - adds missing titles to objects
  * @param schema The schema to embellish
  * @param path The current path of the schema relative to the original schema

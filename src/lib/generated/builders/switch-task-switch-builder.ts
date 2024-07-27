@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.SwitchTaskSwitch} The validated underlying object
  */
 function buildingFn(data: Specification.SwitchTaskSwitch): Specification.SwitchTaskSwitch {
-  const model = new Classes.SwitchTaskSwitch();
-  Object.assign(model, data);
+  const model = new Classes.SwitchTaskSwitch(data);
 
   validate('SwitchTaskSwitch', model);
   return model as Specification.SwitchTaskSwitch;
@@ -36,6 +35,5 @@ function buildingFn(data: Specification.SwitchTaskSwitch): Specification.SwitchT
  * A factory to create a builder proxy for the type `Specification.SwitchTaskSwitch`
  * @returns {Specification.SwitchTaskSwitch} A builder for `Specification.SwitchTaskSwitch`
  */
-export function switchTaskSwitchBuilder(): Builder<Specification.SwitchTaskSwitch> {
-  return builder<Specification.SwitchTaskSwitch>(buildingFn);
-}
+export const switchTaskSwitchBuilder = (): Builder<Specification.SwitchTaskSwitch> =>
+  builder<Specification.SwitchTaskSwitch>(buildingFn);

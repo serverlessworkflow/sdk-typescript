@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.SetTaskSet} The validated underlying object
  */
 function buildingFn(data: Specification.SetTaskSet): Specification.SetTaskSet {
-  const model = new Classes.SetTaskSet();
-  Object.assign(model, data);
+  const model = new Classes.SetTaskSet(data);
 
   validate('SetTaskSet', model);
   return model as Specification.SetTaskSet;
@@ -36,6 +35,4 @@ function buildingFn(data: Specification.SetTaskSet): Specification.SetTaskSet {
  * A factory to create a builder proxy for the type `Specification.SetTaskSet`
  * @returns {Specification.SetTaskSet} A builder for `Specification.SetTaskSet`
  */
-export function setTaskSetBuilder(): Builder<Specification.SetTaskSet> {
-  return builder<Specification.SetTaskSet>(buildingFn);
-}
+export const setTaskSetBuilder = (): Builder<Specification.SetTaskSet> => builder<Specification.SetTaskSet>(buildingFn);

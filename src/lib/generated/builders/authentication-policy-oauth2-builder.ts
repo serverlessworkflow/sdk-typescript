@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.AuthenticationPolicyOauth2} The validated underlying object
  */
 function buildingFn(data: Specification.AuthenticationPolicyOauth2): Specification.AuthenticationPolicyOauth2 {
-  const model = new Classes.AuthenticationPolicyOauth2();
-  Object.assign(model, data);
+  const model = new Classes.AuthenticationPolicyOauth2(data);
 
   validate('AuthenticationPolicyOauth2', model);
   return model as Specification.AuthenticationPolicyOauth2;
@@ -36,6 +35,5 @@ function buildingFn(data: Specification.AuthenticationPolicyOauth2): Specificati
  * A factory to create a builder proxy for the type `Specification.AuthenticationPolicyOauth2`
  * @returns {Specification.AuthenticationPolicyOauth2} A builder for `Specification.AuthenticationPolicyOauth2`
  */
-export function authenticationPolicyOauth2Builder(): Builder<Specification.AuthenticationPolicyOauth2> {
-  return builder<Specification.AuthenticationPolicyOauth2>(buildingFn);
-}
+export const authenticationPolicyOauth2Builder = (): Builder<Specification.AuthenticationPolicyOauth2> =>
+  builder<Specification.AuthenticationPolicyOauth2>(buildingFn);

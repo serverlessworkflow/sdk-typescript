@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.Document} The validated underlying object
  */
 function buildingFn(data: Specification.Document): Specification.Document {
-  const model = new Classes.Document();
-  Object.assign(model, data);
+  const model = new Classes.Document(data);
 
   validate('Document', model);
   return model as Specification.Document;
@@ -36,6 +35,4 @@ function buildingFn(data: Specification.Document): Specification.Document {
  * A factory to create a builder proxy for the type `Specification.Document`
  * @returns {Specification.Document} A builder for `Specification.Document`
  */
-export function documentBuilder(): Builder<Specification.Document> {
-  return builder<Specification.Document>(buildingFn);
-}
+export const documentBuilder = (): Builder<Specification.Document> => builder<Specification.Document>(buildingFn);

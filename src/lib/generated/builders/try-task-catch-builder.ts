@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.TryTaskCatch} The validated underlying object
  */
 function buildingFn(data: Specification.TryTaskCatch): Specification.TryTaskCatch {
-  const model = new Classes.TryTaskCatch();
-  Object.assign(model, data);
+  const model = new Classes.TryTaskCatch(data);
 
   validate('TryTaskCatch', model);
   return model as Specification.TryTaskCatch;
@@ -36,6 +35,5 @@ function buildingFn(data: Specification.TryTaskCatch): Specification.TryTaskCatc
  * A factory to create a builder proxy for the type `Specification.TryTaskCatch`
  * @returns {Specification.TryTaskCatch} A builder for `Specification.TryTaskCatch`
  */
-export function tryTaskCatchBuilder(): Builder<Specification.TryTaskCatch> {
-  return builder<Specification.TryTaskCatch>(buildingFn);
-}
+export const tryTaskCatchBuilder = (): Builder<Specification.TryTaskCatch> =>
+  builder<Specification.TryTaskCatch>(buildingFn);

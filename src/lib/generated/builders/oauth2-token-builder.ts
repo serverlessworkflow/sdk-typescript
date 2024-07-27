@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.Oauth2Token} The validated underlying object
  */
 function buildingFn(data: Specification.Oauth2Token): Specification.Oauth2Token {
-  const model = new Classes.Oauth2Token();
-  Object.assign(model, data);
+  const model = new Classes.Oauth2Token(data);
 
   validate('Oauth2Token', model);
   return model as Specification.Oauth2Token;
@@ -36,6 +35,5 @@ function buildingFn(data: Specification.Oauth2Token): Specification.Oauth2Token 
  * A factory to create a builder proxy for the type `Specification.Oauth2Token`
  * @returns {Specification.Oauth2Token} A builder for `Specification.Oauth2Token`
  */
-export function oauth2TokenBuilder(): Builder<Specification.Oauth2Token> {
-  return builder<Specification.Oauth2Token>(buildingFn);
-}
+export const oauth2TokenBuilder = (): Builder<Specification.Oauth2Token> =>
+  builder<Specification.Oauth2Token>(buildingFn);

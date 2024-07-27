@@ -75,8 +75,7 @@ ${extension?.import ? extension.import + '\n' : ''}
  * @returns {Specification.${declaration}} The validated underlying object
  */
 function buildingFn(data: Specification.${declaration}): Specification.${declaration} {
-  const model = new Classes.${declaration}();
-  Object.assign(model, data);
+  const model = new Classes.${declaration}(data);
   ${extension?.preValidate || ''}    
   validate('${declaration}', model);
   return model as Specification.${declaration};
@@ -86,9 +85,7 @@ function buildingFn(data: Specification.${declaration}): Specification.${declara
  * A factory to create a builder proxy for the type \`Specification.${declaration}\`
  * @returns {Specification.${declaration}} A builder for \`Specification.${declaration}\`
  */
-export function ${camelType}Builder(): Builder<Specification.${declaration}> {
-return builder<Specification.${declaration}>(buildingFn);
-}`;
+export const ${camelType}Builder = (): Builder<Specification.${declaration}> => builder<Specification.${declaration}>(buildingFn);`;
   const destFile = path.resolve(destDir, toKebabCase(normalizeKnownAllCaps(declaration)) + '-builder.ts');
   await writeFile(destFile, builderCode);
 }

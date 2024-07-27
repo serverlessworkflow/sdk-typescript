@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.Timeout} The validated underlying object
  */
 function buildingFn(data: Specification.Timeout): Specification.Timeout {
-  const model = new Classes.Timeout();
-  Object.assign(model, data);
+  const model = new Classes.Timeout(data);
 
   validate('Timeout', model);
   return model as Specification.Timeout;
@@ -36,6 +35,4 @@ function buildingFn(data: Specification.Timeout): Specification.Timeout {
  * A factory to create a builder proxy for the type `Specification.Timeout`
  * @returns {Specification.Timeout} A builder for `Specification.Timeout`
  */
-export function timeoutBuilder(): Builder<Specification.Timeout> {
-  return builder<Specification.Timeout>(buildingFn);
-}
+export const timeoutBuilder = (): Builder<Specification.Timeout> => builder<Specification.Timeout>(buildingFn);

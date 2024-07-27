@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.RunTask} The validated underlying object
  */
 function buildingFn(data: Specification.RunTask): Specification.RunTask {
-  const model = new Classes.RunTask();
-  Object.assign(model, data);
+  const model = new Classes.RunTask(data);
 
   validate('RunTask', model);
   return model as Specification.RunTask;
@@ -36,6 +35,4 @@ function buildingFn(data: Specification.RunTask): Specification.RunTask {
  * A factory to create a builder proxy for the type `Specification.RunTask`
  * @returns {Specification.RunTask} A builder for `Specification.RunTask`
  */
-export function runTaskBuilder(): Builder<Specification.RunTask> {
-  return builder<Specification.RunTask>(buildingFn);
-}
+export const runTaskBuilder = (): Builder<Specification.RunTask> => builder<Specification.RunTask>(buildingFn);

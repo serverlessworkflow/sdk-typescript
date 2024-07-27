@@ -27,8 +27,7 @@ import { Specification } from '../definitions';
 function buildingFn(
   data: Specification.CallGRPCWithServiceAuthentication,
 ): Specification.CallGRPCWithServiceAuthentication {
-  const model = new Classes.CallGRPCWithServiceAuthentication();
-  Object.assign(model, data);
+  const model = new Classes.CallGRPCWithServiceAuthentication(data);
 
   validate('CallGRPCWithServiceAuthentication', model);
   return model as Specification.CallGRPCWithServiceAuthentication;
@@ -38,6 +37,5 @@ function buildingFn(
  * A factory to create a builder proxy for the type `Specification.CallGRPCWithServiceAuthentication`
  * @returns {Specification.CallGRPCWithServiceAuthentication} A builder for `Specification.CallGRPCWithServiceAuthentication`
  */
-export function callGRPCWithServiceAuthenticationBuilder(): Builder<Specification.CallGRPCWithServiceAuthentication> {
-  return builder<Specification.CallGRPCWithServiceAuthentication>(buildingFn);
-}
+export const callGRPCWithServiceAuthenticationBuilder = (): Builder<Specification.CallGRPCWithServiceAuthentication> =>
+  builder<Specification.CallGRPCWithServiceAuthentication>(buildingFn);

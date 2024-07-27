@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.CallGRPC} The validated underlying object
  */
 function buildingFn(data: Specification.CallGRPC): Specification.CallGRPC {
-  const model = new Classes.CallGRPC();
-  Object.assign(model, data);
+  const model = new Classes.CallGRPC(data);
 
   validate('CallGRPC', model);
   return model as Specification.CallGRPC;
@@ -36,6 +35,4 @@ function buildingFn(data: Specification.CallGRPC): Specification.CallGRPC {
  * A factory to create a builder proxy for the type `Specification.CallGRPC`
  * @returns {Specification.CallGRPC} A builder for `Specification.CallGRPC`
  */
-export function callGRPCBuilder(): Builder<Specification.CallGRPC> {
-  return builder<Specification.CallGRPC>(buildingFn);
-}
+export const callGRPCBuilder = (): Builder<Specification.CallGRPC> => builder<Specification.CallGRPC>(buildingFn);

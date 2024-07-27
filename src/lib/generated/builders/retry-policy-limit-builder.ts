@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.RetryPolicyLimit} The validated underlying object
  */
 function buildingFn(data: Specification.RetryPolicyLimit): Specification.RetryPolicyLimit {
-  const model = new Classes.RetryPolicyLimit();
-  Object.assign(model, data);
+  const model = new Classes.RetryPolicyLimit(data);
 
   validate('RetryPolicyLimit', model);
   return model as Specification.RetryPolicyLimit;
@@ -36,6 +35,5 @@ function buildingFn(data: Specification.RetryPolicyLimit): Specification.RetryPo
  * A factory to create a builder proxy for the type `Specification.RetryPolicyLimit`
  * @returns {Specification.RetryPolicyLimit} A builder for `Specification.RetryPolicyLimit`
  */
-export function retryPolicyLimitBuilder(): Builder<Specification.RetryPolicyLimit> {
-  return builder<Specification.RetryPolicyLimit>(buildingFn);
-}
+export const retryPolicyLimitBuilder = (): Builder<Specification.RetryPolicyLimit> =>
+  builder<Specification.RetryPolicyLimit>(buildingFn);

@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.UseRetries} The validated underlying object
  */
 function buildingFn(data: Specification.UseRetries): Specification.UseRetries {
-  const model = new Classes.UseRetries();
-  Object.assign(model, data);
+  const model = new Classes.UseRetries(data);
 
   validate('UseRetries', model);
   return model as Specification.UseRetries;
@@ -36,6 +35,4 @@ function buildingFn(data: Specification.UseRetries): Specification.UseRetries {
  * A factory to create a builder proxy for the type `Specification.UseRetries`
  * @returns {Specification.UseRetries} A builder for `Specification.UseRetries`
  */
-export function useRetriesBuilder(): Builder<Specification.UseRetries> {
-  return builder<Specification.UseRetries>(buildingFn);
-}
+export const useRetriesBuilder = (): Builder<Specification.UseRetries> => builder<Specification.UseRetries>(buildingFn);

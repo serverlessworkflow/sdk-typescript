@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.ListenTask} The validated underlying object
  */
 function buildingFn(data: Specification.ListenTask): Specification.ListenTask {
-  const model = new Classes.ListenTask();
-  Object.assign(model, data);
+  const model = new Classes.ListenTask(data);
 
   validate('ListenTask', model);
   return model as Specification.ListenTask;
@@ -36,6 +35,4 @@ function buildingFn(data: Specification.ListenTask): Specification.ListenTask {
  * A factory to create a builder proxy for the type `Specification.ListenTask`
  * @returns {Specification.ListenTask} A builder for `Specification.ListenTask`
  */
-export function listenTaskBuilder(): Builder<Specification.ListenTask> {
-  return builder<Specification.ListenTask>(buildingFn);
-}
+export const listenTaskBuilder = (): Builder<Specification.ListenTask> => builder<Specification.ListenTask>(buildingFn);

@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.Workflow} The validated underlying object
  */
 function buildingFn(data: Specification.Workflow): Specification.Workflow {
-  const model = new Classes.Workflow();
-  Object.assign(model, data);
+  const model = new Classes.Workflow(data);
 
   validate('Workflow', model);
   return model as Specification.Workflow;
@@ -36,6 +35,4 @@ function buildingFn(data: Specification.Workflow): Specification.Workflow {
  * A factory to create a builder proxy for the type `Specification.Workflow`
  * @returns {Specification.Workflow} A builder for `Specification.Workflow`
  */
-export function workflowBuilder(): Builder<Specification.Workflow> {
-  return builder<Specification.Workflow>(buildingFn);
-}
+export const workflowBuilder = (): Builder<Specification.Workflow> => builder<Specification.Workflow>(buildingFn);

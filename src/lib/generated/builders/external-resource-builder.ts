@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.ExternalResource} The validated underlying object
  */
 function buildingFn(data: Specification.ExternalResource): Specification.ExternalResource {
-  const model = new Classes.ExternalResource();
-  Object.assign(model, data);
+  const model = new Classes.ExternalResource(data);
 
   validate('ExternalResource', model);
   return model as Specification.ExternalResource;
@@ -36,6 +35,5 @@ function buildingFn(data: Specification.ExternalResource): Specification.Externa
  * A factory to create a builder proxy for the type `Specification.ExternalResource`
  * @returns {Specification.ExternalResource} A builder for `Specification.ExternalResource`
  */
-export function externalResourceBuilder(): Builder<Specification.ExternalResource> {
-  return builder<Specification.ExternalResource>(buildingFn);
-}
+export const externalResourceBuilder = (): Builder<Specification.ExternalResource> =>
+  builder<Specification.ExternalResource>(buildingFn);

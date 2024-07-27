@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.WaitTask} The validated underlying object
  */
 function buildingFn(data: Specification.WaitTask): Specification.WaitTask {
-  const model = new Classes.WaitTask();
-  Object.assign(model, data);
+  const model = new Classes.WaitTask(data);
 
   validate('WaitTask', model);
   return model as Specification.WaitTask;
@@ -36,6 +35,4 @@ function buildingFn(data: Specification.WaitTask): Specification.WaitTask {
  * A factory to create a builder proxy for the type `Specification.WaitTask`
  * @returns {Specification.WaitTask} A builder for `Specification.WaitTask`
  */
-export function waitTaskBuilder(): Builder<Specification.WaitTask> {
-  return builder<Specification.WaitTask>(buildingFn);
-}
+export const waitTaskBuilder = (): Builder<Specification.WaitTask> => builder<Specification.WaitTask>(buildingFn);

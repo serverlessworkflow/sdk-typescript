@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.RunTaskRunShell} The validated underlying object
  */
 function buildingFn(data: Specification.RunTaskRunShell): Specification.RunTaskRunShell {
-  const model = new Classes.RunTaskRunShell();
-  Object.assign(model, data);
+  const model = new Classes.RunTaskRunShell(data);
 
   validate('RunTaskRunShell', model);
   return model as Specification.RunTaskRunShell;
@@ -36,6 +35,5 @@ function buildingFn(data: Specification.RunTaskRunShell): Specification.RunTaskR
  * A factory to create a builder proxy for the type `Specification.RunTaskRunShell`
  * @returns {Specification.RunTaskRunShell} A builder for `Specification.RunTaskRunShell`
  */
-export function runTaskRunShellBuilder(): Builder<Specification.RunTaskRunShell> {
-  return builder<Specification.RunTaskRunShell>(buildingFn);
-}
+export const runTaskRunShellBuilder = (): Builder<Specification.RunTaskRunShell> =>
+  builder<Specification.RunTaskRunShell>(buildingFn);

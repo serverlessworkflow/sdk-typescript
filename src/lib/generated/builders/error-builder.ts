@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.Error} The validated underlying object
  */
 function buildingFn(data: Specification.Error): Specification.Error {
-  const model = new Classes.Error();
-  Object.assign(model, data);
+  const model = new Classes.Error(data);
 
   validate('Error', model);
   return model as Specification.Error;
@@ -36,6 +35,4 @@ function buildingFn(data: Specification.Error): Specification.Error {
  * A factory to create a builder proxy for the type `Specification.Error`
  * @returns {Specification.Error} A builder for `Specification.Error`
  */
-export function errorBuilder(): Builder<Specification.Error> {
-  return builder<Specification.Error>(buildingFn);
-}
+export const errorBuilder = (): Builder<Specification.Error> => builder<Specification.Error>(buildingFn);

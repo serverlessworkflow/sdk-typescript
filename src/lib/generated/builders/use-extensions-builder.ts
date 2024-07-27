@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.UseExtensions} The validated underlying object
  */
 function buildingFn(data: Specification.UseExtensions): Specification.UseExtensions {
-  const model = new Classes.UseExtensions();
-  Object.assign(model, data);
+  const model = new Classes.UseExtensions(data);
 
   validate('UseExtensions', model);
   return model as Specification.UseExtensions;
@@ -36,6 +35,5 @@ function buildingFn(data: Specification.UseExtensions): Specification.UseExtensi
  * A factory to create a builder proxy for the type `Specification.UseExtensions`
  * @returns {Specification.UseExtensions} A builder for `Specification.UseExtensions`
  */
-export function useExtensionsBuilder(): Builder<Specification.UseExtensions> {
-  return builder<Specification.UseExtensions>(buildingFn);
-}
+export const useExtensionsBuilder = (): Builder<Specification.UseExtensions> =>
+  builder<Specification.UseExtensions>(buildingFn);

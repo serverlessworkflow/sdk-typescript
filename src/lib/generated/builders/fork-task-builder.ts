@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.ForkTask} The validated underlying object
  */
 function buildingFn(data: Specification.ForkTask): Specification.ForkTask {
-  const model = new Classes.ForkTask();
-  Object.assign(model, data);
+  const model = new Classes.ForkTask(data);
 
   validate('ForkTask', model);
   return model as Specification.ForkTask;
@@ -36,6 +35,4 @@ function buildingFn(data: Specification.ForkTask): Specification.ForkTask {
  * A factory to create a builder proxy for the type `Specification.ForkTask`
  * @returns {Specification.ForkTask} A builder for `Specification.ForkTask`
  */
-export function forkTaskBuilder(): Builder<Specification.ForkTask> {
-  return builder<Specification.ForkTask>(buildingFn);
-}
+export const forkTaskBuilder = (): Builder<Specification.ForkTask> => builder<Specification.ForkTask>(buildingFn);

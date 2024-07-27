@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.CallFunction} The validated underlying object
  */
 function buildingFn(data: Specification.CallFunction): Specification.CallFunction {
-  const model = new Classes.CallFunction();
-  Object.assign(model, data);
+  const model = new Classes.CallFunction(data);
 
   validate('CallFunction', model);
   return model as Specification.CallFunction;
@@ -36,6 +35,5 @@ function buildingFn(data: Specification.CallFunction): Specification.CallFunctio
  * A factory to create a builder proxy for the type `Specification.CallFunction`
  * @returns {Specification.CallFunction} A builder for `Specification.CallFunction`
  */
-export function callFunctionBuilder(): Builder<Specification.CallFunction> {
-  return builder<Specification.CallFunction>(buildingFn);
-}
+export const callFunctionBuilder = (): Builder<Specification.CallFunction> =>
+  builder<Specification.CallFunction>(buildingFn);

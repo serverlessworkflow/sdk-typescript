@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.RaiseTaskRaise} The validated underlying object
  */
 function buildingFn(data: Specification.RaiseTaskRaise): Specification.RaiseTaskRaise {
-  const model = new Classes.RaiseTaskRaise();
-  Object.assign(model, data);
+  const model = new Classes.RaiseTaskRaise(data);
 
   validate('RaiseTaskRaise', model);
   return model as Specification.RaiseTaskRaise;
@@ -36,6 +35,5 @@ function buildingFn(data: Specification.RaiseTaskRaise): Specification.RaiseTask
  * A factory to create a builder proxy for the type `Specification.RaiseTaskRaise`
  * @returns {Specification.RaiseTaskRaise} A builder for `Specification.RaiseTaskRaise`
  */
-export function raiseTaskRaiseBuilder(): Builder<Specification.RaiseTaskRaise> {
-  return builder<Specification.RaiseTaskRaise>(buildingFn);
-}
+export const raiseTaskRaiseBuilder = (): Builder<Specification.RaiseTaskRaise> =>
+  builder<Specification.RaiseTaskRaise>(buildingFn);

@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.TaskList} The validated underlying object
  */
 function buildingFn(data: Specification.TaskList): Specification.TaskList {
-  const model = new Classes.TaskList();
-  Object.assign(model, data);
+  const model = new Classes.TaskList(data);
 
   validate('TaskList', model);
   return model as Specification.TaskList;
@@ -36,6 +35,4 @@ function buildingFn(data: Specification.TaskList): Specification.TaskList {
  * A factory to create a builder proxy for the type `Specification.TaskList`
  * @returns {Specification.TaskList} A builder for `Specification.TaskList`
  */
-export function taskListBuilder(): Builder<Specification.TaskList> {
-  return builder<Specification.TaskList>(buildingFn);
-}
+export const taskListBuilder = (): Builder<Specification.TaskList> => builder<Specification.TaskList>(buildingFn);

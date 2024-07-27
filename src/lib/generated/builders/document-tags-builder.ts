@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.DocumentTags} The validated underlying object
  */
 function buildingFn(data: Specification.DocumentTags): Specification.DocumentTags {
-  const model = new Classes.DocumentTags();
-  Object.assign(model, data);
+  const model = new Classes.DocumentTags(data);
 
   validate('DocumentTags', model);
   return model as Specification.DocumentTags;
@@ -36,6 +35,5 @@ function buildingFn(data: Specification.DocumentTags): Specification.DocumentTag
  * A factory to create a builder proxy for the type `Specification.DocumentTags`
  * @returns {Specification.DocumentTags} A builder for `Specification.DocumentTags`
  */
-export function documentTagsBuilder(): Builder<Specification.DocumentTags> {
-  return builder<Specification.DocumentTags>(buildingFn);
-}
+export const documentTagsBuilder = (): Builder<Specification.DocumentTags> =>
+  builder<Specification.DocumentTags>(buildingFn);

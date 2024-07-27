@@ -25,8 +25,7 @@ import { Specification } from '../definitions';
  * @returns {Specification.EndpointAuthentication} The validated underlying object
  */
 function buildingFn(data: Specification.EndpointAuthentication): Specification.EndpointAuthentication {
-  const model = new Classes.EndpointAuthentication();
-  Object.assign(model, data);
+  const model = new Classes.EndpointAuthentication(data);
 
   validate('EndpointAuthentication', model);
   return model as Specification.EndpointAuthentication;
@@ -36,6 +35,5 @@ function buildingFn(data: Specification.EndpointAuthentication): Specification.E
  * A factory to create a builder proxy for the type `Specification.EndpointAuthentication`
  * @returns {Specification.EndpointAuthentication} A builder for `Specification.EndpointAuthentication`
  */
-export function endpointAuthenticationBuilder(): Builder<Specification.EndpointAuthentication> {
-  return builder<Specification.EndpointAuthentication>(buildingFn);
-}
+export const endpointAuthenticationBuilder = (): Builder<Specification.EndpointAuthentication> =>
+  builder<Specification.EndpointAuthentication>(buildingFn);
