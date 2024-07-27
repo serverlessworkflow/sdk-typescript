@@ -21,19 +21,19 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.RunTaskRunContainer} data The underlying object
+ * @param {Specification.RunTaskRunContainer} model The underlying object
  * @returns {Specification.RunTaskRunContainer} The validated underlying object
  */
-function buildingFn(data: Specification.RunTaskRunContainer): Specification.RunTaskRunContainer {
-  const model = new Classes.RunTaskRunContainer(data);
-
-  validate('RunTaskRunContainer', model);
-  return model as Specification.RunTaskRunContainer;
+function buildingFn(model: Specification.RunTaskRunContainer): Specification.RunTaskRunContainer {
+  const instance = new Classes.RunTaskRunContainer(model);
+  validate('RunTaskRunContainer', instance);
+  return instance as Specification.RunTaskRunContainer;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.RunTaskRunContainer`
- * @returns {Specification.RunTaskRunContainer} A builder for `Specification.RunTaskRunContainer`
+ * @returns {Builder<Specification.RunTaskRunContainer>} A builder for `Specification.RunTaskRunContainer`
  */
-export const runTaskRunContainerBuilder = (): Builder<Specification.RunTaskRunContainer> =>
-  builder<Specification.RunTaskRunContainer>(buildingFn);
+export const runTaskRunContainerBuilder = (
+  model?: Partial<Specification.RunTaskRunContainer>,
+): Builder<Specification.RunTaskRunContainer> => builder<Specification.RunTaskRunContainer>(model, buildingFn);

@@ -21,19 +21,19 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.ExternalResource} data The underlying object
+ * @param {Specification.ExternalResource} model The underlying object
  * @returns {Specification.ExternalResource} The validated underlying object
  */
-function buildingFn(data: Specification.ExternalResource): Specification.ExternalResource {
-  const model = new Classes.ExternalResource(data);
-
-  validate('ExternalResource', model);
-  return model as Specification.ExternalResource;
+function buildingFn(model: Specification.ExternalResource): Specification.ExternalResource {
+  const instance = new Classes.ExternalResource(model);
+  validate('ExternalResource', instance);
+  return instance as Specification.ExternalResource;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.ExternalResource`
- * @returns {Specification.ExternalResource} A builder for `Specification.ExternalResource`
+ * @returns {Builder<Specification.ExternalResource>} A builder for `Specification.ExternalResource`
  */
-export const externalResourceBuilder = (): Builder<Specification.ExternalResource> =>
-  builder<Specification.ExternalResource>(buildingFn);
+export const externalResourceBuilder = (
+  model?: Partial<Specification.ExternalResource>,
+): Builder<Specification.ExternalResource> => builder<Specification.ExternalResource>(model, buildingFn);

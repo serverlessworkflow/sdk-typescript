@@ -21,19 +21,19 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.RunTaskRunWorkflowInput} data The underlying object
+ * @param {Specification.RunTaskRunWorkflowInput} model The underlying object
  * @returns {Specification.RunTaskRunWorkflowInput} The validated underlying object
  */
-function buildingFn(data: Specification.RunTaskRunWorkflowInput): Specification.RunTaskRunWorkflowInput {
-  const model = new Classes.RunTaskRunWorkflowInput(data);
-
-  validate('RunTaskRunWorkflowInput', model);
-  return model as Specification.RunTaskRunWorkflowInput;
+function buildingFn(model: Specification.RunTaskRunWorkflowInput): Specification.RunTaskRunWorkflowInput {
+  const instance = new Classes.RunTaskRunWorkflowInput(model);
+  validate('RunTaskRunWorkflowInput', instance);
+  return instance as Specification.RunTaskRunWorkflowInput;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.RunTaskRunWorkflowInput`
- * @returns {Specification.RunTaskRunWorkflowInput} A builder for `Specification.RunTaskRunWorkflowInput`
+ * @returns {Builder<Specification.RunTaskRunWorkflowInput>} A builder for `Specification.RunTaskRunWorkflowInput`
  */
-export const runTaskRunWorkflowInputBuilder = (): Builder<Specification.RunTaskRunWorkflowInput> =>
-  builder<Specification.RunTaskRunWorkflowInput>(buildingFn);
+export const runTaskRunWorkflowInputBuilder = (
+  model?: Partial<Specification.RunTaskRunWorkflowInput>,
+): Builder<Specification.RunTaskRunWorkflowInput> => builder<Specification.RunTaskRunWorkflowInput>(model, buildingFn);

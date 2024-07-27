@@ -21,19 +21,18 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.EventFilter} data The underlying object
+ * @param {Specification.EventFilter} model The underlying object
  * @returns {Specification.EventFilter} The validated underlying object
  */
-function buildingFn(data: Specification.EventFilter): Specification.EventFilter {
-  const model = new Classes.EventFilter(data);
-
-  validate('EventFilter', model);
-  return model as Specification.EventFilter;
+function buildingFn(model: Specification.EventFilter): Specification.EventFilter {
+  const instance = new Classes.EventFilter(model);
+  validate('EventFilter', instance);
+  return instance as Specification.EventFilter;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.EventFilter`
- * @returns {Specification.EventFilter} A builder for `Specification.EventFilter`
+ * @returns {Builder<Specification.EventFilter>} A builder for `Specification.EventFilter`
  */
-export const eventFilterBuilder = (): Builder<Specification.EventFilter> =>
-  builder<Specification.EventFilter>(buildingFn);
+export const eventFilterBuilder = (model?: Partial<Specification.EventFilter>): Builder<Specification.EventFilter> =>
+  builder<Specification.EventFilter>(model, buildingFn);

@@ -21,19 +21,20 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.CallOpenAPIWithAuthentication} data The underlying object
+ * @param {Specification.CallOpenAPIWithAuthentication} model The underlying object
  * @returns {Specification.CallOpenAPIWithAuthentication} The validated underlying object
  */
-function buildingFn(data: Specification.CallOpenAPIWithAuthentication): Specification.CallOpenAPIWithAuthentication {
-  const model = new Classes.CallOpenAPIWithAuthentication(data);
-
-  validate('CallOpenAPIWithAuthentication', model);
-  return model as Specification.CallOpenAPIWithAuthentication;
+function buildingFn(model: Specification.CallOpenAPIWithAuthentication): Specification.CallOpenAPIWithAuthentication {
+  const instance = new Classes.CallOpenAPIWithAuthentication(model);
+  validate('CallOpenAPIWithAuthentication', instance);
+  return instance as Specification.CallOpenAPIWithAuthentication;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.CallOpenAPIWithAuthentication`
- * @returns {Specification.CallOpenAPIWithAuthentication} A builder for `Specification.CallOpenAPIWithAuthentication`
+ * @returns {Builder<Specification.CallOpenAPIWithAuthentication>} A builder for `Specification.CallOpenAPIWithAuthentication`
  */
-export const callOpenAPIWithAuthenticationBuilder = (): Builder<Specification.CallOpenAPIWithAuthentication> =>
-  builder<Specification.CallOpenAPIWithAuthentication>(buildingFn);
+export const callOpenAPIWithAuthenticationBuilder = (
+  model?: Partial<Specification.CallOpenAPIWithAuthentication>,
+): Builder<Specification.CallOpenAPIWithAuthentication> =>
+  builder<Specification.CallOpenAPIWithAuthentication>(model, buildingFn);

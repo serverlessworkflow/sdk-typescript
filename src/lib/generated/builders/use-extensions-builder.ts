@@ -14,26 +14,27 @@
  * limitations under the License.
  */
 
-import { builder, Builder } from '../../builder';
+import { arrayBuilder, ArrayBuilder } from '../../builder';
 import { validate } from '../../validation';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
- * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.UseExtensions} data The underlying object
- * @returns {Specification.UseExtensions} The validated underlying object
+ * The internal function used by the builder proxy to validate and return its underlying array
+ * @param {Specification.UseExtensions} model The underlying array
+ * @returns {Specification.UseExtensions} The validated underlying array
  */
-function buildingFn(data: Specification.UseExtensions): Specification.UseExtensions {
-  const model = new Classes.UseExtensions(data);
-
-  validate('UseExtensions', model);
-  return model as Specification.UseExtensions;
+function buildingFn(model: Specification.UseExtensions): Specification.UseExtensions {
+  const instance = new Classes.UseExtensions(model);
+  validate('UseExtensions', instance);
+  return instance as Specification.UseExtensions;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.UseExtensions`
- * @returns {Specification.UseExtensions} A builder for `Specification.UseExtensions`
+ * @returns {ArrayBuilder<Specification.UseExtensions>} A builder for `Specification.UseExtensions`
  */
-export const useExtensionsBuilder = (): Builder<Specification.UseExtensions> =>
-  builder<Specification.UseExtensions>(buildingFn);
+export const useExtensionsBuilder = (
+  model?: Specification.UseExtensions,
+): ArrayBuilder<{ [k: string]: Specification.Extension }> =>
+  arrayBuilder<{ [k: string]: Specification.Extension }>(model, buildingFn);

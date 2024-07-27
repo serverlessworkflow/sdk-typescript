@@ -21,19 +21,20 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.ExternalResourceAuthentication} data The underlying object
+ * @param {Specification.ExternalResourceAuthentication} model The underlying object
  * @returns {Specification.ExternalResourceAuthentication} The validated underlying object
  */
-function buildingFn(data: Specification.ExternalResourceAuthentication): Specification.ExternalResourceAuthentication {
-  const model = new Classes.ExternalResourceAuthentication(data);
-
-  validate('ExternalResourceAuthentication', model);
-  return model as Specification.ExternalResourceAuthentication;
+function buildingFn(model: Specification.ExternalResourceAuthentication): Specification.ExternalResourceAuthentication {
+  const instance = new Classes.ExternalResourceAuthentication(model);
+  validate('ExternalResourceAuthentication', instance);
+  return instance as Specification.ExternalResourceAuthentication;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.ExternalResourceAuthentication`
- * @returns {Specification.ExternalResourceAuthentication} A builder for `Specification.ExternalResourceAuthentication`
+ * @returns {Builder<Specification.ExternalResourceAuthentication>} A builder for `Specification.ExternalResourceAuthentication`
  */
-export const externalResourceAuthenticationBuilder = (): Builder<Specification.ExternalResourceAuthentication> =>
-  builder<Specification.ExternalResourceAuthentication>(buildingFn);
+export const externalResourceAuthenticationBuilder = (
+  model?: Partial<Specification.ExternalResourceAuthentication>,
+): Builder<Specification.ExternalResourceAuthentication> =>
+  builder<Specification.ExternalResourceAuthentication>(model, buildingFn);

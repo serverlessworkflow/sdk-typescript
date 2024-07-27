@@ -21,19 +21,19 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.UseAuthentications} data The underlying object
+ * @param {Specification.UseAuthentications} model The underlying object
  * @returns {Specification.UseAuthentications} The validated underlying object
  */
-function buildingFn(data: Specification.UseAuthentications): Specification.UseAuthentications {
-  const model = new Classes.UseAuthentications(data);
-
-  validate('UseAuthentications', model);
-  return model as Specification.UseAuthentications;
+function buildingFn(model: Specification.UseAuthentications): Specification.UseAuthentications {
+  const instance = new Classes.UseAuthentications(model);
+  validate('UseAuthentications', instance);
+  return instance as Specification.UseAuthentications;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.UseAuthentications`
- * @returns {Specification.UseAuthentications} A builder for `Specification.UseAuthentications`
+ * @returns {Builder<Specification.UseAuthentications>} A builder for `Specification.UseAuthentications`
  */
-export const useAuthenticationsBuilder = (): Builder<Specification.UseAuthentications> =>
-  builder<Specification.UseAuthentications>(buildingFn);
+export const useAuthenticationsBuilder = (
+  model?: Partial<Specification.UseAuthentications>,
+): Builder<Specification.UseAuthentications> => builder<Specification.UseAuthentications>(model, buildingFn);

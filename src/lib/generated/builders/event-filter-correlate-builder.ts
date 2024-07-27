@@ -21,19 +21,19 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.EventFilterCorrelate} data The underlying object
+ * @param {Specification.EventFilterCorrelate} model The underlying object
  * @returns {Specification.EventFilterCorrelate} The validated underlying object
  */
-function buildingFn(data: Specification.EventFilterCorrelate): Specification.EventFilterCorrelate {
-  const model = new Classes.EventFilterCorrelate(data);
-
-  validate('EventFilterCorrelate', model);
-  return model as Specification.EventFilterCorrelate;
+function buildingFn(model: Specification.EventFilterCorrelate): Specification.EventFilterCorrelate {
+  const instance = new Classes.EventFilterCorrelate(model);
+  validate('EventFilterCorrelate', instance);
+  return instance as Specification.EventFilterCorrelate;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.EventFilterCorrelate`
- * @returns {Specification.EventFilterCorrelate} A builder for `Specification.EventFilterCorrelate`
+ * @returns {Builder<Specification.EventFilterCorrelate>} A builder for `Specification.EventFilterCorrelate`
  */
-export const eventFilterCorrelateBuilder = (): Builder<Specification.EventFilterCorrelate> =>
-  builder<Specification.EventFilterCorrelate>(buildingFn);
+export const eventFilterCorrelateBuilder = (
+  model?: Partial<Specification.EventFilterCorrelate>,
+): Builder<Specification.EventFilterCorrelate> => builder<Specification.EventFilterCorrelate>(model, buildingFn);

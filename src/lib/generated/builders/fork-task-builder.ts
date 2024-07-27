@@ -21,18 +21,18 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.ForkTask} data The underlying object
+ * @param {Specification.ForkTask} model The underlying object
  * @returns {Specification.ForkTask} The validated underlying object
  */
-function buildingFn(data: Specification.ForkTask): Specification.ForkTask {
-  const model = new Classes.ForkTask(data);
-
-  validate('ForkTask', model);
-  return model as Specification.ForkTask;
+function buildingFn(model: Specification.ForkTask): Specification.ForkTask {
+  const instance = new Classes.ForkTask(model);
+  validate('ForkTask', instance);
+  return instance as Specification.ForkTask;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.ForkTask`
- * @returns {Specification.ForkTask} A builder for `Specification.ForkTask`
+ * @returns {Builder<Specification.ForkTask>} A builder for `Specification.ForkTask`
  */
-export const forkTaskBuilder = (): Builder<Specification.ForkTask> => builder<Specification.ForkTask>(buildingFn);
+export const forkTaskBuilder = (model?: Partial<Specification.ForkTask>): Builder<Specification.ForkTask> =>
+  builder<Specification.ForkTask>(model, buildingFn);

@@ -1026,9 +1026,10 @@
                   "$ref": "#/$defs/flowDirective",
                   "description": "The flow directive to execute when the case matches.",
                   "type": "object",
-                  "title": "SwitchTaskSwitchThen"
+                  "title": "SwitchTaskSwitchCaseThen"
                 }
-              }
+              },
+              "title": "SwitchTaskSwitchCase"
             }
           },
           "title": "SwitchTaskSwitch"

@@ -21,19 +21,19 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.EndpointAuthentication} data The underlying object
+ * @param {Specification.EndpointAuthentication} model The underlying object
  * @returns {Specification.EndpointAuthentication} The validated underlying object
  */
-function buildingFn(data: Specification.EndpointAuthentication): Specification.EndpointAuthentication {
-  const model = new Classes.EndpointAuthentication(data);
-
-  validate('EndpointAuthentication', model);
-  return model as Specification.EndpointAuthentication;
+function buildingFn(model: Specification.EndpointAuthentication): Specification.EndpointAuthentication {
+  const instance = new Classes.EndpointAuthentication(model);
+  validate('EndpointAuthentication', instance);
+  return instance as Specification.EndpointAuthentication;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.EndpointAuthentication`
- * @returns {Specification.EndpointAuthentication} A builder for `Specification.EndpointAuthentication`
+ * @returns {Builder<Specification.EndpointAuthentication>} A builder for `Specification.EndpointAuthentication`
  */
-export const endpointAuthenticationBuilder = (): Builder<Specification.EndpointAuthentication> =>
-  builder<Specification.EndpointAuthentication>(buildingFn);
+export const endpointAuthenticationBuilder = (
+  model?: Partial<Specification.EndpointAuthentication>,
+): Builder<Specification.EndpointAuthentication> => builder<Specification.EndpointAuthentication>(model, buildingFn);

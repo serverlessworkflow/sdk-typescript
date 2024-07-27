@@ -16,7 +16,7 @@
  */
 
 /**
- * Represents a fluent builder proxy
+ * Represents a fluent builder proxy for an object
  */
 export type Builder<T> = {
   build: (validate?: boolean) => T;
@@ -25,30 +25,71 @@ export type Builder<T> = {
 };
 
 /**
+ * Represents a fluent builder proxy for an array
+ */
+export type ArrayBuilder<T> = {
+  push: (item: T) => ArrayBuilder<T>;
+  build: (validate?: boolean) => Array<T>;
+};
+
+/**
  * The default function used to build an object, basically just return the provided object
- * @param data The object to "build"
+ * @param model The object to "build"
  * @returns
  */
-function defaultBuildingFn<T>(data: Partial<T>): T {
-  return data as T;
+function defaultBuildingFn<T>(model: Partial<T>): T {
+  return model as T;
 }
 
 /**
  * A factory for fluent builders that proxy properties assignations and can validate against schema on build()
- * @param {Function} buildingFn The function used to validate and produce the object on build()
- * @returns {Builder} A fluent builder
+ * @param buildingFn The function used to validate and produce the object on build()
+ * @returns A fluent builder
  */
-export function builder<T>(buildingFn?: (data: Partial<T>) => T): Builder<T> {
-  const data: Partial<T> = {};
+export function builder<T>(
+  model: Partial<T> = {},
+  buildingFn: (data: Partial<T>) => T = defaultBuildingFn,
+): Builder<T> {
   const proxy = new Proxy({} as Builder<T>, {
     get: (_, prop) => {
       if (prop === 'build') {
-        return (validate: boolean = true) => (validate ? (buildingFn || defaultBuildingFn)(data) : data);
+        return (validate: boolean = true) => (validate ? buildingFn(model) : model);
       }
       return (value: unknown): Builder<T> => {
-        (data as any)[prop.toString()] = value;
+        (model as any)[prop.toString()] = value;
         return proxy;
       };
+    },
+    set: () => {
+      return false;
+    },
+  });
+  return proxy;
+}
+
+/**
+ * A factory for fluent builders that proxy properties assignations and can validate against schema on build()
+ * @param buildingFn The function used to validate and produce the object on build()
+ * @returns A fluent builder
+ */
+export function arrayBuilder<T>(
+  model: Array<T> = [],
+  buildingFn: (data: Array<T>) => Array<T> = defaultBuildingFn,
+): ArrayBuilder<T> {
+  if (model != null && !Array.isArray(model)) {
+    throw new Error(`The provided model should be an array`);
+  }
+  const proxy = new Proxy({} as ArrayBuilder<T>, {
+    get: (_, prop) => {
+      if (prop === 'build') {
+        return (validate: boolean = true) => (validate ? buildingFn(model) : model);
+      }
+      if (prop === 'push') {
+        return (value: T): ArrayBuilder<T> => {
+          model.push(value);
+          return proxy;
+        };
+      }
     },
     set: () => {
       return false;

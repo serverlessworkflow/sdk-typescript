@@ -21,18 +21,18 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.CallGRPC} data The underlying object
+ * @param {Specification.CallGRPC} model The underlying object
  * @returns {Specification.CallGRPC} The validated underlying object
  */
-function buildingFn(data: Specification.CallGRPC): Specification.CallGRPC {
-  const model = new Classes.CallGRPC(data);
-
-  validate('CallGRPC', model);
-  return model as Specification.CallGRPC;
+function buildingFn(model: Specification.CallGRPC): Specification.CallGRPC {
+  const instance = new Classes.CallGRPC(model);
+  validate('CallGRPC', instance);
+  return instance as Specification.CallGRPC;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.CallGRPC`
- * @returns {Specification.CallGRPC} A builder for `Specification.CallGRPC`
+ * @returns {Builder<Specification.CallGRPC>} A builder for `Specification.CallGRPC`
  */
-export const callGRPCBuilder = (): Builder<Specification.CallGRPC> => builder<Specification.CallGRPC>(buildingFn);
+export const callGRPCBuilder = (model?: Partial<Specification.CallGRPC>): Builder<Specification.CallGRPC> =>
+  builder<Specification.CallGRPC>(model, buildingFn);

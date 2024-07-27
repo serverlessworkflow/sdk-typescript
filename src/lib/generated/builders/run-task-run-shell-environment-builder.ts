@@ -21,19 +21,20 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.RunTaskRunShellEnvironment} data The underlying object
+ * @param {Specification.RunTaskRunShellEnvironment} model The underlying object
  * @returns {Specification.RunTaskRunShellEnvironment} The validated underlying object
  */
-function buildingFn(data: Specification.RunTaskRunShellEnvironment): Specification.RunTaskRunShellEnvironment {
-  const model = new Classes.RunTaskRunShellEnvironment(data);
-
-  validate('RunTaskRunShellEnvironment', model);
-  return model as Specification.RunTaskRunShellEnvironment;
+function buildingFn(model: Specification.RunTaskRunShellEnvironment): Specification.RunTaskRunShellEnvironment {
+  const instance = new Classes.RunTaskRunShellEnvironment(model);
+  validate('RunTaskRunShellEnvironment', instance);
+  return instance as Specification.RunTaskRunShellEnvironment;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.RunTaskRunShellEnvironment`
- * @returns {Specification.RunTaskRunShellEnvironment} A builder for `Specification.RunTaskRunShellEnvironment`
+ * @returns {Builder<Specification.RunTaskRunShellEnvironment>} A builder for `Specification.RunTaskRunShellEnvironment`
  */
-export const runTaskRunShellEnvironmentBuilder = (): Builder<Specification.RunTaskRunShellEnvironment> =>
-  builder<Specification.RunTaskRunShellEnvironment>(buildingFn);
+export const runTaskRunShellEnvironmentBuilder = (
+  model?: Partial<Specification.RunTaskRunShellEnvironment>,
+): Builder<Specification.RunTaskRunShellEnvironment> =>
+  builder<Specification.RunTaskRunShellEnvironment>(model, buildingFn);

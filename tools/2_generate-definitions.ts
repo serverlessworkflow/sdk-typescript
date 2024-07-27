@@ -17,7 +17,7 @@
 import { compile, JSONSchema, Options } from 'json-schema-to-typescript';
 import { promises as fsPromises } from 'fs';
 import * as path from 'path';
-import { fileHeader } from './consts';
+import { fileHeader, inFileDisclaimer } from './consts';
 import { definitionsDir, isObject, reset, schemaDir, toPascalCase } from './utils';
 
 const { writeFile, readFile } = fsPromises;
@@ -75,7 +75,9 @@ function prepareSchema(schema: any, path: string[] = ['#'], parentTitle: string 
   const newSchema = JSON.parse(JSON.stringify(schema));
   const parent = path.slice(-1)[0];
   const schemaKeys = Object.keys(newSchema);
-  if (!structuralObjectProperties.includes(parent)) {
+  const isItemWithAdditionalProperties =
+    parent === 'additionalProperties' && path.slice(-2)[0] === 'items' && newSchema.properties; // only "useful" for SwitchTask.Switch.Cases
+  if (!structuralObjectProperties.includes(parent) || isItemWithAdditionalProperties) {
     if (!newSchema.type && !newSchema.oneOf && !newSchema.anyOf && !newSchema.allOf) {
       // not necessary ?
       newSchema.type = 'object';
@@ -93,7 +95,8 @@ function prepareSchema(schema: any, path: string[] = ['#'], parentTitle: string 
       schemaKeys.filter((key) => !metadataProperties.includes(key)).length // if it's just a plain object, with nothing but a type an some description
     ) {
       if (parentTitle.trim()) {
-        newSchema.title = toPascalCase(`${parentTitle} ${parent}`);
+        let title = !isItemWithAdditionalProperties ? parent : path.includes('switch') ? 'case' : 'item';
+        newSchema.title = toPascalCase(`${parentTitle} ${title}`);
       } else {
         newSchema.title = toPascalCase(
           path
@@ -169,12 +172,7 @@ async function generate(srcFile: string, destFile: string): Promise<void> {
     customName: (schema: JSONSchema, keyNameFromDefinition: string | undefined) =>
       schema.$id?.includes('serverlessworkflow.io') ? 'Workflow' : keyNameFromDefinition,
     bannerComment: `${fileHeader}
-  
-  /*****************************************************************************************
-   *
-   * /!\\ This file is computer generated. Any manual modification can and will be lost. /!\\
-   *
-   *****************************************************************************************/
+${inFileDisclaimer}
   
   `,
     style: {

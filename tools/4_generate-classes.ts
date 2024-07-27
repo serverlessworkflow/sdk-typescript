@@ -16,7 +16,7 @@
 
 import { promises as fsPromises } from 'fs';
 import * as path from 'path';
-import { fileHeader } from './consts';
+import { fileHeader, inFileDisclaimer } from './consts';
 import {
   classesDir,
   definitionsDir,
@@ -28,37 +28,82 @@ import {
 
 const { writeFile, readFile } = fsPromises;
 
-const getClassDeclaration = (className: string): string => `import { _Reflector } from "../../reflector";
+/**
+ * Returns the declaration for a class
+ * @param name The name of the class
+ * @param baseClass The inherited class, if any
+ * @returns The declaration of the class
+ */
+const getObjectClassDeclaration = (name: string, baseClass?: string): string =>
+  `${fileHeader}
+${inFileDisclaimer}
+
+${baseClass ? `import { ${baseClass} } from './${toKebabCase(normalizeKnownAllCaps(baseClass))}';` : 'import { Hydrator } from "../../hydrator";'}
 import { Specification } from "../definitions";
 
-class _${className} extends _Reflector<Specification.${className}> {
-    constructor(data?: Partial<Specification.${className}>) {
-        super(data);
+class _${name} extends ${baseClass ? baseClass : `Hydrator<Specification.${name}>`} {
+    constructor(model?: Partial<Specification.${name}>) {
+        super(model);
     }
 }
 
-export const ${className} = _${className} as ({
-    new (data?: Partial<Specification.${className}>): _${className} & Specification.${className}
+export const ${name} = _${name} as ({
+    new (model?: Partial<Specification.${name}>): _${name} & Specification.${name}
 });`;
 
 /**
- * Generates empty classes. Used
- * @param definitionFile
- * @param destDir
+ * Returns the declaration for a class that behaves like an array
+ * @param name The name of the class
+ * @param arrayType The type parameter of the underlying array
+ * @returns The declaration of the array-like class
+ */
+const getArrayLikeClassDeclaration = (name: string, arrayType: string): string =>
+  `${fileHeader}
+${inFileDisclaimer}
+
+import { Specification } from "../definitions";
+
+export class ${name} extends Array<${arrayType}> {
+  constructor(model?: Array<${arrayType}>) {
+    super(...(model||[]));
+    if (model != null && !Array.isArray(model)) {
+      throw new Error('The provided model should be an array');
+    }
+    Object.setPrototypeOf(this, Object.create(${name}.prototype));
+  }
+}
+`;
+
+/**
+ * Generates classes
+ * @param definitionFile The declaration file to generate the classes from
+ * @param destDir The directory to save the declaration at
  */
 async function generate(definitionFile: string, destDir: string): Promise<void> {
   const definitions = await readFile(definitionFile, { encoding: 'utf-8' });
-  const declarations = getExportedDeclarations(definitions);
+  const exportedDeclarations = getExportedDeclarations(definitions);
+  const aliases = Array.from(exportedDeclarations.keys());
   await reset(destDir);
-  for (const declaration of declarations) {
-    const classSrc = getClassDeclaration(declaration);
-    const destFile = path.resolve(destDir, toKebabCase(normalizeKnownAllCaps(declaration)) + '.ts');
-    await writeFile(destFile, classSrc);
+  for (const [alias, exported] of exportedDeclarations) {
+    const exportedType = exported![0].getType();
+    let classDeclaration: string = '';
+    if (!exportedType.isArray()) {
+      const baseClass = exportedType.getIntersectionTypes()?.[0]?.getText().replace('import("/declarations").', '');
+      classDeclaration = getObjectClassDeclaration(alias, baseClass);
+    } else {
+      const arrayType = exportedType
+        .getArrayElementTypeOrThrow()
+        .getText()
+        .replace('import("/declarations")', 'Specification');
+      classDeclaration = getArrayLikeClassDeclaration(alias, arrayType);
+    }
+    const destFile = path.resolve(destDir, toKebabCase(normalizeKnownAllCaps(alias)) + '.ts');
+    await writeFile(destFile, classDeclaration);
   }
   const indexSrc = `${fileHeader}
-${declarations.reduce((imports, declaration) => `${imports}import { ${declaration} } from './${toKebabCase(normalizeKnownAllCaps(declaration))}';\n`, '')}
+${aliases.reduce((imports, alias) => `${imports}import { ${alias} } from './${toKebabCase(normalizeKnownAllCaps(alias))}';\n`, '')}
 export const Classes = {
-  ${declarations.reduce((exports, declaration) => `${exports}  ${declaration},\n`, '')}
+  ${aliases.reduce((exports, alias) => `${exports}  ${alias},\n`, '')}
 };`;
   const destFile = path.resolve(destDir, 'index.ts');
   await writeFile(destFile, indexSrc);

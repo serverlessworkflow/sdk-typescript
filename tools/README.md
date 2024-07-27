@@ -48,7 +48,7 @@ After phases 1 & 2, the mutated schema is passed to `json-schema-to-typescript` 
 > *(i) The declarations are saved in `src/lib/generated/definitions/specification.ts`.*
 
 ## 3. Generating Validators
-To validate an object of type `T`, where `T` is not the root object described by the JSON Schema, we need to know the subschema's JSON pointer corresponding to `T`. The exported declarations of the TypeScript file produced in [step 2](#2-generating-types) are extracted using `ts-morph`. *(This is probably overkill; a regex could probably do the trick, but this library might be useful later on.)* For each declaration, the internal JSON Schema produced in [step 2 - Phase 1](#phase-1-embellishing-the-json-schema) is crawled to find the object with the matching title. Then, an object where the keys are the names of the types and the values are their JSON pointers is saved as `validation-pointers.ts`.
+To validate an object of type `T`, where `T` is not the root object described by the JSON Schema, we need to know the subschema's JSON pointer corresponding to `T`. The exported declarations of the TypeScript file produced in [step 2](#2-generating-types) are extracted using `ts-morph`. *(At this point, it is probably overkill; a regex could probably do the trick, but this library will be useful later on.)* For each declaration, the internal JSON Schema produced in [step 2 - Phase 1](#phase-1-embellishing-the-json-schema) is crawled to find the object with the matching title. Then, an object where the keys are the names of the types and the values are their JSON pointers is saved as `validation-pointers.ts`.
 
 > *(i) The validation pointers are saved in `src/lib/generated/validation/validation-pointers.ts`.*
 
@@ -79,6 +79,16 @@ export const FooClass = _FooClass as {
 const fooInstance = new FooClass();
 console.log(fooInstance instanceof FooClass); // true
 ```
+
+For array types, it's a bit different. Here the challenge is to extend `Array` but enforce our prototype:
+```typescript
+export class Foo extends Array<SomeType> {
+  constructor(model?: Array<SomeType>) {
+    super(...(model||[]));
+    Object.setPrototypeOf(this, Object.create(Foo.prototype));
+  }
+}
+``` 
 
 At the moment, classes don't do anything else. Validation, for instance, is called by the builders (next step). In the future, validation will be migrated to the classes, along with recursive hydration and default values handling.
 

@@ -26,17 +26,17 @@ type Person = {
 };
 
 const darknessMyOldFriend = { name: 'Darkness', age: 999 };
-const isPerson = (data: Partial<Person>): data is Person => !!data.name && !!data.age;
-function personBuildingFn(data: Partial<Person>): Person {
-  if (!isPerson(data)) {
+const isPerson = (model: Partial<Person>): model is Person => !!model.name && !!model.age;
+function personBuildingFn(model: Partial<Person>): Person {
+  if (!isPerson(model)) {
     throw new Error('The provided object is not a person');
   }
   return {
-    ...data,
-    friends: [...(data.friends || []), darknessMyOldFriend],
+    ...model,
+    friends: [...(model.friends || []), darknessMyOldFriend],
   };
 }
-const personBuilder = (): Builder<Person> => builder<Person>(personBuildingFn);
+const personBuilder = (model?: Partial<Person>): Builder<Person> => builder<Person>(model, personBuildingFn);
 
 describe('builder proxy', () => {
   it('should infer property types', () => {

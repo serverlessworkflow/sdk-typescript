@@ -21,18 +21,18 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.RunTask} data The underlying object
+ * @param {Specification.RunTask} model The underlying object
  * @returns {Specification.RunTask} The validated underlying object
  */
-function buildingFn(data: Specification.RunTask): Specification.RunTask {
-  const model = new Classes.RunTask(data);
-
-  validate('RunTask', model);
-  return model as Specification.RunTask;
+function buildingFn(model: Specification.RunTask): Specification.RunTask {
+  const instance = new Classes.RunTask(model);
+  validate('RunTask', instance);
+  return instance as Specification.RunTask;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.RunTask`
- * @returns {Specification.RunTask} A builder for `Specification.RunTask`
+ * @returns {Builder<Specification.RunTask>} A builder for `Specification.RunTask`
  */
-export const runTaskBuilder = (): Builder<Specification.RunTask> => builder<Specification.RunTask>(buildingFn);
+export const runTaskBuilder = (model?: Partial<Specification.RunTask>): Builder<Specification.RunTask> =>
+  builder<Specification.RunTask>(model, buildingFn);

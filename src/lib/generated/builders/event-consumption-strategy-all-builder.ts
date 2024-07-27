@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-import { builder, Builder } from '../../builder';
+import { arrayBuilder, ArrayBuilder } from '../../builder';
 import { validate } from '../../validation';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
- * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.EventConsumptionStrategyAll} data The underlying object
- * @returns {Specification.EventConsumptionStrategyAll} The validated underlying object
+ * The internal function used by the builder proxy to validate and return its underlying array
+ * @param {Specification.EventConsumptionStrategyAll} model The underlying array
+ * @returns {Specification.EventConsumptionStrategyAll} The validated underlying array
  */
-function buildingFn(data: Specification.EventConsumptionStrategyAll): Specification.EventConsumptionStrategyAll {
-  const model = new Classes.EventConsumptionStrategyAll(data);
-
-  validate('EventConsumptionStrategyAll', model);
-  return model as Specification.EventConsumptionStrategyAll;
+function buildingFn(model: Specification.EventConsumptionStrategyAll): Specification.EventConsumptionStrategyAll {
+  const instance = new Classes.EventConsumptionStrategyAll(model);
+  validate('EventConsumptionStrategyAll', instance);
+  return instance as Specification.EventConsumptionStrategyAll;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.EventConsumptionStrategyAll`
- * @returns {Specification.EventConsumptionStrategyAll} A builder for `Specification.EventConsumptionStrategyAll`
+ * @returns {ArrayBuilder<Specification.EventConsumptionStrategyAll>} A builder for `Specification.EventConsumptionStrategyAll`
  */
-export const eventConsumptionStrategyAllBuilder = (): Builder<Specification.EventConsumptionStrategyAll> =>
-  builder<Specification.EventConsumptionStrategyAll>(buildingFn);
+export const eventConsumptionStrategyAllBuilder = (
+  model?: Specification.EventConsumptionStrategyAll,
+): ArrayBuilder<Specification.EventFilter> => arrayBuilder<Specification.EventFilter>(model, buildingFn);

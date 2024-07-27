@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-import { builder, Builder } from '../../builder';
+import { arrayBuilder, ArrayBuilder } from '../../builder';
 import { validate } from '../../validation';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
- * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.TaskList} data The underlying object
- * @returns {Specification.TaskList} The validated underlying object
+ * The internal function used by the builder proxy to validate and return its underlying array
+ * @param {Specification.TaskList} model The underlying array
+ * @returns {Specification.TaskList} The validated underlying array
  */
-function buildingFn(data: Specification.TaskList): Specification.TaskList {
-  const model = new Classes.TaskList(data);
-
-  validate('TaskList', model);
-  return model as Specification.TaskList;
+function buildingFn(model: Specification.TaskList): Specification.TaskList {
+  const instance = new Classes.TaskList(model);
+  validate('TaskList', instance);
+  return instance as Specification.TaskList;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.TaskList`
- * @returns {Specification.TaskList} A builder for `Specification.TaskList`
+ * @returns {ArrayBuilder<Specification.TaskList>} A builder for `Specification.TaskList`
  */
-export const taskListBuilder = (): Builder<Specification.TaskList> => builder<Specification.TaskList>(buildingFn);
+export const taskListBuilder = (model?: Specification.TaskList): ArrayBuilder<{ [k: string]: Specification.Task }> =>
+  arrayBuilder<{ [k: string]: Specification.Task }>(model, buildingFn);

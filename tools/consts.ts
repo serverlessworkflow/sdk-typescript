@@ -31,5 +31,13 @@ export const fileHeader = `/*
 
 `;
 
+export const inFileDisclaimer = `  
+  /*****************************************************************************************
+   *
+   * /!\\ This file is computer generated. Any manual modification can and will be lost. /!\\
+   *
+   *****************************************************************************************/
+  `;
+
 export const readMeDisclaimer = `# Auto generated notice
 This directory and its content has been generated automatically. Do not modify its content, it WILL be lost.`;

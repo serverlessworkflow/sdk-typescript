@@ -21,19 +21,19 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.RaiseTaskRaise} data The underlying object
+ * @param {Specification.RaiseTaskRaise} model The underlying object
  * @returns {Specification.RaiseTaskRaise} The validated underlying object
  */
-function buildingFn(data: Specification.RaiseTaskRaise): Specification.RaiseTaskRaise {
-  const model = new Classes.RaiseTaskRaise(data);
-
-  validate('RaiseTaskRaise', model);
-  return model as Specification.RaiseTaskRaise;
+function buildingFn(model: Specification.RaiseTaskRaise): Specification.RaiseTaskRaise {
+  const instance = new Classes.RaiseTaskRaise(model);
+  validate('RaiseTaskRaise', instance);
+  return instance as Specification.RaiseTaskRaise;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.RaiseTaskRaise`
- * @returns {Specification.RaiseTaskRaise} A builder for `Specification.RaiseTaskRaise`
+ * @returns {Builder<Specification.RaiseTaskRaise>} A builder for `Specification.RaiseTaskRaise`
  */
-export const raiseTaskRaiseBuilder = (): Builder<Specification.RaiseTaskRaise> =>
-  builder<Specification.RaiseTaskRaise>(buildingFn);
+export const raiseTaskRaiseBuilder = (
+  model?: Partial<Specification.RaiseTaskRaise>,
+): Builder<Specification.RaiseTaskRaise> => builder<Specification.RaiseTaskRaise>(model, buildingFn);

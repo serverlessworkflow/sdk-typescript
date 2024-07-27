@@ -21,19 +21,19 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.RetryPolicyBackoff} data The underlying object
+ * @param {Specification.RetryPolicyBackoff} model The underlying object
  * @returns {Specification.RetryPolicyBackoff} The validated underlying object
  */
-function buildingFn(data: Specification.RetryPolicyBackoff): Specification.RetryPolicyBackoff {
-  const model = new Classes.RetryPolicyBackoff(data);
-
-  validate('RetryPolicyBackoff', model);
-  return model as Specification.RetryPolicyBackoff;
+function buildingFn(model: Specification.RetryPolicyBackoff): Specification.RetryPolicyBackoff {
+  const instance = new Classes.RetryPolicyBackoff(model);
+  validate('RetryPolicyBackoff', instance);
+  return instance as Specification.RetryPolicyBackoff;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.RetryPolicyBackoff`
- * @returns {Specification.RetryPolicyBackoff} A builder for `Specification.RetryPolicyBackoff`
+ * @returns {Builder<Specification.RetryPolicyBackoff>} A builder for `Specification.RetryPolicyBackoff`
  */
-export const retryPolicyBackoffBuilder = (): Builder<Specification.RetryPolicyBackoff> =>
-  builder<Specification.RetryPolicyBackoff>(buildingFn);
+export const retryPolicyBackoffBuilder = (
+  model?: Partial<Specification.RetryPolicyBackoff>,
+): Builder<Specification.RetryPolicyBackoff> => builder<Specification.RetryPolicyBackoff>(model, buildingFn);

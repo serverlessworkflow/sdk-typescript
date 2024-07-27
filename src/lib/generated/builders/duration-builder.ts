@@ -21,18 +21,18 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Duration} data The underlying object
+ * @param {Specification.Duration} model The underlying object
  * @returns {Specification.Duration} The validated underlying object
  */
-function buildingFn(data: Specification.Duration): Specification.Duration {
-  const model = new Classes.Duration(data);
-
-  validate('Duration', model);
-  return model as Specification.Duration;
+function buildingFn(model: Specification.Duration): Specification.Duration {
+  const instance = new Classes.Duration(model);
+  validate('Duration', instance);
+  return instance as Specification.Duration;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Duration`
- * @returns {Specification.Duration} A builder for `Specification.Duration`
+ * @returns {Builder<Specification.Duration>} A builder for `Specification.Duration`
  */
-export const durationBuilder = (): Builder<Specification.Duration> => builder<Specification.Duration>(buildingFn);
+export const durationBuilder = (model?: Partial<Specification.Duration>): Builder<Specification.Duration> =>
+  builder<Specification.Duration>(model, buildingFn);

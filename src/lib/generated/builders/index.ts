@@ -95,6 +95,7 @@ export * from './run-task-run-shell-environment-builder';
 export * from './run-task-run-workflow-builder';
 export * from './run-task-run-workflow-input-builder';
 export * from './set-task-set-builder';
+export * from './switch-task-switch-case-builder';
 export * from './try-task-catch-builder';
 export * from './retry-policy-builder';
 export * from './retry-policy-limit-builder';

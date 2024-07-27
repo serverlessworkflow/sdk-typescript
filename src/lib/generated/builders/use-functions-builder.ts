@@ -21,19 +21,18 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.UseFunctions} data The underlying object
+ * @param {Specification.UseFunctions} model The underlying object
  * @returns {Specification.UseFunctions} The validated underlying object
  */
-function buildingFn(data: Specification.UseFunctions): Specification.UseFunctions {
-  const model = new Classes.UseFunctions(data);
-
-  validate('UseFunctions', model);
-  return model as Specification.UseFunctions;
+function buildingFn(model: Specification.UseFunctions): Specification.UseFunctions {
+  const instance = new Classes.UseFunctions(model);
+  validate('UseFunctions', instance);
+  return instance as Specification.UseFunctions;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.UseFunctions`
- * @returns {Specification.UseFunctions} A builder for `Specification.UseFunctions`
+ * @returns {Builder<Specification.UseFunctions>} A builder for `Specification.UseFunctions`
  */
-export const useFunctionsBuilder = (): Builder<Specification.UseFunctions> =>
-  builder<Specification.UseFunctions>(buildingFn);
+export const useFunctionsBuilder = (model?: Partial<Specification.UseFunctions>): Builder<Specification.UseFunctions> =>
+  builder<Specification.UseFunctions>(model, buildingFn);

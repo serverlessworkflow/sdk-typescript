@@ -21,18 +21,18 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Timeout} data The underlying object
+ * @param {Specification.Timeout} model The underlying object
  * @returns {Specification.Timeout} The validated underlying object
  */
-function buildingFn(data: Specification.Timeout): Specification.Timeout {
-  const model = new Classes.Timeout(data);
-
-  validate('Timeout', model);
-  return model as Specification.Timeout;
+function buildingFn(model: Specification.Timeout): Specification.Timeout {
+  const instance = new Classes.Timeout(model);
+  validate('Timeout', instance);
+  return instance as Specification.Timeout;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Timeout`
- * @returns {Specification.Timeout} A builder for `Specification.Timeout`
+ * @returns {Builder<Specification.Timeout>} A builder for `Specification.Timeout`
  */
-export const timeoutBuilder = (): Builder<Specification.Timeout> => builder<Specification.Timeout>(buildingFn);
+export const timeoutBuilder = (model?: Partial<Specification.Timeout>): Builder<Specification.Timeout> =>
+  builder<Specification.Timeout>(model, buildingFn);

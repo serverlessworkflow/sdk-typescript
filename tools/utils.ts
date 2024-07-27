@@ -21,7 +21,7 @@ import { readMeDisclaimer } from './consts';
 import { URL } from 'url';
 import yargs from 'yargs';
 import { schemaVersion } from '../package.json';
-import { Project, QuoteKind } from 'ts-morph';
+import { ExportedDeclarations, Project, QuoteKind } from 'ts-morph';
 
 const { writeFile, mkdir } = fsPromises;
 
@@ -84,7 +84,7 @@ export const normalizeKnownAllCaps = (source: string): string =>
  * @param tsSource The TypeScript code to parse
  * @returns An array containing the name of the exported declarations
  */
-export const getExportedDeclarations = (tsSource: string): Array<string> => {
+export const getExportedDeclarations = (tsSource: string): ReadonlyMap<string, ExportedDeclarations[]> => {
   const project = new Project({
     useInMemoryFileSystem: true,
     manipulationSettings: {
@@ -92,7 +92,7 @@ export const getExportedDeclarations = (tsSource: string): Array<string> => {
     },
   });
   const sourceFile = project.createSourceFile('declarations.ts', tsSource);
-  return Array.from(sourceFile.getExportedDeclarations()).map(([name]) => name);
+  return sourceFile.getExportedDeclarations();
 };
 
 /** Schemas directory */

@@ -21,18 +21,18 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Workflow} data The underlying object
+ * @param {Specification.Workflow} model The underlying object
  * @returns {Specification.Workflow} The validated underlying object
  */
-function buildingFn(data: Specification.Workflow): Specification.Workflow {
-  const model = new Classes.Workflow(data);
-
-  validate('Workflow', model);
-  return model as Specification.Workflow;
+function buildingFn(model: Specification.Workflow): Specification.Workflow {
+  const instance = new Classes.Workflow(model);
+  validate('Workflow', instance);
+  return instance as Specification.Workflow;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Workflow`
- * @returns {Specification.Workflow} A builder for `Specification.Workflow`
+ * @returns {Builder<Specification.Workflow>} A builder for `Specification.Workflow`
  */
-export const workflowBuilder = (): Builder<Specification.Workflow> => builder<Specification.Workflow>(buildingFn);
+export const workflowBuilder = (model?: Partial<Specification.Workflow>): Builder<Specification.Workflow> =>
+  builder<Specification.Workflow>(model, buildingFn);

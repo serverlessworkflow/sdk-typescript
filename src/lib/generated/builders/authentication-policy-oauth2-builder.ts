@@ -21,19 +21,20 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.AuthenticationPolicyOauth2} data The underlying object
+ * @param {Specification.AuthenticationPolicyOauth2} model The underlying object
  * @returns {Specification.AuthenticationPolicyOauth2} The validated underlying object
  */
-function buildingFn(data: Specification.AuthenticationPolicyOauth2): Specification.AuthenticationPolicyOauth2 {
-  const model = new Classes.AuthenticationPolicyOauth2(data);
-
-  validate('AuthenticationPolicyOauth2', model);
-  return model as Specification.AuthenticationPolicyOauth2;
+function buildingFn(model: Specification.AuthenticationPolicyOauth2): Specification.AuthenticationPolicyOauth2 {
+  const instance = new Classes.AuthenticationPolicyOauth2(model);
+  validate('AuthenticationPolicyOauth2', instance);
+  return instance as Specification.AuthenticationPolicyOauth2;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.AuthenticationPolicyOauth2`
- * @returns {Specification.AuthenticationPolicyOauth2} A builder for `Specification.AuthenticationPolicyOauth2`
+ * @returns {Builder<Specification.AuthenticationPolicyOauth2>} A builder for `Specification.AuthenticationPolicyOauth2`
  */
-export const authenticationPolicyOauth2Builder = (): Builder<Specification.AuthenticationPolicyOauth2> =>
-  builder<Specification.AuthenticationPolicyOauth2>(buildingFn);
+export const authenticationPolicyOauth2Builder = (
+  model?: Partial<Specification.AuthenticationPolicyOauth2>,
+): Builder<Specification.AuthenticationPolicyOauth2> =>
+  builder<Specification.AuthenticationPolicyOauth2>(model, buildingFn);

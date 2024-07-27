@@ -21,19 +21,19 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.CallFunctionWith} data The underlying object
+ * @param {Specification.CallFunctionWith} model The underlying object
  * @returns {Specification.CallFunctionWith} The validated underlying object
  */
-function buildingFn(data: Specification.CallFunctionWith): Specification.CallFunctionWith {
-  const model = new Classes.CallFunctionWith(data);
-
-  validate('CallFunctionWith', model);
-  return model as Specification.CallFunctionWith;
+function buildingFn(model: Specification.CallFunctionWith): Specification.CallFunctionWith {
+  const instance = new Classes.CallFunctionWith(model);
+  validate('CallFunctionWith', instance);
+  return instance as Specification.CallFunctionWith;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.CallFunctionWith`
- * @returns {Specification.CallFunctionWith} A builder for `Specification.CallFunctionWith`
+ * @returns {Builder<Specification.CallFunctionWith>} A builder for `Specification.CallFunctionWith`
  */
-export const callFunctionWithBuilder = (): Builder<Specification.CallFunctionWith> =>
-  builder<Specification.CallFunctionWith>(buildingFn);
+export const callFunctionWithBuilder = (
+  model?: Partial<Specification.CallFunctionWith>,
+): Builder<Specification.CallFunctionWith> => builder<Specification.CallFunctionWith>(model, buildingFn);

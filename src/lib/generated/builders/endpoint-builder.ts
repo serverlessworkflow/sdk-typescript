@@ -21,18 +21,18 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Endpoint} data The underlying object
+ * @param {Specification.Endpoint} model The underlying object
  * @returns {Specification.Endpoint} The validated underlying object
  */
-function buildingFn(data: Specification.Endpoint): Specification.Endpoint {
-  const model = new Classes.Endpoint(data);
-
-  validate('Endpoint', model);
-  return model as Specification.Endpoint;
+function buildingFn(model: Specification.Endpoint): Specification.Endpoint {
+  const instance = new Classes.Endpoint(model);
+  validate('Endpoint', instance);
+  return instance as Specification.Endpoint;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Endpoint`
- * @returns {Specification.Endpoint} A builder for `Specification.Endpoint`
+ * @returns {Builder<Specification.Endpoint>} A builder for `Specification.Endpoint`
  */
-export const endpointBuilder = (): Builder<Specification.Endpoint> => builder<Specification.Endpoint>(buildingFn);
+export const endpointBuilder = (model?: Partial<Specification.Endpoint>): Builder<Specification.Endpoint> =>
+  builder<Specification.Endpoint>(model, buildingFn);

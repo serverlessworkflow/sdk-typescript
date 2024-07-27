@@ -21,18 +21,18 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Error} data The underlying object
+ * @param {Specification.Error} model The underlying object
  * @returns {Specification.Error} The validated underlying object
  */
-function buildingFn(data: Specification.Error): Specification.Error {
-  const model = new Classes.Error(data);
-
-  validate('Error', model);
-  return model as Specification.Error;
+function buildingFn(model: Specification.Error): Specification.Error {
+  const instance = new Classes.Error(model);
+  validate('Error', instance);
+  return instance as Specification.Error;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Error`
- * @returns {Specification.Error} A builder for `Specification.Error`
+ * @returns {Builder<Specification.Error>} A builder for `Specification.Error`
  */
-export const errorBuilder = (): Builder<Specification.Error> => builder<Specification.Error>(buildingFn);
+export const errorBuilder = (model?: Partial<Specification.Error>): Builder<Specification.Error> =>
+  builder<Specification.Error>(model, buildingFn);

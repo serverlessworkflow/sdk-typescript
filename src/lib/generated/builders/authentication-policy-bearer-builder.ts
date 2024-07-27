@@ -21,19 +21,20 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.AuthenticationPolicyBearer} data The underlying object
+ * @param {Specification.AuthenticationPolicyBearer} model The underlying object
  * @returns {Specification.AuthenticationPolicyBearer} The validated underlying object
  */
-function buildingFn(data: Specification.AuthenticationPolicyBearer): Specification.AuthenticationPolicyBearer {
-  const model = new Classes.AuthenticationPolicyBearer(data);
-
-  validate('AuthenticationPolicyBearer', model);
-  return model as Specification.AuthenticationPolicyBearer;
+function buildingFn(model: Specification.AuthenticationPolicyBearer): Specification.AuthenticationPolicyBearer {
+  const instance = new Classes.AuthenticationPolicyBearer(model);
+  validate('AuthenticationPolicyBearer', instance);
+  return instance as Specification.AuthenticationPolicyBearer;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.AuthenticationPolicyBearer`
- * @returns {Specification.AuthenticationPolicyBearer} A builder for `Specification.AuthenticationPolicyBearer`
+ * @returns {Builder<Specification.AuthenticationPolicyBearer>} A builder for `Specification.AuthenticationPolicyBearer`
  */
-export const authenticationPolicyBearerBuilder = (): Builder<Specification.AuthenticationPolicyBearer> =>
-  builder<Specification.AuthenticationPolicyBearer>(buildingFn);
+export const authenticationPolicyBearerBuilder = (
+  model?: Partial<Specification.AuthenticationPolicyBearer>,
+): Builder<Specification.AuthenticationPolicyBearer> =>
+  builder<Specification.AuthenticationPolicyBearer>(model, buildingFn);

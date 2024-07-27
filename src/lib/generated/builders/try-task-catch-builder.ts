@@ -21,19 +21,18 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.TryTaskCatch} data The underlying object
+ * @param {Specification.TryTaskCatch} model The underlying object
  * @returns {Specification.TryTaskCatch} The validated underlying object
  */
-function buildingFn(data: Specification.TryTaskCatch): Specification.TryTaskCatch {
-  const model = new Classes.TryTaskCatch(data);
-
-  validate('TryTaskCatch', model);
-  return model as Specification.TryTaskCatch;
+function buildingFn(model: Specification.TryTaskCatch): Specification.TryTaskCatch {
+  const instance = new Classes.TryTaskCatch(model);
+  validate('TryTaskCatch', instance);
+  return instance as Specification.TryTaskCatch;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.TryTaskCatch`
- * @returns {Specification.TryTaskCatch} A builder for `Specification.TryTaskCatch`
+ * @returns {Builder<Specification.TryTaskCatch>} A builder for `Specification.TryTaskCatch`
  */
-export const tryTaskCatchBuilder = (): Builder<Specification.TryTaskCatch> =>
-  builder<Specification.TryTaskCatch>(buildingFn);
+export const tryTaskCatchBuilder = (model?: Partial<Specification.TryTaskCatch>): Builder<Specification.TryTaskCatch> =>
+  builder<Specification.TryTaskCatch>(model, buildingFn);

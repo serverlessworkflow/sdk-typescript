@@ -254,32 +254,10 @@ export type SwitchTask = TaskBase & {
  */
 export type SwitchTaskSwitch = [
   {
-    [k: string]: {
-      /**
-       * The case's name.
-       */
-      name?: string;
-      /**
-       * A runtime expression used to determine whether or not the case matches.
-       */
-      when?: string;
-      then?: FlowDirective;
-      [k: string]: unknown;
-    };
+    [k: string]: SwitchTaskSwitchCase;
   },
   ...{
-    [k: string]: {
-      /**
-       * The case's name.
-       */
-      name?: string;
-      /**
-       * A runtime expression used to determine whether or not the case matches.
-       */
-      when?: string;
-      then?: FlowDirective;
-      [k: string]: unknown;
-    };
+    [k: string]: SwitchTaskSwitchCase;
   }[],
 ];
 /**
@@ -921,6 +899,18 @@ export interface RunTaskRunWorkflowInput {
  * The data to set
  */
 export interface SetTaskSet {
+  [k: string]: unknown;
+}
+export interface SwitchTaskSwitchCase {
+  /**
+   * The case's name.
+   */
+  name?: string;
+  /**
+   * A runtime expression used to determine whether or not the case matches.
+   */
+  when?: string;
+  then?: FlowDirective;
   [k: string]: unknown;
 }
 export interface TryTaskCatch {

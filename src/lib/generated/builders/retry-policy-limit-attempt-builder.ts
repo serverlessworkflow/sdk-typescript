@@ -21,19 +21,19 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.RetryPolicyLimitAttempt} data The underlying object
+ * @param {Specification.RetryPolicyLimitAttempt} model The underlying object
  * @returns {Specification.RetryPolicyLimitAttempt} The validated underlying object
  */
-function buildingFn(data: Specification.RetryPolicyLimitAttempt): Specification.RetryPolicyLimitAttempt {
-  const model = new Classes.RetryPolicyLimitAttempt(data);
-
-  validate('RetryPolicyLimitAttempt', model);
-  return model as Specification.RetryPolicyLimitAttempt;
+function buildingFn(model: Specification.RetryPolicyLimitAttempt): Specification.RetryPolicyLimitAttempt {
+  const instance = new Classes.RetryPolicyLimitAttempt(model);
+  validate('RetryPolicyLimitAttempt', instance);
+  return instance as Specification.RetryPolicyLimitAttempt;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.RetryPolicyLimitAttempt`
- * @returns {Specification.RetryPolicyLimitAttempt} A builder for `Specification.RetryPolicyLimitAttempt`
+ * @returns {Builder<Specification.RetryPolicyLimitAttempt>} A builder for `Specification.RetryPolicyLimitAttempt`
  */
-export const retryPolicyLimitAttemptBuilder = (): Builder<Specification.RetryPolicyLimitAttempt> =>
-  builder<Specification.RetryPolicyLimitAttempt>(buildingFn);
+export const retryPolicyLimitAttemptBuilder = (
+  model?: Partial<Specification.RetryPolicyLimitAttempt>,
+): Builder<Specification.RetryPolicyLimitAttempt> => builder<Specification.RetryPolicyLimitAttempt>(model, buildingFn);

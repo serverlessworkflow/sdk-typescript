@@ -21,19 +21,19 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.CallGRPCWithArguments} data The underlying object
+ * @param {Specification.CallGRPCWithArguments} model The underlying object
  * @returns {Specification.CallGRPCWithArguments} The validated underlying object
  */
-function buildingFn(data: Specification.CallGRPCWithArguments): Specification.CallGRPCWithArguments {
-  const model = new Classes.CallGRPCWithArguments(data);
-
-  validate('CallGRPCWithArguments', model);
-  return model as Specification.CallGRPCWithArguments;
+function buildingFn(model: Specification.CallGRPCWithArguments): Specification.CallGRPCWithArguments {
+  const instance = new Classes.CallGRPCWithArguments(model);
+  validate('CallGRPCWithArguments', instance);
+  return instance as Specification.CallGRPCWithArguments;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.CallGRPCWithArguments`
- * @returns {Specification.CallGRPCWithArguments} A builder for `Specification.CallGRPCWithArguments`
+ * @returns {Builder<Specification.CallGRPCWithArguments>} A builder for `Specification.CallGRPCWithArguments`
  */
-export const callGRPCWithArgumentsBuilder = (): Builder<Specification.CallGRPCWithArguments> =>
-  builder<Specification.CallGRPCWithArguments>(buildingFn);
+export const callGRPCWithArgumentsBuilder = (
+  model?: Partial<Specification.CallGRPCWithArguments>,
+): Builder<Specification.CallGRPCWithArguments> => builder<Specification.CallGRPCWithArguments>(model, buildingFn);

@@ -21,19 +21,18 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Oauth2Token} data The underlying object
+ * @param {Specification.Oauth2Token} model The underlying object
  * @returns {Specification.Oauth2Token} The validated underlying object
  */
-function buildingFn(data: Specification.Oauth2Token): Specification.Oauth2Token {
-  const model = new Classes.Oauth2Token(data);
-
-  validate('Oauth2Token', model);
-  return model as Specification.Oauth2Token;
+function buildingFn(model: Specification.Oauth2Token): Specification.Oauth2Token {
+  const instance = new Classes.Oauth2Token(model);
+  validate('Oauth2Token', instance);
+  return instance as Specification.Oauth2Token;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Oauth2Token`
- * @returns {Specification.Oauth2Token} A builder for `Specification.Oauth2Token`
+ * @returns {Builder<Specification.Oauth2Token>} A builder for `Specification.Oauth2Token`
  */
-export const oauth2TokenBuilder = (): Builder<Specification.Oauth2Token> =>
-  builder<Specification.Oauth2Token>(buildingFn);
+export const oauth2TokenBuilder = (model?: Partial<Specification.Oauth2Token>): Builder<Specification.Oauth2Token> =>
+  builder<Specification.Oauth2Token>(model, buildingFn);

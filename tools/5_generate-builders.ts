@@ -16,7 +16,7 @@
 
 import { promises as fsPromises } from 'fs';
 import * as path from 'path';
-import { fileHeader } from './consts';
+import { fileHeader, inFileDisclaimer } from './consts';
 import {
   buildersDir,
   definitionsDir,
@@ -28,23 +28,9 @@ import {
 
 const { readFile, writeFile } = fsPromises;
 
-interface BuilderExtension {
-  import?: string;
-  preValidate: string;
-}
-
-/** Stores additional code that needs to be added to builders depending on their type */
-const buildersExtensions: { [key: string]: BuilderExtension } = {
-  Dummy: {
-    // example
-    import: `import { dummyFunction } from '../definitions/utils';`,
-    preValidate: `\r\n    dummyFunction(model);`,
-  },
-};
-
 /**
  * Transforms PascalCase into camelCase
- * @param {string} value A PascalCase string
+ * @para value A PascalCase string
  * @returns A camelCase string
  */
 function toCamelCase(value: string): string {
@@ -54,41 +40,65 @@ function toCamelCase(value: string): string {
 }
 
 /**
- * Creates a builder for the provided type
- * @param {string} destDir The builders directory
- * @param {string} declaration The type to create the builder for
- * @returns {void}
+ * Creates an object builder for the provided type
+ * @param name The name type to create the builder for
  */
-async function createBuilder(destDir: string, declaration: string): Promise<void> {
-  const camelType = toCamelCase(declaration);
-  const extension = buildersExtensions[declaration];
-  const builderCode =
-    fileHeader +
-    `import { builder, Builder } from "../../builder";
+const getObjectBuilderDeclaration = (name: string): string =>
+  `${fileHeader}
+${inFileDisclaimer}
+
+import { builder, Builder } from "../../builder";
 import { validate } from "../../validation";
 import { Classes } from "../classes";
 import { Specification } from "../definitions";
-${extension?.import ? extension.import + '\n' : ''}
+
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.${declaration}} data The underlying object
- * @returns {Specification.${declaration}} The validated underlying object
+ * @param {Specification.${name}} model The underlying object
+ * @returns {Specification.${name}} The validated underlying object
  */
-function buildingFn(data: Specification.${declaration}): Specification.${declaration} {
-  const model = new Classes.${declaration}(data);
-  ${extension?.preValidate || ''}    
-  validate('${declaration}', model);
-  return model as Specification.${declaration};
+function buildingFn(model: Specification.${name}): Specification.${name} {
+  const instance = new Classes.${name}(model);
+  validate('${name}', instance);
+  return instance as Specification.${name};
 }
 
 /**
- * A factory to create a builder proxy for the type \`Specification.${declaration}\`
- * @returns {Specification.${declaration}} A builder for \`Specification.${declaration}\`
+ * A factory to create a builder proxy for the type \`Specification.${name}\`
+ * @returns {Builder<Specification.${name}>} A builder for \`Specification.${name}\`
  */
-export const ${camelType}Builder = (): Builder<Specification.${declaration}> => builder<Specification.${declaration}>(buildingFn);`;
-  const destFile = path.resolve(destDir, toKebabCase(normalizeKnownAllCaps(declaration)) + '-builder.ts');
-  await writeFile(destFile, builderCode);
+export const ${toCamelCase(name)}Builder = (model?: Partial<Specification.${name}>): Builder<Specification.${name}> => builder<Specification.${name}>(model, buildingFn);`;
+
+/**
+ * Creates an array builder for the provided type
+ * @param name The name type to create the builder for
+ * @param arrayType The type parameter of the underlying array
+ */
+const getArrayBuilderDeclaration = (name: string, arrayType: string): string =>
+  `${fileHeader}
+${inFileDisclaimer}
+
+import { arrayBuilder, ArrayBuilder } from "../../builder";
+import { validate } from "../../validation";
+import { Classes } from "../classes";
+import { Specification } from "../definitions";
+
+/**
+ * The internal function used by the builder proxy to validate and return its underlying array
+ * @param {Specification.${name}} model The underlying array
+ * @returns {Specification.${name}} The validated underlying array
+ */
+function buildingFn(model: Specification.${name}): Specification.${name} {
+  const instance = new Classes.${name}(model);
+  validate('${name}', instance);
+  return instance as Specification.${name};
 }
+
+/**
+ * A factory to create a builder proxy for the type \`Specification.${name}\`
+ * @returns {ArrayBuilder<Specification.${name}>} A builder for \`Specification.${name}\`
+ */
+export const ${toCamelCase(name)}Builder = (model?: Specification.${name}): ArrayBuilder<${arrayType}> => arrayBuilder<${arrayType}>(model, buildingFn);`;
 
 /**
  * Creates the builders index file
@@ -123,9 +133,24 @@ async function generate(definitionFile: string, destDir: string): Promise<void> 
   try {
     await reset(destDir);
     const definitions = await readFile(definitionFile, { encoding: 'utf-8' });
-    const declarations = getExportedDeclarations(definitions);
-    await Promise.all(declarations.map(createBuilder.bind(null, destDir)));
-    createIndex(destDir, declarations);
+    const exportedDeclarations = getExportedDeclarations(definitions);
+    const aliases = Array.from(exportedDeclarations.keys());
+    for (const [alias, exported] of exportedDeclarations) {
+      const exportedType = exported![0].getType();
+      let builderDeclaration: string = '';
+      if (!exportedType.isArray()) {
+        builderDeclaration = getObjectBuilderDeclaration(alias);
+      } else {
+        const arrayType = exportedType
+          .getArrayElementTypeOrThrow()
+          .getText()
+          .replace('import("/declarations")', 'Specification');
+        builderDeclaration = getArrayBuilderDeclaration(alias, arrayType);
+      }
+      const destFile = path.resolve(destDir, toKebabCase(normalizeKnownAllCaps(alias)) + '-builder.ts');
+      await writeFile(destFile, builderDeclaration);
+    }
+    createIndex(destDir, aliases);
     return Promise.resolve();
   } catch (ex) {
     return Promise.reject(ex);

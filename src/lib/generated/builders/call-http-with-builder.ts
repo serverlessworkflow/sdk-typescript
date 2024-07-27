@@ -21,19 +21,18 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.CallHTTPWith} data The underlying object
+ * @param {Specification.CallHTTPWith} model The underlying object
  * @returns {Specification.CallHTTPWith} The validated underlying object
  */
-function buildingFn(data: Specification.CallHTTPWith): Specification.CallHTTPWith {
-  const model = new Classes.CallHTTPWith(data);
-
-  validate('CallHTTPWith', model);
-  return model as Specification.CallHTTPWith;
+function buildingFn(model: Specification.CallHTTPWith): Specification.CallHTTPWith {
+  const instance = new Classes.CallHTTPWith(model);
+  validate('CallHTTPWith', instance);
+  return instance as Specification.CallHTTPWith;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.CallHTTPWith`
- * @returns {Specification.CallHTTPWith} A builder for `Specification.CallHTTPWith`
+ * @returns {Builder<Specification.CallHTTPWith>} A builder for `Specification.CallHTTPWith`
  */
-export const callHTTPWithBuilder = (): Builder<Specification.CallHTTPWith> =>
-  builder<Specification.CallHTTPWith>(buildingFn);
+export const callHTTPWithBuilder = (model?: Partial<Specification.CallHTTPWith>): Builder<Specification.CallHTTPWith> =>
+  builder<Specification.CallHTTPWith>(model, buildingFn);

@@ -21,18 +21,18 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.WaitTask} data The underlying object
+ * @param {Specification.WaitTask} model The underlying object
  * @returns {Specification.WaitTask} The validated underlying object
  */
-function buildingFn(data: Specification.WaitTask): Specification.WaitTask {
-  const model = new Classes.WaitTask(data);
-
-  validate('WaitTask', model);
-  return model as Specification.WaitTask;
+function buildingFn(model: Specification.WaitTask): Specification.WaitTask {
+  const instance = new Classes.WaitTask(model);
+  validate('WaitTask', instance);
+  return instance as Specification.WaitTask;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.WaitTask`
- * @returns {Specification.WaitTask} A builder for `Specification.WaitTask`
+ * @returns {Builder<Specification.WaitTask>} A builder for `Specification.WaitTask`
  */
-export const waitTaskBuilder = (): Builder<Specification.WaitTask> => builder<Specification.WaitTask>(buildingFn);
+export const waitTaskBuilder = (model?: Partial<Specification.WaitTask>): Builder<Specification.WaitTask> =>
+  builder<Specification.WaitTask>(model, buildingFn);

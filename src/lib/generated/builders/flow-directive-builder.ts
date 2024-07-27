@@ -21,19 +21,19 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.FlowDirective} data The underlying object
+ * @param {Specification.FlowDirective} model The underlying object
  * @returns {Specification.FlowDirective} The validated underlying object
  */
-function buildingFn(data: Specification.FlowDirective): Specification.FlowDirective {
-  const model = new Classes.FlowDirective(data);
-
-  validate('FlowDirective', model);
-  return model as Specification.FlowDirective;
+function buildingFn(model: Specification.FlowDirective): Specification.FlowDirective {
+  const instance = new Classes.FlowDirective(model);
+  validate('FlowDirective', instance);
+  return instance as Specification.FlowDirective;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.FlowDirective`
- * @returns {Specification.FlowDirective} A builder for `Specification.FlowDirective`
+ * @returns {Builder<Specification.FlowDirective>} A builder for `Specification.FlowDirective`
  */
-export const flowDirectiveBuilder = (): Builder<Specification.FlowDirective> =>
-  builder<Specification.FlowDirective>(buildingFn);
+export const flowDirectiveBuilder = (
+  model?: Partial<Specification.FlowDirective>,
+): Builder<Specification.FlowDirective> => builder<Specification.FlowDirective>(model, buildingFn);

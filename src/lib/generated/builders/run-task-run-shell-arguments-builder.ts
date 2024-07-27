@@ -21,19 +21,20 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.RunTaskRunShellArguments} data The underlying object
+ * @param {Specification.RunTaskRunShellArguments} model The underlying object
  * @returns {Specification.RunTaskRunShellArguments} The validated underlying object
  */
-function buildingFn(data: Specification.RunTaskRunShellArguments): Specification.RunTaskRunShellArguments {
-  const model = new Classes.RunTaskRunShellArguments(data);
-
-  validate('RunTaskRunShellArguments', model);
-  return model as Specification.RunTaskRunShellArguments;
+function buildingFn(model: Specification.RunTaskRunShellArguments): Specification.RunTaskRunShellArguments {
+  const instance = new Classes.RunTaskRunShellArguments(model);
+  validate('RunTaskRunShellArguments', instance);
+  return instance as Specification.RunTaskRunShellArguments;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.RunTaskRunShellArguments`
- * @returns {Specification.RunTaskRunShellArguments} A builder for `Specification.RunTaskRunShellArguments`
+ * @returns {Builder<Specification.RunTaskRunShellArguments>} A builder for `Specification.RunTaskRunShellArguments`
  */
-export const runTaskRunShellArgumentsBuilder = (): Builder<Specification.RunTaskRunShellArguments> =>
-  builder<Specification.RunTaskRunShellArguments>(buildingFn);
+export const runTaskRunShellArgumentsBuilder = (
+  model?: Partial<Specification.RunTaskRunShellArguments>,
+): Builder<Specification.RunTaskRunShellArguments> =>
+  builder<Specification.RunTaskRunShellArguments>(model, buildingFn);

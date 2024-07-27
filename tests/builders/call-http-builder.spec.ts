@@ -1,8 +1,8 @@
-import { callHTTPBuilder } from '../../src/lib/generated/builders/call-http-builder';
+import { callHTTPBuilder } from '../../src/lib/generated/builders';
 import { Classes } from '../../src/lib/generated/classes';
 
 describe('CallHTTP builder', () => {
-  it('should build', () => {
+  it('should build with fluent api', () => {
     const endpoint = 'https://serverlessworkflow.io';
     const method = 'get';
     const callHttp = callHTTPBuilder()
@@ -13,11 +13,30 @@ describe('CallHTTP builder', () => {
       })
       .build();
     expect(callHttp).toBeDefined();
+    expect(callHttp).toBeInstanceOf(Classes.CallHTTP);
     expect(callHttp.call).toBe('http');
     expect(callHttp.with).toBeDefined();
     expect(callHttp.with!.endpoint).toBe(endpoint);
     expect(callHttp.with!.method).toBe(method);
+  });
+
+  it('should build with input', () => {
+    const endpoint = 'https://serverlessworkflow.io';
+    const method = 'get';
+    const data = {
+      call: 'http' as 'http',
+      with: {
+        endpoint,
+        method,
+      },
+    };
+    const callHttp = callHTTPBuilder(data).build();
+    expect(callHttp).toBeDefined();
     expect(callHttp).toBeInstanceOf(Classes.CallHTTP);
+    expect(callHttp.call).toBe('http');
+    expect(callHttp.with).toBeDefined();
+    expect(callHttp.with!.endpoint).toBe(endpoint);
+    expect(callHttp.with!.method).toBe(method);
   });
 
   it('should validate', () => {

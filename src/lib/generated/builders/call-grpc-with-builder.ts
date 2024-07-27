@@ -21,19 +21,18 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.CallGRPCWith} data The underlying object
+ * @param {Specification.CallGRPCWith} model The underlying object
  * @returns {Specification.CallGRPCWith} The validated underlying object
  */
-function buildingFn(data: Specification.CallGRPCWith): Specification.CallGRPCWith {
-  const model = new Classes.CallGRPCWith(data);
-
-  validate('CallGRPCWith', model);
-  return model as Specification.CallGRPCWith;
+function buildingFn(model: Specification.CallGRPCWith): Specification.CallGRPCWith {
+  const instance = new Classes.CallGRPCWith(model);
+  validate('CallGRPCWith', instance);
+  return instance as Specification.CallGRPCWith;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.CallGRPCWith`
- * @returns {Specification.CallGRPCWith} A builder for `Specification.CallGRPCWith`
+ * @returns {Builder<Specification.CallGRPCWith>} A builder for `Specification.CallGRPCWith`
  */
-export const callGRPCWithBuilder = (): Builder<Specification.CallGRPCWith> =>
-  builder<Specification.CallGRPCWith>(buildingFn);
+export const callGRPCWithBuilder = (model?: Partial<Specification.CallGRPCWith>): Builder<Specification.CallGRPCWith> =>
+  builder<Specification.CallGRPCWith>(model, buildingFn);

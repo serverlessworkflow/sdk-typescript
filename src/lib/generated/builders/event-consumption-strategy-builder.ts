@@ -21,19 +21,20 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.EventConsumptionStrategy} data The underlying object
+ * @param {Specification.EventConsumptionStrategy} model The underlying object
  * @returns {Specification.EventConsumptionStrategy} The validated underlying object
  */
-function buildingFn(data: Specification.EventConsumptionStrategy): Specification.EventConsumptionStrategy {
-  const model = new Classes.EventConsumptionStrategy(data);
-
-  validate('EventConsumptionStrategy', model);
-  return model as Specification.EventConsumptionStrategy;
+function buildingFn(model: Specification.EventConsumptionStrategy): Specification.EventConsumptionStrategy {
+  const instance = new Classes.EventConsumptionStrategy(model);
+  validate('EventConsumptionStrategy', instance);
+  return instance as Specification.EventConsumptionStrategy;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.EventConsumptionStrategy`
- * @returns {Specification.EventConsumptionStrategy} A builder for `Specification.EventConsumptionStrategy`
+ * @returns {Builder<Specification.EventConsumptionStrategy>} A builder for `Specification.EventConsumptionStrategy`
  */
-export const eventConsumptionStrategyBuilder = (): Builder<Specification.EventConsumptionStrategy> =>
-  builder<Specification.EventConsumptionStrategy>(buildingFn);
+export const eventConsumptionStrategyBuilder = (
+  model?: Partial<Specification.EventConsumptionStrategy>,
+): Builder<Specification.EventConsumptionStrategy> =>
+  builder<Specification.EventConsumptionStrategy>(model, buildingFn);

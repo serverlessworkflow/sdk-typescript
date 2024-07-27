@@ -21,19 +21,19 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.ListenTaskListen} data The underlying object
+ * @param {Specification.ListenTaskListen} model The underlying object
  * @returns {Specification.ListenTaskListen} The validated underlying object
  */
-function buildingFn(data: Specification.ListenTaskListen): Specification.ListenTaskListen {
-  const model = new Classes.ListenTaskListen(data);
-
-  validate('ListenTaskListen', model);
-  return model as Specification.ListenTaskListen;
+function buildingFn(model: Specification.ListenTaskListen): Specification.ListenTaskListen {
+  const instance = new Classes.ListenTaskListen(model);
+  validate('ListenTaskListen', instance);
+  return instance as Specification.ListenTaskListen;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.ListenTaskListen`
- * @returns {Specification.ListenTaskListen} A builder for `Specification.ListenTaskListen`
+ * @returns {Builder<Specification.ListenTaskListen>} A builder for `Specification.ListenTaskListen`
  */
-export const listenTaskListenBuilder = (): Builder<Specification.ListenTaskListen> =>
-  builder<Specification.ListenTaskListen>(buildingFn);
+export const listenTaskListenBuilder = (
+  model?: Partial<Specification.ListenTaskListen>,
+): Builder<Specification.ListenTaskListen> => builder<Specification.ListenTaskListen>(model, buildingFn);

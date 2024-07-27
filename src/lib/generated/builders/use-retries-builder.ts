@@ -21,18 +21,18 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.UseRetries} data The underlying object
+ * @param {Specification.UseRetries} model The underlying object
  * @returns {Specification.UseRetries} The validated underlying object
  */
-function buildingFn(data: Specification.UseRetries): Specification.UseRetries {
-  const model = new Classes.UseRetries(data);
-
-  validate('UseRetries', model);
-  return model as Specification.UseRetries;
+function buildingFn(model: Specification.UseRetries): Specification.UseRetries {
+  const instance = new Classes.UseRetries(model);
+  validate('UseRetries', instance);
+  return instance as Specification.UseRetries;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.UseRetries`
- * @returns {Specification.UseRetries} A builder for `Specification.UseRetries`
+ * @returns {Builder<Specification.UseRetries>} A builder for `Specification.UseRetries`
  */
-export const useRetriesBuilder = (): Builder<Specification.UseRetries> => builder<Specification.UseRetries>(buildingFn);
+export const useRetriesBuilder = (model?: Partial<Specification.UseRetries>): Builder<Specification.UseRetries> =>
+  builder<Specification.UseRetries>(model, buildingFn);

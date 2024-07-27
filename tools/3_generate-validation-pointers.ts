@@ -16,7 +16,7 @@
 
 import { promises as fsPromises } from 'fs';
 import * as path from 'path';
-import { fileHeader } from './consts';
+import { fileHeader, inFileDisclaimer } from './consts';
 import { definitionsDir, getExportedDeclarations, isObject, reset, schemaDir, vallidationDir } from './utils';
 import { JSONSchema } from 'json-schema-to-typescript';
 
@@ -62,7 +62,7 @@ function getJsonPointer(schema: JSONSchema, title: string, parentPointer: string
 async function generate(schemaFile: string, definitionFile: string, destFile: string): Promise<void> {
   const definitions = await readFile(definitionFile, { encoding: 'utf-8' });
   const schemaTxt = await readFile(schemaFile, { encoding: 'utf-8' });
-  const declarations = getExportedDeclarations(definitions)
+  const declarations = Array.from(getExportedDeclarations(definitions).keys())
     .filter((name) => name !== 'Workflow')
     .sort((a, b) => a.localeCompare(b));
   const schema = JSON.parse(schemaTxt) as JSONSchema;
@@ -72,6 +72,8 @@ async function generate(schemaFile: string, definitionFile: string, destFile: st
     ...declarations.map((name) => [name, getJsonPointer(schema, name, baseUri)]),
   ];
   const validationPointersSrc = `${fileHeader}
+${inFileDisclaimer}
+
 /**
 * A map of type names and their corresponding schema
 */

@@ -21,19 +21,19 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.SwitchTaskSwitch} data The underlying object
+ * @param {Specification.SwitchTaskSwitch} model The underlying object
  * @returns {Specification.SwitchTaskSwitch} The validated underlying object
  */
-function buildingFn(data: Specification.SwitchTaskSwitch): Specification.SwitchTaskSwitch {
-  const model = new Classes.SwitchTaskSwitch(data);
-
-  validate('SwitchTaskSwitch', model);
-  return model as Specification.SwitchTaskSwitch;
+function buildingFn(model: Specification.SwitchTaskSwitch): Specification.SwitchTaskSwitch {
+  const instance = new Classes.SwitchTaskSwitch(model);
+  validate('SwitchTaskSwitch', instance);
+  return instance as Specification.SwitchTaskSwitch;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.SwitchTaskSwitch`
- * @returns {Specification.SwitchTaskSwitch} A builder for `Specification.SwitchTaskSwitch`
+ * @returns {Builder<Specification.SwitchTaskSwitch>} A builder for `Specification.SwitchTaskSwitch`
  */
-export const switchTaskSwitchBuilder = (): Builder<Specification.SwitchTaskSwitch> =>
-  builder<Specification.SwitchTaskSwitch>(buildingFn);
+export const switchTaskSwitchBuilder = (
+  model?: Partial<Specification.SwitchTaskSwitch>,
+): Builder<Specification.SwitchTaskSwitch> => builder<Specification.SwitchTaskSwitch>(model, buildingFn);

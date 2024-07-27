@@ -95,6 +95,7 @@ import { RunTaskRunShellEnvironment } from './run-task-run-shell-environment';
 import { RunTaskRunWorkflow } from './run-task-run-workflow';
 import { RunTaskRunWorkflowInput } from './run-task-run-workflow-input';
 import { SetTaskSet } from './set-task-set';
+import { SwitchTaskSwitchCase } from './switch-task-switch-case';
 import { TryTaskCatch } from './try-task-catch';
 import { RetryPolicy } from './retry-policy';
 import { RetryPolicyLimit } from './retry-policy-limit';
@@ -186,6 +187,7 @@ export const Classes = {
   RunTaskRunWorkflow,
   RunTaskRunWorkflowInput,
   SetTaskSet,
+  SwitchTaskSwitchCase,
   TryTaskCatch,
   RetryPolicy,
   RetryPolicyLimit,

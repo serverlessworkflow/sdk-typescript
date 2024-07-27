@@ -21,19 +21,19 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.CallHTTPWithEndpoint} data The underlying object
+ * @param {Specification.CallHTTPWithEndpoint} model The underlying object
  * @returns {Specification.CallHTTPWithEndpoint} The validated underlying object
  */
-function buildingFn(data: Specification.CallHTTPWithEndpoint): Specification.CallHTTPWithEndpoint {
-  const model = new Classes.CallHTTPWithEndpoint(data);
-
-  validate('CallHTTPWithEndpoint', model);
-  return model as Specification.CallHTTPWithEndpoint;
+function buildingFn(model: Specification.CallHTTPWithEndpoint): Specification.CallHTTPWithEndpoint {
+  const instance = new Classes.CallHTTPWithEndpoint(model);
+  validate('CallHTTPWithEndpoint', instance);
+  return instance as Specification.CallHTTPWithEndpoint;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.CallHTTPWithEndpoint`
- * @returns {Specification.CallHTTPWithEndpoint} A builder for `Specification.CallHTTPWithEndpoint`
+ * @returns {Builder<Specification.CallHTTPWithEndpoint>} A builder for `Specification.CallHTTPWithEndpoint`
  */
-export const callHTTPWithEndpointBuilder = (): Builder<Specification.CallHTTPWithEndpoint> =>
-  builder<Specification.CallHTTPWithEndpoint>(buildingFn);
+export const callHTTPWithEndpointBuilder = (
+  model?: Partial<Specification.CallHTTPWithEndpoint>,
+): Builder<Specification.CallHTTPWithEndpoint> => builder<Specification.CallHTTPWithEndpoint>(model, buildingFn);

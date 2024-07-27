@@ -21,18 +21,19 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Schedule} model The underlying object
- * @returns {Specification.Schedule} The validated underlying object
+ * @param {Specification.SwitchTaskSwitchCase} model The underlying object
+ * @returns {Specification.SwitchTaskSwitchCase} The validated underlying object
  */
-function buildingFn(model: Specification.Schedule): Specification.Schedule {
-  const instance = new Classes.Schedule(model);
-  validate('Schedule', instance);
-  return instance as Specification.Schedule;
+function buildingFn(model: Specification.SwitchTaskSwitchCase): Specification.SwitchTaskSwitchCase {
+  const instance = new Classes.SwitchTaskSwitchCase(model);
+  validate('SwitchTaskSwitchCase', instance);
+  return instance as Specification.SwitchTaskSwitchCase;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.Schedule`
- * @returns {Builder<Specification.Schedule>} A builder for `Specification.Schedule`
+ * A factory to create a builder proxy for the type `Specification.SwitchTaskSwitchCase`
+ * @returns {Builder<Specification.SwitchTaskSwitchCase>} A builder for `Specification.SwitchTaskSwitchCase`
  */
-export const scheduleBuilder = (model?: Partial<Specification.Schedule>): Builder<Specification.Schedule> =>
-  builder<Specification.Schedule>(model, buildingFn);
+export const switchTaskSwitchCaseBuilder = (
+  model?: Partial<Specification.SwitchTaskSwitchCase>,
+): Builder<Specification.SwitchTaskSwitchCase> => builder<Specification.SwitchTaskSwitchCase>(model, buildingFn);

@@ -21,19 +21,18 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.CallAsyncAPI} data The underlying object
+ * @param {Specification.CallAsyncAPI} model The underlying object
  * @returns {Specification.CallAsyncAPI} The validated underlying object
  */
-function buildingFn(data: Specification.CallAsyncAPI): Specification.CallAsyncAPI {
-  const model = new Classes.CallAsyncAPI(data);
-
-  validate('CallAsyncAPI', model);
-  return model as Specification.CallAsyncAPI;
+function buildingFn(model: Specification.CallAsyncAPI): Specification.CallAsyncAPI {
+  const instance = new Classes.CallAsyncAPI(model);
+  validate('CallAsyncAPI', instance);
+  return instance as Specification.CallAsyncAPI;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.CallAsyncAPI`
- * @returns {Specification.CallAsyncAPI} A builder for `Specification.CallAsyncAPI`
+ * @returns {Builder<Specification.CallAsyncAPI>} A builder for `Specification.CallAsyncAPI`
  */
-export const callAsyncAPIBuilder = (): Builder<Specification.CallAsyncAPI> =>
-  builder<Specification.CallAsyncAPI>(buildingFn);
+export const callAsyncAPIBuilder = (model?: Partial<Specification.CallAsyncAPI>): Builder<Specification.CallAsyncAPI> =>
+  builder<Specification.CallAsyncAPI>(model, buildingFn);

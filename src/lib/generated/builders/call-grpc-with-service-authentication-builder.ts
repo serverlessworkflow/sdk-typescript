@@ -21,21 +21,22 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.CallGRPCWithServiceAuthentication} data The underlying object
+ * @param {Specification.CallGRPCWithServiceAuthentication} model The underlying object
  * @returns {Specification.CallGRPCWithServiceAuthentication} The validated underlying object
  */
 function buildingFn(
-  data: Specification.CallGRPCWithServiceAuthentication,
+  model: Specification.CallGRPCWithServiceAuthentication,
 ): Specification.CallGRPCWithServiceAuthentication {
-  const model = new Classes.CallGRPCWithServiceAuthentication(data);
-
-  validate('CallGRPCWithServiceAuthentication', model);
-  return model as Specification.CallGRPCWithServiceAuthentication;
+  const instance = new Classes.CallGRPCWithServiceAuthentication(model);
+  validate('CallGRPCWithServiceAuthentication', instance);
+  return instance as Specification.CallGRPCWithServiceAuthentication;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.CallGRPCWithServiceAuthentication`
- * @returns {Specification.CallGRPCWithServiceAuthentication} A builder for `Specification.CallGRPCWithServiceAuthentication`
+ * @returns {Builder<Specification.CallGRPCWithServiceAuthentication>} A builder for `Specification.CallGRPCWithServiceAuthentication`
  */
-export const callGRPCWithServiceAuthenticationBuilder = (): Builder<Specification.CallGRPCWithServiceAuthentication> =>
-  builder<Specification.CallGRPCWithServiceAuthentication>(buildingFn);
+export const callGRPCWithServiceAuthenticationBuilder = (
+  model?: Partial<Specification.CallGRPCWithServiceAuthentication>,
+): Builder<Specification.CallGRPCWithServiceAuthentication> =>
+  builder<Specification.CallGRPCWithServiceAuthentication>(model, buildingFn);

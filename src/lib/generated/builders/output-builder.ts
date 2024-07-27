@@ -21,18 +21,18 @@ import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Output} data The underlying object
+ * @param {Specification.Output} model The underlying object
  * @returns {Specification.Output} The validated underlying object
  */
-function buildingFn(data: Specification.Output): Specification.Output {
-  const model = new Classes.Output(data);
-
-  validate('Output', model);
-  return model as Specification.Output;
+function buildingFn(model: Specification.Output): Specification.Output {
+  const instance = new Classes.Output(model);
+  validate('Output', instance);
+  return instance as Specification.Output;
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Output`
- * @returns {Specification.Output} A builder for `Specification.Output`
+ * @returns {Builder<Specification.Output>} A builder for `Specification.Output`
  */
-export const outputBuilder = (): Builder<Specification.Output> => builder<Specification.Output>(buildingFn);
+export const outputBuilder = (model?: Partial<Specification.Output>): Builder<Specification.Output> =>
+  builder<Specification.Output>(model, buildingFn);
