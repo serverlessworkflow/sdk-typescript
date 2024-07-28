@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _DocumentTags extends Hydrator<Specification.DocumentTags> {
+class DocumentTags extends Hydrator<Specification.DocumentTags> {
   constructor(model?: Partial<Specification.DocumentTags>) {
     super(model);
   }
 }
 
-export const DocumentTags = _DocumentTags as {
-  new (model?: Partial<Specification.DocumentTags>): _DocumentTags & Specification.DocumentTags;
+export const _DocumentTags = DocumentTags as {
+  new (model?: Partial<Specification.DocumentTags>): DocumentTags & Specification.DocumentTags;
 };

@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _CallGRPCWithService extends Hydrator<Specification.CallGRPCWithService> {
+class CallGRPCWithService extends Hydrator<Specification.CallGRPCWithService> {
   constructor(model?: Partial<Specification.CallGRPCWithService>) {
     super(model);
   }
 }
 
-export const CallGRPCWithService = _CallGRPCWithService as {
-  new (model?: Partial<Specification.CallGRPCWithService>): _CallGRPCWithService & Specification.CallGRPCWithService;
+export const _CallGRPCWithService = CallGRPCWithService as {
+  new (model?: Partial<Specification.CallGRPCWithService>): CallGRPCWithService & Specification.CallGRPCWithService;
 };

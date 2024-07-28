@@ -14,186 +14,186 @@
  * limitations under the License.
  */
 
-import { Schema } from './schema';
-import { ExternalResource } from './external-resource';
-import { ExternalResourceAuthentication } from './external-resource-authentication';
-import { AuthenticationPolicy } from './authentication-policy';
-import { Task } from './task';
-import { CallTask } from './call-task';
-import { CallAsyncAPI } from './call-async-api';
-import { FlowDirective } from './flow-directive';
-import { CallAsyncAPIWithAuthentication } from './call-async-api-with-authentication';
-import { CallGRPC } from './call-grpc';
-import { CallGRPCWithServiceAuthentication } from './call-grpc-with-service-authentication';
-import { CallHTTP } from './call-http';
-import { CallHTTPWithEndpoint } from './call-http-with-endpoint';
-import { EndpointAuthentication } from './endpoint-authentication';
-import { CallOpenAPI } from './call-open-api';
-import { CallOpenAPIWithAuthentication } from './call-open-api-with-authentication';
-import { CallFunction } from './call-function';
-import { DoTask } from './do-task';
-import { ForkTask } from './fork-task';
-import { EmitTask } from './emit-task';
-import { ForTask } from './for-task';
-import { ListenTask } from './listen-task';
-import { EventConsumptionStrategy } from './event-consumption-strategy';
-import { EventConsumptionStrategyAll } from './event-consumption-strategy-all';
-import { EventConsumptionStrategyAny } from './event-consumption-strategy-any';
-import { RaiseTask } from './raise-task';
-import { RunTask } from './run-task';
-import { RunTaskRun } from './run-task-run';
-import { RunTaskRunScript } from './run-task-run-script';
-import { SetTask } from './set-task';
-import { SwitchTask } from './switch-task';
-import { SwitchTaskSwitch } from './switch-task-switch';
-import { TryTask } from './try-task';
-import { RetryPolicyBackoff } from './retry-policy-backoff';
-import { WaitTask } from './wait-task';
-import { TaskList } from './task-list';
-import { UseExtensions } from './use-extensions';
-import { Workflow } from './workflow';
-import { Document } from './document';
-import { DocumentTags } from './document-tags';
-import { Input } from './input';
-import { AuthenticationPolicyBasic } from './authentication-policy-basic';
-import { AuthenticationPolicyBearer } from './authentication-policy-bearer';
-import { AuthenticationPolicyOauth2 } from './authentication-policy-oauth2';
-import { AuthenticationPolicyOauth2Client } from './authentication-policy-oauth2-client';
-import { Oauth2Token } from './oauth2-token';
-import { Use } from './use';
-import { UseAuthentications } from './use-authentications';
-import { UseErrors } from './use-errors';
-import { Error } from './error';
-import { Extension } from './extension';
-import { TaskBase } from './task-base';
-import { Output } from './output';
-import { Export } from './export';
-import { Timeout } from './timeout';
-import { Duration } from './duration';
-import { CallAsyncAPIWith } from './call-async-api-with';
-import { CallGRPCWith } from './call-grpc-with';
-import { CallGRPCWithService } from './call-grpc-with-service';
-import { CallGRPCWithArguments } from './call-grpc-with-arguments';
-import { CallHTTPWith } from './call-http-with';
-import { Endpoint } from './endpoint';
-import { CallOpenAPIWith } from './call-open-api-with';
-import { CallOpenAPIWithParameters } from './call-open-api-with-parameters';
-import { CallFunctionWith } from './call-function-with';
-import { ForkTaskFork } from './fork-task-fork';
-import { EmitTaskEmit } from './emit-task-emit';
-import { EmitTaskEmitEvent } from './emit-task-emit-event';
-import { ForTaskFor } from './for-task-for';
-import { ListenTaskListen } from './listen-task-listen';
-import { EventFilter } from './event-filter';
-import { EventFilterWith } from './event-filter-with';
-import { EventFilterCorrelate } from './event-filter-correlate';
-import { RaiseTaskRaise } from './raise-task-raise';
-import { RunTaskRunContainer } from './run-task-run-container';
-import { RunTaskRunShell } from './run-task-run-shell';
-import { RunTaskRunShellArguments } from './run-task-run-shell-arguments';
-import { RunTaskRunShellEnvironment } from './run-task-run-shell-environment';
-import { RunTaskRunWorkflow } from './run-task-run-workflow';
-import { RunTaskRunWorkflowInput } from './run-task-run-workflow-input';
-import { SetTaskSet } from './set-task-set';
-import { SwitchTaskSwitchCase } from './switch-task-switch-case';
-import { TryTaskCatch } from './try-task-catch';
-import { RetryPolicy } from './retry-policy';
-import { RetryPolicyLimit } from './retry-policy-limit';
-import { RetryPolicyLimitAttempt } from './retry-policy-limit-attempt';
-import { RetryPolicyJitter } from './retry-policy-jitter';
-import { UseFunctions } from './use-functions';
-import { UseRetries } from './use-retries';
-import { Schedule } from './schedule';
+import { _Schema } from './schema';
+import { _ExternalResource } from './external-resource';
+import { _ExternalResourceAuthentication } from './external-resource-authentication';
+import { _AuthenticationPolicy } from './authentication-policy';
+import { _Task } from './task';
+import { _CallTask } from './call-task';
+import { _CallAsyncAPI } from './call-async-api';
+import { _FlowDirective } from './flow-directive';
+import { _CallAsyncAPIWithAuthentication } from './call-async-api-with-authentication';
+import { _CallGRPC } from './call-grpc';
+import { _CallGRPCWithServiceAuthentication } from './call-grpc-with-service-authentication';
+import { _CallHTTP } from './call-http';
+import { _CallHTTPWithEndpoint } from './call-http-with-endpoint';
+import { _EndpointAuthentication } from './endpoint-authentication';
+import { _CallOpenAPI } from './call-open-api';
+import { _CallOpenAPIWithAuthentication } from './call-open-api-with-authentication';
+import { _CallFunction } from './call-function';
+import { _DoTask } from './do-task';
+import { _ForkTask } from './fork-task';
+import { _EmitTask } from './emit-task';
+import { _ForTask } from './for-task';
+import { _ListenTask } from './listen-task';
+import { _EventConsumptionStrategy } from './event-consumption-strategy';
+import { _EventConsumptionStrategyAll } from './event-consumption-strategy-all';
+import { _EventConsumptionStrategyAny } from './event-consumption-strategy-any';
+import { _RaiseTask } from './raise-task';
+import { _RunTask } from './run-task';
+import { _RunTaskRun } from './run-task-run';
+import { _RunTaskRunScript } from './run-task-run-script';
+import { _SetTask } from './set-task';
+import { _SwitchTask } from './switch-task';
+import { _SwitchTaskSwitch } from './switch-task-switch';
+import { _TryTask } from './try-task';
+import { _RetryPolicyBackoff } from './retry-policy-backoff';
+import { _WaitTask } from './wait-task';
+import { _TaskList } from './task-list';
+import { _UseExtensions } from './use-extensions';
+import { _Workflow } from './workflow';
+import { _Document } from './document';
+import { _DocumentTags } from './document-tags';
+import { _Input } from './input';
+import { _AuthenticationPolicyBasic } from './authentication-policy-basic';
+import { _AuthenticationPolicyBearer } from './authentication-policy-bearer';
+import { _AuthenticationPolicyOauth2 } from './authentication-policy-oauth2';
+import { _AuthenticationPolicyOauth2Client } from './authentication-policy-oauth2-client';
+import { _Oauth2Token } from './oauth2-token';
+import { _Use } from './use';
+import { _UseAuthentications } from './use-authentications';
+import { _UseErrors } from './use-errors';
+import { _Error } from './error';
+import { _Extension } from './extension';
+import { _TaskBase } from './task-base';
+import { _Output } from './output';
+import { _Export } from './export';
+import { _Timeout } from './timeout';
+import { _Duration } from './duration';
+import { _CallAsyncAPIWith } from './call-async-api-with';
+import { _CallGRPCWith } from './call-grpc-with';
+import { _CallGRPCWithService } from './call-grpc-with-service';
+import { _CallGRPCWithArguments } from './call-grpc-with-arguments';
+import { _CallHTTPWith } from './call-http-with';
+import { _Endpoint } from './endpoint';
+import { _CallOpenAPIWith } from './call-open-api-with';
+import { _CallOpenAPIWithParameters } from './call-open-api-with-parameters';
+import { _CallFunctionWith } from './call-function-with';
+import { _ForkTaskFork } from './fork-task-fork';
+import { _EmitTaskEmit } from './emit-task-emit';
+import { _EmitTaskEmitEvent } from './emit-task-emit-event';
+import { _ForTaskFor } from './for-task-for';
+import { _ListenTaskListen } from './listen-task-listen';
+import { _EventFilter } from './event-filter';
+import { _EventFilterWith } from './event-filter-with';
+import { _EventFilterCorrelate } from './event-filter-correlate';
+import { _RaiseTaskRaise } from './raise-task-raise';
+import { _RunTaskRunContainer } from './run-task-run-container';
+import { _RunTaskRunShell } from './run-task-run-shell';
+import { _RunTaskRunShellArguments } from './run-task-run-shell-arguments';
+import { _RunTaskRunShellEnvironment } from './run-task-run-shell-environment';
+import { _RunTaskRunWorkflow } from './run-task-run-workflow';
+import { _RunTaskRunWorkflowInput } from './run-task-run-workflow-input';
+import { _SetTaskSet } from './set-task-set';
+import { _SwitchTaskSwitchCase } from './switch-task-switch-case';
+import { _TryTaskCatch } from './try-task-catch';
+import { _RetryPolicy } from './retry-policy';
+import { _RetryPolicyLimit } from './retry-policy-limit';
+import { _RetryPolicyLimitAttempt } from './retry-policy-limit-attempt';
+import { _RetryPolicyJitter } from './retry-policy-jitter';
+import { _UseFunctions } from './use-functions';
+import { _UseRetries } from './use-retries';
+import { _Schedule } from './schedule';
 
 export const Classes = {
-  Schema,
-  ExternalResource,
-  ExternalResourceAuthentication,
-  AuthenticationPolicy,
-  Task,
-  CallTask,
-  CallAsyncAPI,
-  FlowDirective,
-  CallAsyncAPIWithAuthentication,
-  CallGRPC,
-  CallGRPCWithServiceAuthentication,
-  CallHTTP,
-  CallHTTPWithEndpoint,
-  EndpointAuthentication,
-  CallOpenAPI,
-  CallOpenAPIWithAuthentication,
-  CallFunction,
-  DoTask,
-  ForkTask,
-  EmitTask,
-  ForTask,
-  ListenTask,
-  EventConsumptionStrategy,
-  EventConsumptionStrategyAll,
-  EventConsumptionStrategyAny,
-  RaiseTask,
-  RunTask,
-  RunTaskRun,
-  RunTaskRunScript,
-  SetTask,
-  SwitchTask,
-  SwitchTaskSwitch,
-  TryTask,
-  RetryPolicyBackoff,
-  WaitTask,
-  TaskList,
-  UseExtensions,
-  Workflow,
-  Document,
-  DocumentTags,
-  Input,
-  AuthenticationPolicyBasic,
-  AuthenticationPolicyBearer,
-  AuthenticationPolicyOauth2,
-  AuthenticationPolicyOauth2Client,
-  Oauth2Token,
-  Use,
-  UseAuthentications,
-  UseErrors,
-  Error,
-  Extension,
-  TaskBase,
-  Output,
-  Export,
-  Timeout,
-  Duration,
-  CallAsyncAPIWith,
-  CallGRPCWith,
-  CallGRPCWithService,
-  CallGRPCWithArguments,
-  CallHTTPWith,
-  Endpoint,
-  CallOpenAPIWith,
-  CallOpenAPIWithParameters,
-  CallFunctionWith,
-  ForkTaskFork,
-  EmitTaskEmit,
-  EmitTaskEmitEvent,
-  ForTaskFor,
-  ListenTaskListen,
-  EventFilter,
-  EventFilterWith,
-  EventFilterCorrelate,
-  RaiseTaskRaise,
-  RunTaskRunContainer,
-  RunTaskRunShell,
-  RunTaskRunShellArguments,
-  RunTaskRunShellEnvironment,
-  RunTaskRunWorkflow,
-  RunTaskRunWorkflowInput,
-  SetTaskSet,
-  SwitchTaskSwitchCase,
-  TryTaskCatch,
-  RetryPolicy,
-  RetryPolicyLimit,
-  RetryPolicyLimitAttempt,
-  RetryPolicyJitter,
-  UseFunctions,
-  UseRetries,
-  Schedule,
+  Schema: _Schema,
+  ExternalResource: _ExternalResource,
+  ExternalResourceAuthentication: _ExternalResourceAuthentication,
+  AuthenticationPolicy: _AuthenticationPolicy,
+  Task: _Task,
+  CallTask: _CallTask,
+  CallAsyncAPI: _CallAsyncAPI,
+  FlowDirective: _FlowDirective,
+  CallAsyncAPIWithAuthentication: _CallAsyncAPIWithAuthentication,
+  CallGRPC: _CallGRPC,
+  CallGRPCWithServiceAuthentication: _CallGRPCWithServiceAuthentication,
+  CallHTTP: _CallHTTP,
+  CallHTTPWithEndpoint: _CallHTTPWithEndpoint,
+  EndpointAuthentication: _EndpointAuthentication,
+  CallOpenAPI: _CallOpenAPI,
+  CallOpenAPIWithAuthentication: _CallOpenAPIWithAuthentication,
+  CallFunction: _CallFunction,
+  DoTask: _DoTask,
+  ForkTask: _ForkTask,
+  EmitTask: _EmitTask,
+  ForTask: _ForTask,
+  ListenTask: _ListenTask,
+  EventConsumptionStrategy: _EventConsumptionStrategy,
+  EventConsumptionStrategyAll: _EventConsumptionStrategyAll,
+  EventConsumptionStrategyAny: _EventConsumptionStrategyAny,
+  RaiseTask: _RaiseTask,
+  RunTask: _RunTask,
+  RunTaskRun: _RunTaskRun,
+  RunTaskRunScript: _RunTaskRunScript,
+  SetTask: _SetTask,
+  SwitchTask: _SwitchTask,
+  SwitchTaskSwitch: _SwitchTaskSwitch,
+  TryTask: _TryTask,
+  RetryPolicyBackoff: _RetryPolicyBackoff,
+  WaitTask: _WaitTask,
+  TaskList: _TaskList,
+  UseExtensions: _UseExtensions,
+  Workflow: _Workflow,
+  Document: _Document,
+  DocumentTags: _DocumentTags,
+  Input: _Input,
+  AuthenticationPolicyBasic: _AuthenticationPolicyBasic,
+  AuthenticationPolicyBearer: _AuthenticationPolicyBearer,
+  AuthenticationPolicyOauth2: _AuthenticationPolicyOauth2,
+  AuthenticationPolicyOauth2Client: _AuthenticationPolicyOauth2Client,
+  Oauth2Token: _Oauth2Token,
+  Use: _Use,
+  UseAuthentications: _UseAuthentications,
+  UseErrors: _UseErrors,
+  Error: _Error,
+  Extension: _Extension,
+  TaskBase: _TaskBase,
+  Output: _Output,
+  Export: _Export,
+  Timeout: _Timeout,
+  Duration: _Duration,
+  CallAsyncAPIWith: _CallAsyncAPIWith,
+  CallGRPCWith: _CallGRPCWith,
+  CallGRPCWithService: _CallGRPCWithService,
+  CallGRPCWithArguments: _CallGRPCWithArguments,
+  CallHTTPWith: _CallHTTPWith,
+  Endpoint: _Endpoint,
+  CallOpenAPIWith: _CallOpenAPIWith,
+  CallOpenAPIWithParameters: _CallOpenAPIWithParameters,
+  CallFunctionWith: _CallFunctionWith,
+  ForkTaskFork: _ForkTaskFork,
+  EmitTaskEmit: _EmitTaskEmit,
+  EmitTaskEmitEvent: _EmitTaskEmitEvent,
+  ForTaskFor: _ForTaskFor,
+  ListenTaskListen: _ListenTaskListen,
+  EventFilter: _EventFilter,
+  EventFilterWith: _EventFilterWith,
+  EventFilterCorrelate: _EventFilterCorrelate,
+  RaiseTaskRaise: _RaiseTaskRaise,
+  RunTaskRunContainer: _RunTaskRunContainer,
+  RunTaskRunShell: _RunTaskRunShell,
+  RunTaskRunShellArguments: _RunTaskRunShellArguments,
+  RunTaskRunShellEnvironment: _RunTaskRunShellEnvironment,
+  RunTaskRunWorkflow: _RunTaskRunWorkflow,
+  RunTaskRunWorkflowInput: _RunTaskRunWorkflowInput,
+  SetTaskSet: _SetTaskSet,
+  SwitchTaskSwitchCase: _SwitchTaskSwitchCase,
+  TryTaskCatch: _TryTaskCatch,
+  RetryPolicy: _RetryPolicy,
+  RetryPolicyLimit: _RetryPolicyLimit,
+  RetryPolicyLimitAttempt: _RetryPolicyLimitAttempt,
+  RetryPolicyJitter: _RetryPolicyJitter,
+  UseFunctions: _UseFunctions,
+  UseRetries: _UseRetries,
+  Schedule: _Schedule,
 };

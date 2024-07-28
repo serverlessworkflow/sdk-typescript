@@ -22,7 +22,7 @@
 
 import { Specification } from '../definitions';
 
-export class UseExtensions extends Array<{ [k: string]: Specification.Extension }> {
+class UseExtensions extends Array<{ [k: string]: Specification.Extension }> {
   constructor(model?: Array<{ [k: string]: Specification.Extension }>) {
     super(...(model || []));
     if (model != null && !Array.isArray(model)) {
@@ -31,3 +31,5 @@ export class UseExtensions extends Array<{ [k: string]: Specification.Extension 
     Object.setPrototypeOf(this, Object.create(UseExtensions.prototype));
   }
 }
+
+export const _UseExtensions = UseExtensions; // could be exported directly, but it makes the job of building the index more straightforward as it's consistant with "object" classes

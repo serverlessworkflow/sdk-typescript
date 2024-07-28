@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _Duration extends Hydrator<Specification.Duration> {
+class Duration extends Hydrator<Specification.Duration> {
   constructor(model?: Partial<Specification.Duration>) {
     super(model);
   }
 }
 
-export const Duration = _Duration as {
-  new (model?: Partial<Specification.Duration>): _Duration & Specification.Duration;
+export const _Duration = Duration as {
+  new (model?: Partial<Specification.Duration>): Duration & Specification.Duration;
 };

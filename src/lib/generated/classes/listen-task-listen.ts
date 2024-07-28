@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _ListenTaskListen extends Hydrator<Specification.ListenTaskListen> {
+class ListenTaskListen extends Hydrator<Specification.ListenTaskListen> {
   constructor(model?: Partial<Specification.ListenTaskListen>) {
     super(model);
   }
 }
 
-export const ListenTaskListen = _ListenTaskListen as {
-  new (model?: Partial<Specification.ListenTaskListen>): _ListenTaskListen & Specification.ListenTaskListen;
+export const _ListenTaskListen = ListenTaskListen as {
+  new (model?: Partial<Specification.ListenTaskListen>): ListenTaskListen & Specification.ListenTaskListen;
 };

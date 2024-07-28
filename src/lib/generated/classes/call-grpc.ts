@@ -20,15 +20,15 @@
  *
  *****************************************************************************************/
 
-import { TaskBase } from './task-base';
+import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
 
-class _CallGRPC extends TaskBase {
+class CallGRPC extends _TaskBase {
   constructor(model?: Partial<Specification.CallGRPC>) {
     super(model);
   }
 }
 
-export const CallGRPC = _CallGRPC as {
-  new (model?: Partial<Specification.CallGRPC>): _CallGRPC & Specification.CallGRPC;
+export const _CallGRPC = CallGRPC as {
+  new (model?: Partial<Specification.CallGRPC>): CallGRPC & Specification.CallGRPC;
 };

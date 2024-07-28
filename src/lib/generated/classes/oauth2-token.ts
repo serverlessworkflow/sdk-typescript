@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _Oauth2Token extends Hydrator<Specification.Oauth2Token> {
+class Oauth2Token extends Hydrator<Specification.Oauth2Token> {
   constructor(model?: Partial<Specification.Oauth2Token>) {
     super(model);
   }
 }
 
-export const Oauth2Token = _Oauth2Token as {
-  new (model?: Partial<Specification.Oauth2Token>): _Oauth2Token & Specification.Oauth2Token;
+export const _Oauth2Token = Oauth2Token as {
+  new (model?: Partial<Specification.Oauth2Token>): Oauth2Token & Specification.Oauth2Token;
 };

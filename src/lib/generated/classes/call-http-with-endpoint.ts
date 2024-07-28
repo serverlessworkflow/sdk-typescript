@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _CallHTTPWithEndpoint extends Hydrator<Specification.CallHTTPWithEndpoint> {
+class CallHTTPWithEndpoint extends Hydrator<Specification.CallHTTPWithEndpoint> {
   constructor(model?: Partial<Specification.CallHTTPWithEndpoint>) {
     super(model);
   }
 }
 
-export const CallHTTPWithEndpoint = _CallHTTPWithEndpoint as {
-  new (model?: Partial<Specification.CallHTTPWithEndpoint>): _CallHTTPWithEndpoint & Specification.CallHTTPWithEndpoint;
+export const _CallHTTPWithEndpoint = CallHTTPWithEndpoint as {
+  new (model?: Partial<Specification.CallHTTPWithEndpoint>): CallHTTPWithEndpoint & Specification.CallHTTPWithEndpoint;
 };

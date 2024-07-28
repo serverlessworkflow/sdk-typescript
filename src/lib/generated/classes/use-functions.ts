@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _UseFunctions extends Hydrator<Specification.UseFunctions> {
+class UseFunctions extends Hydrator<Specification.UseFunctions> {
   constructor(model?: Partial<Specification.UseFunctions>) {
     super(model);
   }
 }
 
-export const UseFunctions = _UseFunctions as {
-  new (model?: Partial<Specification.UseFunctions>): _UseFunctions & Specification.UseFunctions;
+export const _UseFunctions = UseFunctions as {
+  new (model?: Partial<Specification.UseFunctions>): UseFunctions & Specification.UseFunctions;
 };

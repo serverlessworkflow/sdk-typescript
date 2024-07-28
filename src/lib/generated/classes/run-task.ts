@@ -20,15 +20,15 @@
  *
  *****************************************************************************************/
 
-import { TaskBase } from './task-base';
+import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
 
-class _RunTask extends TaskBase {
+class RunTask extends _TaskBase {
   constructor(model?: Partial<Specification.RunTask>) {
     super(model);
   }
 }
 
-export const RunTask = _RunTask as {
-  new (model?: Partial<Specification.RunTask>): _RunTask & Specification.RunTask;
+export const _RunTask = RunTask as {
+  new (model?: Partial<Specification.RunTask>): RunTask & Specification.RunTask;
 };

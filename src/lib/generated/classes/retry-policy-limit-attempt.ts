@@ -23,14 +23,14 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _RetryPolicyLimitAttempt extends Hydrator<Specification.RetryPolicyLimitAttempt> {
+class RetryPolicyLimitAttempt extends Hydrator<Specification.RetryPolicyLimitAttempt> {
   constructor(model?: Partial<Specification.RetryPolicyLimitAttempt>) {
     super(model);
   }
 }
 
-export const RetryPolicyLimitAttempt = _RetryPolicyLimitAttempt as {
+export const _RetryPolicyLimitAttempt = RetryPolicyLimitAttempt as {
   new (
     model?: Partial<Specification.RetryPolicyLimitAttempt>,
-  ): _RetryPolicyLimitAttempt & Specification.RetryPolicyLimitAttempt;
+  ): RetryPolicyLimitAttempt & Specification.RetryPolicyLimitAttempt;
 };

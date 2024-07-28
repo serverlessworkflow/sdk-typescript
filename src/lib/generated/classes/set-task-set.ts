@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _SetTaskSet extends Hydrator<Specification.SetTaskSet> {
+class SetTaskSet extends Hydrator<Specification.SetTaskSet> {
   constructor(model?: Partial<Specification.SetTaskSet>) {
     super(model);
   }
 }
 
-export const SetTaskSet = _SetTaskSet as {
-  new (model?: Partial<Specification.SetTaskSet>): _SetTaskSet & Specification.SetTaskSet;
+export const _SetTaskSet = SetTaskSet as {
+  new (model?: Partial<Specification.SetTaskSet>): SetTaskSet & Specification.SetTaskSet;
 };

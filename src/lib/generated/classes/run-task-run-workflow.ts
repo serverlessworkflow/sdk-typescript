@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _RunTaskRunWorkflow extends Hydrator<Specification.RunTaskRunWorkflow> {
+class RunTaskRunWorkflow extends Hydrator<Specification.RunTaskRunWorkflow> {
   constructor(model?: Partial<Specification.RunTaskRunWorkflow>) {
     super(model);
   }
 }
 
-export const RunTaskRunWorkflow = _RunTaskRunWorkflow as {
-  new (model?: Partial<Specification.RunTaskRunWorkflow>): _RunTaskRunWorkflow & Specification.RunTaskRunWorkflow;
+export const _RunTaskRunWorkflow = RunTaskRunWorkflow as {
+  new (model?: Partial<Specification.RunTaskRunWorkflow>): RunTaskRunWorkflow & Specification.RunTaskRunWorkflow;
 };

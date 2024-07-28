@@ -20,15 +20,15 @@
  *
  *****************************************************************************************/
 
-import { TaskBase } from './task-base';
+import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
 
-class _CallHTTP extends TaskBase {
+class CallHTTP extends _TaskBase {
   constructor(model?: Partial<Specification.CallHTTP>) {
     super(model);
   }
 }
 
-export const CallHTTP = _CallHTTP as {
-  new (model?: Partial<Specification.CallHTTP>): _CallHTTP & Specification.CallHTTP;
+export const _CallHTTP = CallHTTP as {
+  new (model?: Partial<Specification.CallHTTP>): CallHTTP & Specification.CallHTTP;
 };

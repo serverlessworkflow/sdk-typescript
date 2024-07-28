@@ -20,15 +20,15 @@
  *
  *****************************************************************************************/
 
-import { TaskBase } from './task-base';
+import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
 
-class _CallFunction extends TaskBase {
+class CallFunction extends _TaskBase {
   constructor(model?: Partial<Specification.CallFunction>) {
     super(model);
   }
 }
 
-export const CallFunction = _CallFunction as {
-  new (model?: Partial<Specification.CallFunction>): _CallFunction & Specification.CallFunction;
+export const _CallFunction = CallFunction as {
+  new (model?: Partial<Specification.CallFunction>): CallFunction & Specification.CallFunction;
 };

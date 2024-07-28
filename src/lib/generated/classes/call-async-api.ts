@@ -20,15 +20,15 @@
  *
  *****************************************************************************************/
 
-import { TaskBase } from './task-base';
+import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
 
-class _CallAsyncAPI extends TaskBase {
+class CallAsyncAPI extends _TaskBase {
   constructor(model?: Partial<Specification.CallAsyncAPI>) {
     super(model);
   }
 }
 
-export const CallAsyncAPI = _CallAsyncAPI as {
-  new (model?: Partial<Specification.CallAsyncAPI>): _CallAsyncAPI & Specification.CallAsyncAPI;
+export const _CallAsyncAPI = CallAsyncAPI as {
+  new (model?: Partial<Specification.CallAsyncAPI>): CallAsyncAPI & Specification.CallAsyncAPI;
 };

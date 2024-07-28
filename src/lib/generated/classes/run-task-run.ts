@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _RunTaskRun extends Hydrator<Specification.RunTaskRun> {
+class RunTaskRun extends Hydrator<Specification.RunTaskRun> {
   constructor(model?: Partial<Specification.RunTaskRun>) {
     super(model);
   }
 }
 
-export const RunTaskRun = _RunTaskRun as {
-  new (model?: Partial<Specification.RunTaskRun>): _RunTaskRun & Specification.RunTaskRun;
+export const _RunTaskRun = RunTaskRun as {
+  new (model?: Partial<Specification.RunTaskRun>): RunTaskRun & Specification.RunTaskRun;
 };

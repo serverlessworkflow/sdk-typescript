@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _Timeout extends Hydrator<Specification.Timeout> {
+class Timeout extends Hydrator<Specification.Timeout> {
   constructor(model?: Partial<Specification.Timeout>) {
     super(model);
   }
 }
 
-export const Timeout = _Timeout as {
-  new (model?: Partial<Specification.Timeout>): _Timeout & Specification.Timeout;
+export const _Timeout = Timeout as {
+  new (model?: Partial<Specification.Timeout>): Timeout & Specification.Timeout;
 };

@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _Workflow extends Hydrator<Specification.Workflow> {
+class Workflow extends Hydrator<Specification.Workflow> {
   constructor(model?: Partial<Specification.Workflow>) {
     super(model);
   }
 }
 
-export const Workflow = _Workflow as {
-  new (model?: Partial<Specification.Workflow>): _Workflow & Specification.Workflow;
+export const _Workflow = Workflow as {
+  new (model?: Partial<Specification.Workflow>): Workflow & Specification.Workflow;
 };

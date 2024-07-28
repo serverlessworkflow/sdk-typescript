@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _Export extends Hydrator<Specification.Export> {
+class Export extends Hydrator<Specification.Export> {
   constructor(model?: Partial<Specification.Export>) {
     super(model);
   }
 }
 
-export const Export = _Export as {
-  new (model?: Partial<Specification.Export>): _Export & Specification.Export;
+export const _Export = Export as {
+  new (model?: Partial<Specification.Export>): Export & Specification.Export;
 };

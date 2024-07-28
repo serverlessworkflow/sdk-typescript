@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _TaskBase extends Hydrator<Specification.TaskBase> {
+class TaskBase extends Hydrator<Specification.TaskBase> {
   constructor(model?: Partial<Specification.TaskBase>) {
     super(model);
   }
 }
 
-export const TaskBase = _TaskBase as {
-  new (model?: Partial<Specification.TaskBase>): _TaskBase & Specification.TaskBase;
+export const _TaskBase = TaskBase as {
+  new (model?: Partial<Specification.TaskBase>): TaskBase & Specification.TaskBase;
 };

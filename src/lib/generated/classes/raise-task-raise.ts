@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _RaiseTaskRaise extends Hydrator<Specification.RaiseTaskRaise> {
+class RaiseTaskRaise extends Hydrator<Specification.RaiseTaskRaise> {
   constructor(model?: Partial<Specification.RaiseTaskRaise>) {
     super(model);
   }
 }
 
-export const RaiseTaskRaise = _RaiseTaskRaise as {
-  new (model?: Partial<Specification.RaiseTaskRaise>): _RaiseTaskRaise & Specification.RaiseTaskRaise;
+export const _RaiseTaskRaise = RaiseTaskRaise as {
+  new (model?: Partial<Specification.RaiseTaskRaise>): RaiseTaskRaise & Specification.RaiseTaskRaise;
 };

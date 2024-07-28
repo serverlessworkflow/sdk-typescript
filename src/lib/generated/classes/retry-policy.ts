@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _RetryPolicy extends Hydrator<Specification.RetryPolicy> {
+class RetryPolicy extends Hydrator<Specification.RetryPolicy> {
   constructor(model?: Partial<Specification.RetryPolicy>) {
     super(model);
   }
 }
 
-export const RetryPolicy = _RetryPolicy as {
-  new (model?: Partial<Specification.RetryPolicy>): _RetryPolicy & Specification.RetryPolicy;
+export const _RetryPolicy = RetryPolicy as {
+  new (model?: Partial<Specification.RetryPolicy>): RetryPolicy & Specification.RetryPolicy;
 };

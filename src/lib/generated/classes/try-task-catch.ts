@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _TryTaskCatch extends Hydrator<Specification.TryTaskCatch> {
+class TryTaskCatch extends Hydrator<Specification.TryTaskCatch> {
   constructor(model?: Partial<Specification.TryTaskCatch>) {
     super(model);
   }
 }
 
-export const TryTaskCatch = _TryTaskCatch as {
-  new (model?: Partial<Specification.TryTaskCatch>): _TryTaskCatch & Specification.TryTaskCatch;
+export const _TryTaskCatch = TryTaskCatch as {
+  new (model?: Partial<Specification.TryTaskCatch>): TryTaskCatch & Specification.TryTaskCatch;
 };

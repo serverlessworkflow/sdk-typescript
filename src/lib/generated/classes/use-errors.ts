@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _UseErrors extends Hydrator<Specification.UseErrors> {
+class UseErrors extends Hydrator<Specification.UseErrors> {
   constructor(model?: Partial<Specification.UseErrors>) {
     super(model);
   }
 }
 
-export const UseErrors = _UseErrors as {
-  new (model?: Partial<Specification.UseErrors>): _UseErrors & Specification.UseErrors;
+export const _UseErrors = UseErrors as {
+  new (model?: Partial<Specification.UseErrors>): UseErrors & Specification.UseErrors;
 };

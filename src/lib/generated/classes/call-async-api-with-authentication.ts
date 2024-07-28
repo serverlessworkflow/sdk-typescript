@@ -23,14 +23,14 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _CallAsyncAPIWithAuthentication extends Hydrator<Specification.CallAsyncAPIWithAuthentication> {
+class CallAsyncAPIWithAuthentication extends Hydrator<Specification.CallAsyncAPIWithAuthentication> {
   constructor(model?: Partial<Specification.CallAsyncAPIWithAuthentication>) {
     super(model);
   }
 }
 
-export const CallAsyncAPIWithAuthentication = _CallAsyncAPIWithAuthentication as {
+export const _CallAsyncAPIWithAuthentication = CallAsyncAPIWithAuthentication as {
   new (
     model?: Partial<Specification.CallAsyncAPIWithAuthentication>,
-  ): _CallAsyncAPIWithAuthentication & Specification.CallAsyncAPIWithAuthentication;
+  ): CallAsyncAPIWithAuthentication & Specification.CallAsyncAPIWithAuthentication;
 };

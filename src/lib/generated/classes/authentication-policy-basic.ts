@@ -23,14 +23,14 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _AuthenticationPolicyBasic extends Hydrator<Specification.AuthenticationPolicyBasic> {
+class AuthenticationPolicyBasic extends Hydrator<Specification.AuthenticationPolicyBasic> {
   constructor(model?: Partial<Specification.AuthenticationPolicyBasic>) {
     super(model);
   }
 }
 
-export const AuthenticationPolicyBasic = _AuthenticationPolicyBasic as {
+export const _AuthenticationPolicyBasic = AuthenticationPolicyBasic as {
   new (
     model?: Partial<Specification.AuthenticationPolicyBasic>,
-  ): _AuthenticationPolicyBasic & Specification.AuthenticationPolicyBasic;
+  ): AuthenticationPolicyBasic & Specification.AuthenticationPolicyBasic;
 };

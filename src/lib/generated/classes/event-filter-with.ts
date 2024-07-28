@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _EventFilterWith extends Hydrator<Specification.EventFilterWith> {
+class EventFilterWith extends Hydrator<Specification.EventFilterWith> {
   constructor(model?: Partial<Specification.EventFilterWith>) {
     super(model);
   }
 }
 
-export const EventFilterWith = _EventFilterWith as {
-  new (model?: Partial<Specification.EventFilterWith>): _EventFilterWith & Specification.EventFilterWith;
+export const _EventFilterWith = EventFilterWith as {
+  new (model?: Partial<Specification.EventFilterWith>): EventFilterWith & Specification.EventFilterWith;
 };

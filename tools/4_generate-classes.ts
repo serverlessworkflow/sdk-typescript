@@ -38,17 +38,17 @@ const getObjectClassDeclaration = (name: string, baseClass?: string): string =>
   `${fileHeader}
 ${inFileDisclaimer}
 
-${baseClass ? `import { ${baseClass} } from './${toKebabCase(normalizeKnownAllCaps(baseClass))}';` : 'import { Hydrator } from "../../hydrator";'}
+${baseClass ? `import { _${baseClass} } from './${toKebabCase(normalizeKnownAllCaps(baseClass))}';` : 'import { Hydrator } from "../../hydrator";'}
 import { Specification } from "../definitions";
 
-class _${name} extends ${baseClass ? baseClass : `Hydrator<Specification.${name}>`} {
+class ${name} extends ${baseClass ? '_' + baseClass : `Hydrator<Specification.${name}>`} {
     constructor(model?: Partial<Specification.${name}>) {
         super(model);
     }
 }
 
-export const ${name} = _${name} as ({
-    new (model?: Partial<Specification.${name}>): _${name} & Specification.${name}
+export const _${name} = ${name} as ({
+    new (model?: Partial<Specification.${name}>): ${name} & Specification.${name}
 });`;
 
 /**
@@ -63,7 +63,7 @@ ${inFileDisclaimer}
 
 import { Specification } from "../definitions";
 
-export class ${name} extends Array<${arrayType}> {
+class ${name} extends Array<${arrayType}> {
   constructor(model?: Array<${arrayType}>) {
     super(...(model||[]));
     if (model != null && !Array.isArray(model)) {
@@ -72,6 +72,8 @@ export class ${name} extends Array<${arrayType}> {
     Object.setPrototypeOf(this, Object.create(${name}.prototype));
   }
 }
+
+export const _${name} = ${name}; // could be exported directly, but it makes the job of building the index more straightforward as it's consistant with "object" classes
 `;
 
 /**
@@ -84,8 +86,8 @@ async function generate(definitionFile: string, destDir: string): Promise<void> 
   const exportedDeclarations = getExportedDeclarations(definitions);
   const aliases = Array.from(exportedDeclarations.keys());
   await reset(destDir);
-  for (const [alias, exported] of exportedDeclarations) {
-    const exportedType = exported![0].getType();
+  for (const [alias, node] of exportedDeclarations) {
+    const exportedType = node![0].getType();
     let classDeclaration: string = '';
     if (!exportedType.isArray()) {
       const baseClass = exportedType.getIntersectionTypes()?.[0]?.getText().replace('import("/declarations").', '');
@@ -101,9 +103,9 @@ async function generate(definitionFile: string, destDir: string): Promise<void> 
     await writeFile(destFile, classDeclaration);
   }
   const indexSrc = `${fileHeader}
-${aliases.reduce((imports, alias) => `${imports}import { ${alias} } from './${toKebabCase(normalizeKnownAllCaps(alias))}';\n`, '')}
+${aliases.reduce((imports, alias) => `${imports}import { _${alias} } from './${toKebabCase(normalizeKnownAllCaps(alias))}';\n`, '')}
 export const Classes = {
-  ${aliases.reduce((exports, alias) => `${exports}  ${alias},\n`, '')}
+${aliases.reduce((exports, alias) => `${exports}  ${alias}: _${alias},\n`, '')}
 };`;
   const destFile = path.resolve(destDir, 'index.ts');
   await writeFile(destFile, indexSrc);

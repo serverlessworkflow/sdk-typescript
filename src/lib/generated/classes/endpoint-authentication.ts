@@ -23,14 +23,14 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _EndpointAuthentication extends Hydrator<Specification.EndpointAuthentication> {
+class EndpointAuthentication extends Hydrator<Specification.EndpointAuthentication> {
   constructor(model?: Partial<Specification.EndpointAuthentication>) {
     super(model);
   }
 }
 
-export const EndpointAuthentication = _EndpointAuthentication as {
+export const _EndpointAuthentication = EndpointAuthentication as {
   new (
     model?: Partial<Specification.EndpointAuthentication>,
-  ): _EndpointAuthentication & Specification.EndpointAuthentication;
+  ): EndpointAuthentication & Specification.EndpointAuthentication;
 };

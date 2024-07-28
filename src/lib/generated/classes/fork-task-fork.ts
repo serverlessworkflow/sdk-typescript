@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _ForkTaskFork extends Hydrator<Specification.ForkTaskFork> {
+class ForkTaskFork extends Hydrator<Specification.ForkTaskFork> {
   constructor(model?: Partial<Specification.ForkTaskFork>) {
     super(model);
   }
 }
 
-export const ForkTaskFork = _ForkTaskFork as {
-  new (model?: Partial<Specification.ForkTaskFork>): _ForkTaskFork & Specification.ForkTaskFork;
+export const _ForkTaskFork = ForkTaskFork as {
+  new (model?: Partial<Specification.ForkTaskFork>): ForkTaskFork & Specification.ForkTaskFork;
 };

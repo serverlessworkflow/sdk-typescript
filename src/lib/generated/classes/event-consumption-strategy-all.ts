@@ -22,7 +22,7 @@
 
 import { Specification } from '../definitions';
 
-export class EventConsumptionStrategyAll extends Array<Specification.EventFilter> {
+class EventConsumptionStrategyAll extends Array<Specification.EventFilter> {
   constructor(model?: Array<Specification.EventFilter>) {
     super(...(model || []));
     if (model != null && !Array.isArray(model)) {
@@ -31,3 +31,5 @@ export class EventConsumptionStrategyAll extends Array<Specification.EventFilter
     Object.setPrototypeOf(this, Object.create(EventConsumptionStrategyAll.prototype));
   }
 }
+
+export const _EventConsumptionStrategyAll = EventConsumptionStrategyAll; // could be exported directly, but it makes the job of building the index more straightforward as it's consistant with "object" classes

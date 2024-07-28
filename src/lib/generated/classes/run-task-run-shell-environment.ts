@@ -23,14 +23,14 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _RunTaskRunShellEnvironment extends Hydrator<Specification.RunTaskRunShellEnvironment> {
+class RunTaskRunShellEnvironment extends Hydrator<Specification.RunTaskRunShellEnvironment> {
   constructor(model?: Partial<Specification.RunTaskRunShellEnvironment>) {
     super(model);
   }
 }
 
-export const RunTaskRunShellEnvironment = _RunTaskRunShellEnvironment as {
+export const _RunTaskRunShellEnvironment = RunTaskRunShellEnvironment as {
   new (
     model?: Partial<Specification.RunTaskRunShellEnvironment>,
-  ): _RunTaskRunShellEnvironment & Specification.RunTaskRunShellEnvironment;
+  ): RunTaskRunShellEnvironment & Specification.RunTaskRunShellEnvironment;
 };

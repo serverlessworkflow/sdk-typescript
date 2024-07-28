@@ -95,7 +95,7 @@ function prepareSchema(schema: any, path: string[] = ['#'], parentTitle: string 
       schemaKeys.filter((key) => !metadataProperties.includes(key)).length // if it's just a plain object, with nothing but a type an some description
     ) {
       if (parentTitle.trim()) {
-        let title = !isItemWithAdditionalProperties ? parent : path.includes('switch') ? 'case' : 'item';
+        const title = !isItemWithAdditionalProperties ? parent : path.includes('switch') ? 'case' : 'item';
         newSchema.title = toPascalCase(`${parentTitle} ${title}`);
       } else {
         newSchema.title = toPascalCase(

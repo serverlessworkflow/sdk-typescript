@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _SwitchTaskSwitchCase extends Hydrator<Specification.SwitchTaskSwitchCase> {
+class SwitchTaskSwitchCase extends Hydrator<Specification.SwitchTaskSwitchCase> {
   constructor(model?: Partial<Specification.SwitchTaskSwitchCase>) {
     super(model);
   }
 }
 
-export const SwitchTaskSwitchCase = _SwitchTaskSwitchCase as {
-  new (model?: Partial<Specification.SwitchTaskSwitchCase>): _SwitchTaskSwitchCase & Specification.SwitchTaskSwitchCase;
+export const _SwitchTaskSwitchCase = SwitchTaskSwitchCase as {
+  new (model?: Partial<Specification.SwitchTaskSwitchCase>): SwitchTaskSwitchCase & Specification.SwitchTaskSwitchCase;
 };

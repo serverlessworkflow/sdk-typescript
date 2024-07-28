@@ -20,15 +20,15 @@
  *
  *****************************************************************************************/
 
-import { TaskBase } from './task-base';
+import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
 
-class _DoTask extends TaskBase {
+class DoTask extends _TaskBase {
   constructor(model?: Partial<Specification.DoTask>) {
     super(model);
   }
 }
 
-export const DoTask = _DoTask as {
-  new (model?: Partial<Specification.DoTask>): _DoTask & Specification.DoTask;
+export const _DoTask = DoTask as {
+  new (model?: Partial<Specification.DoTask>): DoTask & Specification.DoTask;
 };

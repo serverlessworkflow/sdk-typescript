@@ -22,7 +22,7 @@
 
 import { Specification } from '../definitions';
 
-export class TaskList extends Array<{ [k: string]: Specification.Task }> {
+class TaskList extends Array<{ [k: string]: Specification.Task }> {
   constructor(model?: Array<{ [k: string]: Specification.Task }>) {
     super(...(model || []));
     if (model != null && !Array.isArray(model)) {
@@ -31,3 +31,5 @@ export class TaskList extends Array<{ [k: string]: Specification.Task }> {
     Object.setPrototypeOf(this, Object.create(TaskList.prototype));
   }
 }
+
+export const _TaskList = TaskList; // could be exported directly, but it makes the job of building the index more straightforward as it's consistant with "object" classes

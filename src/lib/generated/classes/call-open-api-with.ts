@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _CallOpenAPIWith extends Hydrator<Specification.CallOpenAPIWith> {
+class CallOpenAPIWith extends Hydrator<Specification.CallOpenAPIWith> {
   constructor(model?: Partial<Specification.CallOpenAPIWith>) {
     super(model);
   }
 }
 
-export const CallOpenAPIWith = _CallOpenAPIWith as {
-  new (model?: Partial<Specification.CallOpenAPIWith>): _CallOpenAPIWith & Specification.CallOpenAPIWith;
+export const _CallOpenAPIWith = CallOpenAPIWith as {
+  new (model?: Partial<Specification.CallOpenAPIWith>): CallOpenAPIWith & Specification.CallOpenAPIWith;
 };

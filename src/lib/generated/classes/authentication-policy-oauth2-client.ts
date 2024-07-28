@@ -23,14 +23,14 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _AuthenticationPolicyOauth2Client extends Hydrator<Specification.AuthenticationPolicyOauth2Client> {
+class AuthenticationPolicyOauth2Client extends Hydrator<Specification.AuthenticationPolicyOauth2Client> {
   constructor(model?: Partial<Specification.AuthenticationPolicyOauth2Client>) {
     super(model);
   }
 }
 
-export const AuthenticationPolicyOauth2Client = _AuthenticationPolicyOauth2Client as {
+export const _AuthenticationPolicyOauth2Client = AuthenticationPolicyOauth2Client as {
   new (
     model?: Partial<Specification.AuthenticationPolicyOauth2Client>,
-  ): _AuthenticationPolicyOauth2Client & Specification.AuthenticationPolicyOauth2Client;
+  ): AuthenticationPolicyOauth2Client & Specification.AuthenticationPolicyOauth2Client;
 };

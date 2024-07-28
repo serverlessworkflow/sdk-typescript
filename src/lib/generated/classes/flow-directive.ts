@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _FlowDirective extends Hydrator<Specification.FlowDirective> {
+class FlowDirective extends Hydrator<Specification.FlowDirective> {
   constructor(model?: Partial<Specification.FlowDirective>) {
     super(model);
   }
 }
 
-export const FlowDirective = _FlowDirective as {
-  new (model?: Partial<Specification.FlowDirective>): _FlowDirective & Specification.FlowDirective;
+export const _FlowDirective = FlowDirective as {
+  new (model?: Partial<Specification.FlowDirective>): FlowDirective & Specification.FlowDirective;
 };

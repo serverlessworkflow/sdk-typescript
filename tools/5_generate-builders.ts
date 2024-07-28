@@ -135,8 +135,8 @@ async function generate(definitionFile: string, destDir: string): Promise<void> 
     const definitions = await readFile(definitionFile, { encoding: 'utf-8' });
     const exportedDeclarations = getExportedDeclarations(definitions);
     const aliases = Array.from(exportedDeclarations.keys());
-    for (const [alias, exported] of exportedDeclarations) {
-      const exportedType = exported![0].getType();
+    for (const [alias, node] of exportedDeclarations) {
+      const exportedType = node![0].getType();
       let builderDeclaration: string = '';
       if (!exportedType.isArray()) {
         builderDeclaration = getObjectBuilderDeclaration(alias);

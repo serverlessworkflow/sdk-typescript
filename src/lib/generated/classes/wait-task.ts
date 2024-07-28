@@ -20,15 +20,15 @@
  *
  *****************************************************************************************/
 
-import { TaskBase } from './task-base';
+import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
 
-class _WaitTask extends TaskBase {
+class WaitTask extends _TaskBase {
   constructor(model?: Partial<Specification.WaitTask>) {
     super(model);
   }
 }
 
-export const WaitTask = _WaitTask as {
-  new (model?: Partial<Specification.WaitTask>): _WaitTask & Specification.WaitTask;
+export const _WaitTask = WaitTask as {
+  new (model?: Partial<Specification.WaitTask>): WaitTask & Specification.WaitTask;
 };

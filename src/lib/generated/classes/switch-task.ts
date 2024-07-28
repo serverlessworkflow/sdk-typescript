@@ -20,15 +20,15 @@
  *
  *****************************************************************************************/
 
-import { TaskBase } from './task-base';
+import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
 
-class _SwitchTask extends TaskBase {
+class SwitchTask extends _TaskBase {
   constructor(model?: Partial<Specification.SwitchTask>) {
     super(model);
   }
 }
 
-export const SwitchTask = _SwitchTask as {
-  new (model?: Partial<Specification.SwitchTask>): _SwitchTask & Specification.SwitchTask;
+export const _SwitchTask = SwitchTask as {
+  new (model?: Partial<Specification.SwitchTask>): SwitchTask & Specification.SwitchTask;
 };

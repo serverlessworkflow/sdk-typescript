@@ -24,7 +24,7 @@ describe('CallHTTP builder', () => {
     const endpoint = 'https://serverlessworkflow.io';
     const method = 'get';
     const data = {
-      call: 'http' as 'http',
+      call: 'http' as const,
       with: {
         endpoint,
         method,

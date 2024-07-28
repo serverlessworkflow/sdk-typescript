@@ -23,14 +23,14 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _EventConsumptionStrategy extends Hydrator<Specification.EventConsumptionStrategy> {
+class EventConsumptionStrategy extends Hydrator<Specification.EventConsumptionStrategy> {
   constructor(model?: Partial<Specification.EventConsumptionStrategy>) {
     super(model);
   }
 }
 
-export const EventConsumptionStrategy = _EventConsumptionStrategy as {
+export const _EventConsumptionStrategy = EventConsumptionStrategy as {
   new (
     model?: Partial<Specification.EventConsumptionStrategy>,
-  ): _EventConsumptionStrategy & Specification.EventConsumptionStrategy;
+  ): EventConsumptionStrategy & Specification.EventConsumptionStrategy;
 };

@@ -23,14 +23,14 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _RunTaskRunWorkflowInput extends Hydrator<Specification.RunTaskRunWorkflowInput> {
+class RunTaskRunWorkflowInput extends Hydrator<Specification.RunTaskRunWorkflowInput> {
   constructor(model?: Partial<Specification.RunTaskRunWorkflowInput>) {
     super(model);
   }
 }
 
-export const RunTaskRunWorkflowInput = _RunTaskRunWorkflowInput as {
+export const _RunTaskRunWorkflowInput = RunTaskRunWorkflowInput as {
   new (
     model?: Partial<Specification.RunTaskRunWorkflowInput>,
-  ): _RunTaskRunWorkflowInput & Specification.RunTaskRunWorkflowInput;
+  ): RunTaskRunWorkflowInput & Specification.RunTaskRunWorkflowInput;
 };

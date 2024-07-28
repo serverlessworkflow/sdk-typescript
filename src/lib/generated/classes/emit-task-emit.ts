@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _EmitTaskEmit extends Hydrator<Specification.EmitTaskEmit> {
+class EmitTaskEmit extends Hydrator<Specification.EmitTaskEmit> {
   constructor(model?: Partial<Specification.EmitTaskEmit>) {
     super(model);
   }
 }
 
-export const EmitTaskEmit = _EmitTaskEmit as {
-  new (model?: Partial<Specification.EmitTaskEmit>): _EmitTaskEmit & Specification.EmitTaskEmit;
+export const _EmitTaskEmit = EmitTaskEmit as {
+  new (model?: Partial<Specification.EmitTaskEmit>): EmitTaskEmit & Specification.EmitTaskEmit;
 };

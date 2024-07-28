@@ -23,12 +23,12 @@
 import { Hydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 
-class _ExternalResource extends Hydrator<Specification.ExternalResource> {
+class ExternalResource extends Hydrator<Specification.ExternalResource> {
   constructor(model?: Partial<Specification.ExternalResource>) {
     super(model);
   }
 }
 
-export const ExternalResource = _ExternalResource as {
-  new (model?: Partial<Specification.ExternalResource>): _ExternalResource & Specification.ExternalResource;
+export const _ExternalResource = ExternalResource as {
+  new (model?: Partial<Specification.ExternalResource>): ExternalResource & Specification.ExternalResource;
 };
