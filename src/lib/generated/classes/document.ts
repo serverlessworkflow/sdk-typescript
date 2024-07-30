@@ -20,10 +20,12 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _DocumentTags } from './document-tags';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class Document extends ObjectHydrator<Specification.Document> {
   constructor(model?: Partial<Specification.Document>) {
@@ -32,6 +34,19 @@ class Document extends ObjectHydrator<Specification.Document> {
     if (isObject(model)) {
       if (typeof model.tags === 'object') self.tags = new _DocumentTags(model.tags);
     }
+    getLifecycleHook('Document')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new Document(this as any) as Document & Specification.Document;
+    getLifecycleHook('Document')?.preValidation?.(copy);
+    validate('Document', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('Document')?.postValidation?.(copy);
+  }
+
+  normalize(): Document & Specification.Document {
+    const copy = new Document(this as any) as Document & Specification.Document;
+    return getLifecycleHook('Document')?.normalize?.(copy) || copy;
   }
 }
 

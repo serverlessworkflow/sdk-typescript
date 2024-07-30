@@ -20,14 +20,16 @@
  *
  *****************************************************************************************/
 
-import { _TaskBase } from './task-base';
 import { _Input } from './input';
 import { _Output } from './output';
 import { _Export } from './export';
 import { _Timeout } from './timeout';
 import { _TaskList } from './task-list';
+import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class DoTask extends _TaskBase {
   constructor(model?: Partial<Specification.DoTask>) {
@@ -40,6 +42,19 @@ class DoTask extends _TaskBase {
       if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
       if (typeof model.do === 'object') self.do = new _TaskList(model.do);
     }
+    getLifecycleHook('DoTask')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new DoTask(this as any) as DoTask & Specification.DoTask;
+    getLifecycleHook('DoTask')?.preValidation?.(copy);
+    validate('DoTask', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('DoTask')?.postValidation?.(copy);
+  }
+
+  normalize(): DoTask & Specification.DoTask {
+    const copy = new DoTask(this as any) as DoTask & Specification.DoTask;
+    return getLifecycleHook('DoTask')?.normalize?.(copy) || copy;
   }
 }
 

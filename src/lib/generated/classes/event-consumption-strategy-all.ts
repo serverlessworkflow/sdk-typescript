@@ -23,6 +23,9 @@
 import { _EventFilter } from './event-filter';
 import { Specification } from '../definitions';
 import { ArrayHydrator } from '../../hydrator';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class EventConsumptionStrategyAll extends ArrayHydrator<Specification.EventFilter> {
   constructor(model?: Array<Specification.EventFilter> | number) {
@@ -34,6 +37,19 @@ class EventConsumptionStrategyAll extends ArrayHydrator<Specification.EventFilte
       }
     }
     Object.setPrototypeOf(this, Object.create(EventConsumptionStrategyAll.prototype));
+    getLifecycleHook('EventConsumptionStrategyAll')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new EventConsumptionStrategyAll(this);
+    getLifecycleHook('EventConsumptionStrategyAll')?.preValidation?.(copy);
+    validate('EventConsumptionStrategyAll', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('EventConsumptionStrategyAll')?.postValidation?.(copy);
+  }
+
+  normalize(): EventConsumptionStrategyAll {
+    const copy = new EventConsumptionStrategyAll(this);
+    return getLifecycleHook('EventConsumptionStrategyAll')?.normalize?.(copy) || copy;
   }
 }
 

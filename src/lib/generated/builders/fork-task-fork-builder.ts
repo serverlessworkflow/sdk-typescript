@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.ForkTaskFork} model The underlying object
- * @returns {Specification.ForkTaskFork} The validated underlying object
+ * @param {Specification.ForkTaskFork} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.ForkTaskFork} The built object
  */
-function buildingFn(model: Specification.ForkTaskFork): Specification.ForkTaskFork {
+function buildingFn(model: Specification.ForkTaskFork, options: BuildOptions): Specification.ForkTaskFork {
   const instance = new Classes.ForkTaskFork(model);
-  validate('ForkTaskFork', instance);
-  return instance as Specification.ForkTaskFork;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.ForkTaskFork;
 }
 
 /**

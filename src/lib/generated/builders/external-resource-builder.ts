@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.ExternalResource} model The underlying object
- * @returns {Specification.ExternalResource} The validated underlying object
+ * @param {Specification.ExternalResource} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.ExternalResource} The built object
  */
-function buildingFn(model: Specification.ExternalResource): Specification.ExternalResource {
+function buildingFn(model: Specification.ExternalResource, options: BuildOptions): Specification.ExternalResource {
   const instance = new Classes.ExternalResource(model);
-  validate('ExternalResource', instance);
-  return instance as Specification.ExternalResource;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.ExternalResource;
 }
 
 /**

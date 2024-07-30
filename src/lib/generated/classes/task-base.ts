@@ -20,13 +20,15 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _Input } from './input';
 import { _Output } from './output';
 import { _Export } from './export';
 import { _Timeout } from './timeout';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class TaskBase extends ObjectHydrator<Specification.TaskBase> {
   constructor(model?: Partial<Specification.TaskBase>) {
@@ -38,6 +40,19 @@ class TaskBase extends ObjectHydrator<Specification.TaskBase> {
       if (typeof model.export === 'object') self.export = new _Export(model.export);
       if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
     }
+    getLifecycleHook('TaskBase')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new TaskBase(this as any) as TaskBase & Specification.TaskBase;
+    getLifecycleHook('TaskBase')?.preValidation?.(copy);
+    validate('TaskBase', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('TaskBase')?.postValidation?.(copy);
+  }
+
+  normalize(): TaskBase & Specification.TaskBase {
+    const copy = new TaskBase(this as any) as TaskBase & Specification.TaskBase;
+    return getLifecycleHook('TaskBase')?.normalize?.(copy) || copy;
   }
 }
 

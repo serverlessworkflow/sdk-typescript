@@ -21,12 +21,28 @@
  *****************************************************************************************/
 
 import { ObjectHydrator } from '../../hydrator';
-
 import { Specification } from '../definitions';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class SetTaskSet extends ObjectHydrator<Specification.SetTaskSet> {
   constructor(model?: Partial<Specification.SetTaskSet>) {
     super(model);
+
+    getLifecycleHook('SetTaskSet')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new SetTaskSet(this as any) as SetTaskSet & Specification.SetTaskSet;
+    getLifecycleHook('SetTaskSet')?.preValidation?.(copy);
+    validate('SetTaskSet', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('SetTaskSet')?.postValidation?.(copy);
+  }
+
+  normalize(): SetTaskSet & Specification.SetTaskSet {
+    const copy = new SetTaskSet(this as any) as SetTaskSet & Specification.SetTaskSet;
+    return getLifecycleHook('SetTaskSet')?.normalize?.(copy) || copy;
   }
 }
 

@@ -20,20 +20,23 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.EndpointAuthentication} model The underlying object
- * @returns {Specification.EndpointAuthentication} The validated underlying object
+ * @param {Specification.EndpointAuthentication} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.EndpointAuthentication} The built object
  */
-function buildingFn(model: Specification.EndpointAuthentication): Specification.EndpointAuthentication {
+function buildingFn(
+  model: Specification.EndpointAuthentication,
+  options: BuildOptions,
+): Specification.EndpointAuthentication {
   const instance = new Classes.EndpointAuthentication(model);
-  validate('EndpointAuthentication', instance);
-  return instance as Specification.EndpointAuthentication;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.EndpointAuthentication;
 }
 
 /**

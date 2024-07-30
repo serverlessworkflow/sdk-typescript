@@ -20,13 +20,15 @@
  *
  *****************************************************************************************/
 
-import { _TaskBase } from './task-base';
 import { _Input } from './input';
 import { _Output } from './output';
 import { _Export } from './export';
 import { _Timeout } from './timeout';
+import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class RunTask extends _TaskBase {
   constructor(model?: Partial<Specification.RunTask>) {
@@ -38,6 +40,19 @@ class RunTask extends _TaskBase {
       if (typeof model.export === 'object') self.export = new _Export(model.export);
       if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
     }
+    getLifecycleHook('RunTask')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new RunTask(this as any) as RunTask & Specification.RunTask;
+    getLifecycleHook('RunTask')?.preValidation?.(copy);
+    validate('RunTask', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('RunTask')?.postValidation?.(copy);
+  }
+
+  normalize(): RunTask & Specification.RunTask {
+    const copy = new RunTask(this as any) as RunTask & Specification.RunTask;
+    return getLifecycleHook('RunTask')?.normalize?.(copy) || copy;
   }
 }
 

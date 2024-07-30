@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.ListenTaskListen} model The underlying object
- * @returns {Specification.ListenTaskListen} The validated underlying object
+ * @param {Specification.ListenTaskListen} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.ListenTaskListen} The built object
  */
-function buildingFn(model: Specification.ListenTaskListen): Specification.ListenTaskListen {
+function buildingFn(model: Specification.ListenTaskListen, options: BuildOptions): Specification.ListenTaskListen {
   const instance = new Classes.ListenTaskListen(model);
-  validate('ListenTaskListen', instance);
-  return instance as Specification.ListenTaskListen;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.ListenTaskListen;
 }
 
 /**

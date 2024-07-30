@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.EventFilter} model The underlying object
- * @returns {Specification.EventFilter} The validated underlying object
+ * @param {Specification.EventFilter} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.EventFilter} The built object
  */
-function buildingFn(model: Specification.EventFilter): Specification.EventFilter {
+function buildingFn(model: Specification.EventFilter, options: BuildOptions): Specification.EventFilter {
   const instance = new Classes.EventFilter(model);
-  validate('EventFilter', instance);
-  return instance as Specification.EventFilter;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.EventFilter;
 }
 
 /**

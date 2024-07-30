@@ -21,12 +21,28 @@
  *****************************************************************************************/
 
 import { ObjectHydrator } from '../../hydrator';
-
 import { Specification } from '../definitions';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class EventFilterCorrelate extends ObjectHydrator<Specification.EventFilterCorrelate> {
   constructor(model?: Partial<Specification.EventFilterCorrelate>) {
     super(model);
+
+    getLifecycleHook('EventFilterCorrelate')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new EventFilterCorrelate(this as any) as EventFilterCorrelate & Specification.EventFilterCorrelate;
+    getLifecycleHook('EventFilterCorrelate')?.preValidation?.(copy);
+    validate('EventFilterCorrelate', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('EventFilterCorrelate')?.postValidation?.(copy);
+  }
+
+  normalize(): EventFilterCorrelate & Specification.EventFilterCorrelate {
+    const copy = new EventFilterCorrelate(this as any) as EventFilterCorrelate & Specification.EventFilterCorrelate;
+    return getLifecycleHook('EventFilterCorrelate')?.normalize?.(copy) || copy;
   }
 }
 

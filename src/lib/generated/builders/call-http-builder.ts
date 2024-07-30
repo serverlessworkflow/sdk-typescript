@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.CallHTTP} model The underlying object
- * @returns {Specification.CallHTTP} The validated underlying object
+ * @param {Specification.CallHTTP} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.CallHTTP} The built object
  */
-function buildingFn(model: Specification.CallHTTP): Specification.CallHTTP {
+function buildingFn(model: Specification.CallHTTP, options: BuildOptions): Specification.CallHTTP {
   const instance = new Classes.CallHTTP(model);
-  validate('CallHTTP', instance);
-  return instance as Specification.CallHTTP;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.CallHTTP;
 }
 
 /**

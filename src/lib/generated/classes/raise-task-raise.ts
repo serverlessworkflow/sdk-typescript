@@ -20,10 +20,12 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _Error } from './error';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class RaiseTaskRaise extends ObjectHydrator<Specification.RaiseTaskRaise> {
   constructor(model?: Partial<Specification.RaiseTaskRaise>) {
@@ -32,6 +34,19 @@ class RaiseTaskRaise extends ObjectHydrator<Specification.RaiseTaskRaise> {
     if (isObject(model)) {
       if (typeof model.error === 'object') self.error = new _Error(model.error);
     }
+    getLifecycleHook('RaiseTaskRaise')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new RaiseTaskRaise(this as any) as RaiseTaskRaise & Specification.RaiseTaskRaise;
+    getLifecycleHook('RaiseTaskRaise')?.preValidation?.(copy);
+    validate('RaiseTaskRaise', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('RaiseTaskRaise')?.postValidation?.(copy);
+  }
+
+  normalize(): RaiseTaskRaise & Specification.RaiseTaskRaise {
+    const copy = new RaiseTaskRaise(this as any) as RaiseTaskRaise & Specification.RaiseTaskRaise;
+    return getLifecycleHook('RaiseTaskRaise')?.normalize?.(copy) || copy;
   }
 }
 

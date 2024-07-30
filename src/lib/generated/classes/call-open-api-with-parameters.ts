@@ -21,12 +21,30 @@
  *****************************************************************************************/
 
 import { ObjectHydrator } from '../../hydrator';
-
 import { Specification } from '../definitions';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class CallOpenAPIWithParameters extends ObjectHydrator<Specification.CallOpenAPIWithParameters> {
   constructor(model?: Partial<Specification.CallOpenAPIWithParameters>) {
     super(model);
+
+    getLifecycleHook('CallOpenAPIWithParameters')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new CallOpenAPIWithParameters(this as any) as CallOpenAPIWithParameters &
+      Specification.CallOpenAPIWithParameters;
+    getLifecycleHook('CallOpenAPIWithParameters')?.preValidation?.(copy);
+    validate('CallOpenAPIWithParameters', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('CallOpenAPIWithParameters')?.postValidation?.(copy);
+  }
+
+  normalize(): CallOpenAPIWithParameters & Specification.CallOpenAPIWithParameters {
+    const copy = new CallOpenAPIWithParameters(this as any) as CallOpenAPIWithParameters &
+      Specification.CallOpenAPIWithParameters;
+    return getLifecycleHook('CallOpenAPIWithParameters')?.normalize?.(copy) || copy;
   }
 }
 

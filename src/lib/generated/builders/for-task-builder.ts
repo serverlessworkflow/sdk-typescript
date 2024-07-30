@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.ForTask} model The underlying object
- * @returns {Specification.ForTask} The validated underlying object
+ * @param {Specification.ForTask} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.ForTask} The built object
  */
-function buildingFn(model: Specification.ForTask): Specification.ForTask {
+function buildingFn(model: Specification.ForTask, options: BuildOptions): Specification.ForTask {
   const instance = new Classes.ForTask(model);
-  validate('ForTask', instance);
-  return instance as Specification.ForTask;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.ForTask;
 }
 
 /**

@@ -21,12 +21,28 @@
  *****************************************************************************************/
 
 import { ObjectHydrator } from '../../hydrator';
-
 import { Specification } from '../definitions';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class CallGRPCWithService extends ObjectHydrator<Specification.CallGRPCWithService> {
   constructor(model?: Partial<Specification.CallGRPCWithService>) {
     super(model);
+
+    getLifecycleHook('CallGRPCWithService')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new CallGRPCWithService(this as any) as CallGRPCWithService & Specification.CallGRPCWithService;
+    getLifecycleHook('CallGRPCWithService')?.preValidation?.(copy);
+    validate('CallGRPCWithService', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('CallGRPCWithService')?.postValidation?.(copy);
+  }
+
+  normalize(): CallGRPCWithService & Specification.CallGRPCWithService {
+    const copy = new CallGRPCWithService(this as any) as CallGRPCWithService & Specification.CallGRPCWithService;
+    return getLifecycleHook('CallGRPCWithService')?.normalize?.(copy) || copy;
   }
 }
 

@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.DocumentTags} model The underlying object
- * @returns {Specification.DocumentTags} The validated underlying object
+ * @param {Specification.DocumentTags} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.DocumentTags} The built object
  */
-function buildingFn(model: Specification.DocumentTags): Specification.DocumentTags {
+function buildingFn(model: Specification.DocumentTags, options: BuildOptions): Specification.DocumentTags {
   const instance = new Classes.DocumentTags(model);
-  validate('DocumentTags', instance);
-  return instance as Specification.DocumentTags;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.DocumentTags;
 }
 
 /**

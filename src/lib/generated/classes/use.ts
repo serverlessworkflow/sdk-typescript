@@ -20,14 +20,16 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _UseAuthentications } from './use-authentications';
 import { _UseErrors } from './use-errors';
 import { _UseExtensions } from './use-extensions';
 import { _UseFunctions } from './use-functions';
 import { _UseRetries } from './use-retries';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class Use extends ObjectHydrator<Specification.Use> {
   constructor(model?: Partial<Specification.Use>) {
@@ -41,6 +43,19 @@ class Use extends ObjectHydrator<Specification.Use> {
       if (typeof model.functions === 'object') self.functions = new _UseFunctions(model.functions);
       if (typeof model.retries === 'object') self.retries = new _UseRetries(model.retries);
     }
+    getLifecycleHook('Use')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new Use(this as any) as Use & Specification.Use;
+    getLifecycleHook('Use')?.preValidation?.(copy);
+    validate('Use', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('Use')?.postValidation?.(copy);
+  }
+
+  normalize(): Use & Specification.Use {
+    const copy = new Use(this as any) as Use & Specification.Use;
+    return getLifecycleHook('Use')?.normalize?.(copy) || copy;
   }
 }
 

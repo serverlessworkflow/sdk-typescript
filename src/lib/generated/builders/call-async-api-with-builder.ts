@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.CallAsyncAPIWith} model The underlying object
- * @returns {Specification.CallAsyncAPIWith} The validated underlying object
+ * @param {Specification.CallAsyncAPIWith} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.CallAsyncAPIWith} The built object
  */
-function buildingFn(model: Specification.CallAsyncAPIWith): Specification.CallAsyncAPIWith {
+function buildingFn(model: Specification.CallAsyncAPIWith, options: BuildOptions): Specification.CallAsyncAPIWith {
   const instance = new Classes.CallAsyncAPIWith(model);
-  validate('CallAsyncAPIWith', instance);
-  return instance as Specification.CallAsyncAPIWith;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.CallAsyncAPIWith;
 }
 
 /**

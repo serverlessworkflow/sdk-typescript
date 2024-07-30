@@ -20,7 +20,6 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _Input } from './input';
 import { _Output } from './output';
 import { _Export } from './export';
@@ -35,8 +34,11 @@ import { _SwitchTaskSwitch } from './switch-task-switch';
 import { _TaskList } from './task-list';
 import { _TryTaskCatch } from './try-task-catch';
 import { _Duration } from './duration';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class Task extends ObjectHydrator<Specification.Task> {
   constructor(model?: Partial<Specification.Task>) {
@@ -58,11 +60,24 @@ class Task extends ObjectHydrator<Specification.Task> {
       if (typeof model.switch === 'object')
         self.switch = new _SwitchTaskSwitch(
           model.switch as Specification.SwitchTaskSwitch,
-        ) as Specification.SwitchTaskSwitch;
+        ) as unknown as Specification.SwitchTaskSwitch;
       if (typeof model.try === 'object') self.try = new _TaskList(model.try as Specification.TaskList);
       if (typeof model.catch === 'object') self.catch = new _TryTaskCatch(model.catch as Specification.TryTaskCatch);
       if (typeof model.wait === 'object') self.wait = new _Duration(model.wait as Specification.Duration);
     }
+    getLifecycleHook('Task')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new Task(this as any) as Task & Specification.Task;
+    getLifecycleHook('Task')?.preValidation?.(copy);
+    validate('Task', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('Task')?.postValidation?.(copy);
+  }
+
+  normalize(): Task & Specification.Task {
+    const copy = new Task(this as any) as Task & Specification.Task;
+    return getLifecycleHook('Task')?.normalize?.(copy) || copy;
   }
 }
 

@@ -20,14 +20,16 @@
  *
  *****************************************************************************************/
 
-import { _TaskBase } from './task-base';
 import { _Input } from './input';
 import { _Output } from './output';
 import { _Export } from './export';
 import { _Timeout } from './timeout';
 import { _CallFunctionWith } from './call-function-with';
+import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class CallFunction extends _TaskBase {
   constructor(model?: Partial<Specification.CallFunction>) {
@@ -40,6 +42,19 @@ class CallFunction extends _TaskBase {
       if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
       if (typeof model.with === 'object') self.with = new _CallFunctionWith(model.with);
     }
+    getLifecycleHook('CallFunction')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new CallFunction(this as any) as CallFunction & Specification.CallFunction;
+    getLifecycleHook('CallFunction')?.preValidation?.(copy);
+    validate('CallFunction', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('CallFunction')?.postValidation?.(copy);
+  }
+
+  normalize(): CallFunction & Specification.CallFunction {
+    const copy = new CallFunction(this as any) as CallFunction & Specification.CallFunction;
+    return getLifecycleHook('CallFunction')?.normalize?.(copy) || copy;
   }
 }
 

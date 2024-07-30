@@ -23,6 +23,9 @@
 import { _Task } from './task';
 import { Specification } from '../definitions';
 import { ArrayHydrator } from '../../hydrator';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class TaskList extends ArrayHydrator<{ [k: string]: Specification.Task }> {
   constructor(model?: Array<{ [k: string]: Specification.Task }> | number) {
@@ -36,6 +39,19 @@ class TaskList extends ArrayHydrator<{ [k: string]: Specification.Task }> {
       }
     }
     Object.setPrototypeOf(this, Object.create(TaskList.prototype));
+    getLifecycleHook('TaskList')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new TaskList(this);
+    getLifecycleHook('TaskList')?.preValidation?.(copy);
+    validate('TaskList', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('TaskList')?.postValidation?.(copy);
+  }
+
+  normalize(): TaskList {
+    const copy = new TaskList(this);
+    return getLifecycleHook('TaskList')?.normalize?.(copy) || copy;
   }
 }
 

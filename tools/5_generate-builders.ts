@@ -19,6 +19,7 @@ import * as path from 'path';
 import { fileHeader, inFileDisclaimer } from './consts';
 import { buildersDir, definitionsDir, normalizeKnownAllCaps, reset, toKebabCase } from './utils';
 import { getExportedDeclarations } from './reflection';
+import { Type } from 'ts-morph';
 
 const { readFile, writeFile } = fsPromises;
 
@@ -37,24 +38,24 @@ function toCamelCase(value: string): string {
  * Creates an object builder for the provided type
  * @param name The name type to create the builder for
  */
-const getObjectBuilderDeclaration = (name: string): string =>
+const getObjectBuilderDeclaration = (name: string, type: Type): string =>
   `${fileHeader}
 ${inFileDisclaimer}
 
-import { builder, Builder } from "../../builder";
-import { validate } from "../../validation";
+import { builder, Builder, BuildOptions } from "../../builder";
 import { Classes } from "../classes";
 import { Specification } from "../definitions";
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.${name}} model The underlying object
- * @returns {Specification.${name}} The validated underlying object
+ * @param {Specification.${name}} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.${name}} The built object
  */
-function buildingFn(model: Specification.${name}): Specification.${name} {
+function buildingFn(model: Specification.${name}, options: BuildOptions): Specification.${name} {
   const instance = new Classes.${name}(model);
-  validate('${name}', instance);
-  return instance as Specification.${name};
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) ${type.isTuple() ? 'as unknown ' : ''}as Specification.${name};
 }
 
 /**
@@ -66,33 +67,33 @@ export const ${toCamelCase(name)}Builder = (model?: Partial<Specification.${name
 /**
  * Creates an array builder for the provided type
  * @param name The name type to create the builder for
- * @param arrayType The type parameter of the underlying array
+ * @param arrayTypeName The type parameter of the underlying array
  */
-const getArrayBuilderDeclaration = (name: string, arrayType: string): string =>
+const getArrayBuilderDeclaration = (name: string, arrayTypeName: string): string =>
   `${fileHeader}
 ${inFileDisclaimer}
 
-import { arrayBuilder, ArrayBuilder } from "../../builder";
-import { validate } from "../../validation";
+import { arrayBuilder, ArrayBuilder, BuildOptions } from "../../builder";
 import { Classes } from "../classes";
 import { Specification } from "../definitions";
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying array
- * @param {Specification.${name}} model The underlying array
- * @returns {Specification.${name}} The validated underlying array
+ * @param {Specification.${name}} model The proxied array
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.${name}} The built array
  */
-function buildingFn(model: Specification.${name}): Specification.${name} {
+function buildingFn(model: Specification.${name}, options: BuildOptions): Specification.${name} {
   const instance = new Classes.${name}(model);
-  validate('${name}', instance);
-  return instance as Specification.${name};
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.${name};
 }
 
 /**
  * A factory to create a builder proxy for the type \`Specification.${name}\`
  * @returns {ArrayBuilder<Specification.${name}>} A builder for \`Specification.${name}\`
  */
-export const ${toCamelCase(name)}Builder = (model?: Specification.${name}): ArrayBuilder<${arrayType}> => arrayBuilder<${arrayType}>(model, buildingFn);`;
+export const ${toCamelCase(name)}Builder = (model?: Specification.${name}): ArrayBuilder<${arrayTypeName}> => arrayBuilder<${arrayTypeName}>(model, buildingFn);`;
 
 /**
  * Creates the builders index file
@@ -133,7 +134,7 @@ async function generate(definitionFile: string, destDir: string): Promise<void> 
       const exportedType = node![0].getType();
       let builderDeclaration: string = '';
       if (!exportedType.isArray()) {
-        builderDeclaration = getObjectBuilderDeclaration(alias);
+        builderDeclaration = getObjectBuilderDeclaration(alias, exportedType);
       } else {
         const arrayType = exportedType
           .getArrayElementTypeOrThrow()

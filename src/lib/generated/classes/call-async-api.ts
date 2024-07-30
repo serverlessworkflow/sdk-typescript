@@ -20,14 +20,16 @@
  *
  *****************************************************************************************/
 
-import { _TaskBase } from './task-base';
 import { _Input } from './input';
 import { _Output } from './output';
 import { _Export } from './export';
 import { _Timeout } from './timeout';
 import { _CallAsyncAPIWith } from './call-async-api-with';
+import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class CallAsyncAPI extends _TaskBase {
   constructor(model?: Partial<Specification.CallAsyncAPI>) {
@@ -41,6 +43,19 @@ class CallAsyncAPI extends _TaskBase {
       if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
       if (typeof model.with === 'object') self.with = new _CallAsyncAPIWith(model.with);
     }
+    getLifecycleHook('CallAsyncAPI')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new CallAsyncAPI(this as any) as CallAsyncAPI & Specification.CallAsyncAPI;
+    getLifecycleHook('CallAsyncAPI')?.preValidation?.(copy);
+    validate('CallAsyncAPI', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('CallAsyncAPI')?.postValidation?.(copy);
+  }
+
+  normalize(): CallAsyncAPI & Specification.CallAsyncAPI {
+    const copy = new CallAsyncAPI(this as any) as CallAsyncAPI & Specification.CallAsyncAPI;
+    return getLifecycleHook('CallAsyncAPI')?.normalize?.(copy) || copy;
   }
 }
 

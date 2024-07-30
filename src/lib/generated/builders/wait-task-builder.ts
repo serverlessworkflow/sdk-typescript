@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.WaitTask} model The underlying object
- * @returns {Specification.WaitTask} The validated underlying object
+ * @param {Specification.WaitTask} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.WaitTask} The built object
  */
-function buildingFn(model: Specification.WaitTask): Specification.WaitTask {
+function buildingFn(model: Specification.WaitTask, options: BuildOptions): Specification.WaitTask {
   const instance = new Classes.WaitTask(model);
-  validate('WaitTask', instance);
-  return instance as Specification.WaitTask;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.WaitTask;
 }
 
 /**

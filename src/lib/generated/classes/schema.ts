@@ -21,12 +21,28 @@
  *****************************************************************************************/
 
 import { ObjectHydrator } from '../../hydrator';
-
 import { Specification } from '../definitions';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class Schema extends ObjectHydrator<Specification.Schema> {
   constructor(model?: Partial<Specification.Schema>) {
     super(model);
+
+    getLifecycleHook('Schema')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new Schema(this as any) as Schema & Specification.Schema;
+    getLifecycleHook('Schema')?.preValidation?.(copy);
+    validate('Schema', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('Schema')?.postValidation?.(copy);
+  }
+
+  normalize(): Schema & Specification.Schema {
+    const copy = new Schema(this as any) as Schema & Specification.Schema;
+    return getLifecycleHook('Schema')?.normalize?.(copy) || copy;
   }
 }
 

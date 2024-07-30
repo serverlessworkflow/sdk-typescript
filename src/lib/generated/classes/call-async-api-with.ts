@@ -21,12 +21,28 @@
  *****************************************************************************************/
 
 import { ObjectHydrator } from '../../hydrator';
-
 import { Specification } from '../definitions';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class CallAsyncAPIWith extends ObjectHydrator<Specification.CallAsyncAPIWith> {
   constructor(model?: Partial<Specification.CallAsyncAPIWith>) {
     super(model);
+
+    getLifecycleHook('CallAsyncAPIWith')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new CallAsyncAPIWith(this as any) as CallAsyncAPIWith & Specification.CallAsyncAPIWith;
+    getLifecycleHook('CallAsyncAPIWith')?.preValidation?.(copy);
+    validate('CallAsyncAPIWith', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('CallAsyncAPIWith')?.postValidation?.(copy);
+  }
+
+  normalize(): CallAsyncAPIWith & Specification.CallAsyncAPIWith {
+    const copy = new CallAsyncAPIWith(this as any) as CallAsyncAPIWith & Specification.CallAsyncAPIWith;
+    return getLifecycleHook('CallAsyncAPIWith')?.normalize?.(copy) || copy;
   }
 }
 

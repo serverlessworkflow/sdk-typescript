@@ -21,12 +21,28 @@
  *****************************************************************************************/
 
 import { ObjectHydrator } from '../../hydrator';
-
 import { Specification } from '../definitions';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class CallHTTPWithEndpoint extends ObjectHydrator<Specification.CallHTTPWithEndpoint> {
   constructor(model?: Partial<Specification.CallHTTPWithEndpoint>) {
     super(model);
+
+    getLifecycleHook('CallHTTPWithEndpoint')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new CallHTTPWithEndpoint(this as any) as CallHTTPWithEndpoint & Specification.CallHTTPWithEndpoint;
+    getLifecycleHook('CallHTTPWithEndpoint')?.preValidation?.(copy);
+    validate('CallHTTPWithEndpoint', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('CallHTTPWithEndpoint')?.postValidation?.(copy);
+  }
+
+  normalize(): CallHTTPWithEndpoint & Specification.CallHTTPWithEndpoint {
+    const copy = new CallHTTPWithEndpoint(this as any) as CallHTTPWithEndpoint & Specification.CallHTTPWithEndpoint;
+    return getLifecycleHook('CallHTTPWithEndpoint')?.normalize?.(copy) || copy;
   }
 }
 

@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.RetryPolicyBackoff} model The underlying object
- * @returns {Specification.RetryPolicyBackoff} The validated underlying object
+ * @param {Specification.RetryPolicyBackoff} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.RetryPolicyBackoff} The built object
  */
-function buildingFn(model: Specification.RetryPolicyBackoff): Specification.RetryPolicyBackoff {
+function buildingFn(model: Specification.RetryPolicyBackoff, options: BuildOptions): Specification.RetryPolicyBackoff {
   const instance = new Classes.RetryPolicyBackoff(model);
-  validate('RetryPolicyBackoff', instance);
-  return instance as Specification.RetryPolicyBackoff;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.RetryPolicyBackoff;
 }
 
 /**

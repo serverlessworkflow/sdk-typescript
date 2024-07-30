@@ -20,10 +20,12 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _Duration } from './duration';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class RetryPolicyLimitAttempt extends ObjectHydrator<Specification.RetryPolicyLimitAttempt> {
   constructor(model?: Partial<Specification.RetryPolicyLimitAttempt>) {
@@ -32,6 +34,21 @@ class RetryPolicyLimitAttempt extends ObjectHydrator<Specification.RetryPolicyLi
     if (isObject(model)) {
       if (typeof model.duration === 'object') self.duration = new _Duration(model.duration);
     }
+    getLifecycleHook('RetryPolicyLimitAttempt')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new RetryPolicyLimitAttempt(this as any) as RetryPolicyLimitAttempt &
+      Specification.RetryPolicyLimitAttempt;
+    getLifecycleHook('RetryPolicyLimitAttempt')?.preValidation?.(copy);
+    validate('RetryPolicyLimitAttempt', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('RetryPolicyLimitAttempt')?.postValidation?.(copy);
+  }
+
+  normalize(): RetryPolicyLimitAttempt & Specification.RetryPolicyLimitAttempt {
+    const copy = new RetryPolicyLimitAttempt(this as any) as RetryPolicyLimitAttempt &
+      Specification.RetryPolicyLimitAttempt;
+    return getLifecycleHook('RetryPolicyLimitAttempt')?.normalize?.(copy) || copy;
   }
 }
 

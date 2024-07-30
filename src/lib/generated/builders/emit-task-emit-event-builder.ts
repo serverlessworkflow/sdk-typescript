@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.EmitTaskEmitEvent} model The underlying object
- * @returns {Specification.EmitTaskEmitEvent} The validated underlying object
+ * @param {Specification.EmitTaskEmitEvent} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.EmitTaskEmitEvent} The built object
  */
-function buildingFn(model: Specification.EmitTaskEmitEvent): Specification.EmitTaskEmitEvent {
+function buildingFn(model: Specification.EmitTaskEmitEvent, options: BuildOptions): Specification.EmitTaskEmitEvent {
   const instance = new Classes.EmitTaskEmitEvent(model);
-  validate('EmitTaskEmitEvent', instance);
-  return instance as Specification.EmitTaskEmitEvent;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.EmitTaskEmitEvent;
 }
 
 /**

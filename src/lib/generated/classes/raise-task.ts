@@ -20,14 +20,16 @@
  *
  *****************************************************************************************/
 
-import { _TaskBase } from './task-base';
 import { _Input } from './input';
 import { _Output } from './output';
 import { _Export } from './export';
 import { _Timeout } from './timeout';
 import { _RaiseTaskRaise } from './raise-task-raise';
+import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class RaiseTask extends _TaskBase {
   constructor(model?: Partial<Specification.RaiseTask>) {
@@ -40,6 +42,19 @@ class RaiseTask extends _TaskBase {
       if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
       if (typeof model.raise === 'object') self.raise = new _RaiseTaskRaise(model.raise);
     }
+    getLifecycleHook('RaiseTask')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new RaiseTask(this as any) as RaiseTask & Specification.RaiseTask;
+    getLifecycleHook('RaiseTask')?.preValidation?.(copy);
+    validate('RaiseTask', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('RaiseTask')?.postValidation?.(copy);
+  }
+
+  normalize(): RaiseTask & Specification.RaiseTask {
+    const copy = new RaiseTask(this as any) as RaiseTask & Specification.RaiseTask;
+    return getLifecycleHook('RaiseTask')?.normalize?.(copy) || copy;
   }
 }
 

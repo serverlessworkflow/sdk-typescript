@@ -20,14 +20,16 @@
  *
  *****************************************************************************************/
 
-import { _TaskBase } from './task-base';
 import { _Input } from './input';
 import { _Output } from './output';
 import { _Export } from './export';
 import { _Timeout } from './timeout';
 import { _ListenTaskListen } from './listen-task-listen';
+import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class ListenTask extends _TaskBase {
   constructor(model?: Partial<Specification.ListenTask>) {
@@ -40,6 +42,19 @@ class ListenTask extends _TaskBase {
       if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
       if (typeof model.listen === 'object') self.listen = new _ListenTaskListen(model.listen);
     }
+    getLifecycleHook('ListenTask')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new ListenTask(this as any) as ListenTask & Specification.ListenTask;
+    getLifecycleHook('ListenTask')?.preValidation?.(copy);
+    validate('ListenTask', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('ListenTask')?.postValidation?.(copy);
+  }
+
+  normalize(): ListenTask & Specification.ListenTask {
+    const copy = new ListenTask(this as any) as ListenTask & Specification.ListenTask;
+    return getLifecycleHook('ListenTask')?.normalize?.(copy) || copy;
   }
 }
 

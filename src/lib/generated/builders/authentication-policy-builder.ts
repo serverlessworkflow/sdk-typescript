@@ -20,20 +20,23 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.AuthenticationPolicy} model The underlying object
- * @returns {Specification.AuthenticationPolicy} The validated underlying object
+ * @param {Specification.AuthenticationPolicy} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.AuthenticationPolicy} The built object
  */
-function buildingFn(model: Specification.AuthenticationPolicy): Specification.AuthenticationPolicy {
+function buildingFn(
+  model: Specification.AuthenticationPolicy,
+  options: BuildOptions,
+): Specification.AuthenticationPolicy {
   const instance = new Classes.AuthenticationPolicy(model);
-  validate('AuthenticationPolicy', instance);
-  return instance as Specification.AuthenticationPolicy;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.AuthenticationPolicy;
 }
 
 /**

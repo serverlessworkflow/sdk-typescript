@@ -228,7 +228,7 @@ export function getObjectHydration(node: Node, type: Type): HydrationResult {
     ...namedProperties.map((prop) => {
       const propName = !type.isUnion() ? prop.name : `${prop.name} as Specification.${prop.type}`;
       if (!prop.isAnonymous) {
-        return `if (typeof model.${prop.name} === 'object') self.${prop.name} = new _${prop.type}(model.${propName}) ${prop.originalType.isTuple() ? `as Specification.${prop.type}` : ''};`;
+        return `if (typeof model.${prop.name} === 'object') self.${prop.name} = new _${prop.type}(model.${propName}) ${prop.originalType.isTuple() ? `as unknown as Specification.${prop.type}` : ''};`;
       }
       if (prop.isAnonymous) {
         return `if (typeof model.${prop.name} === 'object') self.${prop.name} = Object.fromEntries(

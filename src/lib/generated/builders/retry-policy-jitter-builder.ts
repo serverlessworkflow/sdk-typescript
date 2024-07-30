@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.RetryPolicyJitter} model The underlying object
- * @returns {Specification.RetryPolicyJitter} The validated underlying object
+ * @param {Specification.RetryPolicyJitter} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.RetryPolicyJitter} The built object
  */
-function buildingFn(model: Specification.RetryPolicyJitter): Specification.RetryPolicyJitter {
+function buildingFn(model: Specification.RetryPolicyJitter, options: BuildOptions): Specification.RetryPolicyJitter {
   const instance = new Classes.RetryPolicyJitter(model);
-  validate('RetryPolicyJitter', instance);
-  return instance as Specification.RetryPolicyJitter;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.RetryPolicyJitter;
 }
 
 /**

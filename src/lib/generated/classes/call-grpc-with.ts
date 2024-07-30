@@ -20,11 +20,13 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _CallGRPCWithService } from './call-grpc-with-service';
 import { _CallGRPCWithArguments } from './call-grpc-with-arguments';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class CallGRPCWith extends ObjectHydrator<Specification.CallGRPCWith> {
   constructor(model?: Partial<Specification.CallGRPCWith>) {
@@ -34,6 +36,19 @@ class CallGRPCWith extends ObjectHydrator<Specification.CallGRPCWith> {
       if (typeof model.service === 'object') self.service = new _CallGRPCWithService(model.service);
       if (typeof model.arguments === 'object') self.arguments = new _CallGRPCWithArguments(model.arguments);
     }
+    getLifecycleHook('CallGRPCWith')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new CallGRPCWith(this as any) as CallGRPCWith & Specification.CallGRPCWith;
+    getLifecycleHook('CallGRPCWith')?.preValidation?.(copy);
+    validate('CallGRPCWith', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('CallGRPCWith')?.postValidation?.(copy);
+  }
+
+  normalize(): CallGRPCWith & Specification.CallGRPCWith {
+    const copy = new CallGRPCWith(this as any) as CallGRPCWith & Specification.CallGRPCWith;
+    return getLifecycleHook('CallGRPCWith')?.normalize?.(copy) || copy;
   }
 }
 

@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.CallOpenAPI} model The underlying object
- * @returns {Specification.CallOpenAPI} The validated underlying object
+ * @param {Specification.CallOpenAPI} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.CallOpenAPI} The built object
  */
-function buildingFn(model: Specification.CallOpenAPI): Specification.CallOpenAPI {
+function buildingFn(model: Specification.CallOpenAPI, options: BuildOptions): Specification.CallOpenAPI {
   const instance = new Classes.CallOpenAPI(model);
-  validate('CallOpenAPI', instance);
-  return instance as Specification.CallOpenAPI;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.CallOpenAPI;
 }
 
 /**

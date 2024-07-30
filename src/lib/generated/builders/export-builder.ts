@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Export} model The underlying object
- * @returns {Specification.Export} The validated underlying object
+ * @param {Specification.Export} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.Export} The built object
  */
-function buildingFn(model: Specification.Export): Specification.Export {
+function buildingFn(model: Specification.Export, options: BuildOptions): Specification.Export {
   const instance = new Classes.Export(model);
-  validate('Export', instance);
-  return instance as Specification.Export;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.Export;
 }
 
 /**

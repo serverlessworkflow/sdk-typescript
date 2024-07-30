@@ -20,10 +20,12 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _Duration } from './duration';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class Timeout extends ObjectHydrator<Specification.Timeout> {
   constructor(model?: Partial<Specification.Timeout>) {
@@ -32,6 +34,19 @@ class Timeout extends ObjectHydrator<Specification.Timeout> {
     if (isObject(model)) {
       if (typeof model.after === 'object') self.after = new _Duration(model.after);
     }
+    getLifecycleHook('Timeout')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new Timeout(this as any) as Timeout & Specification.Timeout;
+    getLifecycleHook('Timeout')?.preValidation?.(copy);
+    validate('Timeout', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('Timeout')?.postValidation?.(copy);
+  }
+
+  normalize(): Timeout & Specification.Timeout {
+    const copy = new Timeout(this as any) as Timeout & Specification.Timeout;
+    return getLifecycleHook('Timeout')?.normalize?.(copy) || copy;
   }
 }
 

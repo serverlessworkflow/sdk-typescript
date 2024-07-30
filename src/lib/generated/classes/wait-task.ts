@@ -20,14 +20,16 @@
  *
  *****************************************************************************************/
 
-import { _TaskBase } from './task-base';
 import { _Input } from './input';
 import { _Output } from './output';
 import { _Export } from './export';
 import { _Timeout } from './timeout';
 import { _Duration } from './duration';
+import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class WaitTask extends _TaskBase {
   constructor(model?: Partial<Specification.WaitTask>) {
@@ -40,6 +42,19 @@ class WaitTask extends _TaskBase {
       if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
       if (typeof model.wait === 'object') self.wait = new _Duration(model.wait);
     }
+    getLifecycleHook('WaitTask')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new WaitTask(this as any) as WaitTask & Specification.WaitTask;
+    getLifecycleHook('WaitTask')?.preValidation?.(copy);
+    validate('WaitTask', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('WaitTask')?.postValidation?.(copy);
+  }
+
+  normalize(): WaitTask & Specification.WaitTask {
+    const copy = new WaitTask(this as any) as WaitTask & Specification.WaitTask;
+    return getLifecycleHook('WaitTask')?.normalize?.(copy) || copy;
   }
 }
 

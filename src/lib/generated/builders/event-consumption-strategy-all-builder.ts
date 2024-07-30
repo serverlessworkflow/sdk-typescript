@@ -20,20 +20,23 @@
  *
  *****************************************************************************************/
 
-import { arrayBuilder, ArrayBuilder } from '../../builder';
-import { validate } from '../../validation';
+import { arrayBuilder, ArrayBuilder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying array
- * @param {Specification.EventConsumptionStrategyAll} model The underlying array
- * @returns {Specification.EventConsumptionStrategyAll} The validated underlying array
+ * @param {Specification.EventConsumptionStrategyAll} model The proxied array
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.EventConsumptionStrategyAll} The built array
  */
-function buildingFn(model: Specification.EventConsumptionStrategyAll): Specification.EventConsumptionStrategyAll {
+function buildingFn(
+  model: Specification.EventConsumptionStrategyAll,
+  options: BuildOptions,
+): Specification.EventConsumptionStrategyAll {
   const instance = new Classes.EventConsumptionStrategyAll(model);
-  validate('EventConsumptionStrategyAll', instance);
-  return instance as Specification.EventConsumptionStrategyAll;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.EventConsumptionStrategyAll;
 }
 
 /**

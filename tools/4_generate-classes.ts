@@ -40,24 +40,38 @@ function getObjectClassDeclaration(name: string, node: Node, type: Type, baseCla
   return `${fileHeader}
 ${inFileDisclaimer}
 
-${baseClass ? `import { _${baseClass} } from './${toKebabCase(normalizeKnownAllCaps(baseClass))}';` : "import { ObjectHydrator } from '../../hydrator';"}
 ${hydrationResult.imports.map((type) => `import { _${type} } from './${toKebabCase(normalizeKnownAllCaps(type))}';`).join('\n')}
+${baseClass ? `import { _${baseClass} } from './${toKebabCase(normalizeKnownAllCaps(baseClass))}';` : "import { ObjectHydrator } from '../../hydrator';"}
 import { Specification } from '../definitions';
-${hydrationResult.code ? "import { isObject } from '../../utils';" : ''}
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy${hydrationResult.code ? ', isObject' : ''} } from '../../utils';
 
 class ${name} extends ${baseClass ? '_' + baseClass : `ObjectHydrator<Specification.${name}>`} {
-    constructor(model?: Partial<Specification.${name}>) {
-        super(model);
-        ${
-          hydrationResult.code
-            ? `const self = (this as unknown) as Specification.${name} & object;
-          if (isObject(model)) {
-            ${hydrationResult.code}
-          }`
-            : ''
-        }
-        
+  constructor(model?: Partial<Specification.${name}>) {
+    super(model);
+    ${
+      hydrationResult.code
+        ? `const self = (this as unknown) as Specification.${name} & object;
+      if (isObject(model)) {
+        ${hydrationResult.code}
+      }`
+        : ''
     }
+    getLifecycleHook('${name}')?.constructor?.(this);
+  }
+  
+  validate() {
+    const copy = new ${name}(this as any) as ${name} & Specification.${name};
+    getLifecycleHook('${name}')?.preValidation?.(copy);
+    validate('${name}', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('${name}')?.postValidation?.(copy);
+  }
+  
+  normalize(): ${name} & Specification.${name} {
+    const copy = new ${name}(this as any) as ${name} & Specification.${name};
+    return getLifecycleHook('${name}')?.normalize?.(copy) || copy;
+  }
 }
 
 export const _${name} = ${name} as ({
@@ -79,6 +93,9 @@ ${inFileDisclaimer}
 ${hydrationResult.imports.map((type) => `import { _${type} } from './${toKebabCase(normalizeKnownAllCaps(type))}';`)}
 import { Specification } from '../definitions';
 import { ArrayHydrator } from '../../hydrator';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class ${name} extends ArrayHydrator<${arrayTypeName}> {
   constructor(model?: Array<${arrayTypeName}> | number) {
@@ -87,6 +104,19 @@ class ${name} extends ArrayHydrator<${arrayTypeName}> {
       ${hydrationResult.code}
     }
     Object.setPrototypeOf(this, Object.create(${name}.prototype));
+    getLifecycleHook('${name}')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new ${name}(this);
+    getLifecycleHook('${name}')?.preValidation?.(copy);
+    validate('${name}', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('${name}')?.postValidation?.(copy);
+  }
+  
+  normalize(): ${name} {
+    const copy = new ${name}(this);
+    return getLifecycleHook('${name}')?.normalize?.(copy) || copy;
   }
 }
 

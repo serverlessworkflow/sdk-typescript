@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.RunTaskRun} model The underlying object
- * @returns {Specification.RunTaskRun} The validated underlying object
+ * @param {Specification.RunTaskRun} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.RunTaskRun} The built object
  */
-function buildingFn(model: Specification.RunTaskRun): Specification.RunTaskRun {
+function buildingFn(model: Specification.RunTaskRun, options: BuildOptions): Specification.RunTaskRun {
   const instance = new Classes.RunTaskRun(model);
-  validate('RunTaskRun', instance);
-  return instance as Specification.RunTaskRun;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.RunTaskRun;
 }
 
 /**

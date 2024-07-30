@@ -21,12 +21,28 @@
  *****************************************************************************************/
 
 import { ObjectHydrator } from '../../hydrator';
-
 import { Specification } from '../definitions';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class Oauth2Token extends ObjectHydrator<Specification.Oauth2Token> {
   constructor(model?: Partial<Specification.Oauth2Token>) {
     super(model);
+
+    getLifecycleHook('Oauth2Token')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new Oauth2Token(this as any) as Oauth2Token & Specification.Oauth2Token;
+    getLifecycleHook('Oauth2Token')?.preValidation?.(copy);
+    validate('Oauth2Token', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('Oauth2Token')?.postValidation?.(copy);
+  }
+
+  normalize(): Oauth2Token & Specification.Oauth2Token {
+    const copy = new Oauth2Token(this as any) as Oauth2Token & Specification.Oauth2Token;
+    return getLifecycleHook('Oauth2Token')?.normalize?.(copy) || copy;
   }
 }
 

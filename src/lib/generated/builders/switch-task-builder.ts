@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.SwitchTask} model The underlying object
- * @returns {Specification.SwitchTask} The validated underlying object
+ * @param {Specification.SwitchTask} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.SwitchTask} The built object
  */
-function buildingFn(model: Specification.SwitchTask): Specification.SwitchTask {
+function buildingFn(model: Specification.SwitchTask, options: BuildOptions): Specification.SwitchTask {
   const instance = new Classes.SwitchTask(model);
-  validate('SwitchTask', instance);
-  return instance as Specification.SwitchTask;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.SwitchTask;
 }
 
 /**

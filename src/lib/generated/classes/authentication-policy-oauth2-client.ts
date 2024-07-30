@@ -21,12 +21,30 @@
  *****************************************************************************************/
 
 import { ObjectHydrator } from '../../hydrator';
-
 import { Specification } from '../definitions';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class AuthenticationPolicyOauth2Client extends ObjectHydrator<Specification.AuthenticationPolicyOauth2Client> {
   constructor(model?: Partial<Specification.AuthenticationPolicyOauth2Client>) {
     super(model);
+
+    getLifecycleHook('AuthenticationPolicyOauth2Client')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new AuthenticationPolicyOauth2Client(this as any) as AuthenticationPolicyOauth2Client &
+      Specification.AuthenticationPolicyOauth2Client;
+    getLifecycleHook('AuthenticationPolicyOauth2Client')?.preValidation?.(copy);
+    validate('AuthenticationPolicyOauth2Client', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('AuthenticationPolicyOauth2Client')?.postValidation?.(copy);
+  }
+
+  normalize(): AuthenticationPolicyOauth2Client & Specification.AuthenticationPolicyOauth2Client {
+    const copy = new AuthenticationPolicyOauth2Client(this as any) as AuthenticationPolicyOauth2Client &
+      Specification.AuthenticationPolicyOauth2Client;
+    return getLifecycleHook('AuthenticationPolicyOauth2Client')?.normalize?.(copy) || copy;
   }
 }
 

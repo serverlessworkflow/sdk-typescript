@@ -3,7 +3,8 @@
 ## 1. Downloader
 A simple script that downloads the JSON Schema(s) from `https://serverlessworkflow.io/`. Currently, there is only one schema, but the script supports downloading referenced schemas as well for legacy reasons. As it might be useful in the future and doesn't add much complexity, it has been retained.
 
-> *(i) The schema(s) are saved in `src/lib/generated/schema/`, the main one being `workflow.json`.*
+> [!TIP]
+> The schema(s) are saved in `src/lib/generated/schema/`, the main one being `workflow.json`.*
 
 ## 2. Generating Types
 The goal is to automatically generate TypeScript types/interfaces or classes corresponding to the specification's JSON Schema. This step is the trickiest. Its outcome will vary depending on the schema and the library used.
@@ -28,7 +29,8 @@ The `type: object` is also added when not specified. This doesn't impact type ge
 
 Theoretically, *Phase 1* doesn't affect the validity of the schema.
 
-> *(i) The resulting schema is saved as `src/lib/generated/schema/__internal_workflow.json` for later use.*
+> [!TIP]
+> The resulting schema is saved as `src/lib/generated/schema/__internal_workflow.json` for later use.*
 
 ### Phase 2: Mutating the JSON Schema
 `json-schema-to-typescript` has limitations, as highlighted in the issues linked above:
@@ -45,39 +47,47 @@ The resulting schema is used in-memory to generate the types. The schema produce
 
 After phases 1 & 2, the mutated schema is passed to `json-schema-to-typescript` and the resulting TypeScript declarations are saved to `specification.ts`.
 
-> *(i) The declarations are saved in `src/lib/generated/definitions/specification.ts`.*
+> [!TIP]
+> The declarations are saved in `src/lib/generated/definitions/specification.ts`.*
 
 ## 3. Generating Validators
 To validate an object of type `T`, where `T` is not the root object described by the JSON Schema, we need to know the subschema's JSON pointer corresponding to `T`. The exported declarations of the TypeScript file produced in [step 2](#2-generating-types) are extracted using `ts-morph`. *(At this point, it is probably overkill; a regex could probably do the trick, but this library will be useful later on.)* For each declaration, the internal JSON Schema produced in [step 2 - Phase 1](#phase-1-embellishing-the-json-schema) is crawled to find the object with the matching title. Then, an object where the keys are the names of the types and the values are their JSON pointers is saved as `validation-pointers.ts`.
 
-> *(i) The validation pointers are saved in `src/lib/generated/validation/validation-pointers.ts`.*
+> [!TIP]
+> The validation pointers are saved in `src/lib/generated/validation/validation-pointers.ts`.*
 
 The produced validation pointers are used by the SDK to expose a `validate` function that takes the name of the type to validate and the object to validate:
 ```typescript
 validate('TypeName', value);
 ```
 
-> *(i) The validation function is located at `src/lib/validation.ts`.*
+> [!TIP]
+> The validation function is located at `src/lib/validation.ts`.*
 
 ## 4. Generating Classes
 [Generating types](#2-generating-types) is already a great step, but classes have a few advantages we'd like to leverage in an SDK:
 - Unlike types, they can be tested at runtime with `instanceof`
-- They can carry business logic such as object hydration (for the aforementioned `instanceof` checking), self-validation, default value handling, etc.
+- They can carry business logic such as object hydration (for the aforementioned `instanceof` checking), validation, normalization, etc.
 
-The aim is to generate a class for each type/interface generated in the 2nd step that shares the same property signatures. This is achieved by exploiting a TypeScript trick: declaring an internal class and then exposing it as an intersection of its constructor and its associated type (see this [StackOverflow reply](https://stackoverflow.com/questions/54207173/classes-keyof-in-typescript/54207465#54207465)). For instance, if our type is `Foo`, we can mimic a class `FooClass` using the following code:
+### Phase 1: Declaration
+The aim is to generate a class for each type/interface generated in [step 2](#2-generating-types) that shares the same property signatures. This is achieved by exploiting a TypeScript trick: declaring an internal class and then exposing it as an intersection of its constructor and its associated type (see this [StackOverflow reply](https://stackoverflow.com/questions/54207173/classes-keyof-in-typescript/54207465#54207465)). For instance, if our type is `Foo`, we can mimic a class `FooClass` using the following code:
 ```typescript
-class _FooClass {
-  constructor(model?: Partial<Foo>) {
+class FooClass {
+  constructor(model?: Partial<Specification.Foo>) {
     if (model) Object.assign(this, model);
   }
 }
 
-export const FooClass = _FooClass as {
-  new(model?: Foo): _FooClass & Foo // aka "the constructor creates an object which is both _FooClass and Foo"
+const _FooClass = FooClass as {
+  new(model?: Foo): FooClass & Specification.Foo // aka "the constructor creates an object which is both FooClass and Foo"
 };
 
-const fooInstance = new FooClass();
-console.log(fooInstance instanceof FooClass); // true
+export const Classes = {
+  FooClass: _FooClass
+};
+
+const fooInstance = new Classes.FooClass();
+console.log(fooInstance instanceof Classes.FooClass); // true
 ```
 
 For array types, it's a bit different. Here the challenge is to extend `Array` but enforce our prototype:
@@ -89,10 +99,31 @@ export class Foo extends Array<SomeType> {
   }
 }
 ``` 
+> [!NOTE]
+> After implementing this approach, the "hydration" has been researched and implemented. During this phase, properties of a type/interface and their subtypes (union/intersection/tuple) are reflected to be recursively hydrated. We could maybe use those to declare classes properties instead of using the "cast trick".
 
-At the moment, classes don't do anything else. Validation, for instance, is called by the builders (next step). In the future, validation will be migrated to the classes, along with recursive hydration and default values handling.
+### Phase 2: Hydration
+To hydrate the object, we rely on `ts-morph` to reflect the properties and build the hydration code. The process consists of the following steps:
+- Get the target object associate type/interface and its subtypes (union/intersection/tuple)
+- For each of those types, get their properties and indexed signature
+- Get literal properties that can be constant and hydrate the constant if necessary
+- Get properties that are not value types and hydrate the properties if necessary
+- Get the indexed signature type and hydrate it if necessary
 
-> *(i) The classes are saved in `src/lib/generated/classes/`.*
+If a property is defined in multiple subtypes with different types, it's ignore altogether and a warning is emitted. For instance, a `CallTask` is a union of specialized call task such as `CallAsyncAPI`, `CallHTTP`, ... Those types both declare a `with` property but with different signature. Therefore, its hydration is ignored at the `CallTask` level.
+
+In addition to the hydration, a call to the `constructor` lifecycle hook is also generated.
+
+### Phase 3: Validation and normalization
+When generating the class, two methods will be added:
+- `validate(): void` which calls, in that order, the `preValidation` lifecycle hook, the `validate` function using the pointers build in [step 3](#3-generating-validators) and the `postValidation` lifecycle hook
+- `normalize(): T` which calls the the `normalize` lifecycle hook
+
+> [!TIP]
+> The classes are saved in `src/lib/generated/classes/`.*
+
+> [!TIP]
+> The lifecycle hooks can be found in `src/lib/hooks/`.*
 
 ## 5. Generating Fluent Builders
 One feature of the SDK is to expose fluent builders. This feature heavily relies on the builder proxy in `src/lib/builder.ts`. The generic type `Builder<T>` reflects properties of `T` as methods and adds a `build()` method to return the built object. The proxy sets the property value when the corresponding method is called or calls a "building function" when `build()` is called.
@@ -101,13 +132,15 @@ The generator iterates over the generated types to:
 - Define a "building function" that creates an "instance of the type" (of the class that mimics the type) and validates it.
 - Wrap the generic proxy into a specific one. e.g., `export const workflowBuilder = (): Builder<Specification.Workflow> => builder<Specification.Workflow>(buildingFn);`.
 
-At the moment, the "building function" can be extended to include pre-validation code, but this will likely migrate to the class level.
+The "building function" will call the `validate()` and `normalize()` methods of the class.
 
-> *(i) The builders are saved in `src/lib/generated/builders/`.*
+> [!TIP]
+> The builders are saved in `src/lib/generated/builders/`.*
 
 ## Conclusion
 With the tooling in place, we can automatically provide the required features of the SDK:
 - Type checking
 - Validation
+- Normalization
 - Typed instances
 - Fluent builder

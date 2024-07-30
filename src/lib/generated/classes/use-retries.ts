@@ -20,10 +20,12 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _RetryPolicy } from './retry-policy';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class UseRetries extends ObjectHydrator<Specification.UseRetries> {
   constructor(model?: Partial<Specification.UseRetries>) {
@@ -37,6 +39,19 @@ class UseRetries extends ObjectHydrator<Specification.UseRetries> {
           self[key] = new _RetryPolicy(value);
         });
     }
+    getLifecycleHook('UseRetries')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new UseRetries(this as any) as UseRetries & Specification.UseRetries;
+    getLifecycleHook('UseRetries')?.preValidation?.(copy);
+    validate('UseRetries', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('UseRetries')?.postValidation?.(copy);
+  }
+
+  normalize(): UseRetries & Specification.UseRetries {
+    const copy = new UseRetries(this as any) as UseRetries & Specification.UseRetries;
+    return getLifecycleHook('UseRetries')?.normalize?.(copy) || copy;
   }
 }
 

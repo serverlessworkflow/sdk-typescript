@@ -20,12 +20,14 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _AuthenticationPolicyBasic } from './authentication-policy-basic';
 import { _AuthenticationPolicyBearer } from './authentication-policy-bearer';
 import { _AuthenticationPolicyOauth2 } from './authentication-policy-oauth2';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class CallAsyncAPIWithAuthentication extends ObjectHydrator<Specification.CallAsyncAPIWithAuthentication> {
   constructor(model?: Partial<Specification.CallAsyncAPIWithAuthentication>) {
@@ -39,6 +41,21 @@ class CallAsyncAPIWithAuthentication extends ObjectHydrator<Specification.CallAs
       if (typeof model.oauth2 === 'object')
         self.oauth2 = new _AuthenticationPolicyOauth2(model.oauth2 as Specification.AuthenticationPolicyOauth2);
     }
+    getLifecycleHook('CallAsyncAPIWithAuthentication')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new CallAsyncAPIWithAuthentication(this as any) as CallAsyncAPIWithAuthentication &
+      Specification.CallAsyncAPIWithAuthentication;
+    getLifecycleHook('CallAsyncAPIWithAuthentication')?.preValidation?.(copy);
+    validate('CallAsyncAPIWithAuthentication', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('CallAsyncAPIWithAuthentication')?.postValidation?.(copy);
+  }
+
+  normalize(): CallAsyncAPIWithAuthentication & Specification.CallAsyncAPIWithAuthentication {
+    const copy = new CallAsyncAPIWithAuthentication(this as any) as CallAsyncAPIWithAuthentication &
+      Specification.CallAsyncAPIWithAuthentication;
+    return getLifecycleHook('CallAsyncAPIWithAuthentication')?.normalize?.(copy) || copy;
   }
 }
 

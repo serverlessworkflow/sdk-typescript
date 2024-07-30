@@ -16,10 +16,34 @@
  */
 
 /**
+ * Represents the options passed to the `build()` method
+ */
+export type BuildOptions = {
+  /**
+   * Default true
+   */
+  validate?: boolean;
+  /**
+   * Default true
+   */
+  normalize?: boolean;
+};
+
+/**
+ * The type of the underlying function called on `build()` for objects
+ */
+export type BuildingFunction<T> = (model: Partial<T>, options: BuildOptions) => T;
+
+/**
+ * The type of the underlying function called on `build()` for arrays
+ */
+export type ArrayBuildingFunction<T> = (model: Array<T>, options: BuildOptions) => Array<T>;
+
+/**
  * Represents a fluent builder proxy for an object
  */
 export type Builder<T> = {
-  build: (validate?: boolean) => T;
+  build: (option?: BuildOptions) => T;
 } & {
   [K in keyof T]-?: (arg: T[K]) => Builder<T>;
 };
@@ -29,15 +53,23 @@ export type Builder<T> = {
  */
 export type ArrayBuilder<T> = {
   push: (item: T) => ArrayBuilder<T>;
-  build: (validate?: boolean) => Array<T>;
+  build: (option?: BuildOptions) => Array<T>;
 };
 
 /**
  * The default function used to build an object, basically just return the provided object
  * @param model The object to "build"
+ * @param options The build options
  * @returns
  */
-function defaultBuildingFn<T>(model: Partial<T>): T {
+function defaultBuildingFn<T>(model: Partial<T>, options: BuildOptions): T {
+  // prevents @typescript-eslint/no-unused-vars ...
+  if (options.validate == null) {
+    options.validate = true;
+  }
+  if (options.normalize == null) {
+    options.normalize = true;
+  }
   return model as T;
 }
 
@@ -46,14 +78,20 @@ function defaultBuildingFn<T>(model: Partial<T>): T {
  * @param buildingFn The function used to validate and produce the object on build()
  * @returns A fluent builder
  */
-export function builder<T>(
-  model: Partial<T> = {},
-  buildingFn: (data: Partial<T>) => T = defaultBuildingFn,
-): Builder<T> {
+export function builder<T>(model: Partial<T> = {}, buildingFn: BuildingFunction<T> = defaultBuildingFn): Builder<T> {
   const proxy = new Proxy({} as Builder<T>, {
     get: (_, prop) => {
       if (prop === 'build') {
-        return (validate: boolean = true) => (validate ? buildingFn(model) : model);
+        return (options?: BuildOptions) => {
+          options = options || ({} as BuildOptions);
+          if (options.validate == null) {
+            options.validate = true;
+          }
+          if (options.normalize == null) {
+            options.normalize = true;
+          }
+          return buildingFn(model, options);
+        };
       }
       return (value: unknown): Builder<T> => {
         (model as any)[prop.toString()] = value;
@@ -74,7 +112,7 @@ export function builder<T>(
  */
 export function arrayBuilder<T>(
   model: Array<T> = [],
-  buildingFn: (data: Array<T>) => Array<T> = defaultBuildingFn,
+  buildingFn: ArrayBuildingFunction<T> = defaultBuildingFn,
 ): ArrayBuilder<T> {
   if (model != null && !Array.isArray(model)) {
     throw new Error(`The provided model should be an array`);
@@ -82,7 +120,16 @@ export function arrayBuilder<T>(
   const proxy = new Proxy({} as ArrayBuilder<T>, {
     get: (_, prop) => {
       if (prop === 'build') {
-        return (validate: boolean = true) => (validate ? buildingFn(model) : model);
+        return (options?: BuildOptions) => {
+          options = options || ({} as BuildOptions);
+          if (options.validate == null) {
+            options.validate = true;
+          }
+          if (options.normalize == null) {
+            options.normalize = true;
+          }
+          return buildingFn(model, options);
+        };
       }
       if (prop === 'push') {
         return (value: T): ArrayBuilder<T> => {

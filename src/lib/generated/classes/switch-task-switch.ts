@@ -23,6 +23,9 @@
 import { _SwitchTaskSwitchCase } from './switch-task-switch-case';
 import { Specification } from '../definitions';
 import { ArrayHydrator } from '../../hydrator';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class SwitchTaskSwitch extends ArrayHydrator<{ [k: string]: Specification.SwitchTaskSwitchCase }> {
   constructor(model?: Array<{ [k: string]: Specification.SwitchTaskSwitchCase }> | number) {
@@ -38,6 +41,19 @@ class SwitchTaskSwitch extends ArrayHydrator<{ [k: string]: Specification.Switch
       }
     }
     Object.setPrototypeOf(this, Object.create(SwitchTaskSwitch.prototype));
+    getLifecycleHook('SwitchTaskSwitch')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new SwitchTaskSwitch(this);
+    getLifecycleHook('SwitchTaskSwitch')?.preValidation?.(copy);
+    validate('SwitchTaskSwitch', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('SwitchTaskSwitch')?.postValidation?.(copy);
+  }
+
+  normalize(): SwitchTaskSwitch {
+    const copy = new SwitchTaskSwitch(this);
+    return getLifecycleHook('SwitchTaskSwitch')?.normalize?.(copy) || copy;
   }
 }
 

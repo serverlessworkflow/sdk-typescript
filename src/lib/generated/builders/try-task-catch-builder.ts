@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.TryTaskCatch} model The underlying object
- * @returns {Specification.TryTaskCatch} The validated underlying object
+ * @param {Specification.TryTaskCatch} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.TryTaskCatch} The built object
  */
-function buildingFn(model: Specification.TryTaskCatch): Specification.TryTaskCatch {
+function buildingFn(model: Specification.TryTaskCatch, options: BuildOptions): Specification.TryTaskCatch {
   const instance = new Classes.TryTaskCatch(model);
-  validate('TryTaskCatch', instance);
-  return instance as Specification.TryTaskCatch;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.TryTaskCatch;
 }
 
 /**

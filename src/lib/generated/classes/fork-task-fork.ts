@@ -20,10 +20,12 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _TaskList } from './task-list';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class ForkTaskFork extends ObjectHydrator<Specification.ForkTaskFork> {
   constructor(model?: Partial<Specification.ForkTaskFork>) {
@@ -32,6 +34,19 @@ class ForkTaskFork extends ObjectHydrator<Specification.ForkTaskFork> {
     if (isObject(model)) {
       if (typeof model.branches === 'object') self.branches = new _TaskList(model.branches);
     }
+    getLifecycleHook('ForkTaskFork')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new ForkTaskFork(this as any) as ForkTaskFork & Specification.ForkTaskFork;
+    getLifecycleHook('ForkTaskFork')?.preValidation?.(copy);
+    validate('ForkTaskFork', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('ForkTaskFork')?.postValidation?.(copy);
+  }
+
+  normalize(): ForkTaskFork & Specification.ForkTaskFork {
+    const copy = new ForkTaskFork(this as any) as ForkTaskFork & Specification.ForkTaskFork;
+    return getLifecycleHook('ForkTaskFork')?.normalize?.(copy) || copy;
   }
 }
 

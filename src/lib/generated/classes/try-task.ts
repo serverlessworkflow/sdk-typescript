@@ -20,15 +20,17 @@
  *
  *****************************************************************************************/
 
-import { _TaskBase } from './task-base';
 import { _Input } from './input';
 import { _Output } from './output';
 import { _Export } from './export';
 import { _Timeout } from './timeout';
 import { _TaskList } from './task-list';
 import { _TryTaskCatch } from './try-task-catch';
+import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class TryTask extends _TaskBase {
   constructor(model?: Partial<Specification.TryTask>) {
@@ -42,6 +44,19 @@ class TryTask extends _TaskBase {
       if (typeof model.try === 'object') self.try = new _TaskList(model.try);
       if (typeof model.catch === 'object') self.catch = new _TryTaskCatch(model.catch);
     }
+    getLifecycleHook('TryTask')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new TryTask(this as any) as TryTask & Specification.TryTask;
+    getLifecycleHook('TryTask')?.preValidation?.(copy);
+    validate('TryTask', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('TryTask')?.postValidation?.(copy);
+  }
+
+  normalize(): TryTask & Specification.TryTask {
+    const copy = new TryTask(this as any) as TryTask & Specification.TryTask;
+    return getLifecycleHook('TryTask')?.normalize?.(copy) || copy;
   }
 }
 

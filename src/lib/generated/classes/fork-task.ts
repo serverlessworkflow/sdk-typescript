@@ -20,14 +20,16 @@
  *
  *****************************************************************************************/
 
-import { _TaskBase } from './task-base';
 import { _Input } from './input';
 import { _Output } from './output';
 import { _Export } from './export';
 import { _Timeout } from './timeout';
 import { _ForkTaskFork } from './fork-task-fork';
+import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class ForkTask extends _TaskBase {
   constructor(model?: Partial<Specification.ForkTask>) {
@@ -40,6 +42,19 @@ class ForkTask extends _TaskBase {
       if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
       if (typeof model.fork === 'object') self.fork = new _ForkTaskFork(model.fork);
     }
+    getLifecycleHook('ForkTask')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new ForkTask(this as any) as ForkTask & Specification.ForkTask;
+    getLifecycleHook('ForkTask')?.preValidation?.(copy);
+    validate('ForkTask', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('ForkTask')?.postValidation?.(copy);
+  }
+
+  normalize(): ForkTask & Specification.ForkTask {
+    const copy = new ForkTask(this as any) as ForkTask & Specification.ForkTask;
+    return getLifecycleHook('ForkTask')?.normalize?.(copy) || copy;
   }
 }
 

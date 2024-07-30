@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Workflow} model The underlying object
- * @returns {Specification.Workflow} The validated underlying object
+ * @param {Specification.Workflow} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.Workflow} The built object
  */
-function buildingFn(model: Specification.Workflow): Specification.Workflow {
+function buildingFn(model: Specification.Workflow, options: BuildOptions): Specification.Workflow {
   const instance = new Classes.Workflow(model);
-  validate('Workflow', instance);
-  return instance as Specification.Workflow;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.Workflow;
 }
 
 /**

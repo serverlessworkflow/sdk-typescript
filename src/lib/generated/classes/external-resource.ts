@@ -21,12 +21,28 @@
  *****************************************************************************************/
 
 import { ObjectHydrator } from '../../hydrator';
-
 import { Specification } from '../definitions';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class ExternalResource extends ObjectHydrator<Specification.ExternalResource> {
   constructor(model?: Partial<Specification.ExternalResource>) {
     super(model);
+
+    getLifecycleHook('ExternalResource')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new ExternalResource(this as any) as ExternalResource & Specification.ExternalResource;
+    getLifecycleHook('ExternalResource')?.preValidation?.(copy);
+    validate('ExternalResource', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('ExternalResource')?.postValidation?.(copy);
+  }
+
+  normalize(): ExternalResource & Specification.ExternalResource {
+    const copy = new ExternalResource(this as any) as ExternalResource & Specification.ExternalResource;
+    return getLifecycleHook('ExternalResource')?.normalize?.(copy) || copy;
   }
 }
 

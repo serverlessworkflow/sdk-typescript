@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.RaiseTaskRaise} model The underlying object
- * @returns {Specification.RaiseTaskRaise} The validated underlying object
+ * @param {Specification.RaiseTaskRaise} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.RaiseTaskRaise} The built object
  */
-function buildingFn(model: Specification.RaiseTaskRaise): Specification.RaiseTaskRaise {
+function buildingFn(model: Specification.RaiseTaskRaise, options: BuildOptions): Specification.RaiseTaskRaise {
   const instance = new Classes.RaiseTaskRaise(model);
-  validate('RaiseTaskRaise', instance);
-  return instance as Specification.RaiseTaskRaise;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.RaiseTaskRaise;
 }
 
 /**

@@ -21,12 +21,28 @@
  *****************************************************************************************/
 
 import { ObjectHydrator } from '../../hydrator';
-
 import { Specification } from '../definitions';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class RetryPolicyBackoff extends ObjectHydrator<Specification.RetryPolicyBackoff> {
   constructor(model?: Partial<Specification.RetryPolicyBackoff>) {
     super(model);
+
+    getLifecycleHook('RetryPolicyBackoff')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new RetryPolicyBackoff(this as any) as RetryPolicyBackoff & Specification.RetryPolicyBackoff;
+    getLifecycleHook('RetryPolicyBackoff')?.preValidation?.(copy);
+    validate('RetryPolicyBackoff', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('RetryPolicyBackoff')?.postValidation?.(copy);
+  }
+
+  normalize(): RetryPolicyBackoff & Specification.RetryPolicyBackoff {
+    const copy = new RetryPolicyBackoff(this as any) as RetryPolicyBackoff & Specification.RetryPolicyBackoff;
+    return getLifecycleHook('RetryPolicyBackoff')?.normalize?.(copy) || copy;
   }
 }
 

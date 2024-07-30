@@ -21,12 +21,28 @@
  *****************************************************************************************/
 
 import { ObjectHydrator } from '../../hydrator';
-
 import { Specification } from '../definitions';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class FlowDirective extends ObjectHydrator<Specification.FlowDirective> {
   constructor(model?: Partial<Specification.FlowDirective>) {
     super(model);
+
+    getLifecycleHook('FlowDirective')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new FlowDirective(this as any) as FlowDirective & Specification.FlowDirective;
+    getLifecycleHook('FlowDirective')?.preValidation?.(copy);
+    validate('FlowDirective', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('FlowDirective')?.postValidation?.(copy);
+  }
+
+  normalize(): FlowDirective & Specification.FlowDirective {
+    const copy = new FlowDirective(this as any) as FlowDirective & Specification.FlowDirective;
+    return getLifecycleHook('FlowDirective')?.normalize?.(copy) || copy;
   }
 }
 

@@ -20,14 +20,16 @@
  *
  *****************************************************************************************/
 
-import { _TaskBase } from './task-base';
 import { _Input } from './input';
 import { _Output } from './output';
 import { _Export } from './export';
 import { _Timeout } from './timeout';
 import { _CallOpenAPIWith } from './call-open-api-with';
+import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class CallOpenAPI extends _TaskBase {
   constructor(model?: Partial<Specification.CallOpenAPI>) {
@@ -41,6 +43,19 @@ class CallOpenAPI extends _TaskBase {
       if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
       if (typeof model.with === 'object') self.with = new _CallOpenAPIWith(model.with);
     }
+    getLifecycleHook('CallOpenAPI')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new CallOpenAPI(this as any) as CallOpenAPI & Specification.CallOpenAPI;
+    getLifecycleHook('CallOpenAPI')?.preValidation?.(copy);
+    validate('CallOpenAPI', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('CallOpenAPI')?.postValidation?.(copy);
+  }
+
+  normalize(): CallOpenAPI & Specification.CallOpenAPI {
+    const copy = new CallOpenAPI(this as any) as CallOpenAPI & Specification.CallOpenAPI;
+    return getLifecycleHook('CallOpenAPI')?.normalize?.(copy) || copy;
   }
 }
 

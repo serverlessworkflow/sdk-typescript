@@ -21,12 +21,28 @@
  *****************************************************************************************/
 
 import { ObjectHydrator } from '../../hydrator';
-
 import { Specification } from '../definitions';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class SwitchTaskSwitchCase extends ObjectHydrator<Specification.SwitchTaskSwitchCase> {
   constructor(model?: Partial<Specification.SwitchTaskSwitchCase>) {
     super(model);
+
+    getLifecycleHook('SwitchTaskSwitchCase')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new SwitchTaskSwitchCase(this as any) as SwitchTaskSwitchCase & Specification.SwitchTaskSwitchCase;
+    getLifecycleHook('SwitchTaskSwitchCase')?.preValidation?.(copy);
+    validate('SwitchTaskSwitchCase', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('SwitchTaskSwitchCase')?.postValidation?.(copy);
+  }
+
+  normalize(): SwitchTaskSwitchCase & Specification.SwitchTaskSwitchCase {
+    const copy = new SwitchTaskSwitchCase(this as any) as SwitchTaskSwitchCase & Specification.SwitchTaskSwitchCase;
+    return getLifecycleHook('SwitchTaskSwitchCase')?.normalize?.(copy) || copy;
   }
 }
 

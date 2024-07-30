@@ -20,22 +20,23 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.CallGRPCWithServiceAuthentication} model The underlying object
- * @returns {Specification.CallGRPCWithServiceAuthentication} The validated underlying object
+ * @param {Specification.CallGRPCWithServiceAuthentication} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.CallGRPCWithServiceAuthentication} The built object
  */
 function buildingFn(
   model: Specification.CallGRPCWithServiceAuthentication,
+  options: BuildOptions,
 ): Specification.CallGRPCWithServiceAuthentication {
   const instance = new Classes.CallGRPCWithServiceAuthentication(model);
-  validate('CallGRPCWithServiceAuthentication', instance);
-  return instance as Specification.CallGRPCWithServiceAuthentication;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.CallGRPCWithServiceAuthentication;
 }
 
 /**

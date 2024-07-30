@@ -20,11 +20,13 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _EventFilterWith } from './event-filter-with';
 import { _EventFilterCorrelate } from './event-filter-correlate';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class EventFilter extends ObjectHydrator<Specification.EventFilter> {
   constructor(model?: Partial<Specification.EventFilter>) {
@@ -34,6 +36,19 @@ class EventFilter extends ObjectHydrator<Specification.EventFilter> {
       if (typeof model.with === 'object') self.with = new _EventFilterWith(model.with);
       if (typeof model.correlate === 'object') self.correlate = new _EventFilterCorrelate(model.correlate);
     }
+    getLifecycleHook('EventFilter')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new EventFilter(this as any) as EventFilter & Specification.EventFilter;
+    getLifecycleHook('EventFilter')?.preValidation?.(copy);
+    validate('EventFilter', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('EventFilter')?.postValidation?.(copy);
+  }
+
+  normalize(): EventFilter & Specification.EventFilter {
+    const copy = new EventFilter(this as any) as EventFilter & Specification.EventFilter;
+    return getLifecycleHook('EventFilter')?.normalize?.(copy) || copy;
   }
 }
 

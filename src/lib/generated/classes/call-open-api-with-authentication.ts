@@ -20,12 +20,14 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _AuthenticationPolicyBasic } from './authentication-policy-basic';
 import { _AuthenticationPolicyBearer } from './authentication-policy-bearer';
 import { _AuthenticationPolicyOauth2 } from './authentication-policy-oauth2';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class CallOpenAPIWithAuthentication extends ObjectHydrator<Specification.CallOpenAPIWithAuthentication> {
   constructor(model?: Partial<Specification.CallOpenAPIWithAuthentication>) {
@@ -39,6 +41,21 @@ class CallOpenAPIWithAuthentication extends ObjectHydrator<Specification.CallOpe
       if (typeof model.oauth2 === 'object')
         self.oauth2 = new _AuthenticationPolicyOauth2(model.oauth2 as Specification.AuthenticationPolicyOauth2);
     }
+    getLifecycleHook('CallOpenAPIWithAuthentication')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new CallOpenAPIWithAuthentication(this as any) as CallOpenAPIWithAuthentication &
+      Specification.CallOpenAPIWithAuthentication;
+    getLifecycleHook('CallOpenAPIWithAuthentication')?.preValidation?.(copy);
+    validate('CallOpenAPIWithAuthentication', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('CallOpenAPIWithAuthentication')?.postValidation?.(copy);
+  }
+
+  normalize(): CallOpenAPIWithAuthentication & Specification.CallOpenAPIWithAuthentication {
+    const copy = new CallOpenAPIWithAuthentication(this as any) as CallOpenAPIWithAuthentication &
+      Specification.CallOpenAPIWithAuthentication;
+    return getLifecycleHook('CallOpenAPIWithAuthentication')?.normalize?.(copy) || copy;
   }
 }
 

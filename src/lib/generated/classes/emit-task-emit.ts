@@ -20,10 +20,12 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _EmitTaskEmitEvent } from './emit-task-emit-event';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class EmitTaskEmit extends ObjectHydrator<Specification.EmitTaskEmit> {
   constructor(model?: Partial<Specification.EmitTaskEmit>) {
@@ -32,6 +34,19 @@ class EmitTaskEmit extends ObjectHydrator<Specification.EmitTaskEmit> {
     if (isObject(model)) {
       if (typeof model.event === 'object') self.event = new _EmitTaskEmitEvent(model.event);
     }
+    getLifecycleHook('EmitTaskEmit')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new EmitTaskEmit(this as any) as EmitTaskEmit & Specification.EmitTaskEmit;
+    getLifecycleHook('EmitTaskEmit')?.preValidation?.(copy);
+    validate('EmitTaskEmit', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('EmitTaskEmit')?.postValidation?.(copy);
+  }
+
+  normalize(): EmitTaskEmit & Specification.EmitTaskEmit {
+    const copy = new EmitTaskEmit(this as any) as EmitTaskEmit & Specification.EmitTaskEmit;
+    return getLifecycleHook('EmitTaskEmit')?.normalize?.(copy) || copy;
   }
 }
 

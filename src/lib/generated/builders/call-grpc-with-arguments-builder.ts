@@ -20,20 +20,23 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.CallGRPCWithArguments} model The underlying object
- * @returns {Specification.CallGRPCWithArguments} The validated underlying object
+ * @param {Specification.CallGRPCWithArguments} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.CallGRPCWithArguments} The built object
  */
-function buildingFn(model: Specification.CallGRPCWithArguments): Specification.CallGRPCWithArguments {
+function buildingFn(
+  model: Specification.CallGRPCWithArguments,
+  options: BuildOptions,
+): Specification.CallGRPCWithArguments {
   const instance = new Classes.CallGRPCWithArguments(model);
-  validate('CallGRPCWithArguments', instance);
-  return instance as Specification.CallGRPCWithArguments;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.CallGRPCWithArguments;
 }
 
 /**

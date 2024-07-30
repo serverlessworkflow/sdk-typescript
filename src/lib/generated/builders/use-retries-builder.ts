@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.UseRetries} model The underlying object
- * @returns {Specification.UseRetries} The validated underlying object
+ * @param {Specification.UseRetries} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.UseRetries} The built object
  */
-function buildingFn(model: Specification.UseRetries): Specification.UseRetries {
+function buildingFn(model: Specification.UseRetries, options: BuildOptions): Specification.UseRetries {
   const instance = new Classes.UseRetries(model);
-  validate('UseRetries', instance);
-  return instance as Specification.UseRetries;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.UseRetries;
 }
 
 /**

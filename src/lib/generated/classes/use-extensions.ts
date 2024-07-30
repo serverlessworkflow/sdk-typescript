@@ -23,6 +23,9 @@
 import { _Extension } from './extension';
 import { Specification } from '../definitions';
 import { ArrayHydrator } from '../../hydrator';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class UseExtensions extends ArrayHydrator<{ [k: string]: Specification.Extension }> {
   constructor(model?: Array<{ [k: string]: Specification.Extension }> | number) {
@@ -36,6 +39,19 @@ class UseExtensions extends ArrayHydrator<{ [k: string]: Specification.Extension
       }
     }
     Object.setPrototypeOf(this, Object.create(UseExtensions.prototype));
+    getLifecycleHook('UseExtensions')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new UseExtensions(this);
+    getLifecycleHook('UseExtensions')?.preValidation?.(copy);
+    validate('UseExtensions', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('UseExtensions')?.postValidation?.(copy);
+  }
+
+  normalize(): UseExtensions {
+    const copy = new UseExtensions(this);
+    return getLifecycleHook('UseExtensions')?.normalize?.(copy) || copy;
   }
 }
 

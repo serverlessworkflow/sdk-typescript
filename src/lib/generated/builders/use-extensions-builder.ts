@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { arrayBuilder, ArrayBuilder } from '../../builder';
-import { validate } from '../../validation';
+import { arrayBuilder, ArrayBuilder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying array
- * @param {Specification.UseExtensions} model The underlying array
- * @returns {Specification.UseExtensions} The validated underlying array
+ * @param {Specification.UseExtensions} model The proxied array
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.UseExtensions} The built array
  */
-function buildingFn(model: Specification.UseExtensions): Specification.UseExtensions {
+function buildingFn(model: Specification.UseExtensions, options: BuildOptions): Specification.UseExtensions {
   const instance = new Classes.UseExtensions(model);
-  validate('UseExtensions', instance);
-  return instance as Specification.UseExtensions;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.UseExtensions;
 }
 
 /**

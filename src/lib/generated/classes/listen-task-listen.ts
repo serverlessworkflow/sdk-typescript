@@ -21,12 +21,28 @@
  *****************************************************************************************/
 
 import { ObjectHydrator } from '../../hydrator';
-
 import { Specification } from '../definitions';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class ListenTaskListen extends ObjectHydrator<Specification.ListenTaskListen> {
   constructor(model?: Partial<Specification.ListenTaskListen>) {
     super(model);
+
+    getLifecycleHook('ListenTaskListen')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new ListenTaskListen(this as any) as ListenTaskListen & Specification.ListenTaskListen;
+    getLifecycleHook('ListenTaskListen')?.preValidation?.(copy);
+    validate('ListenTaskListen', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('ListenTaskListen')?.postValidation?.(copy);
+  }
+
+  normalize(): ListenTaskListen & Specification.ListenTaskListen {
+    const copy = new ListenTaskListen(this as any) as ListenTaskListen & Specification.ListenTaskListen;
+    return getLifecycleHook('ListenTaskListen')?.normalize?.(copy) || copy;
   }
 }
 

@@ -20,12 +20,14 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _AuthenticationPolicyBasic } from './authentication-policy-basic';
 import { _AuthenticationPolicyBearer } from './authentication-policy-bearer';
 import { _AuthenticationPolicyOauth2 } from './authentication-policy-oauth2';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class AuthenticationPolicy extends ObjectHydrator<Specification.AuthenticationPolicy> {
   constructor(model?: Partial<Specification.AuthenticationPolicy>) {
@@ -39,6 +41,19 @@ class AuthenticationPolicy extends ObjectHydrator<Specification.AuthenticationPo
       if (typeof model.oauth2 === 'object')
         self.oauth2 = new _AuthenticationPolicyOauth2(model.oauth2 as Specification.AuthenticationPolicyOauth2);
     }
+    getLifecycleHook('AuthenticationPolicy')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new AuthenticationPolicy(this as any) as AuthenticationPolicy & Specification.AuthenticationPolicy;
+    getLifecycleHook('AuthenticationPolicy')?.preValidation?.(copy);
+    validate('AuthenticationPolicy', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('AuthenticationPolicy')?.postValidation?.(copy);
+  }
+
+  normalize(): AuthenticationPolicy & Specification.AuthenticationPolicy {
+    const copy = new AuthenticationPolicy(this as any) as AuthenticationPolicy & Specification.AuthenticationPolicy;
+    return getLifecycleHook('AuthenticationPolicy')?.normalize?.(copy) || copy;
   }
 }
 

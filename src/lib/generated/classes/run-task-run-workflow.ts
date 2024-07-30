@@ -20,10 +20,12 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _RunTaskRunWorkflowInput } from './run-task-run-workflow-input';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class RunTaskRunWorkflow extends ObjectHydrator<Specification.RunTaskRunWorkflow> {
   constructor(model?: Partial<Specification.RunTaskRunWorkflow>) {
@@ -32,6 +34,19 @@ class RunTaskRunWorkflow extends ObjectHydrator<Specification.RunTaskRunWorkflow
     if (isObject(model)) {
       if (typeof model.input === 'object') self.input = new _RunTaskRunWorkflowInput(model.input);
     }
+    getLifecycleHook('RunTaskRunWorkflow')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new RunTaskRunWorkflow(this as any) as RunTaskRunWorkflow & Specification.RunTaskRunWorkflow;
+    getLifecycleHook('RunTaskRunWorkflow')?.preValidation?.(copy);
+    validate('RunTaskRunWorkflow', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('RunTaskRunWorkflow')?.postValidation?.(copy);
+  }
+
+  normalize(): RunTaskRunWorkflow & Specification.RunTaskRunWorkflow {
+    const copy = new RunTaskRunWorkflow(this as any) as RunTaskRunWorkflow & Specification.RunTaskRunWorkflow;
+    return getLifecycleHook('RunTaskRunWorkflow')?.normalize?.(copy) || copy;
   }
 }
 

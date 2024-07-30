@@ -20,14 +20,16 @@
  *
  *****************************************************************************************/
 
-import { _TaskBase } from './task-base';
 import { _Input } from './input';
 import { _Output } from './output';
 import { _Export } from './export';
 import { _Timeout } from './timeout';
 import { _EmitTaskEmit } from './emit-task-emit';
+import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class EmitTask extends _TaskBase {
   constructor(model?: Partial<Specification.EmitTask>) {
@@ -40,6 +42,19 @@ class EmitTask extends _TaskBase {
       if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
       if (typeof model.emit === 'object') self.emit = new _EmitTaskEmit(model.emit);
     }
+    getLifecycleHook('EmitTask')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new EmitTask(this as any) as EmitTask & Specification.EmitTask;
+    getLifecycleHook('EmitTask')?.preValidation?.(copy);
+    validate('EmitTask', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('EmitTask')?.postValidation?.(copy);
+  }
+
+  normalize(): EmitTask & Specification.EmitTask {
+    const copy = new EmitTask(this as any) as EmitTask & Specification.EmitTask;
+    return getLifecycleHook('EmitTask')?.normalize?.(copy) || copy;
   }
 }
 

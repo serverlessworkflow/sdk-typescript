@@ -21,12 +21,28 @@
  *****************************************************************************************/
 
 import { ObjectHydrator } from '../../hydrator';
-
 import { Specification } from '../definitions';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class DocumentTags extends ObjectHydrator<Specification.DocumentTags> {
   constructor(model?: Partial<Specification.DocumentTags>) {
     super(model);
+
+    getLifecycleHook('DocumentTags')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new DocumentTags(this as any) as DocumentTags & Specification.DocumentTags;
+    getLifecycleHook('DocumentTags')?.preValidation?.(copy);
+    validate('DocumentTags', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('DocumentTags')?.postValidation?.(copy);
+  }
+
+  normalize(): DocumentTags & Specification.DocumentTags {
+    const copy = new DocumentTags(this as any) as DocumentTags & Specification.DocumentTags;
+    return getLifecycleHook('DocumentTags')?.normalize?.(copy) || copy;
   }
 }
 

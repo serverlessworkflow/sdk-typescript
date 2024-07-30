@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Schedule} model The underlying object
- * @returns {Specification.Schedule} The validated underlying object
+ * @param {Specification.Schedule} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.Schedule} The built object
  */
-function buildingFn(model: Specification.Schedule): Specification.Schedule {
+function buildingFn(model: Specification.Schedule, options: BuildOptions): Specification.Schedule {
   const instance = new Classes.Schedule(model);
-  validate('Schedule', instance);
-  return instance as Specification.Schedule;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.Schedule;
 }
 
 /**

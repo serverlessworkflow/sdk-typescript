@@ -21,12 +21,28 @@
  *****************************************************************************************/
 
 import { ObjectHydrator } from '../../hydrator';
-
 import { Specification } from '../definitions';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class CallFunctionWith extends ObjectHydrator<Specification.CallFunctionWith> {
   constructor(model?: Partial<Specification.CallFunctionWith>) {
     super(model);
+
+    getLifecycleHook('CallFunctionWith')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new CallFunctionWith(this as any) as CallFunctionWith & Specification.CallFunctionWith;
+    getLifecycleHook('CallFunctionWith')?.preValidation?.(copy);
+    validate('CallFunctionWith', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('CallFunctionWith')?.postValidation?.(copy);
+  }
+
+  normalize(): CallFunctionWith & Specification.CallFunctionWith {
+    const copy = new CallFunctionWith(this as any) as CallFunctionWith & Specification.CallFunctionWith;
+    return getLifecycleHook('CallFunctionWith')?.normalize?.(copy) || copy;
   }
 }
 

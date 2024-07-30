@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.UseErrors} model The underlying object
- * @returns {Specification.UseErrors} The validated underlying object
+ * @param {Specification.UseErrors} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.UseErrors} The built object
  */
-function buildingFn(model: Specification.UseErrors): Specification.UseErrors {
+function buildingFn(model: Specification.UseErrors, options: BuildOptions): Specification.UseErrors {
   const instance = new Classes.UseErrors(model);
-  validate('UseErrors', instance);
-  return instance as Specification.UseErrors;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.UseErrors;
 }
 
 /**

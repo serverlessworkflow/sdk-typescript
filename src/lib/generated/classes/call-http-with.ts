@@ -20,10 +20,12 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _CallHTTPWithEndpoint } from './call-http-with-endpoint';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class CallHTTPWith extends ObjectHydrator<Specification.CallHTTPWith> {
   constructor(model?: Partial<Specification.CallHTTPWith>) {
@@ -32,6 +34,19 @@ class CallHTTPWith extends ObjectHydrator<Specification.CallHTTPWith> {
     if (isObject(model)) {
       if (typeof model.endpoint === 'object') self.endpoint = new _CallHTTPWithEndpoint(model.endpoint);
     }
+    getLifecycleHook('CallHTTPWith')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new CallHTTPWith(this as any) as CallHTTPWith & Specification.CallHTTPWith;
+    getLifecycleHook('CallHTTPWith')?.preValidation?.(copy);
+    validate('CallHTTPWith', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('CallHTTPWith')?.postValidation?.(copy);
+  }
+
+  normalize(): CallHTTPWith & Specification.CallHTTPWith {
+    const copy = new CallHTTPWith(this as any) as CallHTTPWith & Specification.CallHTTPWith;
+    return getLifecycleHook('CallHTTPWith')?.normalize?.(copy) || copy;
   }
 }
 

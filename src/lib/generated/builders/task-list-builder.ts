@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { arrayBuilder, ArrayBuilder } from '../../builder';
-import { validate } from '../../validation';
+import { arrayBuilder, ArrayBuilder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying array
- * @param {Specification.TaskList} model The underlying array
- * @returns {Specification.TaskList} The validated underlying array
+ * @param {Specification.TaskList} model The proxied array
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.TaskList} The built array
  */
-function buildingFn(model: Specification.TaskList): Specification.TaskList {
+function buildingFn(model: Specification.TaskList, options: BuildOptions): Specification.TaskList {
   const instance = new Classes.TaskList(model);
-  validate('TaskList', instance);
-  return instance as Specification.TaskList;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.TaskList;
 }
 
 /**

@@ -20,14 +20,16 @@
  *
  *****************************************************************************************/
 
-import { _TaskBase } from './task-base';
 import { _Input } from './input';
 import { _Output } from './output';
 import { _Export } from './export';
 import { _Timeout } from './timeout';
 import { _SwitchTaskSwitch } from './switch-task-switch';
+import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class SwitchTask extends _TaskBase {
   constructor(model?: Partial<Specification.SwitchTask>) {
@@ -39,8 +41,21 @@ class SwitchTask extends _TaskBase {
       if (typeof model.export === 'object') self.export = new _Export(model.export);
       if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
       if (typeof model.switch === 'object')
-        self.switch = new _SwitchTaskSwitch(model.switch) as Specification.SwitchTaskSwitch;
+        self.switch = new _SwitchTaskSwitch(model.switch) as unknown as Specification.SwitchTaskSwitch;
     }
+    getLifecycleHook('SwitchTask')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new SwitchTask(this as any) as SwitchTask & Specification.SwitchTask;
+    getLifecycleHook('SwitchTask')?.preValidation?.(copy);
+    validate('SwitchTask', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('SwitchTask')?.postValidation?.(copy);
+  }
+
+  normalize(): SwitchTask & Specification.SwitchTask {
+    const copy = new SwitchTask(this as any) as SwitchTask & Specification.SwitchTask;
+    return getLifecycleHook('SwitchTask')?.normalize?.(copy) || copy;
   }
 }
 

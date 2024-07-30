@@ -20,10 +20,12 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _Task } from './task';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class UseFunctions extends ObjectHydrator<Specification.UseFunctions> {
   constructor(model?: Partial<Specification.UseFunctions>) {
@@ -37,6 +39,19 @@ class UseFunctions extends ObjectHydrator<Specification.UseFunctions> {
           self[key] = new _Task(value);
         });
     }
+    getLifecycleHook('UseFunctions')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new UseFunctions(this as any) as UseFunctions & Specification.UseFunctions;
+    getLifecycleHook('UseFunctions')?.preValidation?.(copy);
+    validate('UseFunctions', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('UseFunctions')?.postValidation?.(copy);
+  }
+
+  normalize(): UseFunctions & Specification.UseFunctions {
+    const copy = new UseFunctions(this as any) as UseFunctions & Specification.UseFunctions;
+    return getLifecycleHook('UseFunctions')?.normalize?.(copy) || copy;
   }
 }
 

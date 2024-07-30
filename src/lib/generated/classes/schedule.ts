@@ -20,10 +20,12 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _Duration } from './duration';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class Schedule extends ObjectHydrator<Specification.Schedule> {
   constructor(model?: Partial<Specification.Schedule>) {
@@ -33,6 +35,19 @@ class Schedule extends ObjectHydrator<Specification.Schedule> {
       if (typeof model.every === 'object') self.every = new _Duration(model.every);
       if (typeof model.after === 'object') self.after = new _Duration(model.after);
     }
+    getLifecycleHook('Schedule')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new Schedule(this as any) as Schedule & Specification.Schedule;
+    getLifecycleHook('Schedule')?.preValidation?.(copy);
+    validate('Schedule', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('Schedule')?.postValidation?.(copy);
+  }
+
+  normalize(): Schedule & Specification.Schedule {
+    const copy = new Schedule(this as any) as Schedule & Specification.Schedule;
+    return getLifecycleHook('Schedule')?.normalize?.(copy) || copy;
   }
 }
 

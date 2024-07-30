@@ -20,14 +20,16 @@
  *
  *****************************************************************************************/
 
-import { _TaskBase } from './task-base';
 import { _Input } from './input';
 import { _Output } from './output';
 import { _Export } from './export';
 import { _Timeout } from './timeout';
 import { _CallHTTPWith } from './call-http-with';
+import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class CallHTTP extends _TaskBase {
   constructor(model?: Partial<Specification.CallHTTP>) {
@@ -41,6 +43,19 @@ class CallHTTP extends _TaskBase {
       if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
       if (typeof model.with === 'object') self.with = new _CallHTTPWith(model.with);
     }
+    getLifecycleHook('CallHTTP')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new CallHTTP(this as any) as CallHTTP & Specification.CallHTTP;
+    getLifecycleHook('CallHTTP')?.preValidation?.(copy);
+    validate('CallHTTP', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('CallHTTP')?.postValidation?.(copy);
+  }
+
+  normalize(): CallHTTP & Specification.CallHTTP {
+    const copy = new CallHTTP(this as any) as CallHTTP & Specification.CallHTTP;
+    return getLifecycleHook('CallHTTP')?.normalize?.(copy) || copy;
   }
 }
 

@@ -20,10 +20,12 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _TaskList } from './task-list';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class Extension extends ObjectHydrator<Specification.Extension> {
   constructor(model?: Partial<Specification.Extension>) {
@@ -33,6 +35,19 @@ class Extension extends ObjectHydrator<Specification.Extension> {
       if (typeof model.before === 'object') self.before = new _TaskList(model.before);
       if (typeof model.after === 'object') self.after = new _TaskList(model.after);
     }
+    getLifecycleHook('Extension')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new Extension(this as any) as Extension & Specification.Extension;
+    getLifecycleHook('Extension')?.preValidation?.(copy);
+    validate('Extension', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('Extension')?.postValidation?.(copy);
+  }
+
+  normalize(): Extension & Specification.Extension {
+    const copy = new Extension(this as any) as Extension & Specification.Extension;
+    return getLifecycleHook('Extension')?.normalize?.(copy) || copy;
   }
 }
 

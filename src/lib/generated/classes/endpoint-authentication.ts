@@ -20,12 +20,14 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _AuthenticationPolicyBasic } from './authentication-policy-basic';
 import { _AuthenticationPolicyBearer } from './authentication-policy-bearer';
 import { _AuthenticationPolicyOauth2 } from './authentication-policy-oauth2';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class EndpointAuthentication extends ObjectHydrator<Specification.EndpointAuthentication> {
   constructor(model?: Partial<Specification.EndpointAuthentication>) {
@@ -39,6 +41,21 @@ class EndpointAuthentication extends ObjectHydrator<Specification.EndpointAuthen
       if (typeof model.oauth2 === 'object')
         self.oauth2 = new _AuthenticationPolicyOauth2(model.oauth2 as Specification.AuthenticationPolicyOauth2);
     }
+    getLifecycleHook('EndpointAuthentication')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new EndpointAuthentication(this as any) as EndpointAuthentication &
+      Specification.EndpointAuthentication;
+    getLifecycleHook('EndpointAuthentication')?.preValidation?.(copy);
+    validate('EndpointAuthentication', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('EndpointAuthentication')?.postValidation?.(copy);
+  }
+
+  normalize(): EndpointAuthentication & Specification.EndpointAuthentication {
+    const copy = new EndpointAuthentication(this as any) as EndpointAuthentication &
+      Specification.EndpointAuthentication;
+    return getLifecycleHook('EndpointAuthentication')?.normalize?.(copy) || copy;
   }
 }
 

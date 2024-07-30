@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Oauth2Token} model The underlying object
- * @returns {Specification.Oauth2Token} The validated underlying object
+ * @param {Specification.Oauth2Token} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.Oauth2Token} The built object
  */
-function buildingFn(model: Specification.Oauth2Token): Specification.Oauth2Token {
+function buildingFn(model: Specification.Oauth2Token, options: BuildOptions): Specification.Oauth2Token {
   const instance = new Classes.Oauth2Token(model);
-  validate('Oauth2Token', instance);
-  return instance as Specification.Oauth2Token;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.Oauth2Token;
 }
 
 /**

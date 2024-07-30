@@ -21,12 +21,30 @@
  *****************************************************************************************/
 
 import { ObjectHydrator } from '../../hydrator';
-
 import { Specification } from '../definitions';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class RunTaskRunShellEnvironment extends ObjectHydrator<Specification.RunTaskRunShellEnvironment> {
   constructor(model?: Partial<Specification.RunTaskRunShellEnvironment>) {
     super(model);
+
+    getLifecycleHook('RunTaskRunShellEnvironment')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new RunTaskRunShellEnvironment(this as any) as RunTaskRunShellEnvironment &
+      Specification.RunTaskRunShellEnvironment;
+    getLifecycleHook('RunTaskRunShellEnvironment')?.preValidation?.(copy);
+    validate('RunTaskRunShellEnvironment', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('RunTaskRunShellEnvironment')?.postValidation?.(copy);
+  }
+
+  normalize(): RunTaskRunShellEnvironment & Specification.RunTaskRunShellEnvironment {
+    const copy = new RunTaskRunShellEnvironment(this as any) as RunTaskRunShellEnvironment &
+      Specification.RunTaskRunShellEnvironment;
+    return getLifecycleHook('RunTaskRunShellEnvironment')?.normalize?.(copy) || copy;
   }
 }
 

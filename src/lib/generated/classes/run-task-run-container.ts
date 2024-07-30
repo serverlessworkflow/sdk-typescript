@@ -21,12 +21,28 @@
  *****************************************************************************************/
 
 import { ObjectHydrator } from '../../hydrator';
-
 import { Specification } from '../definitions';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class RunTaskRunContainer extends ObjectHydrator<Specification.RunTaskRunContainer> {
   constructor(model?: Partial<Specification.RunTaskRunContainer>) {
     super(model);
+
+    getLifecycleHook('RunTaskRunContainer')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new RunTaskRunContainer(this as any) as RunTaskRunContainer & Specification.RunTaskRunContainer;
+    getLifecycleHook('RunTaskRunContainer')?.preValidation?.(copy);
+    validate('RunTaskRunContainer', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('RunTaskRunContainer')?.postValidation?.(copy);
+  }
+
+  normalize(): RunTaskRunContainer & Specification.RunTaskRunContainer {
+    const copy = new RunTaskRunContainer(this as any) as RunTaskRunContainer & Specification.RunTaskRunContainer;
+    return getLifecycleHook('RunTaskRunContainer')?.normalize?.(copy) || copy;
   }
 }
 

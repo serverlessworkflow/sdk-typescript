@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.RetryPolicyLimit} model The underlying object
- * @returns {Specification.RetryPolicyLimit} The validated underlying object
+ * @param {Specification.RetryPolicyLimit} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.RetryPolicyLimit} The built object
  */
-function buildingFn(model: Specification.RetryPolicyLimit): Specification.RetryPolicyLimit {
+function buildingFn(model: Specification.RetryPolicyLimit, options: BuildOptions): Specification.RetryPolicyLimit {
   const instance = new Classes.RetryPolicyLimit(model);
-  validate('RetryPolicyLimit', instance);
-  return instance as Specification.RetryPolicyLimit;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.RetryPolicyLimit;
 }
 
 /**

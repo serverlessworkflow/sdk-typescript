@@ -21,12 +21,28 @@
  *****************************************************************************************/
 
 import { ObjectHydrator } from '../../hydrator';
-
 import { Specification } from '../definitions';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class ForTaskFor extends ObjectHydrator<Specification.ForTaskFor> {
   constructor(model?: Partial<Specification.ForTaskFor>) {
     super(model);
+
+    getLifecycleHook('ForTaskFor')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new ForTaskFor(this as any) as ForTaskFor & Specification.ForTaskFor;
+    getLifecycleHook('ForTaskFor')?.preValidation?.(copy);
+    validate('ForTaskFor', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('ForTaskFor')?.postValidation?.(copy);
+  }
+
+  normalize(): ForTaskFor & Specification.ForTaskFor {
+    const copy = new ForTaskFor(this as any) as ForTaskFor & Specification.ForTaskFor;
+    return getLifecycleHook('ForTaskFor')?.normalize?.(copy) || copy;
   }
 }
 

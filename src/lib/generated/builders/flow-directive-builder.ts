@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.FlowDirective} model The underlying object
- * @returns {Specification.FlowDirective} The validated underlying object
+ * @param {Specification.FlowDirective} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.FlowDirective} The built object
  */
-function buildingFn(model: Specification.FlowDirective): Specification.FlowDirective {
+function buildingFn(model: Specification.FlowDirective, options: BuildOptions): Specification.FlowDirective {
   const instance = new Classes.FlowDirective(model);
-  validate('FlowDirective', instance);
-  return instance as Specification.FlowDirective;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.FlowDirective;
 }
 
 /**

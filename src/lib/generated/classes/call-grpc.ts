@@ -20,14 +20,16 @@
  *
  *****************************************************************************************/
 
-import { _TaskBase } from './task-base';
 import { _Input } from './input';
 import { _Output } from './output';
 import { _Export } from './export';
 import { _Timeout } from './timeout';
 import { _CallGRPCWith } from './call-grpc-with';
+import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class CallGRPC extends _TaskBase {
   constructor(model?: Partial<Specification.CallGRPC>) {
@@ -41,6 +43,19 @@ class CallGRPC extends _TaskBase {
       if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
       if (typeof model.with === 'object') self.with = new _CallGRPCWith(model.with);
     }
+    getLifecycleHook('CallGRPC')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new CallGRPC(this as any) as CallGRPC & Specification.CallGRPC;
+    getLifecycleHook('CallGRPC')?.preValidation?.(copy);
+    validate('CallGRPC', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('CallGRPC')?.postValidation?.(copy);
+  }
+
+  normalize(): CallGRPC & Specification.CallGRPC {
+    const copy = new CallGRPC(this as any) as CallGRPC & Specification.CallGRPC;
+    return getLifecycleHook('CallGRPC')?.normalize?.(copy) || copy;
   }
 }
 

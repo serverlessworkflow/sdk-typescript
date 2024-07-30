@@ -20,12 +20,14 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _EventConsumptionStrategyAll } from './event-consumption-strategy-all';
 import { _EventConsumptionStrategyAny } from './event-consumption-strategy-any';
 import { _EventFilter } from './event-filter';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class EventConsumptionStrategy extends ObjectHydrator<Specification.EventConsumptionStrategy> {
   constructor(model?: Partial<Specification.EventConsumptionStrategy>) {
@@ -38,6 +40,21 @@ class EventConsumptionStrategy extends ObjectHydrator<Specification.EventConsump
         self.any = new _EventConsumptionStrategyAny(model.any as Specification.EventConsumptionStrategyAny);
       if (typeof model.one === 'object') self.one = new _EventFilter(model.one as Specification.EventFilter);
     }
+    getLifecycleHook('EventConsumptionStrategy')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new EventConsumptionStrategy(this as any) as EventConsumptionStrategy &
+      Specification.EventConsumptionStrategy;
+    getLifecycleHook('EventConsumptionStrategy')?.preValidation?.(copy);
+    validate('EventConsumptionStrategy', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('EventConsumptionStrategy')?.postValidation?.(copy);
+  }
+
+  normalize(): EventConsumptionStrategy & Specification.EventConsumptionStrategy {
+    const copy = new EventConsumptionStrategy(this as any) as EventConsumptionStrategy &
+      Specification.EventConsumptionStrategy;
+    return getLifecycleHook('EventConsumptionStrategy')?.normalize?.(copy) || copy;
   }
 }
 

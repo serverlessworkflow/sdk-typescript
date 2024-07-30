@@ -21,12 +21,28 @@
  *****************************************************************************************/
 
 import { ObjectHydrator } from '../../hydrator';
-
 import { Specification } from '../definitions';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy } from '../../utils';
 
 class EmitTaskEmitEvent extends ObjectHydrator<Specification.EmitTaskEmitEvent> {
   constructor(model?: Partial<Specification.EmitTaskEmitEvent>) {
     super(model);
+
+    getLifecycleHook('EmitTaskEmitEvent')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new EmitTaskEmitEvent(this as any) as EmitTaskEmitEvent & Specification.EmitTaskEmitEvent;
+    getLifecycleHook('EmitTaskEmitEvent')?.preValidation?.(copy);
+    validate('EmitTaskEmitEvent', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('EmitTaskEmitEvent')?.postValidation?.(copy);
+  }
+
+  normalize(): EmitTaskEmitEvent & Specification.EmitTaskEmitEvent {
+    const copy = new EmitTaskEmitEvent(this as any) as EmitTaskEmitEvent & Specification.EmitTaskEmitEvent;
+    return getLifecycleHook('EmitTaskEmitEvent')?.normalize?.(copy) || copy;
   }
 }
 

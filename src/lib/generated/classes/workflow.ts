@@ -20,7 +20,6 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _Document } from './document';
 import { _Input } from './input';
 import { _Use } from './use';
@@ -28,8 +27,11 @@ import { _TaskList } from './task-list';
 import { _Timeout } from './timeout';
 import { _Output } from './output';
 import { _Schedule } from './schedule';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class Workflow extends ObjectHydrator<Specification.Workflow> {
   constructor(model?: Partial<Specification.Workflow>) {
@@ -44,6 +46,19 @@ class Workflow extends ObjectHydrator<Specification.Workflow> {
       if (typeof model.output === 'object') self.output = new _Output(model.output);
       if (typeof model.schedule === 'object') self.schedule = new _Schedule(model.schedule);
     }
+    getLifecycleHook('Workflow')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new Workflow(this as any) as Workflow & Specification.Workflow;
+    getLifecycleHook('Workflow')?.preValidation?.(copy);
+    validate('Workflow', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('Workflow')?.postValidation?.(copy);
+  }
+
+  normalize(): Workflow & Specification.Workflow {
+    const copy = new Workflow(this as any) as Workflow & Specification.Workflow;
+    return getLifecycleHook('Workflow')?.normalize?.(copy) || copy;
   }
 }
 

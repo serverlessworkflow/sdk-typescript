@@ -20,20 +20,20 @@
  *
  *****************************************************************************************/
 
-import { builder, Builder } from '../../builder';
-import { validate } from '../../validation';
+import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.CallFunctionWith} model The underlying object
- * @returns {Specification.CallFunctionWith} The validated underlying object
+ * @param {Specification.CallFunctionWith} model The proxied object
+ * @param {BuildOptions} options The build options to use
+ * @returns {Specification.CallFunctionWith} The built object
  */
-function buildingFn(model: Specification.CallFunctionWith): Specification.CallFunctionWith {
+function buildingFn(model: Specification.CallFunctionWith, options: BuildOptions): Specification.CallFunctionWith {
   const instance = new Classes.CallFunctionWith(model);
-  validate('CallFunctionWith', instance);
-  return instance as Specification.CallFunctionWith;
+  if (options.validate) instance.validate();
+  return (options.normalize ? instance.normalize() : instance) as Specification.CallFunctionWith;
 }
 
 /**

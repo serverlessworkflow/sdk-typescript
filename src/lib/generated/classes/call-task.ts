@@ -20,13 +20,15 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _Input } from './input';
 import { _Output } from './output';
 import { _Export } from './export';
 import { _Timeout } from './timeout';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class CallTask extends ObjectHydrator<Specification.CallTask> {
   constructor(model?: Partial<Specification.CallTask>) {
@@ -38,6 +40,19 @@ class CallTask extends ObjectHydrator<Specification.CallTask> {
       if (typeof model.export === 'object') self.export = new _Export(model.export as Specification.Export);
       if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout as Specification.Timeout);
     }
+    getLifecycleHook('CallTask')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new CallTask(this as any) as CallTask & Specification.CallTask;
+    getLifecycleHook('CallTask')?.preValidation?.(copy);
+    validate('CallTask', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('CallTask')?.postValidation?.(copy);
+  }
+
+  normalize(): CallTask & Specification.CallTask {
+    const copy = new CallTask(this as any) as CallTask & Specification.CallTask;
+    return getLifecycleHook('CallTask')?.normalize?.(copy) || copy;
   }
 }
 

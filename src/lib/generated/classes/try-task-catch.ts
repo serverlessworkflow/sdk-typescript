@@ -20,11 +20,13 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { _RetryPolicy } from './retry-policy';
 import { _TaskList } from './task-list';
+import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { isObject } from '../../utils';
+import { getLifecycleHook } from '../../lifecycle-hooks';
+import { validate } from '../../validation';
+import { deepCopy, isObject } from '../../utils';
 
 class TryTaskCatch extends ObjectHydrator<Specification.TryTaskCatch> {
   constructor(model?: Partial<Specification.TryTaskCatch>) {
@@ -34,6 +36,19 @@ class TryTaskCatch extends ObjectHydrator<Specification.TryTaskCatch> {
       if (typeof model.retry === 'object') self.retry = new _RetryPolicy(model.retry);
       if (typeof model.do === 'object') self.do = new _TaskList(model.do);
     }
+    getLifecycleHook('TryTaskCatch')?.constructor?.(this);
+  }
+
+  validate() {
+    const copy = new TryTaskCatch(this as any) as TryTaskCatch & Specification.TryTaskCatch;
+    getLifecycleHook('TryTaskCatch')?.preValidation?.(copy);
+    validate('TryTaskCatch', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
+    getLifecycleHook('TryTaskCatch')?.postValidation?.(copy);
+  }
+
+  normalize(): TryTaskCatch & Specification.TryTaskCatch {
+    const copy = new TryTaskCatch(this as any) as TryTaskCatch & Specification.TryTaskCatch;
+    return getLifecycleHook('TryTaskCatch')?.normalize?.(copy) || copy;
   }
 }
 
