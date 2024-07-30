@@ -20,10 +20,11 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+
 import { Specification } from '../definitions';
 
-class FlowDirective extends Hydrator<Specification.FlowDirective> {
+class FlowDirective extends ObjectHydrator<Specification.FlowDirective> {
   constructor(model?: Partial<Specification.FlowDirective>) {
     super(model);
   }

@@ -20,10 +20,11 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+
 import { Specification } from '../definitions';
 
-class CallAsyncAPIWith extends Hydrator<Specification.CallAsyncAPIWith> {
+class CallAsyncAPIWith extends ObjectHydrator<Specification.CallAsyncAPIWith> {
   constructor(model?: Partial<Specification.CallAsyncAPIWith>) {
     super(model);
   }

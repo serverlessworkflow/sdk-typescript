@@ -20,13 +20,20 @@
  *
  *****************************************************************************************/
 
+import { _Extension } from './extension';
 import { Specification } from '../definitions';
+import { ArrayHydrator } from '../../hydrator';
 
-class UseExtensions extends Array<{ [k: string]: Specification.Extension }> {
-  constructor(model?: Array<{ [k: string]: Specification.Extension }>) {
-    super(...(model || []));
-    if (model != null && !Array.isArray(model)) {
-      throw new Error('The provided model should be an array');
+class UseExtensions extends ArrayHydrator<{ [k: string]: Specification.Extension }> {
+  constructor(model?: Array<{ [k: string]: Specification.Extension }> | number) {
+    super(model);
+    if (Array.isArray(model)) {
+      if (model?.length) {
+        this.splice(0, this.length);
+        model.forEach((item) =>
+          this.push(Object.fromEntries(Object.entries(item).map(([key, value]) => [key, new _Extension(value)]))),
+        );
+      }
     }
     Object.setPrototypeOf(this, Object.create(UseExtensions.prototype));
   }

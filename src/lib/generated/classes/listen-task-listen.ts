@@ -20,10 +20,11 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+
 import { Specification } from '../definitions';
 
-class ListenTaskListen extends Hydrator<Specification.ListenTaskListen> {
+class ListenTaskListen extends ObjectHydrator<Specification.ListenTaskListen> {
   constructor(model?: Partial<Specification.ListenTaskListen>) {
     super(model);
   }

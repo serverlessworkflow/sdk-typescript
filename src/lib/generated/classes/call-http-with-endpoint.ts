@@ -20,10 +20,11 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+
 import { Specification } from '../definitions';
 
-class CallHTTPWithEndpoint extends Hydrator<Specification.CallHTTPWithEndpoint> {
+class CallHTTPWithEndpoint extends ObjectHydrator<Specification.CallHTTPWithEndpoint> {
   constructor(model?: Partial<Specification.CallHTTPWithEndpoint>) {
     super(model);
   }

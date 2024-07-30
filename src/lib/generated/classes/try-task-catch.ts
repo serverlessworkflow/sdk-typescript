@@ -20,12 +20,20 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+import { _RetryPolicy } from './retry-policy';
+import { _TaskList } from './task-list';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
-class TryTaskCatch extends Hydrator<Specification.TryTaskCatch> {
+class TryTaskCatch extends ObjectHydrator<Specification.TryTaskCatch> {
   constructor(model?: Partial<Specification.TryTaskCatch>) {
     super(model);
+    const self = this as unknown as Specification.TryTaskCatch & object;
+    if (isObject(model)) {
+      if (typeof model.retry === 'object') self.retry = new _RetryPolicy(model.retry);
+      if (typeof model.do === 'object') self.do = new _TaskList(model.do);
+    }
   }
 }
 

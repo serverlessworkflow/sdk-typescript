@@ -20,12 +20,23 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+import { _Task } from './task';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
-class UseFunctions extends Hydrator<Specification.UseFunctions> {
+class UseFunctions extends ObjectHydrator<Specification.UseFunctions> {
   constructor(model?: Partial<Specification.UseFunctions>) {
     super(model);
+    const self = this as unknown as Specification.UseFunctions & object;
+    if (isObject(model)) {
+      const knownProperties: string[] = [];
+      Object.entries(model)
+        .filter(([key]) => !knownProperties.includes(key))
+        .forEach(([key, value]) => {
+          self[key] = new _Task(value);
+        });
+    }
   }
 }
 

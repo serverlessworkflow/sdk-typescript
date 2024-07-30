@@ -20,12 +20,20 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+import { _EventFilterWith } from './event-filter-with';
+import { _EventFilterCorrelate } from './event-filter-correlate';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
-class EventFilter extends Hydrator<Specification.EventFilter> {
+class EventFilter extends ObjectHydrator<Specification.EventFilter> {
   constructor(model?: Partial<Specification.EventFilter>) {
     super(model);
+    const self = this as unknown as Specification.EventFilter & object;
+    if (isObject(model)) {
+      if (typeof model.with === 'object') self.with = new _EventFilterWith(model.with);
+      if (typeof model.correlate === 'object') self.correlate = new _EventFilterCorrelate(model.correlate);
+    }
   }
 }
 

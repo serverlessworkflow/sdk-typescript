@@ -21,11 +21,25 @@
  *****************************************************************************************/
 
 import { _TaskBase } from './task-base';
+import { _Input } from './input';
+import { _Output } from './output';
+import { _Export } from './export';
+import { _Timeout } from './timeout';
+import { _SetTaskSet } from './set-task-set';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
 class SetTask extends _TaskBase {
   constructor(model?: Partial<Specification.SetTask>) {
     super(model);
+    const self = this as unknown as Specification.SetTask & object;
+    if (isObject(model)) {
+      if (typeof model.input === 'object') self.input = new _Input(model.input);
+      if (typeof model.output === 'object') self.output = new _Output(model.output);
+      if (typeof model.export === 'object') self.export = new _Export(model.export);
+      if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
+      if (typeof model.set === 'object') self.set = new _SetTaskSet(model.set);
+    }
   }
 }
 

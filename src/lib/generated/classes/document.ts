@@ -20,12 +20,18 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+import { _DocumentTags } from './document-tags';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
-class Document extends Hydrator<Specification.Document> {
+class Document extends ObjectHydrator<Specification.Document> {
   constructor(model?: Partial<Specification.Document>) {
     super(model);
+    const self = this as unknown as Specification.Document & object;
+    if (isObject(model)) {
+      if (typeof model.tags === 'object') self.tags = new _DocumentTags(model.tags);
+    }
   }
 }
 

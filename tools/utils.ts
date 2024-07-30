@@ -21,7 +21,6 @@ import { readMeDisclaimer } from './consts';
 import { URL } from 'url';
 import yargs from 'yargs';
 import { schemaVersion } from '../package.json';
-import { ExportedDeclarations, Project, QuoteKind } from 'ts-morph';
 
 const { writeFile, mkdir } = fsPromises;
 
@@ -78,22 +77,6 @@ export const toPascalCase = (source: string): string => {
  */
 export const normalizeKnownAllCaps = (source: string): string =>
   source.replace('API', 'Api').replace('GRPC', 'Grpc').replace('HTTP', 'Http').replace('OAuth2', 'Oauth2');
-
-/**
- * Get the exported declarations of the provided TypeScript code
- * @param tsSource The TypeScript code to parse
- * @returns An array containing the name of the exported declarations
- */
-export const getExportedDeclarations = (tsSource: string): ReadonlyMap<string, ExportedDeclarations[]> => {
-  const project = new Project({
-    useInMemoryFileSystem: true,
-    manipulationSettings: {
-      quoteKind: QuoteKind.Single,
-    },
-  });
-  const sourceFile = project.createSourceFile('declarations.ts', tsSource);
-  return sourceFile.getExportedDeclarations();
-};
 
 /** Schemas directory */
 export const schemaDir = path.resolve(process.cwd(), 'src/lib/generated/schema');

@@ -20,12 +20,19 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+import { _Duration } from './duration';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
-class Schedule extends Hydrator<Specification.Schedule> {
+class Schedule extends ObjectHydrator<Specification.Schedule> {
   constructor(model?: Partial<Specification.Schedule>) {
     super(model);
+    const self = this as unknown as Specification.Schedule & object;
+    if (isObject(model)) {
+      if (typeof model.every === 'object') self.every = new _Duration(model.every);
+      if (typeof model.after === 'object') self.after = new _Duration(model.after);
+    }
   }
 }
 

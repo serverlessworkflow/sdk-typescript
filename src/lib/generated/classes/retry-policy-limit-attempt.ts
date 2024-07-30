@@ -20,12 +20,18 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+import { _Duration } from './duration';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
-class RetryPolicyLimitAttempt extends Hydrator<Specification.RetryPolicyLimitAttempt> {
+class RetryPolicyLimitAttempt extends ObjectHydrator<Specification.RetryPolicyLimitAttempt> {
   constructor(model?: Partial<Specification.RetryPolicyLimitAttempt>) {
     super(model);
+    const self = this as unknown as Specification.RetryPolicyLimitAttempt & object;
+    if (isObject(model)) {
+      if (typeof model.duration === 'object') self.duration = new _Duration(model.duration);
+    }
   }
 }
 

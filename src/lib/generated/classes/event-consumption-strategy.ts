@@ -20,12 +20,24 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+import { _EventConsumptionStrategyAll } from './event-consumption-strategy-all';
+import { _EventConsumptionStrategyAny } from './event-consumption-strategy-any';
+import { _EventFilter } from './event-filter';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
-class EventConsumptionStrategy extends Hydrator<Specification.EventConsumptionStrategy> {
+class EventConsumptionStrategy extends ObjectHydrator<Specification.EventConsumptionStrategy> {
   constructor(model?: Partial<Specification.EventConsumptionStrategy>) {
     super(model);
+    const self = this as unknown as Specification.EventConsumptionStrategy & object;
+    if (isObject(model)) {
+      if (typeof model.all === 'object')
+        self.all = new _EventConsumptionStrategyAll(model.all as Specification.EventConsumptionStrategyAll);
+      if (typeof model.any === 'object')
+        self.any = new _EventConsumptionStrategyAny(model.any as Specification.EventConsumptionStrategyAny);
+      if (typeof model.one === 'object') self.one = new _EventFilter(model.one as Specification.EventFilter);
+    }
   }
 }
 

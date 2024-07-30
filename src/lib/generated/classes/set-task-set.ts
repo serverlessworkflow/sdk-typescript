@@ -20,10 +20,11 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+
 import { Specification } from '../definitions';
 
-class SetTaskSet extends Hydrator<Specification.SetTaskSet> {
+class SetTaskSet extends ObjectHydrator<Specification.SetTaskSet> {
   constructor(model?: Partial<Specification.SetTaskSet>) {
     super(model);
   }

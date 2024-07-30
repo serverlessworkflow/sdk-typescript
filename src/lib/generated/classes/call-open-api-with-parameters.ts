@@ -20,10 +20,11 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+
 import { Specification } from '../definitions';
 
-class CallOpenAPIWithParameters extends Hydrator<Specification.CallOpenAPIWithParameters> {
+class CallOpenAPIWithParameters extends ObjectHydrator<Specification.CallOpenAPIWithParameters> {
   constructor(model?: Partial<Specification.CallOpenAPIWithParameters>) {
     super(model);
   }

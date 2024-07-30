@@ -20,10 +20,11 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+
 import { Specification } from '../definitions';
 
-class ForTaskFor extends Hydrator<Specification.ForTaskFor> {
+class ForTaskFor extends ObjectHydrator<Specification.ForTaskFor> {
   constructor(model?: Partial<Specification.ForTaskFor>) {
     super(model);
   }

@@ -20,10 +20,11 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+
 import { Specification } from '../definitions';
 
-class Duration extends Hydrator<Specification.Duration> {
+class Duration extends ObjectHydrator<Specification.Duration> {
   constructor(model?: Partial<Specification.Duration>) {
     super(model);
   }

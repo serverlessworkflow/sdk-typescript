@@ -20,12 +20,18 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+import { _EmitTaskEmitEvent } from './emit-task-emit-event';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
-class EmitTaskEmit extends Hydrator<Specification.EmitTaskEmit> {
+class EmitTaskEmit extends ObjectHydrator<Specification.EmitTaskEmit> {
   constructor(model?: Partial<Specification.EmitTaskEmit>) {
     super(model);
+    const self = this as unknown as Specification.EmitTaskEmit & object;
+    if (isObject(model)) {
+      if (typeof model.event === 'object') self.event = new _EmitTaskEmitEvent(model.event);
+    }
   }
 }
 

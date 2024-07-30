@@ -20,12 +20,18 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+import { _CallOpenAPIWithParameters } from './call-open-api-with-parameters';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
-class CallOpenAPIWith extends Hydrator<Specification.CallOpenAPIWith> {
+class CallOpenAPIWith extends ObjectHydrator<Specification.CallOpenAPIWith> {
   constructor(model?: Partial<Specification.CallOpenAPIWith>) {
     super(model);
+    const self = this as unknown as Specification.CallOpenAPIWith & object;
+    if (isObject(model)) {
+      if (typeof model.parameters === 'object') self.parameters = new _CallOpenAPIWithParameters(model.parameters);
+    }
   }
 }
 

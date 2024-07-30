@@ -20,12 +20,21 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+import { _AuthenticationPolicyOauth2Client } from './authentication-policy-oauth2-client';
+import { _Oauth2Token } from './oauth2-token';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
-class AuthenticationPolicyOauth2 extends Hydrator<Specification.AuthenticationPolicyOauth2> {
+class AuthenticationPolicyOauth2 extends ObjectHydrator<Specification.AuthenticationPolicyOauth2> {
   constructor(model?: Partial<Specification.AuthenticationPolicyOauth2>) {
     super(model);
+    const self = this as unknown as Specification.AuthenticationPolicyOauth2 & object;
+    if (isObject(model)) {
+      if (typeof model.client === 'object') self.client = new _AuthenticationPolicyOauth2Client(model.client);
+      if (typeof model.subject === 'object') self.subject = new _Oauth2Token(model.subject);
+      if (typeof model.actor === 'object') self.actor = new _Oauth2Token(model.actor);
+    }
   }
 }
 

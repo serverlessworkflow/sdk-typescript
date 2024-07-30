@@ -20,15 +20,25 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { _SwitchTaskSwitchCase } from './switch-task-switch-case';
 import { Specification } from '../definitions';
+import { ArrayHydrator } from '../../hydrator';
 
-class SwitchTaskSwitch extends Hydrator<Specification.SwitchTaskSwitch> {
-  constructor(model?: Partial<Specification.SwitchTaskSwitch>) {
+class SwitchTaskSwitch extends ArrayHydrator<{ [k: string]: Specification.SwitchTaskSwitchCase }> {
+  constructor(model?: Array<{ [k: string]: Specification.SwitchTaskSwitchCase }> | number) {
     super(model);
+    if (Array.isArray(model)) {
+      if (model?.length) {
+        this.splice(0, this.length);
+        model.forEach((item) =>
+          this.push(
+            Object.fromEntries(Object.entries(item).map(([key, value]) => [key, new _SwitchTaskSwitchCase(value)])),
+          ),
+        );
+      }
+    }
+    Object.setPrototypeOf(this, Object.create(SwitchTaskSwitch.prototype));
   }
 }
 
-export const _SwitchTaskSwitch = SwitchTaskSwitch as {
-  new (model?: Partial<Specification.SwitchTaskSwitch>): SwitchTaskSwitch & Specification.SwitchTaskSwitch;
-};
+export const _SwitchTaskSwitch = SwitchTaskSwitch; // could be exported directly, but it makes the job of building the index more straightforward as it's consistant with "object" classes

@@ -20,12 +20,25 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+import { _AuthenticationPolicyBasic } from './authentication-policy-basic';
+import { _AuthenticationPolicyBearer } from './authentication-policy-bearer';
+import { _AuthenticationPolicyOauth2 } from './authentication-policy-oauth2';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
-class CallAsyncAPIWithAuthentication extends Hydrator<Specification.CallAsyncAPIWithAuthentication> {
+class CallAsyncAPIWithAuthentication extends ObjectHydrator<Specification.CallAsyncAPIWithAuthentication> {
   constructor(model?: Partial<Specification.CallAsyncAPIWithAuthentication>) {
     super(model);
+    const self = this as unknown as Specification.CallAsyncAPIWithAuthentication & object;
+    if (isObject(model)) {
+      if (typeof model.basic === 'object')
+        self.basic = new _AuthenticationPolicyBasic(model.basic as Specification.AuthenticationPolicyBasic);
+      if (typeof model.bearer === 'object')
+        self.bearer = new _AuthenticationPolicyBearer(model.bearer as Specification.AuthenticationPolicyBearer);
+      if (typeof model.oauth2 === 'object')
+        self.oauth2 = new _AuthenticationPolicyOauth2(model.oauth2 as Specification.AuthenticationPolicyOauth2);
+    }
   }
 }
 

@@ -20,10 +20,11 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+
 import { Specification } from '../definitions';
 
-class Oauth2Token extends Hydrator<Specification.Oauth2Token> {
+class Oauth2Token extends ObjectHydrator<Specification.Oauth2Token> {
   constructor(model?: Partial<Specification.Oauth2Token>) {
     super(model);
   }

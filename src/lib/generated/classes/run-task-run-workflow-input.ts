@@ -20,10 +20,11 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+
 import { Specification } from '../definitions';
 
-class RunTaskRunWorkflowInput extends Hydrator<Specification.RunTaskRunWorkflowInput> {
+class RunTaskRunWorkflowInput extends ObjectHydrator<Specification.RunTaskRunWorkflowInput> {
   constructor(model?: Partial<Specification.RunTaskRunWorkflowInput>) {
     super(model);
   }

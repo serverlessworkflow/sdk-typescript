@@ -17,8 +17,9 @@
 import { promises as fsPromises } from 'fs';
 import * as path from 'path';
 import { fileHeader, inFileDisclaimer } from './consts';
-import { definitionsDir, getExportedDeclarations, isObject, reset, schemaDir, vallidationDir } from './utils';
+import { definitionsDir, isObject, reset, schemaDir, vallidationDir } from './utils';
 import { JSONSchema } from 'json-schema-to-typescript';
+import { getExportedDeclarations } from './reflection';
 
 const { writeFile, readFile } = fsPromises;
 

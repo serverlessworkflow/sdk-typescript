@@ -20,10 +20,11 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+
 import { Specification } from '../definitions';
 
-class Error extends Hydrator<Specification.Error> {
+class Error extends ObjectHydrator<Specification.Error> {
   constructor(model?: Partial<Specification.Error>) {
     super(model);
   }

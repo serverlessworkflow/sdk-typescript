@@ -20,12 +20,18 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+import { _Duration } from './duration';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
-class Timeout extends Hydrator<Specification.Timeout> {
+class Timeout extends ObjectHydrator<Specification.Timeout> {
   constructor(model?: Partial<Specification.Timeout>) {
     super(model);
+    const self = this as unknown as Specification.Timeout & object;
+    if (isObject(model)) {
+      if (typeof model.after === 'object') self.after = new _Duration(model.after);
+    }
   }
 }
 

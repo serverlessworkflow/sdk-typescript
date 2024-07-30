@@ -20,12 +20,23 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+import { _Error } from './error';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
-class UseErrors extends Hydrator<Specification.UseErrors> {
+class UseErrors extends ObjectHydrator<Specification.UseErrors> {
   constructor(model?: Partial<Specification.UseErrors>) {
     super(model);
+    const self = this as unknown as Specification.UseErrors & object;
+    if (isObject(model)) {
+      const knownProperties: string[] = [];
+      Object.entries(model)
+        .filter(([key]) => !knownProperties.includes(key))
+        .forEach(([key, value]) => {
+          self[key] = new _Error(value);
+        });
+    }
   }
 }
 

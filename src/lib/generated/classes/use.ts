@@ -20,12 +20,27 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+import { _UseAuthentications } from './use-authentications';
+import { _UseErrors } from './use-errors';
+import { _UseExtensions } from './use-extensions';
+import { _UseFunctions } from './use-functions';
+import { _UseRetries } from './use-retries';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
-class Use extends Hydrator<Specification.Use> {
+class Use extends ObjectHydrator<Specification.Use> {
   constructor(model?: Partial<Specification.Use>) {
     super(model);
+    const self = this as unknown as Specification.Use & object;
+    if (isObject(model)) {
+      if (typeof model.authentications === 'object')
+        self.authentications = new _UseAuthentications(model.authentications);
+      if (typeof model.errors === 'object') self.errors = new _UseErrors(model.errors);
+      if (typeof model.extensions === 'object') self.extensions = new _UseExtensions(model.extensions);
+      if (typeof model.functions === 'object') self.functions = new _UseFunctions(model.functions);
+      if (typeof model.retries === 'object') self.retries = new _UseRetries(model.retries);
+    }
   }
 }
 

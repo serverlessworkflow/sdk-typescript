@@ -21,11 +21,25 @@
  *****************************************************************************************/
 
 import { _TaskBase } from './task-base';
+import { _Input } from './input';
+import { _Output } from './output';
+import { _Export } from './export';
+import { _Timeout } from './timeout';
+import { _ForkTaskFork } from './fork-task-fork';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
 class ForkTask extends _TaskBase {
   constructor(model?: Partial<Specification.ForkTask>) {
     super(model);
+    const self = this as unknown as Specification.ForkTask & object;
+    if (isObject(model)) {
+      if (typeof model.input === 'object') self.input = new _Input(model.input);
+      if (typeof model.output === 'object') self.output = new _Output(model.output);
+      if (typeof model.export === 'object') self.export = new _Export(model.export);
+      if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
+      if (typeof model.fork === 'object') self.fork = new _ForkTaskFork(model.fork);
+    }
   }
 }
 

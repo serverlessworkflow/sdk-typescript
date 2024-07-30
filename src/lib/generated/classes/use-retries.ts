@@ -20,12 +20,23 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+import { _RetryPolicy } from './retry-policy';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
-class UseRetries extends Hydrator<Specification.UseRetries> {
+class UseRetries extends ObjectHydrator<Specification.UseRetries> {
   constructor(model?: Partial<Specification.UseRetries>) {
     super(model);
+    const self = this as unknown as Specification.UseRetries & object;
+    if (isObject(model)) {
+      const knownProperties: string[] = [];
+      Object.entries(model)
+        .filter(([key]) => !knownProperties.includes(key))
+        .forEach(([key, value]) => {
+          self[key] = new _RetryPolicy(value);
+        });
+    }
   }
 }
 

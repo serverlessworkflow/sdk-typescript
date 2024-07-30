@@ -20,10 +20,11 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+
 import { Specification } from '../definitions';
 
-class RunTaskRunScript extends Hydrator<Specification.RunTaskRunScript> {
+class RunTaskRunScript extends ObjectHydrator<Specification.RunTaskRunScript> {
   constructor(model?: Partial<Specification.RunTaskRunScript>) {
     super(model);
   }

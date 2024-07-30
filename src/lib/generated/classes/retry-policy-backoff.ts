@@ -20,10 +20,11 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+
 import { Specification } from '../definitions';
 
-class RetryPolicyBackoff extends Hydrator<Specification.RetryPolicyBackoff> {
+class RetryPolicyBackoff extends ObjectHydrator<Specification.RetryPolicyBackoff> {
   constructor(model?: Partial<Specification.RetryPolicyBackoff>) {
     super(model);
   }

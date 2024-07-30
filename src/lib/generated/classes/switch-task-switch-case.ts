@@ -20,10 +20,11 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+
 import { Specification } from '../definitions';
 
-class SwitchTaskSwitchCase extends Hydrator<Specification.SwitchTaskSwitchCase> {
+class SwitchTaskSwitchCase extends ObjectHydrator<Specification.SwitchTaskSwitchCase> {
   constructor(model?: Partial<Specification.SwitchTaskSwitchCase>) {
     super(model);
   }

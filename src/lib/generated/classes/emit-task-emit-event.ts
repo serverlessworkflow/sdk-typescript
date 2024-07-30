@@ -20,10 +20,11 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+
 import { Specification } from '../definitions';
 
-class EmitTaskEmitEvent extends Hydrator<Specification.EmitTaskEmitEvent> {
+class EmitTaskEmitEvent extends ObjectHydrator<Specification.EmitTaskEmitEvent> {
   constructor(model?: Partial<Specification.EmitTaskEmitEvent>) {
     super(model);
   }

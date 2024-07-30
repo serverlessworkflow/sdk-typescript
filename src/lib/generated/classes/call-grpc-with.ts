@@ -20,12 +20,20 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+import { _CallGRPCWithService } from './call-grpc-with-service';
+import { _CallGRPCWithArguments } from './call-grpc-with-arguments';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
-class CallGRPCWith extends Hydrator<Specification.CallGRPCWith> {
+class CallGRPCWith extends ObjectHydrator<Specification.CallGRPCWith> {
   constructor(model?: Partial<Specification.CallGRPCWith>) {
     super(model);
+    const self = this as unknown as Specification.CallGRPCWith & object;
+    if (isObject(model)) {
+      if (typeof model.service === 'object') self.service = new _CallGRPCWithService(model.service);
+      if (typeof model.arguments === 'object') self.arguments = new _CallGRPCWithArguments(model.arguments);
+    }
   }
 }
 

@@ -2,6 +2,7 @@ import Ajv, { ValidateFunction } from 'ajv/dist/2020';
 import addFormats from 'ajv-formats';
 import workflowSchema from './generated/schema/workflow.json';
 import { validationPointers } from './generated/validation';
+import { deepCopy } from './utils';
 
 const ajv = new Ajv({
   schemas: [workflowSchema],
@@ -32,7 +33,7 @@ export const validate = <T>(typeName: string, data: T): boolean => {
   if (!validateFn) {
     throw Error(`Unable to find a validation function for '${typeName}'`);
   }
-  if (!validateFn(JSON.parse(JSON.stringify(data)))) {
+  if (!validateFn(deepCopy(data))) {
     throw new Error(
       `'${typeName}' is invalid:
 ${validateFn.errors?.reduce((acc, error) => acc + `- ${error.instancePath} | ${error.schemaPath} | ${error.message} | ${JSON.stringify(error.params)}\n`, '') ?? ''}

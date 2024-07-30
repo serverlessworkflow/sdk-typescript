@@ -20,10 +20,11 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+
 import { Specification } from '../definitions';
 
-class RunTaskRunShellEnvironment extends Hydrator<Specification.RunTaskRunShellEnvironment> {
+class RunTaskRunShellEnvironment extends ObjectHydrator<Specification.RunTaskRunShellEnvironment> {
   constructor(model?: Partial<Specification.RunTaskRunShellEnvironment>) {
     super(model);
   }

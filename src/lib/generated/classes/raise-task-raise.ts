@@ -20,12 +20,18 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+import { _Error } from './error';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
-class RaiseTaskRaise extends Hydrator<Specification.RaiseTaskRaise> {
+class RaiseTaskRaise extends ObjectHydrator<Specification.RaiseTaskRaise> {
   constructor(model?: Partial<Specification.RaiseTaskRaise>) {
     super(model);
+    const self = this as unknown as Specification.RaiseTaskRaise & object;
+    if (isObject(model)) {
+      if (typeof model.error === 'object') self.error = new _Error(model.error);
+    }
   }
 }
 

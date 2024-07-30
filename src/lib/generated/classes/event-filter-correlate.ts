@@ -20,10 +20,11 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+
 import { Specification } from '../definitions';
 
-class EventFilterCorrelate extends Hydrator<Specification.EventFilterCorrelate> {
+class EventFilterCorrelate extends ObjectHydrator<Specification.EventFilterCorrelate> {
   constructor(model?: Partial<Specification.EventFilterCorrelate>) {
     super(model);
   }

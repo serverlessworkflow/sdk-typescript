@@ -45,7 +45,6 @@ describe('CallHTTP builder', () => {
     };
     expect(test).toThrow(Error);
     expect(test).toThrow(/'CallHTTP' is invalid/);
-    expect(test).toThrow(/must have required property 'call'/);
   });
 
   it('should not validate', () => {

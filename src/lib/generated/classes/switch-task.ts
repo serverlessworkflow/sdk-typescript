@@ -21,11 +21,26 @@
  *****************************************************************************************/
 
 import { _TaskBase } from './task-base';
+import { _Input } from './input';
+import { _Output } from './output';
+import { _Export } from './export';
+import { _Timeout } from './timeout';
+import { _SwitchTaskSwitch } from './switch-task-switch';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
 class SwitchTask extends _TaskBase {
   constructor(model?: Partial<Specification.SwitchTask>) {
     super(model);
+    const self = this as unknown as Specification.SwitchTask & object;
+    if (isObject(model)) {
+      if (typeof model.input === 'object') self.input = new _Input(model.input);
+      if (typeof model.output === 'object') self.output = new _Output(model.output);
+      if (typeof model.export === 'object') self.export = new _Export(model.export);
+      if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
+      if (typeof model.switch === 'object')
+        self.switch = new _SwitchTaskSwitch(model.switch) as Specification.SwitchTaskSwitch;
+    }
   }
 }
 

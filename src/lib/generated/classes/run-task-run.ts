@@ -20,12 +20,25 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+import { _RunTaskRunContainer } from './run-task-run-container';
+import { _RunTaskRunShell } from './run-task-run-shell';
+import { _RunTaskRunWorkflow } from './run-task-run-workflow';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
-class RunTaskRun extends Hydrator<Specification.RunTaskRun> {
+class RunTaskRun extends ObjectHydrator<Specification.RunTaskRun> {
   constructor(model?: Partial<Specification.RunTaskRun>) {
     super(model);
+    const self = this as unknown as Specification.RunTaskRun & object;
+    if (isObject(model)) {
+      if (typeof model.container === 'object')
+        self.container = new _RunTaskRunContainer(model.container as Specification.RunTaskRunContainer);
+      if (typeof model.shell === 'object')
+        self.shell = new _RunTaskRunShell(model.shell as Specification.RunTaskRunShell);
+      if (typeof model.workflow === 'object')
+        self.workflow = new _RunTaskRunWorkflow(model.workflow as Specification.RunTaskRunWorkflow);
+    }
   }
 }
 

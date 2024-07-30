@@ -20,13 +20,18 @@
  *
  *****************************************************************************************/
 
+import { _EventFilter } from './event-filter';
 import { Specification } from '../definitions';
+import { ArrayHydrator } from '../../hydrator';
 
-class EventConsumptionStrategyAll extends Array<Specification.EventFilter> {
-  constructor(model?: Array<Specification.EventFilter>) {
-    super(...(model || []));
-    if (model != null && !Array.isArray(model)) {
-      throw new Error('The provided model should be an array');
+class EventConsumptionStrategyAll extends ArrayHydrator<Specification.EventFilter> {
+  constructor(model?: Array<Specification.EventFilter> | number) {
+    super(model);
+    if (Array.isArray(model)) {
+      if (model?.length) {
+        this.splice(0, this.length);
+        model.forEach((item) => this.push(new _EventFilter(item)));
+      }
     }
     Object.setPrototypeOf(this, Object.create(EventConsumptionStrategyAll.prototype));
   }

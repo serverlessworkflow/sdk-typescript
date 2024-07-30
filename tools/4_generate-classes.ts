@@ -17,14 +17,15 @@
 import { promises as fsPromises } from 'fs';
 import * as path from 'path';
 import { fileHeader, inFileDisclaimer } from './consts';
+import { classesDir, definitionsDir, normalizeKnownAllCaps, reset, toKebabCase } from './utils';
 import {
-  classesDir,
-  definitionsDir,
+  getArrayHydration,
   getExportedDeclarations,
-  normalizeKnownAllCaps,
-  reset,
-  toKebabCase,
-} from './utils';
+  getObjectHydration,
+  getTypeName,
+  getUnderlyingTypes,
+} from './reflection';
+import { Node, Type } from 'ts-morph';
 
 const { writeFile, readFile } = fsPromises;
 
@@ -34,40 +35,56 @@ const { writeFile, readFile } = fsPromises;
  * @param baseClass The inherited class, if any
  * @returns The declaration of the class
  */
-const getObjectClassDeclaration = (name: string, baseClass?: string): string =>
-  `${fileHeader}
+function getObjectClassDeclaration(name: string, node: Node, type: Type, baseClass?: string): string {
+  const hydrationResult = getObjectHydration(node, type);
+  return `${fileHeader}
 ${inFileDisclaimer}
 
-${baseClass ? `import { _${baseClass} } from './${toKebabCase(normalizeKnownAllCaps(baseClass))}';` : 'import { Hydrator } from "../../hydrator";'}
-import { Specification } from "../definitions";
+${baseClass ? `import { _${baseClass} } from './${toKebabCase(normalizeKnownAllCaps(baseClass))}';` : "import { ObjectHydrator } from '../../hydrator';"}
+${hydrationResult.imports.map((type) => `import { _${type} } from './${toKebabCase(normalizeKnownAllCaps(type))}';`).join('\n')}
+import { Specification } from '../definitions';
+${hydrationResult.code ? "import { isObject } from '../../utils';" : ''}
 
-class ${name} extends ${baseClass ? '_' + baseClass : `Hydrator<Specification.${name}>`} {
+class ${name} extends ${baseClass ? '_' + baseClass : `ObjectHydrator<Specification.${name}>`} {
     constructor(model?: Partial<Specification.${name}>) {
         super(model);
+        ${
+          hydrationResult.code
+            ? `const self = (this as unknown) as Specification.${name} & object;
+          if (isObject(model)) {
+            ${hydrationResult.code}
+          }`
+            : ''
+        }
+        
     }
 }
 
 export const _${name} = ${name} as ({
     new (model?: Partial<Specification.${name}>): ${name} & Specification.${name}
 });`;
+}
 
 /**
  * Returns the declaration for a class that behaves like an array
  * @param name The name of the class
- * @param arrayType The type parameter of the underlying array
+ * @param arrayTypeName The type parameter of the underlying array
  * @returns The declaration of the array-like class
  */
-const getArrayLikeClassDeclaration = (name: string, arrayType: string): string =>
-  `${fileHeader}
+function getArrayLikeClassDeclaration(name: string, arrayTypeName: string, type: Type): string {
+  const hydrationResult = getArrayHydration(type);
+  return `${fileHeader}
 ${inFileDisclaimer}
 
-import { Specification } from "../definitions";
+${hydrationResult.imports.map((type) => `import { _${type} } from './${toKebabCase(normalizeKnownAllCaps(type))}';`)}
+import { Specification } from '../definitions';
+import { ArrayHydrator } from '../../hydrator';
 
-class ${name} extends Array<${arrayType}> {
-  constructor(model?: Array<${arrayType}>) {
-    super(...(model||[]));
-    if (model != null && !Array.isArray(model)) {
-      throw new Error('The provided model should be an array');
+class ${name} extends ArrayHydrator<${arrayTypeName}> {
+  constructor(model?: Array<${arrayTypeName}> | number) {
+    super(model);
+    if (Array.isArray(model)) {
+      ${hydrationResult.code}
     }
     Object.setPrototypeOf(this, Object.create(${name}.prototype));
   }
@@ -75,6 +92,7 @@ class ${name} extends Array<${arrayType}> {
 
 export const _${name} = ${name}; // could be exported directly, but it makes the job of building the index more straightforward as it's consistant with "object" classes
 `;
+}
 
 /**
  * Generates classes
@@ -89,15 +107,16 @@ async function generate(definitionFile: string, destDir: string): Promise<void> 
   for (const [alias, node] of exportedDeclarations) {
     const exportedType = node![0].getType();
     let classDeclaration: string = '';
-    if (!exportedType.isArray()) {
-      const baseClass = exportedType.getIntersectionTypes()?.[0]?.getText().replace('import("/declarations").', '');
-      classDeclaration = getObjectClassDeclaration(alias, baseClass);
+    if (!exportedType.isArray() && !exportedType.isTuple()) {
+      const baseClass = exportedType.getIntersectionTypes()?.[0];
+      const baseClassName = baseClass ? getTypeName(baseClass) : undefined;
+      classDeclaration = getObjectClassDeclaration(alias, node![0], exportedType, baseClassName);
     } else {
-      const arrayType = exportedType
-        .getArrayElementTypeOrThrow()
-        .getText()
-        .replace('import("/declarations")', 'Specification');
-      classDeclaration = getArrayLikeClassDeclaration(alias, arrayType);
+      const arrayType = getTypeName(
+        exportedType.getArrayElementType() || getUnderlyingTypes(exportedType)[0],
+        'Specification.',
+      );
+      classDeclaration = getArrayLikeClassDeclaration(alias, arrayType, exportedType);
     }
     const destFile = path.resolve(destDir, toKebabCase(normalizeKnownAllCaps(alias)) + '.ts');
     await writeFile(destFile, classDeclaration);

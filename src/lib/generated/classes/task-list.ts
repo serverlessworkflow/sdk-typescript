@@ -20,13 +20,20 @@
  *
  *****************************************************************************************/
 
+import { _Task } from './task';
 import { Specification } from '../definitions';
+import { ArrayHydrator } from '../../hydrator';
 
-class TaskList extends Array<{ [k: string]: Specification.Task }> {
-  constructor(model?: Array<{ [k: string]: Specification.Task }>) {
-    super(...(model || []));
-    if (model != null && !Array.isArray(model)) {
-      throw new Error('The provided model should be an array');
+class TaskList extends ArrayHydrator<{ [k: string]: Specification.Task }> {
+  constructor(model?: Array<{ [k: string]: Specification.Task }> | number) {
+    super(model);
+    if (Array.isArray(model)) {
+      if (model?.length) {
+        this.splice(0, this.length);
+        model.forEach((item) =>
+          this.push(Object.fromEntries(Object.entries(item).map(([key, value]) => [key, new _Task(value)]))),
+        );
+      }
     }
     Object.setPrototypeOf(this, Object.create(TaskList.prototype));
   }

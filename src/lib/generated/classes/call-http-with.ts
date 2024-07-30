@@ -20,12 +20,18 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+import { _CallHTTPWithEndpoint } from './call-http-with-endpoint';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
-class CallHTTPWith extends Hydrator<Specification.CallHTTPWith> {
+class CallHTTPWith extends ObjectHydrator<Specification.CallHTTPWith> {
   constructor(model?: Partial<Specification.CallHTTPWith>) {
     super(model);
+    const self = this as unknown as Specification.CallHTTPWith & object;
+    if (isObject(model)) {
+      if (typeof model.endpoint === 'object') self.endpoint = new _CallHTTPWithEndpoint(model.endpoint);
+    }
   }
 }
 

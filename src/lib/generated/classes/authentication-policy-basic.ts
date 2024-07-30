@@ -20,10 +20,11 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+
 import { Specification } from '../definitions';
 
-class AuthenticationPolicyBasic extends Hydrator<Specification.AuthenticationPolicyBasic> {
+class AuthenticationPolicyBasic extends ObjectHydrator<Specification.AuthenticationPolicyBasic> {
   constructor(model?: Partial<Specification.AuthenticationPolicyBasic>) {
     super(model);
   }

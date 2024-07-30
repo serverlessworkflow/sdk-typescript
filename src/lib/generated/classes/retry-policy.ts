@@ -20,12 +20,22 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+import { _Duration } from './duration';
+import { _RetryPolicyLimit } from './retry-policy-limit';
+import { _RetryPolicyJitter } from './retry-policy-jitter';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
-class RetryPolicy extends Hydrator<Specification.RetryPolicy> {
+class RetryPolicy extends ObjectHydrator<Specification.RetryPolicy> {
   constructor(model?: Partial<Specification.RetryPolicy>) {
     super(model);
+    const self = this as unknown as Specification.RetryPolicy & object;
+    if (isObject(model)) {
+      if (typeof model.delay === 'object') self.delay = new _Duration(model.delay);
+      if (typeof model.limit === 'object') self.limit = new _RetryPolicyLimit(model.limit);
+      if (typeof model.jitter === 'object') self.jitter = new _RetryPolicyJitter(model.jitter);
+    }
   }
 }
 

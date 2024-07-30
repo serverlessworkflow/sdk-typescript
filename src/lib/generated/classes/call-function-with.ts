@@ -20,10 +20,11 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+
 import { Specification } from '../definitions';
 
-class CallFunctionWith extends Hydrator<Specification.CallFunctionWith> {
+class CallFunctionWith extends ObjectHydrator<Specification.CallFunctionWith> {
   constructor(model?: Partial<Specification.CallFunctionWith>) {
     super(model);
   }

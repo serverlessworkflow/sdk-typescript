@@ -20,12 +20,19 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+import { _TaskList } from './task-list';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
-class Extension extends Hydrator<Specification.Extension> {
+class Extension extends ObjectHydrator<Specification.Extension> {
   constructor(model?: Partial<Specification.Extension>) {
     super(model);
+    const self = this as unknown as Specification.Extension & object;
+    if (isObject(model)) {
+      if (typeof model.before === 'object') self.before = new _TaskList(model.before);
+      if (typeof model.after === 'object') self.after = new _TaskList(model.after);
+    }
   }
 }
 

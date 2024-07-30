@@ -20,12 +20,20 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+import { _RunTaskRunShellArguments } from './run-task-run-shell-arguments';
+import { _RunTaskRunShellEnvironment } from './run-task-run-shell-environment';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
-class RunTaskRunShell extends Hydrator<Specification.RunTaskRunShell> {
+class RunTaskRunShell extends ObjectHydrator<Specification.RunTaskRunShell> {
   constructor(model?: Partial<Specification.RunTaskRunShell>) {
     super(model);
+    const self = this as unknown as Specification.RunTaskRunShell & object;
+    if (isObject(model)) {
+      if (typeof model.arguments === 'object') self.arguments = new _RunTaskRunShellArguments(model.arguments);
+      if (typeof model.environment === 'object') self.environment = new _RunTaskRunShellEnvironment(model.environment);
+    }
   }
 }
 

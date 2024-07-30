@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+/*****************************************************************************************
+ *
+ * /!\ This file is computer generated. Any manual modification can and will be lost. /!\
+ *
+ *****************************************************************************************/
+
 /**
  * A map of type names and their corresponding schema
  */
@@ -131,6 +137,8 @@ export const validationPointers = {
   SwitchTask: 'https://serverlessworkflow.io/schemas/1.0.0-alpha2/workflow.json#/$defs/switchTask',
   SwitchTaskSwitch:
     'https://serverlessworkflow.io/schemas/1.0.0-alpha2/workflow.json#/$defs/switchTask/properties/switch',
+  SwitchTaskSwitchCase:
+    'https://serverlessworkflow.io/schemas/1.0.0-alpha2/workflow.json#/$defs/switchTask/properties/switch/items/additionalProperties',
   Task: 'https://serverlessworkflow.io/schemas/1.0.0-alpha2/workflow.json#/$defs/task',
   TaskBase: 'https://serverlessworkflow.io/schemas/1.0.0-alpha2/workflow.json#/$defs/taskBase',
   TaskList: 'https://serverlessworkflow.io/schemas/1.0.0-alpha2/workflow.json#/$defs/taskList',

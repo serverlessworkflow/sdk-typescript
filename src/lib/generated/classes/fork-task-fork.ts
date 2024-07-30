@@ -20,12 +20,18 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+import { _TaskList } from './task-list';
 import { Specification } from '../definitions';
+import { isObject } from '../../utils';
 
-class ForkTaskFork extends Hydrator<Specification.ForkTaskFork> {
+class ForkTaskFork extends ObjectHydrator<Specification.ForkTaskFork> {
   constructor(model?: Partial<Specification.ForkTaskFork>) {
     super(model);
+    const self = this as unknown as Specification.ForkTaskFork & object;
+    if (isObject(model)) {
+      if (typeof model.branches === 'object') self.branches = new _TaskList(model.branches);
+    }
   }
 }
 

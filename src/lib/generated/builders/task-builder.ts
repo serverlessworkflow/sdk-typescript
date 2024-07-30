@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+/*****************************************************************************************
+ *
+ * /!\ This file is computer generated. Any manual modification can and will be lost. /!\
+ *
+ *****************************************************************************************/
+
 import { builder, Builder } from '../../builder';
 import { validate } from '../../validation';
 import { Classes } from '../classes';

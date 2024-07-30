@@ -20,10 +20,11 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+
 import { Specification } from '../definitions';
 
-class CallGRPCWithArguments extends Hydrator<Specification.CallGRPCWithArguments> {
+class CallGRPCWithArguments extends ObjectHydrator<Specification.CallGRPCWithArguments> {
   constructor(model?: Partial<Specification.CallGRPCWithArguments>) {
     super(model);
   }

@@ -17,14 +17,8 @@
 import { promises as fsPromises } from 'fs';
 import * as path from 'path';
 import { fileHeader, inFileDisclaimer } from './consts';
-import {
-  buildersDir,
-  definitionsDir,
-  getExportedDeclarations,
-  normalizeKnownAllCaps,
-  reset,
-  toKebabCase,
-} from './utils';
+import { buildersDir, definitionsDir, normalizeKnownAllCaps, reset, toKebabCase } from './utils';
+import { getExportedDeclarations } from './reflection';
 
 const { readFile, writeFile } = fsPromises;
 

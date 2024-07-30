@@ -20,10 +20,11 @@
  *
  *****************************************************************************************/
 
-import { Hydrator } from '../../hydrator';
+import { ObjectHydrator } from '../../hydrator';
+
 import { Specification } from '../definitions';
 
-class DocumentTags extends Hydrator<Specification.DocumentTags> {
+class DocumentTags extends ObjectHydrator<Specification.DocumentTags> {
   constructor(model?: Partial<Specification.DocumentTags>) {
     super(model);
   }
