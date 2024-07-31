@@ -75,7 +75,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/serverless-workflow/sdk.git"
+    "url": "https://github.com/serverlessworkflow/sdk-typescript.git"
   },
   "author": {
     "name": "Serverless Workflow Contributors",
@@ -83,7 +83,7 @@
   },
   "license": "http://www.apache.org/licenses/LICENSE-2.0.txt",
   "bugs": {
-    "url": "https://github.com/serverless-workflow/sdk/issues"
+    "url": "https://github.com/serverlessworkflow/sdk-typescript/issues"
   },
   "homepage": "https://serverlessworkflow.io",
   "engines": {

@@ -1,4 +1,4 @@
-![Node CI](https://github.com/serverless-workflow/sdk/workflows/Node%20CI/badge.svg) [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/serverless-workflow/sdk)
+![Node CI](https://github.com/serverlessworkflow/sdk-typescript/workflows/Node%20CI/badge.svg) [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/serverlessworkflow/sdk-typescript)
 
 # Serverless Workflow Specification - TypeScript SDK
 
@@ -14,7 +14,7 @@ The npm [`@serverlessworkflow/sdk`](https://www.npmjs.com/package/@serverlesswor
 
 | Latest Releases | Conformance to Spec Version |
 | :---: | :---: |
-| [v1.0.0-alpha2.\*](https://github.com/serverless-workflow/sdk/releases/) | [v1.0.0-alpha2](https://github.com/serverlessworkflow/specification) |
+| [v1.0.0-alpha2.\*](https://github.com/serverlessworkflow/sdk-typescript/releases/) | [v1.0.0-alpha2](https://github.com/serverlessworkflow/specification) |
 
 > [!WARNING]
 > Previous versions of the SDK were published with a typo in the scope:
@@ -23,9 +23,9 @@ The npm [`@serverlessworkflow/sdk`](https://www.npmjs.com/package/@serverlesswor
 
 | Latest Releases | Conformance to Spec Version |
 | :---: | :---: |
-| [v1.0.0](https://github.com/serverless-workflow/sdk/releases/) | [v0.6](https://github.com/serverlessworkflow/specification/tree/0.6.x) |
-| [v2.0.0](https://github.com/serverless-workflow/sdk/releases/) | [v0.7](https://github.com/serverlessworkflow/specification/tree/0.7.x) |
-| [v3.0.0](https://github.com/serverless-workflow/sdk/releases/) | [v0.8](https://github.com/serverlessworkflow/specification/tree/0.8.x) |
+| [v1.0.0](https://github.com/serverlessworkflow/sdk-typescript/releases/) | [v0.6](https://github.com/serverlessworkflow/specification/tree/0.6.x) |
+| [v2.0.0](https://github.com/serverlessworkflow/sdk-typescript/releases/) | [v0.7](https://github.com/serverlessworkflow/specification/tree/0.7.x) |
+| [v3.0.0](https://github.com/serverlessworkflow/sdk-typescript/releases/) | [v0.8](https://github.com/serverlessworkflow/specification/tree/0.8.x) |
 
 ## SDK Structure
 This SDK includes the following key components:
@@ -240,7 +240,7 @@ catch (ex) {
 To build the project and run tests locally, use the following commands:
 
 ```sh
-git clone https://github.com/serverless-workflow/sdk.git
+git clone https://github.com/serverlessworkflow/sdk-typescript.git
 cd sdk-typescript
 npm install && npm run build && npm run test
 ```
