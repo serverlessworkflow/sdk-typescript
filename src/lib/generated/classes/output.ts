@@ -22,30 +22,57 @@
 
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class Output extends ObjectHydrator<Specification.Output> {
+/**
+ * Represents the intersection between the Output class and type
+ */
+export type OutputIntersection = Output & Specification.Output;
+
+/**
+ * Represents a constructor for the intersection of the Output class and type
+ */
+export interface OutputConstructor {
+  new (model?: Partial<Specification.Output>): OutputIntersection;
+}
+
+/**
+ * Represents a Output with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class Output extends ObjectHydrator<Specification.Output> {
+  /**
+   * Instanciates a new instance of the Output class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the Output.
+   */
   constructor(model?: Partial<Specification.Output>) {
     super(model);
 
-    getLifecycleHook('Output')?.constructor?.(this);
+    getLifecycleHooks('Output')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the Output.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new Output(this as any) as Output & Specification.Output;
-    getLifecycleHook('Output')?.preValidation?.(copy);
-    validate('Output', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('Output')?.postValidation?.(copy);
+    const copy = new Output(this as any) as OutputIntersection;
+    validate('Output', copy);
   }
 
+  /**
+   * Normalizes the current instance of the Output.
+   * Creates a copy of the Output, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the Output instance.
+   */
   normalize(): Output & Specification.Output {
-    const copy = new Output(this as any) as Output & Specification.Output;
-    return getLifecycleHook('Output')?.normalize?.(copy) || copy;
+    const copy = new Output(this as any) as OutputIntersection;
+    return getLifecycleHooks('Output')?.normalize?.(copy) || copy;
   }
 }
 
-export const _Output = Output as {
-  new (model?: Partial<Specification.Output>): Output & Specification.Output;
-};
+export const _Output = Output as OutputConstructor;

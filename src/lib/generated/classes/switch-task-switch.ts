@@ -23,11 +23,19 @@
 import { _SwitchTaskSwitchCase } from './switch-task-switch-case';
 import { Specification } from '../definitions';
 import { ArrayHydrator } from '../../hydrator';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class SwitchTaskSwitch extends ArrayHydrator<{ [k: string]: Specification.SwitchTaskSwitchCase }> {
+/**
+ * Represents a collection of { [k: string]: Specification.SwitchTaskSwitchCase; }.
+ * Inherits from ArrayHydrator to handle array-specific hydration.
+ */
+export class SwitchTaskSwitch extends ArrayHydrator<{ [k: string]: Specification.SwitchTaskSwitchCase }> {
+  /**
+   * Constructs a new instance of the SwitchTaskSwitch class.
+   *
+   * @param model - Optional parameter which can be an array of objects or a number representing the array length.
+   */
   constructor(model?: Array<{ [k: string]: Specification.SwitchTaskSwitchCase }> | number) {
     super(model);
     if (Array.isArray(model)) {
@@ -41,19 +49,27 @@ class SwitchTaskSwitch extends ArrayHydrator<{ [k: string]: Specification.Switch
       }
     }
     Object.setPrototypeOf(this, Object.create(SwitchTaskSwitch.prototype));
-    getLifecycleHook('SwitchTaskSwitch')?.constructor?.(this);
+    getLifecycleHooks('SwitchTaskSwitch')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the SwitchTaskSwitch.
+   * Throws if invalid.
+   */
   validate() {
     const copy = new SwitchTaskSwitch(this);
-    getLifecycleHook('SwitchTaskSwitch')?.preValidation?.(copy);
-    validate('SwitchTaskSwitch', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('SwitchTaskSwitch')?.postValidation?.(copy);
+    validate('SwitchTaskSwitch', copy);
   }
 
+  /**
+   * Normalizes the current instance of the SwitchTaskSwitch.
+   * Creates a copy of the SwitchTaskSwitch, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the SwitchTaskSwitch instance.
+   */
   normalize(): SwitchTaskSwitch {
     const copy = new SwitchTaskSwitch(this);
-    return getLifecycleHook('SwitchTaskSwitch')?.normalize?.(copy) || copy;
+    return getLifecycleHooks('SwitchTaskSwitch')?.normalize?.(copy) || copy;
   }
 }
 

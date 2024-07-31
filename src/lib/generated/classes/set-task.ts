@@ -27,11 +27,33 @@ import { _Timeout } from './timeout';
 import { _SetTaskSet } from './set-task-set';
 import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class SetTask extends _TaskBase {
+/**
+ * Represents the intersection between the SetTask class and type
+ */
+export type SetTaskIntersection = SetTask & Specification.SetTask;
+
+/**
+ * Represents a constructor for the intersection of the SetTask class and type
+ */
+export interface SetTaskConstructor {
+  new (model?: Partial<Specification.SetTask>): SetTaskIntersection;
+}
+
+/**
+ * Represents a SetTask with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class SetTask extends _TaskBase {
+  /**
+   * Instanciates a new instance of the SetTask class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the SetTask.
+   */
   constructor(model?: Partial<Specification.SetTask>) {
     super(model);
     const self = this as unknown as Specification.SetTask & object;
@@ -42,22 +64,28 @@ class SetTask extends _TaskBase {
       if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
       if (typeof model.set === 'object') self.set = new _SetTaskSet(model.set);
     }
-    getLifecycleHook('SetTask')?.constructor?.(this);
+    getLifecycleHooks('SetTask')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the SetTask.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new SetTask(this as any) as SetTask & Specification.SetTask;
-    getLifecycleHook('SetTask')?.preValidation?.(copy);
-    validate('SetTask', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('SetTask')?.postValidation?.(copy);
+    const copy = new SetTask(this as any) as SetTaskIntersection;
+    validate('SetTask', copy);
   }
 
+  /**
+   * Normalizes the current instance of the SetTask.
+   * Creates a copy of the SetTask, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the SetTask instance.
+   */
   normalize(): SetTask & Specification.SetTask {
-    const copy = new SetTask(this as any) as SetTask & Specification.SetTask;
-    return getLifecycleHook('SetTask')?.normalize?.(copy) || copy;
+    const copy = new SetTask(this as any) as SetTaskIntersection;
+    return getLifecycleHooks('SetTask')?.normalize?.(copy) || copy;
   }
 }
 
-export const _SetTask = SetTask as {
-  new (model?: Partial<Specification.SetTask>): SetTask & Specification.SetTask;
-};
+export const _SetTask = SetTask as SetTaskConstructor;

@@ -23,11 +23,33 @@
 import { _TaskList } from './task-list';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class Extension extends ObjectHydrator<Specification.Extension> {
+/**
+ * Represents the intersection between the Extension class and type
+ */
+export type ExtensionIntersection = Extension & Specification.Extension;
+
+/**
+ * Represents a constructor for the intersection of the Extension class and type
+ */
+export interface ExtensionConstructor {
+  new (model?: Partial<Specification.Extension>): ExtensionIntersection;
+}
+
+/**
+ * Represents a Extension with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class Extension extends ObjectHydrator<Specification.Extension> {
+  /**
+   * Instanciates a new instance of the Extension class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the Extension.
+   */
   constructor(model?: Partial<Specification.Extension>) {
     super(model);
     const self = this as unknown as Specification.Extension & object;
@@ -35,22 +57,28 @@ class Extension extends ObjectHydrator<Specification.Extension> {
       if (typeof model.before === 'object') self.before = new _TaskList(model.before);
       if (typeof model.after === 'object') self.after = new _TaskList(model.after);
     }
-    getLifecycleHook('Extension')?.constructor?.(this);
+    getLifecycleHooks('Extension')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the Extension.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new Extension(this as any) as Extension & Specification.Extension;
-    getLifecycleHook('Extension')?.preValidation?.(copy);
-    validate('Extension', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('Extension')?.postValidation?.(copy);
+    const copy = new Extension(this as any) as ExtensionIntersection;
+    validate('Extension', copy);
   }
 
+  /**
+   * Normalizes the current instance of the Extension.
+   * Creates a copy of the Extension, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the Extension instance.
+   */
   normalize(): Extension & Specification.Extension {
-    const copy = new Extension(this as any) as Extension & Specification.Extension;
-    return getLifecycleHook('Extension')?.normalize?.(copy) || copy;
+    const copy = new Extension(this as any) as ExtensionIntersection;
+    return getLifecycleHooks('Extension')?.normalize?.(copy) || copy;
   }
 }
 
-export const _Extension = Extension as {
-  new (model?: Partial<Specification.Extension>): Extension & Specification.Extension;
-};
+export const _Extension = Extension as ExtensionConstructor;

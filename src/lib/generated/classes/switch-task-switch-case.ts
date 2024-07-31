@@ -22,30 +22,57 @@
 
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class SwitchTaskSwitchCase extends ObjectHydrator<Specification.SwitchTaskSwitchCase> {
+/**
+ * Represents the intersection between the SwitchTaskSwitchCase class and type
+ */
+export type SwitchTaskSwitchCaseIntersection = SwitchTaskSwitchCase & Specification.SwitchTaskSwitchCase;
+
+/**
+ * Represents a constructor for the intersection of the SwitchTaskSwitchCase class and type
+ */
+export interface SwitchTaskSwitchCaseConstructor {
+  new (model?: Partial<Specification.SwitchTaskSwitchCase>): SwitchTaskSwitchCaseIntersection;
+}
+
+/**
+ * Represents a SwitchTaskSwitchCase with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class SwitchTaskSwitchCase extends ObjectHydrator<Specification.SwitchTaskSwitchCase> {
+  /**
+   * Instanciates a new instance of the SwitchTaskSwitchCase class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the SwitchTaskSwitchCase.
+   */
   constructor(model?: Partial<Specification.SwitchTaskSwitchCase>) {
     super(model);
 
-    getLifecycleHook('SwitchTaskSwitchCase')?.constructor?.(this);
+    getLifecycleHooks('SwitchTaskSwitchCase')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the SwitchTaskSwitchCase.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new SwitchTaskSwitchCase(this as any) as SwitchTaskSwitchCase & Specification.SwitchTaskSwitchCase;
-    getLifecycleHook('SwitchTaskSwitchCase')?.preValidation?.(copy);
-    validate('SwitchTaskSwitchCase', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('SwitchTaskSwitchCase')?.postValidation?.(copy);
+    const copy = new SwitchTaskSwitchCase(this as any) as SwitchTaskSwitchCaseIntersection;
+    validate('SwitchTaskSwitchCase', copy);
   }
 
+  /**
+   * Normalizes the current instance of the SwitchTaskSwitchCase.
+   * Creates a copy of the SwitchTaskSwitchCase, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the SwitchTaskSwitchCase instance.
+   */
   normalize(): SwitchTaskSwitchCase & Specification.SwitchTaskSwitchCase {
-    const copy = new SwitchTaskSwitchCase(this as any) as SwitchTaskSwitchCase & Specification.SwitchTaskSwitchCase;
-    return getLifecycleHook('SwitchTaskSwitchCase')?.normalize?.(copy) || copy;
+    const copy = new SwitchTaskSwitchCase(this as any) as SwitchTaskSwitchCaseIntersection;
+    return getLifecycleHooks('SwitchTaskSwitchCase')?.normalize?.(copy) || copy;
   }
 }
 
-export const _SwitchTaskSwitchCase = SwitchTaskSwitchCase as {
-  new (model?: Partial<Specification.SwitchTaskSwitchCase>): SwitchTaskSwitchCase & Specification.SwitchTaskSwitchCase;
-};
+export const _SwitchTaskSwitchCase = SwitchTaskSwitchCase as SwitchTaskSwitchCaseConstructor;

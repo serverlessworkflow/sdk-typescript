@@ -27,11 +27,33 @@ import { _Timeout } from './timeout';
 import { _CallFunctionWith } from './call-function-with';
 import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class CallFunction extends _TaskBase {
+/**
+ * Represents the intersection between the CallFunction class and type
+ */
+export type CallFunctionIntersection = CallFunction & Specification.CallFunction;
+
+/**
+ * Represents a constructor for the intersection of the CallFunction class and type
+ */
+export interface CallFunctionConstructor {
+  new (model?: Partial<Specification.CallFunction>): CallFunctionIntersection;
+}
+
+/**
+ * Represents a CallFunction with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class CallFunction extends _TaskBase {
+  /**
+   * Instanciates a new instance of the CallFunction class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the CallFunction.
+   */
   constructor(model?: Partial<Specification.CallFunction>) {
     super(model);
     const self = this as unknown as Specification.CallFunction & object;
@@ -42,22 +64,28 @@ class CallFunction extends _TaskBase {
       if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
       if (typeof model.with === 'object') self.with = new _CallFunctionWith(model.with);
     }
-    getLifecycleHook('CallFunction')?.constructor?.(this);
+    getLifecycleHooks('CallFunction')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the CallFunction.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new CallFunction(this as any) as CallFunction & Specification.CallFunction;
-    getLifecycleHook('CallFunction')?.preValidation?.(copy);
-    validate('CallFunction', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('CallFunction')?.postValidation?.(copy);
+    const copy = new CallFunction(this as any) as CallFunctionIntersection;
+    validate('CallFunction', copy);
   }
 
+  /**
+   * Normalizes the current instance of the CallFunction.
+   * Creates a copy of the CallFunction, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the CallFunction instance.
+   */
   normalize(): CallFunction & Specification.CallFunction {
-    const copy = new CallFunction(this as any) as CallFunction & Specification.CallFunction;
-    return getLifecycleHook('CallFunction')?.normalize?.(copy) || copy;
+    const copy = new CallFunction(this as any) as CallFunctionIntersection;
+    return getLifecycleHooks('CallFunction')?.normalize?.(copy) || copy;
   }
 }
 
-export const _CallFunction = CallFunction as {
-  new (model?: Partial<Specification.CallFunction>): CallFunction & Specification.CallFunction;
-};
+export const _CallFunction = CallFunction as CallFunctionConstructor;

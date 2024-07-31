@@ -22,34 +22,57 @@
 
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class AuthenticationPolicyBasic extends ObjectHydrator<Specification.AuthenticationPolicyBasic> {
+/**
+ * Represents the intersection between the AuthenticationPolicyBasic class and type
+ */
+export type AuthenticationPolicyBasicIntersection = AuthenticationPolicyBasic & Specification.AuthenticationPolicyBasic;
+
+/**
+ * Represents a constructor for the intersection of the AuthenticationPolicyBasic class and type
+ */
+export interface AuthenticationPolicyBasicConstructor {
+  new (model?: Partial<Specification.AuthenticationPolicyBasic>): AuthenticationPolicyBasicIntersection;
+}
+
+/**
+ * Represents a AuthenticationPolicyBasic with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class AuthenticationPolicyBasic extends ObjectHydrator<Specification.AuthenticationPolicyBasic> {
+  /**
+   * Instanciates a new instance of the AuthenticationPolicyBasic class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the AuthenticationPolicyBasic.
+   */
   constructor(model?: Partial<Specification.AuthenticationPolicyBasic>) {
     super(model);
 
-    getLifecycleHook('AuthenticationPolicyBasic')?.constructor?.(this);
+    getLifecycleHooks('AuthenticationPolicyBasic')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the AuthenticationPolicyBasic.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new AuthenticationPolicyBasic(this as any) as AuthenticationPolicyBasic &
-      Specification.AuthenticationPolicyBasic;
-    getLifecycleHook('AuthenticationPolicyBasic')?.preValidation?.(copy);
-    validate('AuthenticationPolicyBasic', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('AuthenticationPolicyBasic')?.postValidation?.(copy);
+    const copy = new AuthenticationPolicyBasic(this as any) as AuthenticationPolicyBasicIntersection;
+    validate('AuthenticationPolicyBasic', copy);
   }
 
+  /**
+   * Normalizes the current instance of the AuthenticationPolicyBasic.
+   * Creates a copy of the AuthenticationPolicyBasic, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the AuthenticationPolicyBasic instance.
+   */
   normalize(): AuthenticationPolicyBasic & Specification.AuthenticationPolicyBasic {
-    const copy = new AuthenticationPolicyBasic(this as any) as AuthenticationPolicyBasic &
-      Specification.AuthenticationPolicyBasic;
-    return getLifecycleHook('AuthenticationPolicyBasic')?.normalize?.(copy) || copy;
+    const copy = new AuthenticationPolicyBasic(this as any) as AuthenticationPolicyBasicIntersection;
+    return getLifecycleHooks('AuthenticationPolicyBasic')?.normalize?.(copy) || copy;
   }
 }
 
-export const _AuthenticationPolicyBasic = AuthenticationPolicyBasic as {
-  new (
-    model?: Partial<Specification.AuthenticationPolicyBasic>,
-  ): AuthenticationPolicyBasic & Specification.AuthenticationPolicyBasic;
-};
+export const _AuthenticationPolicyBasic = AuthenticationPolicyBasic as AuthenticationPolicyBasicConstructor;

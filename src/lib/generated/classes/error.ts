@@ -22,30 +22,57 @@
 
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class Error extends ObjectHydrator<Specification.Error> {
+/**
+ * Represents the intersection between the Error class and type
+ */
+export type ErrorIntersection = Error & Specification.Error;
+
+/**
+ * Represents a constructor for the intersection of the Error class and type
+ */
+export interface ErrorConstructor {
+  new (model?: Partial<Specification.Error>): ErrorIntersection;
+}
+
+/**
+ * Represents a Error with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class Error extends ObjectHydrator<Specification.Error> {
+  /**
+   * Instanciates a new instance of the Error class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the Error.
+   */
   constructor(model?: Partial<Specification.Error>) {
     super(model);
 
-    getLifecycleHook('Error')?.constructor?.(this);
+    getLifecycleHooks('Error')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the Error.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new Error(this as any) as Error & Specification.Error;
-    getLifecycleHook('Error')?.preValidation?.(copy);
-    validate('Error', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('Error')?.postValidation?.(copy);
+    const copy = new Error(this as any) as ErrorIntersection;
+    validate('Error', copy);
   }
 
+  /**
+   * Normalizes the current instance of the Error.
+   * Creates a copy of the Error, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the Error instance.
+   */
   normalize(): Error & Specification.Error {
-    const copy = new Error(this as any) as Error & Specification.Error;
-    return getLifecycleHook('Error')?.normalize?.(copy) || copy;
+    const copy = new Error(this as any) as ErrorIntersection;
+    return getLifecycleHooks('Error')?.normalize?.(copy) || copy;
   }
 }
 
-export const _Error = Error as {
-  new (model?: Partial<Specification.Error>): Error & Specification.Error;
-};
+export const _Error = Error as ErrorConstructor;

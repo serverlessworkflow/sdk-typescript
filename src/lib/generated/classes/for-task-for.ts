@@ -22,30 +22,57 @@
 
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class ForTaskFor extends ObjectHydrator<Specification.ForTaskFor> {
+/**
+ * Represents the intersection between the ForTaskFor class and type
+ */
+export type ForTaskForIntersection = ForTaskFor & Specification.ForTaskFor;
+
+/**
+ * Represents a constructor for the intersection of the ForTaskFor class and type
+ */
+export interface ForTaskForConstructor {
+  new (model?: Partial<Specification.ForTaskFor>): ForTaskForIntersection;
+}
+
+/**
+ * Represents a ForTaskFor with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class ForTaskFor extends ObjectHydrator<Specification.ForTaskFor> {
+  /**
+   * Instanciates a new instance of the ForTaskFor class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the ForTaskFor.
+   */
   constructor(model?: Partial<Specification.ForTaskFor>) {
     super(model);
 
-    getLifecycleHook('ForTaskFor')?.constructor?.(this);
+    getLifecycleHooks('ForTaskFor')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the ForTaskFor.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new ForTaskFor(this as any) as ForTaskFor & Specification.ForTaskFor;
-    getLifecycleHook('ForTaskFor')?.preValidation?.(copy);
-    validate('ForTaskFor', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('ForTaskFor')?.postValidation?.(copy);
+    const copy = new ForTaskFor(this as any) as ForTaskForIntersection;
+    validate('ForTaskFor', copy);
   }
 
+  /**
+   * Normalizes the current instance of the ForTaskFor.
+   * Creates a copy of the ForTaskFor, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the ForTaskFor instance.
+   */
   normalize(): ForTaskFor & Specification.ForTaskFor {
-    const copy = new ForTaskFor(this as any) as ForTaskFor & Specification.ForTaskFor;
-    return getLifecycleHook('ForTaskFor')?.normalize?.(copy) || copy;
+    const copy = new ForTaskFor(this as any) as ForTaskForIntersection;
+    return getLifecycleHooks('ForTaskFor')?.normalize?.(copy) || copy;
   }
 }
 
-export const _ForTaskFor = ForTaskFor as {
-  new (model?: Partial<Specification.ForTaskFor>): ForTaskFor & Specification.ForTaskFor;
-};
+export const _ForTaskFor = ForTaskFor as ForTaskForConstructor;

@@ -24,11 +24,34 @@ import { _AuthenticationPolicyOauth2Client } from './authentication-policy-oauth
 import { _Oauth2Token } from './oauth2-token';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class AuthenticationPolicyOauth2 extends ObjectHydrator<Specification.AuthenticationPolicyOauth2> {
+/**
+ * Represents the intersection between the AuthenticationPolicyOauth2 class and type
+ */
+export type AuthenticationPolicyOauth2Intersection = AuthenticationPolicyOauth2 &
+  Specification.AuthenticationPolicyOauth2;
+
+/**
+ * Represents a constructor for the intersection of the AuthenticationPolicyOauth2 class and type
+ */
+export interface AuthenticationPolicyOauth2Constructor {
+  new (model?: Partial<Specification.AuthenticationPolicyOauth2>): AuthenticationPolicyOauth2Intersection;
+}
+
+/**
+ * Represents a AuthenticationPolicyOauth2 with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class AuthenticationPolicyOauth2 extends ObjectHydrator<Specification.AuthenticationPolicyOauth2> {
+  /**
+   * Instanciates a new instance of the AuthenticationPolicyOauth2 class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the AuthenticationPolicyOauth2.
+   */
   constructor(model?: Partial<Specification.AuthenticationPolicyOauth2>) {
     super(model);
     const self = this as unknown as Specification.AuthenticationPolicyOauth2 & object;
@@ -37,26 +60,28 @@ class AuthenticationPolicyOauth2 extends ObjectHydrator<Specification.Authentica
       if (typeof model.subject === 'object') self.subject = new _Oauth2Token(model.subject);
       if (typeof model.actor === 'object') self.actor = new _Oauth2Token(model.actor);
     }
-    getLifecycleHook('AuthenticationPolicyOauth2')?.constructor?.(this);
+    getLifecycleHooks('AuthenticationPolicyOauth2')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the AuthenticationPolicyOauth2.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new AuthenticationPolicyOauth2(this as any) as AuthenticationPolicyOauth2 &
-      Specification.AuthenticationPolicyOauth2;
-    getLifecycleHook('AuthenticationPolicyOauth2')?.preValidation?.(copy);
-    validate('AuthenticationPolicyOauth2', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('AuthenticationPolicyOauth2')?.postValidation?.(copy);
+    const copy = new AuthenticationPolicyOauth2(this as any) as AuthenticationPolicyOauth2Intersection;
+    validate('AuthenticationPolicyOauth2', copy);
   }
 
+  /**
+   * Normalizes the current instance of the AuthenticationPolicyOauth2.
+   * Creates a copy of the AuthenticationPolicyOauth2, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the AuthenticationPolicyOauth2 instance.
+   */
   normalize(): AuthenticationPolicyOauth2 & Specification.AuthenticationPolicyOauth2 {
-    const copy = new AuthenticationPolicyOauth2(this as any) as AuthenticationPolicyOauth2 &
-      Specification.AuthenticationPolicyOauth2;
-    return getLifecycleHook('AuthenticationPolicyOauth2')?.normalize?.(copy) || copy;
+    const copy = new AuthenticationPolicyOauth2(this as any) as AuthenticationPolicyOauth2Intersection;
+    return getLifecycleHooks('AuthenticationPolicyOauth2')?.normalize?.(copy) || copy;
   }
 }
 
-export const _AuthenticationPolicyOauth2 = AuthenticationPolicyOauth2 as {
-  new (
-    model?: Partial<Specification.AuthenticationPolicyOauth2>,
-  ): AuthenticationPolicyOauth2 & Specification.AuthenticationPolicyOauth2;
-};
+export const _AuthenticationPolicyOauth2 = AuthenticationPolicyOauth2 as AuthenticationPolicyOauth2Constructor;

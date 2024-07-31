@@ -15,14 +15,14 @@
  *
  */
 
+import { Specification } from '../../src/lib/generated/definitions';
 import { Classes } from '../../src/lib/generated/classes';
-import { validate } from '../../src/lib/validation';
 
 import { schemaVersion } from '../../package.json';
 
-describe('Workflow validation', () => {
-  it('should be valid', () => {
-    const workflow = new Classes.Workflow({
+describe('Workflow (de)serialization', () => {
+  it('should deserialize JSON', () => {
+    const data: Specification.Workflow = {
       document: {
         dsl: schemaVersion,
         name: 'test',
@@ -38,37 +38,57 @@ describe('Workflow validation', () => {
           },
         },
       ],
-    });
-    const test = () => validate('Workflow', workflow);
-    expect(test).not.toThrow(Error);
+    };
+    const dataJson = JSON.stringify(data);
+    const workflow = Classes.Workflow.deserialize(dataJson);
+    expect(workflow).toBeInstanceOf(Classes.Workflow);
   });
 
-  it('should throw when invalid', () => {
-    const workflow = new Classes.Workflow({
+  it('should serialize as JSON from static method', () => {
+    const data: Specification.Workflow = {
       document: {
         dsl: schemaVersion,
         name: 'test',
         version: '1.0.0',
         namespace: 'default',
       },
-    });
-    const test = () => validate('Workflow', workflow);
-    expect(test).toThrow(Error);
-    expect(test).toThrow(/'Workflow' is invalid/);
+      do: [
+        {
+          step1: {
+            set: {
+              foo: 'bar',
+            },
+          },
+        },
+      ],
+    };
+    const workflow = new Classes.Workflow(data);
+    const expected = JSON.stringify(data);
+    const serialized = Classes.Workflow.serialize(workflow, 'json');
+    expect(serialized).toEqual(expected);
   });
 
-  it('should throw with incompatible DSL version', () => {
-    const oldVersion = '0.9';
-    const workflow = new Classes.Workflow({
+  it('should serialize as JSON from instance method', () => {
+    const data: Specification.Workflow = {
       document: {
-        dsl: oldVersion,
+        dsl: schemaVersion,
         name: 'test',
         version: '1.0.0',
         namespace: 'default',
       },
-    });
-    expect(() => workflow.validate()).toThrow(
-      `The DSL version of the workflow '${oldVersion}' doesn't match the supported version of the SDK '${schemaVersion}'.`,
-    );
+      do: [
+        {
+          step1: {
+            set: {
+              foo: 'bar',
+            },
+          },
+        },
+      ],
+    };
+    const workflow = new Classes.Workflow(data);
+    const expected = JSON.stringify(data);
+    const serialized = workflow.serialize('json');
+    expect(serialized).toEqual(expected);
   });
 });

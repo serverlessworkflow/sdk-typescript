@@ -27,11 +27,33 @@ import { _Timeout } from './timeout';
 import { _TaskList } from './task-list';
 import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class DoTask extends _TaskBase {
+/**
+ * Represents the intersection between the DoTask class and type
+ */
+export type DoTaskIntersection = DoTask & Specification.DoTask;
+
+/**
+ * Represents a constructor for the intersection of the DoTask class and type
+ */
+export interface DoTaskConstructor {
+  new (model?: Partial<Specification.DoTask>): DoTaskIntersection;
+}
+
+/**
+ * Represents a DoTask with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class DoTask extends _TaskBase {
+  /**
+   * Instanciates a new instance of the DoTask class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the DoTask.
+   */
   constructor(model?: Partial<Specification.DoTask>) {
     super(model);
     const self = this as unknown as Specification.DoTask & object;
@@ -42,22 +64,28 @@ class DoTask extends _TaskBase {
       if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
       if (typeof model.do === 'object') self.do = new _TaskList(model.do);
     }
-    getLifecycleHook('DoTask')?.constructor?.(this);
+    getLifecycleHooks('DoTask')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the DoTask.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new DoTask(this as any) as DoTask & Specification.DoTask;
-    getLifecycleHook('DoTask')?.preValidation?.(copy);
-    validate('DoTask', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('DoTask')?.postValidation?.(copy);
+    const copy = new DoTask(this as any) as DoTaskIntersection;
+    validate('DoTask', copy);
   }
 
+  /**
+   * Normalizes the current instance of the DoTask.
+   * Creates a copy of the DoTask, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the DoTask instance.
+   */
   normalize(): DoTask & Specification.DoTask {
-    const copy = new DoTask(this as any) as DoTask & Specification.DoTask;
-    return getLifecycleHook('DoTask')?.normalize?.(copy) || copy;
+    const copy = new DoTask(this as any) as DoTaskIntersection;
+    return getLifecycleHooks('DoTask')?.normalize?.(copy) || copy;
   }
 }
 
-export const _DoTask = DoTask as {
-  new (model?: Partial<Specification.DoTask>): DoTask & Specification.DoTask;
-};
+export const _DoTask = DoTask as DoTaskConstructor;

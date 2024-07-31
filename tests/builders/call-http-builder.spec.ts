@@ -22,7 +22,6 @@ describe('CallHTTP builder', () => {
     const endpoint = 'https://serverlessworkflow.io';
     const method = 'get';
     const callHttp = callHTTPBuilder()
-      .call('http') // should be set by the CallHTTP class
       .with({
         endpoint,
         method,
@@ -40,7 +39,6 @@ describe('CallHTTP builder', () => {
     const endpoint = 'https://serverlessworkflow.io';
     const method = 'get';
     const data = {
-      call: 'http' as const,
       with: {
         endpoint,
         method,
@@ -55,7 +53,7 @@ describe('CallHTTP builder', () => {
     expect(callHttp.with!.method).toBe(method);
   });
 
-  it('should validate', () => {
+  it('should throw when invalid', () => {
     const test = () => {
       callHTTPBuilder().build();
     };
@@ -63,7 +61,7 @@ describe('CallHTTP builder', () => {
     expect(test).toThrow(/'CallHTTP' is invalid/);
   });
 
-  it('should not validate', () => {
+  it('should not throw when validation is disabled', () => {
     const test = () => {
       callHTTPBuilder().build({ validate: false });
     };

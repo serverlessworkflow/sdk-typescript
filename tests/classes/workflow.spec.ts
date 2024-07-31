@@ -17,6 +17,7 @@
 import { type } from 'ts-inference-check';
 import { Classes } from '../../src/lib/generated/classes';
 import { Specification } from '../../src/lib/generated/definitions';
+//import { schemaVersion } from '../../package.json';
 
 describe('Workflow class', () => {
   it('should be an instance of Workflow', () => {

@@ -24,11 +24,33 @@ import { _RetryPolicy } from './retry-policy';
 import { _TaskList } from './task-list';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class TryTaskCatch extends ObjectHydrator<Specification.TryTaskCatch> {
+/**
+ * Represents the intersection between the TryTaskCatch class and type
+ */
+export type TryTaskCatchIntersection = TryTaskCatch & Specification.TryTaskCatch;
+
+/**
+ * Represents a constructor for the intersection of the TryTaskCatch class and type
+ */
+export interface TryTaskCatchConstructor {
+  new (model?: Partial<Specification.TryTaskCatch>): TryTaskCatchIntersection;
+}
+
+/**
+ * Represents a TryTaskCatch with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class TryTaskCatch extends ObjectHydrator<Specification.TryTaskCatch> {
+  /**
+   * Instanciates a new instance of the TryTaskCatch class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the TryTaskCatch.
+   */
   constructor(model?: Partial<Specification.TryTaskCatch>) {
     super(model);
     const self = this as unknown as Specification.TryTaskCatch & object;
@@ -36,22 +58,28 @@ class TryTaskCatch extends ObjectHydrator<Specification.TryTaskCatch> {
       if (typeof model.retry === 'object') self.retry = new _RetryPolicy(model.retry);
       if (typeof model.do === 'object') self.do = new _TaskList(model.do);
     }
-    getLifecycleHook('TryTaskCatch')?.constructor?.(this);
+    getLifecycleHooks('TryTaskCatch')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the TryTaskCatch.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new TryTaskCatch(this as any) as TryTaskCatch & Specification.TryTaskCatch;
-    getLifecycleHook('TryTaskCatch')?.preValidation?.(copy);
-    validate('TryTaskCatch', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('TryTaskCatch')?.postValidation?.(copy);
+    const copy = new TryTaskCatch(this as any) as TryTaskCatchIntersection;
+    validate('TryTaskCatch', copy);
   }
 
+  /**
+   * Normalizes the current instance of the TryTaskCatch.
+   * Creates a copy of the TryTaskCatch, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the TryTaskCatch instance.
+   */
   normalize(): TryTaskCatch & Specification.TryTaskCatch {
-    const copy = new TryTaskCatch(this as any) as TryTaskCatch & Specification.TryTaskCatch;
-    return getLifecycleHook('TryTaskCatch')?.normalize?.(copy) || copy;
+    const copy = new TryTaskCatch(this as any) as TryTaskCatchIntersection;
+    return getLifecycleHooks('TryTaskCatch')?.normalize?.(copy) || copy;
   }
 }
 
-export const _TryTaskCatch = TryTaskCatch as {
-  new (model?: Partial<Specification.TryTaskCatch>): TryTaskCatch & Specification.TryTaskCatch;
-};
+export const _TryTaskCatch = TryTaskCatch as TryTaskCatchConstructor;

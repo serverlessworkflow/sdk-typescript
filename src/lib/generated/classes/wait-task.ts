@@ -27,11 +27,33 @@ import { _Timeout } from './timeout';
 import { _Duration } from './duration';
 import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class WaitTask extends _TaskBase {
+/**
+ * Represents the intersection between the WaitTask class and type
+ */
+export type WaitTaskIntersection = WaitTask & Specification.WaitTask;
+
+/**
+ * Represents a constructor for the intersection of the WaitTask class and type
+ */
+export interface WaitTaskConstructor {
+  new (model?: Partial<Specification.WaitTask>): WaitTaskIntersection;
+}
+
+/**
+ * Represents a WaitTask with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class WaitTask extends _TaskBase {
+  /**
+   * Instanciates a new instance of the WaitTask class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the WaitTask.
+   */
   constructor(model?: Partial<Specification.WaitTask>) {
     super(model);
     const self = this as unknown as Specification.WaitTask & object;
@@ -42,22 +64,28 @@ class WaitTask extends _TaskBase {
       if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
       if (typeof model.wait === 'object') self.wait = new _Duration(model.wait);
     }
-    getLifecycleHook('WaitTask')?.constructor?.(this);
+    getLifecycleHooks('WaitTask')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the WaitTask.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new WaitTask(this as any) as WaitTask & Specification.WaitTask;
-    getLifecycleHook('WaitTask')?.preValidation?.(copy);
-    validate('WaitTask', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('WaitTask')?.postValidation?.(copy);
+    const copy = new WaitTask(this as any) as WaitTaskIntersection;
+    validate('WaitTask', copy);
   }
 
+  /**
+   * Normalizes the current instance of the WaitTask.
+   * Creates a copy of the WaitTask, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the WaitTask instance.
+   */
   normalize(): WaitTask & Specification.WaitTask {
-    const copy = new WaitTask(this as any) as WaitTask & Specification.WaitTask;
-    return getLifecycleHook('WaitTask')?.normalize?.(copy) || copy;
+    const copy = new WaitTask(this as any) as WaitTaskIntersection;
+    return getLifecycleHooks('WaitTask')?.normalize?.(copy) || copy;
   }
 }
 
-export const _WaitTask = WaitTask as {
-  new (model?: Partial<Specification.WaitTask>): WaitTask & Specification.WaitTask;
-};
+export const _WaitTask = WaitTask as WaitTaskConstructor;

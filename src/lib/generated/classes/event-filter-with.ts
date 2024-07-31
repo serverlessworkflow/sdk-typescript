@@ -22,30 +22,57 @@
 
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class EventFilterWith extends ObjectHydrator<Specification.EventFilterWith> {
+/**
+ * Represents the intersection between the EventFilterWith class and type
+ */
+export type EventFilterWithIntersection = EventFilterWith & Specification.EventFilterWith;
+
+/**
+ * Represents a constructor for the intersection of the EventFilterWith class and type
+ */
+export interface EventFilterWithConstructor {
+  new (model?: Partial<Specification.EventFilterWith>): EventFilterWithIntersection;
+}
+
+/**
+ * Represents a EventFilterWith with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class EventFilterWith extends ObjectHydrator<Specification.EventFilterWith> {
+  /**
+   * Instanciates a new instance of the EventFilterWith class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the EventFilterWith.
+   */
   constructor(model?: Partial<Specification.EventFilterWith>) {
     super(model);
 
-    getLifecycleHook('EventFilterWith')?.constructor?.(this);
+    getLifecycleHooks('EventFilterWith')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the EventFilterWith.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new EventFilterWith(this as any) as EventFilterWith & Specification.EventFilterWith;
-    getLifecycleHook('EventFilterWith')?.preValidation?.(copy);
-    validate('EventFilterWith', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('EventFilterWith')?.postValidation?.(copy);
+    const copy = new EventFilterWith(this as any) as EventFilterWithIntersection;
+    validate('EventFilterWith', copy);
   }
 
+  /**
+   * Normalizes the current instance of the EventFilterWith.
+   * Creates a copy of the EventFilterWith, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the EventFilterWith instance.
+   */
   normalize(): EventFilterWith & Specification.EventFilterWith {
-    const copy = new EventFilterWith(this as any) as EventFilterWith & Specification.EventFilterWith;
-    return getLifecycleHook('EventFilterWith')?.normalize?.(copy) || copy;
+    const copy = new EventFilterWith(this as any) as EventFilterWithIntersection;
+    return getLifecycleHooks('EventFilterWith')?.normalize?.(copy) || copy;
   }
 }
 
-export const _EventFilterWith = EventFilterWith as {
-  new (model?: Partial<Specification.EventFilterWith>): EventFilterWith & Specification.EventFilterWith;
-};
+export const _EventFilterWith = EventFilterWith as EventFilterWithConstructor;

@@ -23,11 +23,19 @@
 import { _Task } from './task';
 import { Specification } from '../definitions';
 import { ArrayHydrator } from '../../hydrator';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class TaskList extends ArrayHydrator<{ [k: string]: Specification.Task }> {
+/**
+ * Represents a collection of { [k: string]: Specification.Task; }.
+ * Inherits from ArrayHydrator to handle array-specific hydration.
+ */
+export class TaskList extends ArrayHydrator<{ [k: string]: Specification.Task }> {
+  /**
+   * Constructs a new instance of the TaskList class.
+   *
+   * @param model - Optional parameter which can be an array of objects or a number representing the array length.
+   */
   constructor(model?: Array<{ [k: string]: Specification.Task }> | number) {
     super(model);
     if (Array.isArray(model)) {
@@ -39,19 +47,27 @@ class TaskList extends ArrayHydrator<{ [k: string]: Specification.Task }> {
       }
     }
     Object.setPrototypeOf(this, Object.create(TaskList.prototype));
-    getLifecycleHook('TaskList')?.constructor?.(this);
+    getLifecycleHooks('TaskList')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the TaskList.
+   * Throws if invalid.
+   */
   validate() {
     const copy = new TaskList(this);
-    getLifecycleHook('TaskList')?.preValidation?.(copy);
-    validate('TaskList', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('TaskList')?.postValidation?.(copy);
+    validate('TaskList', copy);
   }
 
+  /**
+   * Normalizes the current instance of the TaskList.
+   * Creates a copy of the TaskList, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the TaskList instance.
+   */
   normalize(): TaskList {
     const copy = new TaskList(this);
-    return getLifecycleHook('TaskList')?.normalize?.(copy) || copy;
+    return getLifecycleHooks('TaskList')?.normalize?.(copy) || copy;
   }
 }
 

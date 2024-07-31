@@ -22,30 +22,57 @@
 
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class CallHTTPWithEndpoint extends ObjectHydrator<Specification.CallHTTPWithEndpoint> {
+/**
+ * Represents the intersection between the CallHTTPWithEndpoint class and type
+ */
+export type CallHTTPWithEndpointIntersection = CallHTTPWithEndpoint & Specification.CallHTTPWithEndpoint;
+
+/**
+ * Represents a constructor for the intersection of the CallHTTPWithEndpoint class and type
+ */
+export interface CallHTTPWithEndpointConstructor {
+  new (model?: Partial<Specification.CallHTTPWithEndpoint>): CallHTTPWithEndpointIntersection;
+}
+
+/**
+ * Represents a CallHTTPWithEndpoint with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class CallHTTPWithEndpoint extends ObjectHydrator<Specification.CallHTTPWithEndpoint> {
+  /**
+   * Instanciates a new instance of the CallHTTPWithEndpoint class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the CallHTTPWithEndpoint.
+   */
   constructor(model?: Partial<Specification.CallHTTPWithEndpoint>) {
     super(model);
 
-    getLifecycleHook('CallHTTPWithEndpoint')?.constructor?.(this);
+    getLifecycleHooks('CallHTTPWithEndpoint')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the CallHTTPWithEndpoint.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new CallHTTPWithEndpoint(this as any) as CallHTTPWithEndpoint & Specification.CallHTTPWithEndpoint;
-    getLifecycleHook('CallHTTPWithEndpoint')?.preValidation?.(copy);
-    validate('CallHTTPWithEndpoint', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('CallHTTPWithEndpoint')?.postValidation?.(copy);
+    const copy = new CallHTTPWithEndpoint(this as any) as CallHTTPWithEndpointIntersection;
+    validate('CallHTTPWithEndpoint', copy);
   }
 
+  /**
+   * Normalizes the current instance of the CallHTTPWithEndpoint.
+   * Creates a copy of the CallHTTPWithEndpoint, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the CallHTTPWithEndpoint instance.
+   */
   normalize(): CallHTTPWithEndpoint & Specification.CallHTTPWithEndpoint {
-    const copy = new CallHTTPWithEndpoint(this as any) as CallHTTPWithEndpoint & Specification.CallHTTPWithEndpoint;
-    return getLifecycleHook('CallHTTPWithEndpoint')?.normalize?.(copy) || copy;
+    const copy = new CallHTTPWithEndpoint(this as any) as CallHTTPWithEndpointIntersection;
+    return getLifecycleHooks('CallHTTPWithEndpoint')?.normalize?.(copy) || copy;
   }
 }
 
-export const _CallHTTPWithEndpoint = CallHTTPWithEndpoint as {
-  new (model?: Partial<Specification.CallHTTPWithEndpoint>): CallHTTPWithEndpoint & Specification.CallHTTPWithEndpoint;
-};
+export const _CallHTTPWithEndpoint = CallHTTPWithEndpoint as CallHTTPWithEndpointConstructor;

@@ -23,11 +23,33 @@
 import { _Error } from './error';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class UseErrors extends ObjectHydrator<Specification.UseErrors> {
+/**
+ * Represents the intersection between the UseErrors class and type
+ */
+export type UseErrorsIntersection = UseErrors & Specification.UseErrors;
+
+/**
+ * Represents a constructor for the intersection of the UseErrors class and type
+ */
+export interface UseErrorsConstructor {
+  new (model?: Partial<Specification.UseErrors>): UseErrorsIntersection;
+}
+
+/**
+ * Represents a UseErrors with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class UseErrors extends ObjectHydrator<Specification.UseErrors> {
+  /**
+   * Instanciates a new instance of the UseErrors class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the UseErrors.
+   */
   constructor(model?: Partial<Specification.UseErrors>) {
     super(model);
     const self = this as unknown as Specification.UseErrors & object;
@@ -39,22 +61,28 @@ class UseErrors extends ObjectHydrator<Specification.UseErrors> {
           self[key] = new _Error(value);
         });
     }
-    getLifecycleHook('UseErrors')?.constructor?.(this);
+    getLifecycleHooks('UseErrors')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the UseErrors.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new UseErrors(this as any) as UseErrors & Specification.UseErrors;
-    getLifecycleHook('UseErrors')?.preValidation?.(copy);
-    validate('UseErrors', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('UseErrors')?.postValidation?.(copy);
+    const copy = new UseErrors(this as any) as UseErrorsIntersection;
+    validate('UseErrors', copy);
   }
 
+  /**
+   * Normalizes the current instance of the UseErrors.
+   * Creates a copy of the UseErrors, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the UseErrors instance.
+   */
   normalize(): UseErrors & Specification.UseErrors {
-    const copy = new UseErrors(this as any) as UseErrors & Specification.UseErrors;
-    return getLifecycleHook('UseErrors')?.normalize?.(copy) || copy;
+    const copy = new UseErrors(this as any) as UseErrorsIntersection;
+    return getLifecycleHooks('UseErrors')?.normalize?.(copy) || copy;
   }
 }
 
-export const _UseErrors = UseErrors as {
-  new (model?: Partial<Specification.UseErrors>): UseErrors & Specification.UseErrors;
-};
+export const _UseErrors = UseErrors as UseErrorsConstructor;

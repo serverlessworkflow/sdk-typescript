@@ -25,11 +25,33 @@ import { _RetryPolicyLimit } from './retry-policy-limit';
 import { _RetryPolicyJitter } from './retry-policy-jitter';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class RetryPolicy extends ObjectHydrator<Specification.RetryPolicy> {
+/**
+ * Represents the intersection between the RetryPolicy class and type
+ */
+export type RetryPolicyIntersection = RetryPolicy & Specification.RetryPolicy;
+
+/**
+ * Represents a constructor for the intersection of the RetryPolicy class and type
+ */
+export interface RetryPolicyConstructor {
+  new (model?: Partial<Specification.RetryPolicy>): RetryPolicyIntersection;
+}
+
+/**
+ * Represents a RetryPolicy with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class RetryPolicy extends ObjectHydrator<Specification.RetryPolicy> {
+  /**
+   * Instanciates a new instance of the RetryPolicy class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the RetryPolicy.
+   */
   constructor(model?: Partial<Specification.RetryPolicy>) {
     super(model);
     const self = this as unknown as Specification.RetryPolicy & object;
@@ -38,22 +60,28 @@ class RetryPolicy extends ObjectHydrator<Specification.RetryPolicy> {
       if (typeof model.limit === 'object') self.limit = new _RetryPolicyLimit(model.limit);
       if (typeof model.jitter === 'object') self.jitter = new _RetryPolicyJitter(model.jitter);
     }
-    getLifecycleHook('RetryPolicy')?.constructor?.(this);
+    getLifecycleHooks('RetryPolicy')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the RetryPolicy.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new RetryPolicy(this as any) as RetryPolicy & Specification.RetryPolicy;
-    getLifecycleHook('RetryPolicy')?.preValidation?.(copy);
-    validate('RetryPolicy', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('RetryPolicy')?.postValidation?.(copy);
+    const copy = new RetryPolicy(this as any) as RetryPolicyIntersection;
+    validate('RetryPolicy', copy);
   }
 
+  /**
+   * Normalizes the current instance of the RetryPolicy.
+   * Creates a copy of the RetryPolicy, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the RetryPolicy instance.
+   */
   normalize(): RetryPolicy & Specification.RetryPolicy {
-    const copy = new RetryPolicy(this as any) as RetryPolicy & Specification.RetryPolicy;
-    return getLifecycleHook('RetryPolicy')?.normalize?.(copy) || copy;
+    const copy = new RetryPolicy(this as any) as RetryPolicyIntersection;
+    return getLifecycleHooks('RetryPolicy')?.normalize?.(copy) || copy;
   }
 }
 
-export const _RetryPolicy = RetryPolicy as {
-  new (model?: Partial<Specification.RetryPolicy>): RetryPolicy & Specification.RetryPolicy;
-};
+export const _RetryPolicy = RetryPolicy as RetryPolicyConstructor;

@@ -19,6 +19,8 @@ import Ajv, { ValidateFunction } from 'ajv/dist/2020';
 import addFormats from 'ajv-formats';
 import workflowSchema from './generated/schema/workflow.json';
 import { validationPointers } from './generated/validation';
+import { deepCopy } from './utils';
+import { getLifecycleHooks } from './lifecycle-hooks';
 
 const ajv = new Ajv({
   schemas: [workflowSchema],
@@ -42,15 +44,16 @@ const validators: Map<string, ValidateFunction> = new Map<string, ValidateFuncti
  * Validates the provided data or throws an error
  * @param typeName The data type to validate
  * @param data The data to validate
- * @returns True if valid, throws if invalid
+ * @returns Throws if invalid
  */
-export const validate = <T>(typeName: string, data: T): boolean => {
+export const validate = <T>(typeName: string, data: T) => {
+  getLifecycleHooks(typeName)?.preValidation?.(data);
   const validateFn: ValidateFunction | undefined = validators.get(typeName);
   if (!validateFn) {
     throw Error(`Unable to find a validation function for '${typeName}'`);
   }
-  if (!validateFn(data)) {
-    // can mutate the input data!
+  // prevents possible data mutation and invalid "additional properties" from the classes like constructor/validate/normalize
+  if (!validateFn(deepCopy(data))) {
     throw new Error(
       `'${typeName}' is invalid:
 ${validateFn.errors?.reduce((acc, error) => acc + `- ${error.instancePath} | ${error.schemaPath} | ${error.message} | ${JSON.stringify(error.params)}\n`, '') ?? ''}
@@ -58,5 +61,5 @@ ${validateFn.errors?.reduce((acc, error) => acc + `- ${error.instancePath} | ${e
 data: ${JSON.stringify(data, null, 4)}`,
     );
   }
-  return true;
+  getLifecycleHooks(typeName)?.postValidation?.(data);
 };

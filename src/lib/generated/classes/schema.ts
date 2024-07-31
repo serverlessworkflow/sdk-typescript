@@ -22,30 +22,57 @@
 
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class Schema extends ObjectHydrator<Specification.Schema> {
+/**
+ * Represents the intersection between the Schema class and type
+ */
+export type SchemaIntersection = Schema & Specification.Schema;
+
+/**
+ * Represents a constructor for the intersection of the Schema class and type
+ */
+export interface SchemaConstructor {
+  new (model?: Partial<Specification.Schema>): SchemaIntersection;
+}
+
+/**
+ * Represents a Schema with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class Schema extends ObjectHydrator<Specification.Schema> {
+  /**
+   * Instanciates a new instance of the Schema class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the Schema.
+   */
   constructor(model?: Partial<Specification.Schema>) {
     super(model);
 
-    getLifecycleHook('Schema')?.constructor?.(this);
+    getLifecycleHooks('Schema')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the Schema.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new Schema(this as any) as Schema & Specification.Schema;
-    getLifecycleHook('Schema')?.preValidation?.(copy);
-    validate('Schema', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('Schema')?.postValidation?.(copy);
+    const copy = new Schema(this as any) as SchemaIntersection;
+    validate('Schema', copy);
   }
 
+  /**
+   * Normalizes the current instance of the Schema.
+   * Creates a copy of the Schema, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the Schema instance.
+   */
   normalize(): Schema & Specification.Schema {
-    const copy = new Schema(this as any) as Schema & Specification.Schema;
-    return getLifecycleHook('Schema')?.normalize?.(copy) || copy;
+    const copy = new Schema(this as any) as SchemaIntersection;
+    return getLifecycleHooks('Schema')?.normalize?.(copy) || copy;
   }
 }
 
-export const _Schema = Schema as {
-  new (model?: Partial<Specification.Schema>): Schema & Specification.Schema;
-};
+export const _Schema = Schema as SchemaConstructor;

@@ -23,33 +23,61 @@
 import { _EmitTaskEmitEvent } from './emit-task-emit-event';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class EmitTaskEmit extends ObjectHydrator<Specification.EmitTaskEmit> {
+/**
+ * Represents the intersection between the EmitTaskEmit class and type
+ */
+export type EmitTaskEmitIntersection = EmitTaskEmit & Specification.EmitTaskEmit;
+
+/**
+ * Represents a constructor for the intersection of the EmitTaskEmit class and type
+ */
+export interface EmitTaskEmitConstructor {
+  new (model?: Partial<Specification.EmitTaskEmit>): EmitTaskEmitIntersection;
+}
+
+/**
+ * Represents a EmitTaskEmit with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class EmitTaskEmit extends ObjectHydrator<Specification.EmitTaskEmit> {
+  /**
+   * Instanciates a new instance of the EmitTaskEmit class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the EmitTaskEmit.
+   */
   constructor(model?: Partial<Specification.EmitTaskEmit>) {
     super(model);
     const self = this as unknown as Specification.EmitTaskEmit & object;
     if (isObject(model)) {
       if (typeof model.event === 'object') self.event = new _EmitTaskEmitEvent(model.event);
     }
-    getLifecycleHook('EmitTaskEmit')?.constructor?.(this);
+    getLifecycleHooks('EmitTaskEmit')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the EmitTaskEmit.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new EmitTaskEmit(this as any) as EmitTaskEmit & Specification.EmitTaskEmit;
-    getLifecycleHook('EmitTaskEmit')?.preValidation?.(copy);
-    validate('EmitTaskEmit', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('EmitTaskEmit')?.postValidation?.(copy);
+    const copy = new EmitTaskEmit(this as any) as EmitTaskEmitIntersection;
+    validate('EmitTaskEmit', copy);
   }
 
+  /**
+   * Normalizes the current instance of the EmitTaskEmit.
+   * Creates a copy of the EmitTaskEmit, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the EmitTaskEmit instance.
+   */
   normalize(): EmitTaskEmit & Specification.EmitTaskEmit {
-    const copy = new EmitTaskEmit(this as any) as EmitTaskEmit & Specification.EmitTaskEmit;
-    return getLifecycleHook('EmitTaskEmit')?.normalize?.(copy) || copy;
+    const copy = new EmitTaskEmit(this as any) as EmitTaskEmitIntersection;
+    return getLifecycleHooks('EmitTaskEmit')?.normalize?.(copy) || copy;
   }
 }
 
-export const _EmitTaskEmit = EmitTaskEmit as {
-  new (model?: Partial<Specification.EmitTaskEmit>): EmitTaskEmit & Specification.EmitTaskEmit;
-};
+export const _EmitTaskEmit = EmitTaskEmit as EmitTaskEmitConstructor;

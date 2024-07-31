@@ -23,11 +23,19 @@
 import { _EventFilter } from './event-filter';
 import { Specification } from '../definitions';
 import { ArrayHydrator } from '../../hydrator';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class EventConsumptionStrategyAll extends ArrayHydrator<Specification.EventFilter> {
+/**
+ * Represents a collection of Specification.EventFilter.
+ * Inherits from ArrayHydrator to handle array-specific hydration.
+ */
+export class EventConsumptionStrategyAll extends ArrayHydrator<Specification.EventFilter> {
+  /**
+   * Constructs a new instance of the EventConsumptionStrategyAll class.
+   *
+   * @param model - Optional parameter which can be an array of objects or a number representing the array length.
+   */
   constructor(model?: Array<Specification.EventFilter> | number) {
     super(model);
     if (Array.isArray(model)) {
@@ -37,19 +45,27 @@ class EventConsumptionStrategyAll extends ArrayHydrator<Specification.EventFilte
       }
     }
     Object.setPrototypeOf(this, Object.create(EventConsumptionStrategyAll.prototype));
-    getLifecycleHook('EventConsumptionStrategyAll')?.constructor?.(this);
+    getLifecycleHooks('EventConsumptionStrategyAll')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the EventConsumptionStrategyAll.
+   * Throws if invalid.
+   */
   validate() {
     const copy = new EventConsumptionStrategyAll(this);
-    getLifecycleHook('EventConsumptionStrategyAll')?.preValidation?.(copy);
-    validate('EventConsumptionStrategyAll', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('EventConsumptionStrategyAll')?.postValidation?.(copy);
+    validate('EventConsumptionStrategyAll', copy);
   }
 
+  /**
+   * Normalizes the current instance of the EventConsumptionStrategyAll.
+   * Creates a copy of the EventConsumptionStrategyAll, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the EventConsumptionStrategyAll instance.
+   */
   normalize(): EventConsumptionStrategyAll {
     const copy = new EventConsumptionStrategyAll(this);
-    return getLifecycleHook('EventConsumptionStrategyAll')?.normalize?.(copy) || copy;
+    return getLifecycleHooks('EventConsumptionStrategyAll')?.normalize?.(copy) || copy;
   }
 }
 

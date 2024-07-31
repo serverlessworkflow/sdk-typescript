@@ -23,33 +23,61 @@
 import { _CallOpenAPIWithParameters } from './call-open-api-with-parameters';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class CallOpenAPIWith extends ObjectHydrator<Specification.CallOpenAPIWith> {
+/**
+ * Represents the intersection between the CallOpenAPIWith class and type
+ */
+export type CallOpenAPIWithIntersection = CallOpenAPIWith & Specification.CallOpenAPIWith;
+
+/**
+ * Represents a constructor for the intersection of the CallOpenAPIWith class and type
+ */
+export interface CallOpenAPIWithConstructor {
+  new (model?: Partial<Specification.CallOpenAPIWith>): CallOpenAPIWithIntersection;
+}
+
+/**
+ * Represents a CallOpenAPIWith with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class CallOpenAPIWith extends ObjectHydrator<Specification.CallOpenAPIWith> {
+  /**
+   * Instanciates a new instance of the CallOpenAPIWith class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the CallOpenAPIWith.
+   */
   constructor(model?: Partial<Specification.CallOpenAPIWith>) {
     super(model);
     const self = this as unknown as Specification.CallOpenAPIWith & object;
     if (isObject(model)) {
       if (typeof model.parameters === 'object') self.parameters = new _CallOpenAPIWithParameters(model.parameters);
     }
-    getLifecycleHook('CallOpenAPIWith')?.constructor?.(this);
+    getLifecycleHooks('CallOpenAPIWith')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the CallOpenAPIWith.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new CallOpenAPIWith(this as any) as CallOpenAPIWith & Specification.CallOpenAPIWith;
-    getLifecycleHook('CallOpenAPIWith')?.preValidation?.(copy);
-    validate('CallOpenAPIWith', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('CallOpenAPIWith')?.postValidation?.(copy);
+    const copy = new CallOpenAPIWith(this as any) as CallOpenAPIWithIntersection;
+    validate('CallOpenAPIWith', copy);
   }
 
+  /**
+   * Normalizes the current instance of the CallOpenAPIWith.
+   * Creates a copy of the CallOpenAPIWith, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the CallOpenAPIWith instance.
+   */
   normalize(): CallOpenAPIWith & Specification.CallOpenAPIWith {
-    const copy = new CallOpenAPIWith(this as any) as CallOpenAPIWith & Specification.CallOpenAPIWith;
-    return getLifecycleHook('CallOpenAPIWith')?.normalize?.(copy) || copy;
+    const copy = new CallOpenAPIWith(this as any) as CallOpenAPIWithIntersection;
+    return getLifecycleHooks('CallOpenAPIWith')?.normalize?.(copy) || copy;
   }
 }
 
-export const _CallOpenAPIWith = CallOpenAPIWith as {
-  new (model?: Partial<Specification.CallOpenAPIWith>): CallOpenAPIWith & Specification.CallOpenAPIWith;
-};
+export const _CallOpenAPIWith = CallOpenAPIWith as CallOpenAPIWithConstructor;

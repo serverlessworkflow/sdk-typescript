@@ -14,15 +14,29 @@
  * limitations under the License.
  *
  */
-
+import { documentBuilder, setTaskBuilder, taskListBuilder, workflowBuilder } from '../../src/lib/generated/builders';
 import { Classes } from '../../src/lib/generated/classes';
-import { validate } from '../../src/lib/validation';
 
 import { schemaVersion } from '../../package.json';
 
-describe('Workflow validation', () => {
-  it('should be valid', () => {
-    const workflow = new Classes.Workflow({
+describe('Workflow builder', () => {
+  it('should build with fluent api', () => {
+    const workflow = workflowBuilder()
+      .document(documentBuilder().dsl(schemaVersion).name('test').version('1.0.0').namespace('default').build())
+      .do(
+        taskListBuilder()
+          .push({
+            step1: setTaskBuilder().set({ foo: 'bar' }).build(),
+          })
+          .build(),
+      )
+      .build();
+    expect(workflow).toBeDefined();
+    expect(workflow).toBeInstanceOf(Classes.Workflow);
+  });
+
+  it('should build with input', () => {
+    const data = {
       document: {
         dsl: schemaVersion,
         name: 'test',
@@ -38,37 +52,24 @@ describe('Workflow validation', () => {
           },
         },
       ],
-    });
-    const test = () => validate('Workflow', workflow);
-    expect(test).not.toThrow(Error);
+    };
+    const workflow = workflowBuilder(data).build();
+    expect(workflow).toBeDefined();
+    expect(workflow).toBeInstanceOf(Classes.Workflow);
   });
 
   it('should throw when invalid', () => {
-    const workflow = new Classes.Workflow({
-      document: {
-        dsl: schemaVersion,
-        name: 'test',
-        version: '1.0.0',
-        namespace: 'default',
-      },
-    });
-    const test = () => validate('Workflow', workflow);
+    const test = () => {
+      workflowBuilder().build();
+    };
     expect(test).toThrow(Error);
     expect(test).toThrow(/'Workflow' is invalid/);
   });
 
-  it('should throw with incompatible DSL version', () => {
-    const oldVersion = '0.9';
-    const workflow = new Classes.Workflow({
-      document: {
-        dsl: oldVersion,
-        name: 'test',
-        version: '1.0.0',
-        namespace: 'default',
-      },
-    });
-    expect(() => workflow.validate()).toThrow(
-      `The DSL version of the workflow '${oldVersion}' doesn't match the supported version of the SDK '${schemaVersion}'.`,
-    );
+  it('should not throw when validation is disabled', () => {
+    const test = () => {
+      workflowBuilder().build({ validate: false });
+    };
+    expect(test).not.toThrow();
   });
 });

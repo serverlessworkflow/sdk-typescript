@@ -22,30 +22,57 @@
 
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class Input extends ObjectHydrator<Specification.Input> {
+/**
+ * Represents the intersection between the Input class and type
+ */
+export type InputIntersection = Input & Specification.Input;
+
+/**
+ * Represents a constructor for the intersection of the Input class and type
+ */
+export interface InputConstructor {
+  new (model?: Partial<Specification.Input>): InputIntersection;
+}
+
+/**
+ * Represents a Input with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class Input extends ObjectHydrator<Specification.Input> {
+  /**
+   * Instanciates a new instance of the Input class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the Input.
+   */
   constructor(model?: Partial<Specification.Input>) {
     super(model);
 
-    getLifecycleHook('Input')?.constructor?.(this);
+    getLifecycleHooks('Input')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the Input.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new Input(this as any) as Input & Specification.Input;
-    getLifecycleHook('Input')?.preValidation?.(copy);
-    validate('Input', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('Input')?.postValidation?.(copy);
+    const copy = new Input(this as any) as InputIntersection;
+    validate('Input', copy);
   }
 
+  /**
+   * Normalizes the current instance of the Input.
+   * Creates a copy of the Input, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the Input instance.
+   */
   normalize(): Input & Specification.Input {
-    const copy = new Input(this as any) as Input & Specification.Input;
-    return getLifecycleHook('Input')?.normalize?.(copy) || copy;
+    const copy = new Input(this as any) as InputIntersection;
+    return getLifecycleHooks('Input')?.normalize?.(copy) || copy;
   }
 }
 
-export const _Input = Input as {
-  new (model?: Partial<Specification.Input>): Input & Specification.Input;
-};
+export const _Input = Input as InputConstructor;

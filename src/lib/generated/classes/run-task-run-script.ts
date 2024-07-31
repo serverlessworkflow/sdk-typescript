@@ -22,30 +22,57 @@
 
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class RunTaskRunScript extends ObjectHydrator<Specification.RunTaskRunScript> {
+/**
+ * Represents the intersection between the RunTaskRunScript class and type
+ */
+export type RunTaskRunScriptIntersection = RunTaskRunScript & Specification.RunTaskRunScript;
+
+/**
+ * Represents a constructor for the intersection of the RunTaskRunScript class and type
+ */
+export interface RunTaskRunScriptConstructor {
+  new (model?: Partial<Specification.RunTaskRunScript>): RunTaskRunScriptIntersection;
+}
+
+/**
+ * Represents a RunTaskRunScript with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class RunTaskRunScript extends ObjectHydrator<Specification.RunTaskRunScript> {
+  /**
+   * Instanciates a new instance of the RunTaskRunScript class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the RunTaskRunScript.
+   */
   constructor(model?: Partial<Specification.RunTaskRunScript>) {
     super(model);
 
-    getLifecycleHook('RunTaskRunScript')?.constructor?.(this);
+    getLifecycleHooks('RunTaskRunScript')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the RunTaskRunScript.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new RunTaskRunScript(this as any) as RunTaskRunScript & Specification.RunTaskRunScript;
-    getLifecycleHook('RunTaskRunScript')?.preValidation?.(copy);
-    validate('RunTaskRunScript', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('RunTaskRunScript')?.postValidation?.(copy);
+    const copy = new RunTaskRunScript(this as any) as RunTaskRunScriptIntersection;
+    validate('RunTaskRunScript', copy);
   }
 
+  /**
+   * Normalizes the current instance of the RunTaskRunScript.
+   * Creates a copy of the RunTaskRunScript, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the RunTaskRunScript instance.
+   */
   normalize(): RunTaskRunScript & Specification.RunTaskRunScript {
-    const copy = new RunTaskRunScript(this as any) as RunTaskRunScript & Specification.RunTaskRunScript;
-    return getLifecycleHook('RunTaskRunScript')?.normalize?.(copy) || copy;
+    const copy = new RunTaskRunScript(this as any) as RunTaskRunScriptIntersection;
+    return getLifecycleHooks('RunTaskRunScript')?.normalize?.(copy) || copy;
   }
 }
 
-export const _RunTaskRunScript = RunTaskRunScript as {
-  new (model?: Partial<Specification.RunTaskRunScript>): RunTaskRunScript & Specification.RunTaskRunScript;
-};
+export const _RunTaskRunScript = RunTaskRunScript as RunTaskRunScriptConstructor;

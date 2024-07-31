@@ -23,33 +23,61 @@
 import { _CallHTTPWithEndpoint } from './call-http-with-endpoint';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class CallHTTPWith extends ObjectHydrator<Specification.CallHTTPWith> {
+/**
+ * Represents the intersection between the CallHTTPWith class and type
+ */
+export type CallHTTPWithIntersection = CallHTTPWith & Specification.CallHTTPWith;
+
+/**
+ * Represents a constructor for the intersection of the CallHTTPWith class and type
+ */
+export interface CallHTTPWithConstructor {
+  new (model?: Partial<Specification.CallHTTPWith>): CallHTTPWithIntersection;
+}
+
+/**
+ * Represents a CallHTTPWith with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class CallHTTPWith extends ObjectHydrator<Specification.CallHTTPWith> {
+  /**
+   * Instanciates a new instance of the CallHTTPWith class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the CallHTTPWith.
+   */
   constructor(model?: Partial<Specification.CallHTTPWith>) {
     super(model);
     const self = this as unknown as Specification.CallHTTPWith & object;
     if (isObject(model)) {
       if (typeof model.endpoint === 'object') self.endpoint = new _CallHTTPWithEndpoint(model.endpoint);
     }
-    getLifecycleHook('CallHTTPWith')?.constructor?.(this);
+    getLifecycleHooks('CallHTTPWith')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the CallHTTPWith.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new CallHTTPWith(this as any) as CallHTTPWith & Specification.CallHTTPWith;
-    getLifecycleHook('CallHTTPWith')?.preValidation?.(copy);
-    validate('CallHTTPWith', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('CallHTTPWith')?.postValidation?.(copy);
+    const copy = new CallHTTPWith(this as any) as CallHTTPWithIntersection;
+    validate('CallHTTPWith', copy);
   }
 
+  /**
+   * Normalizes the current instance of the CallHTTPWith.
+   * Creates a copy of the CallHTTPWith, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the CallHTTPWith instance.
+   */
   normalize(): CallHTTPWith & Specification.CallHTTPWith {
-    const copy = new CallHTTPWith(this as any) as CallHTTPWith & Specification.CallHTTPWith;
-    return getLifecycleHook('CallHTTPWith')?.normalize?.(copy) || copy;
+    const copy = new CallHTTPWith(this as any) as CallHTTPWithIntersection;
+    return getLifecycleHooks('CallHTTPWith')?.normalize?.(copy) || copy;
   }
 }
 
-export const _CallHTTPWith = CallHTTPWith as {
-  new (model?: Partial<Specification.CallHTTPWith>): CallHTTPWith & Specification.CallHTTPWith;
-};
+export const _CallHTTPWith = CallHTTPWith as CallHTTPWithConstructor;

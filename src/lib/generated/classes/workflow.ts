@@ -29,11 +29,34 @@ import { _Output } from './output';
 import { _Schedule } from './schedule';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
+import * as yaml from 'js-yaml';
 
-class Workflow extends ObjectHydrator<Specification.Workflow> {
+/**
+ * Represents the intersection between the Workflow class and type
+ */
+export type WorkflowIntersection = Workflow & Specification.Workflow;
+
+/**
+ * Represents a constructor for the intersection of the Workflow class and type
+ */
+export interface WorkflowConstructor {
+  new (model?: Partial<Specification.Workflow>): WorkflowIntersection;
+}
+
+/**
+ * Represents a Workflow with methods for validation normalization, and serialization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class Workflow extends ObjectHydrator<Specification.Workflow> {
+  /**
+   * Instanciates a new instance of the Workflow class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the Workflow.
+   */
   constructor(model?: Partial<Specification.Workflow>) {
     super(model);
     const self = this as unknown as Specification.Workflow & object;
@@ -46,22 +69,75 @@ class Workflow extends ObjectHydrator<Specification.Workflow> {
       if (typeof model.output === 'object') self.output = new _Output(model.output);
       if (typeof model.schedule === 'object') self.schedule = new _Schedule(model.schedule);
     }
-    getLifecycleHook('Workflow')?.constructor?.(this);
+    getLifecycleHooks('Workflow')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the Workflow.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new Workflow(this as any) as Workflow & Specification.Workflow;
-    getLifecycleHook('Workflow')?.preValidation?.(copy);
-    validate('Workflow', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('Workflow')?.postValidation?.(copy);
+    const copy = new Workflow(this as any) as WorkflowIntersection;
+    validate('Workflow', copy);
   }
 
+  /**
+   * Normalizes the current instance of the Workflow.
+   * Creates a copy of the Workflow, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the Workflow instance.
+   */
   normalize(): Workflow & Specification.Workflow {
-    const copy = new Workflow(this as any) as Workflow & Specification.Workflow;
-    return getLifecycleHook('Workflow')?.normalize?.(copy) || copy;
+    const copy = new Workflow(this as any) as WorkflowIntersection;
+    return getLifecycleHooks('Workflow')?.normalize?.(copy) || copy;
+  }
+
+  static deserialize(text: string): WorkflowIntersection {
+    const model = yaml.load(text) as Partial<Specification.Workflow>;
+    getLifecycleHooks('Workflow')?.preValidation?.(model);
+    validate('Workflow', model);
+    getLifecycleHooks('Workflow')?.postValidation?.(model);
+    return new Workflow(model) as WorkflowIntersection;
+  }
+
+  static serialize(
+    workflow: WorkflowIntersection,
+    format: 'yaml' | 'json' = 'yaml',
+    normalize: boolean = true,
+  ): string {
+    workflow.validate();
+    const model = normalize ? workflow.normalize() : workflow;
+    if (format === 'json') {
+      return JSON.stringify(model);
+    }
+    return yaml.dump(model);
+  }
+
+  /**
+   * Serializes the workflow to YAML or JSON
+   * @param format The format, 'yaml' or 'json', default is 'yaml'
+   * @param normalize If the workflow should be normalized before serialization, default true
+   * @returns A string representation of the workflow
+   */
+  serialize(format: 'yaml' | 'json' = 'yaml', normalize: boolean = true): string {
+    return Workflow.serialize(this as unknown as WorkflowIntersection, format, normalize);
   }
 }
 
-export const _Workflow = Workflow as {
-  new (model?: Partial<Specification.Workflow>): Workflow & Specification.Workflow;
+export const _Workflow = Workflow as WorkflowConstructor & {
+  /**
+   * Deserializes the provided string as a Workflow
+   * @param text The YAML or JSON representation of a workflow
+   * @returns A new Workflow instance
+   */
+  deserialize(text: string): WorkflowIntersection;
+
+  /**
+   * Serializes the provided Workflow to YAML or JSON
+   * @param workflow The workflow to serialize
+   * @param format The format, 'yaml' or 'json', default is 'yaml'
+   * @param normalize If the workflow should be normalized before serialization, default true
+   * @returns A string representation of the workflow
+   */
+  serialize(workflow: WorkflowIntersection, format?: 'yaml' | 'json', normalize?: boolean): string;
 };

@@ -22,34 +22,58 @@
 
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class RunTaskRunShellEnvironment extends ObjectHydrator<Specification.RunTaskRunShellEnvironment> {
+/**
+ * Represents the intersection between the RunTaskRunShellEnvironment class and type
+ */
+export type RunTaskRunShellEnvironmentIntersection = RunTaskRunShellEnvironment &
+  Specification.RunTaskRunShellEnvironment;
+
+/**
+ * Represents a constructor for the intersection of the RunTaskRunShellEnvironment class and type
+ */
+export interface RunTaskRunShellEnvironmentConstructor {
+  new (model?: Partial<Specification.RunTaskRunShellEnvironment>): RunTaskRunShellEnvironmentIntersection;
+}
+
+/**
+ * Represents a RunTaskRunShellEnvironment with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class RunTaskRunShellEnvironment extends ObjectHydrator<Specification.RunTaskRunShellEnvironment> {
+  /**
+   * Instanciates a new instance of the RunTaskRunShellEnvironment class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the RunTaskRunShellEnvironment.
+   */
   constructor(model?: Partial<Specification.RunTaskRunShellEnvironment>) {
     super(model);
 
-    getLifecycleHook('RunTaskRunShellEnvironment')?.constructor?.(this);
+    getLifecycleHooks('RunTaskRunShellEnvironment')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the RunTaskRunShellEnvironment.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new RunTaskRunShellEnvironment(this as any) as RunTaskRunShellEnvironment &
-      Specification.RunTaskRunShellEnvironment;
-    getLifecycleHook('RunTaskRunShellEnvironment')?.preValidation?.(copy);
-    validate('RunTaskRunShellEnvironment', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('RunTaskRunShellEnvironment')?.postValidation?.(copy);
+    const copy = new RunTaskRunShellEnvironment(this as any) as RunTaskRunShellEnvironmentIntersection;
+    validate('RunTaskRunShellEnvironment', copy);
   }
 
+  /**
+   * Normalizes the current instance of the RunTaskRunShellEnvironment.
+   * Creates a copy of the RunTaskRunShellEnvironment, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the RunTaskRunShellEnvironment instance.
+   */
   normalize(): RunTaskRunShellEnvironment & Specification.RunTaskRunShellEnvironment {
-    const copy = new RunTaskRunShellEnvironment(this as any) as RunTaskRunShellEnvironment &
-      Specification.RunTaskRunShellEnvironment;
-    return getLifecycleHook('RunTaskRunShellEnvironment')?.normalize?.(copy) || copy;
+    const copy = new RunTaskRunShellEnvironment(this as any) as RunTaskRunShellEnvironmentIntersection;
+    return getLifecycleHooks('RunTaskRunShellEnvironment')?.normalize?.(copy) || copy;
   }
 }
 
-export const _RunTaskRunShellEnvironment = RunTaskRunShellEnvironment as {
-  new (
-    model?: Partial<Specification.RunTaskRunShellEnvironment>,
-  ): RunTaskRunShellEnvironment & Specification.RunTaskRunShellEnvironment;
-};
+export const _RunTaskRunShellEnvironment = RunTaskRunShellEnvironment as RunTaskRunShellEnvironmentConstructor;

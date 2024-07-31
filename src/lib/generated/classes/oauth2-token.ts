@@ -22,30 +22,57 @@
 
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class Oauth2Token extends ObjectHydrator<Specification.Oauth2Token> {
+/**
+ * Represents the intersection between the Oauth2Token class and type
+ */
+export type Oauth2TokenIntersection = Oauth2Token & Specification.Oauth2Token;
+
+/**
+ * Represents a constructor for the intersection of the Oauth2Token class and type
+ */
+export interface Oauth2TokenConstructor {
+  new (model?: Partial<Specification.Oauth2Token>): Oauth2TokenIntersection;
+}
+
+/**
+ * Represents a Oauth2Token with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class Oauth2Token extends ObjectHydrator<Specification.Oauth2Token> {
+  /**
+   * Instanciates a new instance of the Oauth2Token class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the Oauth2Token.
+   */
   constructor(model?: Partial<Specification.Oauth2Token>) {
     super(model);
 
-    getLifecycleHook('Oauth2Token')?.constructor?.(this);
+    getLifecycleHooks('Oauth2Token')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the Oauth2Token.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new Oauth2Token(this as any) as Oauth2Token & Specification.Oauth2Token;
-    getLifecycleHook('Oauth2Token')?.preValidation?.(copy);
-    validate('Oauth2Token', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('Oauth2Token')?.postValidation?.(copy);
+    const copy = new Oauth2Token(this as any) as Oauth2TokenIntersection;
+    validate('Oauth2Token', copy);
   }
 
+  /**
+   * Normalizes the current instance of the Oauth2Token.
+   * Creates a copy of the Oauth2Token, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the Oauth2Token instance.
+   */
   normalize(): Oauth2Token & Specification.Oauth2Token {
-    const copy = new Oauth2Token(this as any) as Oauth2Token & Specification.Oauth2Token;
-    return getLifecycleHook('Oauth2Token')?.normalize?.(copy) || copy;
+    const copy = new Oauth2Token(this as any) as Oauth2TokenIntersection;
+    return getLifecycleHooks('Oauth2Token')?.normalize?.(copy) || copy;
   }
 }
 
-export const _Oauth2Token = Oauth2Token as {
-  new (model?: Partial<Specification.Oauth2Token>): Oauth2Token & Specification.Oauth2Token;
-};
+export const _Oauth2Token = Oauth2Token as Oauth2TokenConstructor;

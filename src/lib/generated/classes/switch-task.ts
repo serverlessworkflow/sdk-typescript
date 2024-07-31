@@ -27,11 +27,33 @@ import { _Timeout } from './timeout';
 import { _SwitchTaskSwitch } from './switch-task-switch';
 import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class SwitchTask extends _TaskBase {
+/**
+ * Represents the intersection between the SwitchTask class and type
+ */
+export type SwitchTaskIntersection = SwitchTask & Specification.SwitchTask;
+
+/**
+ * Represents a constructor for the intersection of the SwitchTask class and type
+ */
+export interface SwitchTaskConstructor {
+  new (model?: Partial<Specification.SwitchTask>): SwitchTaskIntersection;
+}
+
+/**
+ * Represents a SwitchTask with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class SwitchTask extends _TaskBase {
+  /**
+   * Instanciates a new instance of the SwitchTask class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the SwitchTask.
+   */
   constructor(model?: Partial<Specification.SwitchTask>) {
     super(model);
     const self = this as unknown as Specification.SwitchTask & object;
@@ -43,22 +65,28 @@ class SwitchTask extends _TaskBase {
       if (typeof model.switch === 'object')
         self.switch = new _SwitchTaskSwitch(model.switch) as unknown as Specification.SwitchTaskSwitch;
     }
-    getLifecycleHook('SwitchTask')?.constructor?.(this);
+    getLifecycleHooks('SwitchTask')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the SwitchTask.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new SwitchTask(this as any) as SwitchTask & Specification.SwitchTask;
-    getLifecycleHook('SwitchTask')?.preValidation?.(copy);
-    validate('SwitchTask', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('SwitchTask')?.postValidation?.(copy);
+    const copy = new SwitchTask(this as any) as SwitchTaskIntersection;
+    validate('SwitchTask', copy);
   }
 
+  /**
+   * Normalizes the current instance of the SwitchTask.
+   * Creates a copy of the SwitchTask, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the SwitchTask instance.
+   */
   normalize(): SwitchTask & Specification.SwitchTask {
-    const copy = new SwitchTask(this as any) as SwitchTask & Specification.SwitchTask;
-    return getLifecycleHook('SwitchTask')?.normalize?.(copy) || copy;
+    const copy = new SwitchTask(this as any) as SwitchTaskIntersection;
+    return getLifecycleHooks('SwitchTask')?.normalize?.(copy) || copy;
   }
 }
 
-export const _SwitchTask = SwitchTask as {
-  new (model?: Partial<Specification.SwitchTask>): SwitchTask & Specification.SwitchTask;
-};
+export const _SwitchTask = SwitchTask as SwitchTaskConstructor;

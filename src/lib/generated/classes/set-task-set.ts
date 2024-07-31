@@ -22,30 +22,57 @@
 
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class SetTaskSet extends ObjectHydrator<Specification.SetTaskSet> {
+/**
+ * Represents the intersection between the SetTaskSet class and type
+ */
+export type SetTaskSetIntersection = SetTaskSet & Specification.SetTaskSet;
+
+/**
+ * Represents a constructor for the intersection of the SetTaskSet class and type
+ */
+export interface SetTaskSetConstructor {
+  new (model?: Partial<Specification.SetTaskSet>): SetTaskSetIntersection;
+}
+
+/**
+ * Represents a SetTaskSet with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class SetTaskSet extends ObjectHydrator<Specification.SetTaskSet> {
+  /**
+   * Instanciates a new instance of the SetTaskSet class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the SetTaskSet.
+   */
   constructor(model?: Partial<Specification.SetTaskSet>) {
     super(model);
 
-    getLifecycleHook('SetTaskSet')?.constructor?.(this);
+    getLifecycleHooks('SetTaskSet')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the SetTaskSet.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new SetTaskSet(this as any) as SetTaskSet & Specification.SetTaskSet;
-    getLifecycleHook('SetTaskSet')?.preValidation?.(copy);
-    validate('SetTaskSet', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('SetTaskSet')?.postValidation?.(copy);
+    const copy = new SetTaskSet(this as any) as SetTaskSetIntersection;
+    validate('SetTaskSet', copy);
   }
 
+  /**
+   * Normalizes the current instance of the SetTaskSet.
+   * Creates a copy of the SetTaskSet, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the SetTaskSet instance.
+   */
   normalize(): SetTaskSet & Specification.SetTaskSet {
-    const copy = new SetTaskSet(this as any) as SetTaskSet & Specification.SetTaskSet;
-    return getLifecycleHook('SetTaskSet')?.normalize?.(copy) || copy;
+    const copy = new SetTaskSet(this as any) as SetTaskSetIntersection;
+    return getLifecycleHooks('SetTaskSet')?.normalize?.(copy) || copy;
   }
 }
 
-export const _SetTaskSet = SetTaskSet as {
-  new (model?: Partial<Specification.SetTaskSet>): SetTaskSet & Specification.SetTaskSet;
-};
+export const _SetTaskSet = SetTaskSet as SetTaskSetConstructor;

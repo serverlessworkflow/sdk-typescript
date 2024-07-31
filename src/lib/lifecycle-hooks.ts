@@ -15,43 +15,56 @@
  *
  */
 
+import { WorkflowHooks } from './hooks';
+
 /**
  * Represents the possible lifecycle hooks of an instance
  */
-export type LifecycleHook = {
+export type LifecycleHooks<T> = {
   /**
    * The hook called at the end of the constructor
    * @param instance The instance being initialized
    */
-  constructor?: <T>(instance: T) => void;
+  constructor?: (instance: T) => void;
   /**
    * The hook called before the validation
    * @param instance A copy instance being validated
    */
-  preValidation?: <T>(instance: T) => void;
+  preValidation?: (instance: T) => void;
   /**
    * The hook called after the validation
    * @param instance A copy instance being validated
    */
-  postValidation?: <T>(instance: T) => void;
+  postValidation?: (instance: T) => void;
   /**
    * The hook called to normalized the instance
    * @param instance A copy of the instance to normalize
    * @returns The normalized instance
    */
-  normalize?: <T>(instance: T) => T;
+  normalize?: (instance: T) => T;
 };
 
 /**
  * A mapping of type names and their lifecycle hooks
  */
-const registeredHooks: Map<string, LifecycleHook> = new Map<string, LifecycleHook>();
+const registeredHooks: Map<string, LifecycleHooks<any>> = new Map<string, LifecycleHooks<any>>();
+
+/**
+ * The function used to register hooks
+ * @param typeName The name of the type to register the hooks for
+ * @param hooks The hooks to register
+ */
+export const registerHooks = (typeName: string, hooks: LifecycleHooks<any>): void => {
+  registeredHooks.set(typeName, hooks);
+};
 
 /**
  * Gets the lifecylce hook for the provided type, if any
  * @param typeName The type to get the lifecycle hook for
  * @returns The lifecycle hook, if any
  */
-export const getLifecycleHook = (typeName: string): LifecycleHook | undefined => {
+export const getLifecycleHooks = (typeName: string): LifecycleHooks<any> | undefined => {
   return registeredHooks.get(typeName);
 };
+
+registerHooks('Workflow', WorkflowHooks);

@@ -22,30 +22,57 @@
 
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class Export extends ObjectHydrator<Specification.Export> {
+/**
+ * Represents the intersection between the Export class and type
+ */
+export type ExportIntersection = Export & Specification.Export;
+
+/**
+ * Represents a constructor for the intersection of the Export class and type
+ */
+export interface ExportConstructor {
+  new (model?: Partial<Specification.Export>): ExportIntersection;
+}
+
+/**
+ * Represents a Export with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class Export extends ObjectHydrator<Specification.Export> {
+  /**
+   * Instanciates a new instance of the Export class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the Export.
+   */
   constructor(model?: Partial<Specification.Export>) {
     super(model);
 
-    getLifecycleHook('Export')?.constructor?.(this);
+    getLifecycleHooks('Export')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the Export.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new Export(this as any) as Export & Specification.Export;
-    getLifecycleHook('Export')?.preValidation?.(copy);
-    validate('Export', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('Export')?.postValidation?.(copy);
+    const copy = new Export(this as any) as ExportIntersection;
+    validate('Export', copy);
   }
 
+  /**
+   * Normalizes the current instance of the Export.
+   * Creates a copy of the Export, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the Export instance.
+   */
   normalize(): Export & Specification.Export {
-    const copy = new Export(this as any) as Export & Specification.Export;
-    return getLifecycleHook('Export')?.normalize?.(copy) || copy;
+    const copy = new Export(this as any) as ExportIntersection;
+    return getLifecycleHooks('Export')?.normalize?.(copy) || copy;
   }
 }
 
-export const _Export = Export as {
-  new (model?: Partial<Specification.Export>): Export & Specification.Export;
-};
+export const _Export = Export as ExportConstructor;

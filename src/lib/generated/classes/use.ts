@@ -27,11 +27,33 @@ import { _UseFunctions } from './use-functions';
 import { _UseRetries } from './use-retries';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class Use extends ObjectHydrator<Specification.Use> {
+/**
+ * Represents the intersection between the Use class and type
+ */
+export type UseIntersection = Use & Specification.Use;
+
+/**
+ * Represents a constructor for the intersection of the Use class and type
+ */
+export interface UseConstructor {
+  new (model?: Partial<Specification.Use>): UseIntersection;
+}
+
+/**
+ * Represents a Use with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class Use extends ObjectHydrator<Specification.Use> {
+  /**
+   * Instanciates a new instance of the Use class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the Use.
+   */
   constructor(model?: Partial<Specification.Use>) {
     super(model);
     const self = this as unknown as Specification.Use & object;
@@ -43,22 +65,28 @@ class Use extends ObjectHydrator<Specification.Use> {
       if (typeof model.functions === 'object') self.functions = new _UseFunctions(model.functions);
       if (typeof model.retries === 'object') self.retries = new _UseRetries(model.retries);
     }
-    getLifecycleHook('Use')?.constructor?.(this);
+    getLifecycleHooks('Use')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the Use.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new Use(this as any) as Use & Specification.Use;
-    getLifecycleHook('Use')?.preValidation?.(copy);
-    validate('Use', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('Use')?.postValidation?.(copy);
+    const copy = new Use(this as any) as UseIntersection;
+    validate('Use', copy);
   }
 
+  /**
+   * Normalizes the current instance of the Use.
+   * Creates a copy of the Use, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the Use instance.
+   */
   normalize(): Use & Specification.Use {
-    const copy = new Use(this as any) as Use & Specification.Use;
-    return getLifecycleHook('Use')?.normalize?.(copy) || copy;
+    const copy = new Use(this as any) as UseIntersection;
+    return getLifecycleHooks('Use')?.normalize?.(copy) || copy;
   }
 }
 
-export const _Use = Use as {
-  new (model?: Partial<Specification.Use>): Use & Specification.Use;
-};
+export const _Use = Use as UseConstructor;

@@ -27,11 +27,33 @@ import { _Timeout } from './timeout';
 import { _EmitTaskEmit } from './emit-task-emit';
 import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class EmitTask extends _TaskBase {
+/**
+ * Represents the intersection between the EmitTask class and type
+ */
+export type EmitTaskIntersection = EmitTask & Specification.EmitTask;
+
+/**
+ * Represents a constructor for the intersection of the EmitTask class and type
+ */
+export interface EmitTaskConstructor {
+  new (model?: Partial<Specification.EmitTask>): EmitTaskIntersection;
+}
+
+/**
+ * Represents a EmitTask with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class EmitTask extends _TaskBase {
+  /**
+   * Instanciates a new instance of the EmitTask class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the EmitTask.
+   */
   constructor(model?: Partial<Specification.EmitTask>) {
     super(model);
     const self = this as unknown as Specification.EmitTask & object;
@@ -42,22 +64,28 @@ class EmitTask extends _TaskBase {
       if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
       if (typeof model.emit === 'object') self.emit = new _EmitTaskEmit(model.emit);
     }
-    getLifecycleHook('EmitTask')?.constructor?.(this);
+    getLifecycleHooks('EmitTask')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the EmitTask.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new EmitTask(this as any) as EmitTask & Specification.EmitTask;
-    getLifecycleHook('EmitTask')?.preValidation?.(copy);
-    validate('EmitTask', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('EmitTask')?.postValidation?.(copy);
+    const copy = new EmitTask(this as any) as EmitTaskIntersection;
+    validate('EmitTask', copy);
   }
 
+  /**
+   * Normalizes the current instance of the EmitTask.
+   * Creates a copy of the EmitTask, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the EmitTask instance.
+   */
   normalize(): EmitTask & Specification.EmitTask {
-    const copy = new EmitTask(this as any) as EmitTask & Specification.EmitTask;
-    return getLifecycleHook('EmitTask')?.normalize?.(copy) || copy;
+    const copy = new EmitTask(this as any) as EmitTaskIntersection;
+    return getLifecycleHooks('EmitTask')?.normalize?.(copy) || copy;
   }
 }
 
-export const _EmitTask = EmitTask as {
-  new (model?: Partial<Specification.EmitTask>): EmitTask & Specification.EmitTask;
-};
+export const _EmitTask = EmitTask as EmitTaskConstructor;

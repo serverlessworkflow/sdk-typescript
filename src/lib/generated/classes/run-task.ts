@@ -26,11 +26,33 @@ import { _Export } from './export';
 import { _Timeout } from './timeout';
 import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class RunTask extends _TaskBase {
+/**
+ * Represents the intersection between the RunTask class and type
+ */
+export type RunTaskIntersection = RunTask & Specification.RunTask;
+
+/**
+ * Represents a constructor for the intersection of the RunTask class and type
+ */
+export interface RunTaskConstructor {
+  new (model?: Partial<Specification.RunTask>): RunTaskIntersection;
+}
+
+/**
+ * Represents a RunTask with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class RunTask extends _TaskBase {
+  /**
+   * Instanciates a new instance of the RunTask class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the RunTask.
+   */
   constructor(model?: Partial<Specification.RunTask>) {
     super(model);
     const self = this as unknown as Specification.RunTask & object;
@@ -40,22 +62,28 @@ class RunTask extends _TaskBase {
       if (typeof model.export === 'object') self.export = new _Export(model.export);
       if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
     }
-    getLifecycleHook('RunTask')?.constructor?.(this);
+    getLifecycleHooks('RunTask')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the RunTask.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new RunTask(this as any) as RunTask & Specification.RunTask;
-    getLifecycleHook('RunTask')?.preValidation?.(copy);
-    validate('RunTask', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('RunTask')?.postValidation?.(copy);
+    const copy = new RunTask(this as any) as RunTaskIntersection;
+    validate('RunTask', copy);
   }
 
+  /**
+   * Normalizes the current instance of the RunTask.
+   * Creates a copy of the RunTask, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the RunTask instance.
+   */
   normalize(): RunTask & Specification.RunTask {
-    const copy = new RunTask(this as any) as RunTask & Specification.RunTask;
-    return getLifecycleHook('RunTask')?.normalize?.(copy) || copy;
+    const copy = new RunTask(this as any) as RunTaskIntersection;
+    return getLifecycleHooks('RunTask')?.normalize?.(copy) || copy;
   }
 }
 
-export const _RunTask = RunTask as {
-  new (model?: Partial<Specification.RunTask>): RunTask & Specification.RunTask;
-};
+export const _RunTask = RunTask as RunTaskConstructor;

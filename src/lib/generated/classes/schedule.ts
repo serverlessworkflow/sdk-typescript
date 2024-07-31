@@ -23,11 +23,33 @@
 import { _Duration } from './duration';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class Schedule extends ObjectHydrator<Specification.Schedule> {
+/**
+ * Represents the intersection between the Schedule class and type
+ */
+export type ScheduleIntersection = Schedule & Specification.Schedule;
+
+/**
+ * Represents a constructor for the intersection of the Schedule class and type
+ */
+export interface ScheduleConstructor {
+  new (model?: Partial<Specification.Schedule>): ScheduleIntersection;
+}
+
+/**
+ * Represents a Schedule with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class Schedule extends ObjectHydrator<Specification.Schedule> {
+  /**
+   * Instanciates a new instance of the Schedule class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the Schedule.
+   */
   constructor(model?: Partial<Specification.Schedule>) {
     super(model);
     const self = this as unknown as Specification.Schedule & object;
@@ -35,22 +57,28 @@ class Schedule extends ObjectHydrator<Specification.Schedule> {
       if (typeof model.every === 'object') self.every = new _Duration(model.every);
       if (typeof model.after === 'object') self.after = new _Duration(model.after);
     }
-    getLifecycleHook('Schedule')?.constructor?.(this);
+    getLifecycleHooks('Schedule')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the Schedule.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new Schedule(this as any) as Schedule & Specification.Schedule;
-    getLifecycleHook('Schedule')?.preValidation?.(copy);
-    validate('Schedule', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('Schedule')?.postValidation?.(copy);
+    const copy = new Schedule(this as any) as ScheduleIntersection;
+    validate('Schedule', copy);
   }
 
+  /**
+   * Normalizes the current instance of the Schedule.
+   * Creates a copy of the Schedule, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the Schedule instance.
+   */
   normalize(): Schedule & Specification.Schedule {
-    const copy = new Schedule(this as any) as Schedule & Specification.Schedule;
-    return getLifecycleHook('Schedule')?.normalize?.(copy) || copy;
+    const copy = new Schedule(this as any) as ScheduleIntersection;
+    return getLifecycleHooks('Schedule')?.normalize?.(copy) || copy;
   }
 }
 
-export const _Schedule = Schedule as {
-  new (model?: Partial<Specification.Schedule>): Schedule & Specification.Schedule;
-};
+export const _Schedule = Schedule as ScheduleConstructor;

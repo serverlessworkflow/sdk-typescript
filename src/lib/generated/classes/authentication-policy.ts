@@ -25,11 +25,33 @@ import { _AuthenticationPolicyBearer } from './authentication-policy-bearer';
 import { _AuthenticationPolicyOauth2 } from './authentication-policy-oauth2';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class AuthenticationPolicy extends ObjectHydrator<Specification.AuthenticationPolicy> {
+/**
+ * Represents the intersection between the AuthenticationPolicy class and type
+ */
+export type AuthenticationPolicyIntersection = AuthenticationPolicy & Specification.AuthenticationPolicy;
+
+/**
+ * Represents a constructor for the intersection of the AuthenticationPolicy class and type
+ */
+export interface AuthenticationPolicyConstructor {
+  new (model?: Partial<Specification.AuthenticationPolicy>): AuthenticationPolicyIntersection;
+}
+
+/**
+ * Represents a AuthenticationPolicy with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class AuthenticationPolicy extends ObjectHydrator<Specification.AuthenticationPolicy> {
+  /**
+   * Instanciates a new instance of the AuthenticationPolicy class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the AuthenticationPolicy.
+   */
   constructor(model?: Partial<Specification.AuthenticationPolicy>) {
     super(model);
     const self = this as unknown as Specification.AuthenticationPolicy & object;
@@ -41,22 +63,28 @@ class AuthenticationPolicy extends ObjectHydrator<Specification.AuthenticationPo
       if (typeof model.oauth2 === 'object')
         self.oauth2 = new _AuthenticationPolicyOauth2(model.oauth2 as Specification.AuthenticationPolicyOauth2);
     }
-    getLifecycleHook('AuthenticationPolicy')?.constructor?.(this);
+    getLifecycleHooks('AuthenticationPolicy')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the AuthenticationPolicy.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new AuthenticationPolicy(this as any) as AuthenticationPolicy & Specification.AuthenticationPolicy;
-    getLifecycleHook('AuthenticationPolicy')?.preValidation?.(copy);
-    validate('AuthenticationPolicy', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('AuthenticationPolicy')?.postValidation?.(copy);
+    const copy = new AuthenticationPolicy(this as any) as AuthenticationPolicyIntersection;
+    validate('AuthenticationPolicy', copy);
   }
 
+  /**
+   * Normalizes the current instance of the AuthenticationPolicy.
+   * Creates a copy of the AuthenticationPolicy, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the AuthenticationPolicy instance.
+   */
   normalize(): AuthenticationPolicy & Specification.AuthenticationPolicy {
-    const copy = new AuthenticationPolicy(this as any) as AuthenticationPolicy & Specification.AuthenticationPolicy;
-    return getLifecycleHook('AuthenticationPolicy')?.normalize?.(copy) || copy;
+    const copy = new AuthenticationPolicy(this as any) as AuthenticationPolicyIntersection;
+    return getLifecycleHooks('AuthenticationPolicy')?.normalize?.(copy) || copy;
   }
 }
 
-export const _AuthenticationPolicy = AuthenticationPolicy as {
-  new (model?: Partial<Specification.AuthenticationPolicy>): AuthenticationPolicy & Specification.AuthenticationPolicy;
-};
+export const _AuthenticationPolicy = AuthenticationPolicy as AuthenticationPolicyConstructor;

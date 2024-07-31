@@ -23,33 +23,61 @@
 import { _TaskList } from './task-list';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class ForkTaskFork extends ObjectHydrator<Specification.ForkTaskFork> {
+/**
+ * Represents the intersection between the ForkTaskFork class and type
+ */
+export type ForkTaskForkIntersection = ForkTaskFork & Specification.ForkTaskFork;
+
+/**
+ * Represents a constructor for the intersection of the ForkTaskFork class and type
+ */
+export interface ForkTaskForkConstructor {
+  new (model?: Partial<Specification.ForkTaskFork>): ForkTaskForkIntersection;
+}
+
+/**
+ * Represents a ForkTaskFork with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class ForkTaskFork extends ObjectHydrator<Specification.ForkTaskFork> {
+  /**
+   * Instanciates a new instance of the ForkTaskFork class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the ForkTaskFork.
+   */
   constructor(model?: Partial<Specification.ForkTaskFork>) {
     super(model);
     const self = this as unknown as Specification.ForkTaskFork & object;
     if (isObject(model)) {
       if (typeof model.branches === 'object') self.branches = new _TaskList(model.branches);
     }
-    getLifecycleHook('ForkTaskFork')?.constructor?.(this);
+    getLifecycleHooks('ForkTaskFork')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the ForkTaskFork.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new ForkTaskFork(this as any) as ForkTaskFork & Specification.ForkTaskFork;
-    getLifecycleHook('ForkTaskFork')?.preValidation?.(copy);
-    validate('ForkTaskFork', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('ForkTaskFork')?.postValidation?.(copy);
+    const copy = new ForkTaskFork(this as any) as ForkTaskForkIntersection;
+    validate('ForkTaskFork', copy);
   }
 
+  /**
+   * Normalizes the current instance of the ForkTaskFork.
+   * Creates a copy of the ForkTaskFork, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the ForkTaskFork instance.
+   */
   normalize(): ForkTaskFork & Specification.ForkTaskFork {
-    const copy = new ForkTaskFork(this as any) as ForkTaskFork & Specification.ForkTaskFork;
-    return getLifecycleHook('ForkTaskFork')?.normalize?.(copy) || copy;
+    const copy = new ForkTaskFork(this as any) as ForkTaskForkIntersection;
+    return getLifecycleHooks('ForkTaskFork')?.normalize?.(copy) || copy;
   }
 }
 
-export const _ForkTaskFork = ForkTaskFork as {
-  new (model?: Partial<Specification.ForkTaskFork>): ForkTaskFork & Specification.ForkTaskFork;
-};
+export const _ForkTaskFork = ForkTaskFork as ForkTaskForkConstructor;

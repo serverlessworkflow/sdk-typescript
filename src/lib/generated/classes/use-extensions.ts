@@ -23,11 +23,19 @@
 import { _Extension } from './extension';
 import { Specification } from '../definitions';
 import { ArrayHydrator } from '../../hydrator';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class UseExtensions extends ArrayHydrator<{ [k: string]: Specification.Extension }> {
+/**
+ * Represents a collection of { [k: string]: Specification.Extension; }.
+ * Inherits from ArrayHydrator to handle array-specific hydration.
+ */
+export class UseExtensions extends ArrayHydrator<{ [k: string]: Specification.Extension }> {
+  /**
+   * Constructs a new instance of the UseExtensions class.
+   *
+   * @param model - Optional parameter which can be an array of objects or a number representing the array length.
+   */
   constructor(model?: Array<{ [k: string]: Specification.Extension }> | number) {
     super(model);
     if (Array.isArray(model)) {
@@ -39,19 +47,27 @@ class UseExtensions extends ArrayHydrator<{ [k: string]: Specification.Extension
       }
     }
     Object.setPrototypeOf(this, Object.create(UseExtensions.prototype));
-    getLifecycleHook('UseExtensions')?.constructor?.(this);
+    getLifecycleHooks('UseExtensions')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the UseExtensions.
+   * Throws if invalid.
+   */
   validate() {
     const copy = new UseExtensions(this);
-    getLifecycleHook('UseExtensions')?.preValidation?.(copy);
-    validate('UseExtensions', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('UseExtensions')?.postValidation?.(copy);
+    validate('UseExtensions', copy);
   }
 
+  /**
+   * Normalizes the current instance of the UseExtensions.
+   * Creates a copy of the UseExtensions, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the UseExtensions instance.
+   */
   normalize(): UseExtensions {
     const copy = new UseExtensions(this);
-    return getLifecycleHook('UseExtensions')?.normalize?.(copy) || copy;
+    return getLifecycleHooks('UseExtensions')?.normalize?.(copy) || copy;
   }
 }
 

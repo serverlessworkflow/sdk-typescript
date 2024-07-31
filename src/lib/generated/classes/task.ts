@@ -36,11 +36,33 @@ import { _TryTaskCatch } from './try-task-catch';
 import { _Duration } from './duration';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class Task extends ObjectHydrator<Specification.Task> {
+/**
+ * Represents the intersection between the Task class and type
+ */
+export type TaskIntersection = Task & Specification.Task;
+
+/**
+ * Represents a constructor for the intersection of the Task class and type
+ */
+export interface TaskConstructor {
+  new (model?: Partial<Specification.Task>): TaskIntersection;
+}
+
+/**
+ * Represents a Task with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class Task extends ObjectHydrator<Specification.Task> {
+  /**
+   * Instanciates a new instance of the Task class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the Task.
+   */
   constructor(model?: Partial<Specification.Task>) {
     super(model);
     const self = this as unknown as Specification.Task & object;
@@ -65,22 +87,28 @@ class Task extends ObjectHydrator<Specification.Task> {
       if (typeof model.catch === 'object') self.catch = new _TryTaskCatch(model.catch as Specification.TryTaskCatch);
       if (typeof model.wait === 'object') self.wait = new _Duration(model.wait as Specification.Duration);
     }
-    getLifecycleHook('Task')?.constructor?.(this);
+    getLifecycleHooks('Task')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the Task.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new Task(this as any) as Task & Specification.Task;
-    getLifecycleHook('Task')?.preValidation?.(copy);
-    validate('Task', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('Task')?.postValidation?.(copy);
+    const copy = new Task(this as any) as TaskIntersection;
+    validate('Task', copy);
   }
 
+  /**
+   * Normalizes the current instance of the Task.
+   * Creates a copy of the Task, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the Task instance.
+   */
   normalize(): Task & Specification.Task {
-    const copy = new Task(this as any) as Task & Specification.Task;
-    return getLifecycleHook('Task')?.normalize?.(copy) || copy;
+    const copy = new Task(this as any) as TaskIntersection;
+    return getLifecycleHooks('Task')?.normalize?.(copy) || copy;
   }
 }
 
-export const _Task = Task as {
-  new (model?: Partial<Specification.Task>): Task & Specification.Task;
-};
+export const _Task = Task as TaskConstructor;

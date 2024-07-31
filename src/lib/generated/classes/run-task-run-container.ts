@@ -22,30 +22,57 @@
 
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class RunTaskRunContainer extends ObjectHydrator<Specification.RunTaskRunContainer> {
+/**
+ * Represents the intersection between the RunTaskRunContainer class and type
+ */
+export type RunTaskRunContainerIntersection = RunTaskRunContainer & Specification.RunTaskRunContainer;
+
+/**
+ * Represents a constructor for the intersection of the RunTaskRunContainer class and type
+ */
+export interface RunTaskRunContainerConstructor {
+  new (model?: Partial<Specification.RunTaskRunContainer>): RunTaskRunContainerIntersection;
+}
+
+/**
+ * Represents a RunTaskRunContainer with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class RunTaskRunContainer extends ObjectHydrator<Specification.RunTaskRunContainer> {
+  /**
+   * Instanciates a new instance of the RunTaskRunContainer class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the RunTaskRunContainer.
+   */
   constructor(model?: Partial<Specification.RunTaskRunContainer>) {
     super(model);
 
-    getLifecycleHook('RunTaskRunContainer')?.constructor?.(this);
+    getLifecycleHooks('RunTaskRunContainer')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the RunTaskRunContainer.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new RunTaskRunContainer(this as any) as RunTaskRunContainer & Specification.RunTaskRunContainer;
-    getLifecycleHook('RunTaskRunContainer')?.preValidation?.(copy);
-    validate('RunTaskRunContainer', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('RunTaskRunContainer')?.postValidation?.(copy);
+    const copy = new RunTaskRunContainer(this as any) as RunTaskRunContainerIntersection;
+    validate('RunTaskRunContainer', copy);
   }
 
+  /**
+   * Normalizes the current instance of the RunTaskRunContainer.
+   * Creates a copy of the RunTaskRunContainer, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the RunTaskRunContainer instance.
+   */
   normalize(): RunTaskRunContainer & Specification.RunTaskRunContainer {
-    const copy = new RunTaskRunContainer(this as any) as RunTaskRunContainer & Specification.RunTaskRunContainer;
-    return getLifecycleHook('RunTaskRunContainer')?.normalize?.(copy) || copy;
+    const copy = new RunTaskRunContainer(this as any) as RunTaskRunContainerIntersection;
+    return getLifecycleHooks('RunTaskRunContainer')?.normalize?.(copy) || copy;
   }
 }
 
-export const _RunTaskRunContainer = RunTaskRunContainer as {
-  new (model?: Partial<Specification.RunTaskRunContainer>): RunTaskRunContainer & Specification.RunTaskRunContainer;
-};
+export const _RunTaskRunContainer = RunTaskRunContainer as RunTaskRunContainerConstructor;

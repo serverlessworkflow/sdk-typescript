@@ -25,11 +25,33 @@ import { _EventConsumptionStrategyAny } from './event-consumption-strategy-any';
 import { _EventFilter } from './event-filter';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class EventConsumptionStrategy extends ObjectHydrator<Specification.EventConsumptionStrategy> {
+/**
+ * Represents the intersection between the EventConsumptionStrategy class and type
+ */
+export type EventConsumptionStrategyIntersection = EventConsumptionStrategy & Specification.EventConsumptionStrategy;
+
+/**
+ * Represents a constructor for the intersection of the EventConsumptionStrategy class and type
+ */
+export interface EventConsumptionStrategyConstructor {
+  new (model?: Partial<Specification.EventConsumptionStrategy>): EventConsumptionStrategyIntersection;
+}
+
+/**
+ * Represents a EventConsumptionStrategy with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class EventConsumptionStrategy extends ObjectHydrator<Specification.EventConsumptionStrategy> {
+  /**
+   * Instanciates a new instance of the EventConsumptionStrategy class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the EventConsumptionStrategy.
+   */
   constructor(model?: Partial<Specification.EventConsumptionStrategy>) {
     super(model);
     const self = this as unknown as Specification.EventConsumptionStrategy & object;
@@ -40,26 +62,28 @@ class EventConsumptionStrategy extends ObjectHydrator<Specification.EventConsump
         self.any = new _EventConsumptionStrategyAny(model.any as Specification.EventConsumptionStrategyAny);
       if (typeof model.one === 'object') self.one = new _EventFilter(model.one as Specification.EventFilter);
     }
-    getLifecycleHook('EventConsumptionStrategy')?.constructor?.(this);
+    getLifecycleHooks('EventConsumptionStrategy')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the EventConsumptionStrategy.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new EventConsumptionStrategy(this as any) as EventConsumptionStrategy &
-      Specification.EventConsumptionStrategy;
-    getLifecycleHook('EventConsumptionStrategy')?.preValidation?.(copy);
-    validate('EventConsumptionStrategy', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('EventConsumptionStrategy')?.postValidation?.(copy);
+    const copy = new EventConsumptionStrategy(this as any) as EventConsumptionStrategyIntersection;
+    validate('EventConsumptionStrategy', copy);
   }
 
+  /**
+   * Normalizes the current instance of the EventConsumptionStrategy.
+   * Creates a copy of the EventConsumptionStrategy, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the EventConsumptionStrategy instance.
+   */
   normalize(): EventConsumptionStrategy & Specification.EventConsumptionStrategy {
-    const copy = new EventConsumptionStrategy(this as any) as EventConsumptionStrategy &
-      Specification.EventConsumptionStrategy;
-    return getLifecycleHook('EventConsumptionStrategy')?.normalize?.(copy) || copy;
+    const copy = new EventConsumptionStrategy(this as any) as EventConsumptionStrategyIntersection;
+    return getLifecycleHooks('EventConsumptionStrategy')?.normalize?.(copy) || copy;
   }
 }
 
-export const _EventConsumptionStrategy = EventConsumptionStrategy as {
-  new (
-    model?: Partial<Specification.EventConsumptionStrategy>,
-  ): EventConsumptionStrategy & Specification.EventConsumptionStrategy;
-};
+export const _EventConsumptionStrategy = EventConsumptionStrategy as EventConsumptionStrategyConstructor;

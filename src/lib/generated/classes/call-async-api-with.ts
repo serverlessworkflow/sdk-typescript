@@ -22,30 +22,57 @@
 
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class CallAsyncAPIWith extends ObjectHydrator<Specification.CallAsyncAPIWith> {
+/**
+ * Represents the intersection between the CallAsyncAPIWith class and type
+ */
+export type CallAsyncAPIWithIntersection = CallAsyncAPIWith & Specification.CallAsyncAPIWith;
+
+/**
+ * Represents a constructor for the intersection of the CallAsyncAPIWith class and type
+ */
+export interface CallAsyncAPIWithConstructor {
+  new (model?: Partial<Specification.CallAsyncAPIWith>): CallAsyncAPIWithIntersection;
+}
+
+/**
+ * Represents a CallAsyncAPIWith with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class CallAsyncAPIWith extends ObjectHydrator<Specification.CallAsyncAPIWith> {
+  /**
+   * Instanciates a new instance of the CallAsyncAPIWith class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the CallAsyncAPIWith.
+   */
   constructor(model?: Partial<Specification.CallAsyncAPIWith>) {
     super(model);
 
-    getLifecycleHook('CallAsyncAPIWith')?.constructor?.(this);
+    getLifecycleHooks('CallAsyncAPIWith')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the CallAsyncAPIWith.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new CallAsyncAPIWith(this as any) as CallAsyncAPIWith & Specification.CallAsyncAPIWith;
-    getLifecycleHook('CallAsyncAPIWith')?.preValidation?.(copy);
-    validate('CallAsyncAPIWith', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('CallAsyncAPIWith')?.postValidation?.(copy);
+    const copy = new CallAsyncAPIWith(this as any) as CallAsyncAPIWithIntersection;
+    validate('CallAsyncAPIWith', copy);
   }
 
+  /**
+   * Normalizes the current instance of the CallAsyncAPIWith.
+   * Creates a copy of the CallAsyncAPIWith, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the CallAsyncAPIWith instance.
+   */
   normalize(): CallAsyncAPIWith & Specification.CallAsyncAPIWith {
-    const copy = new CallAsyncAPIWith(this as any) as CallAsyncAPIWith & Specification.CallAsyncAPIWith;
-    return getLifecycleHook('CallAsyncAPIWith')?.normalize?.(copy) || copy;
+    const copy = new CallAsyncAPIWith(this as any) as CallAsyncAPIWithIntersection;
+    return getLifecycleHooks('CallAsyncAPIWith')?.normalize?.(copy) || copy;
   }
 }
 
-export const _CallAsyncAPIWith = CallAsyncAPIWith as {
-  new (model?: Partial<Specification.CallAsyncAPIWith>): CallAsyncAPIWith & Specification.CallAsyncAPIWith;
-};
+export const _CallAsyncAPIWith = CallAsyncAPIWith as CallAsyncAPIWithConstructor;

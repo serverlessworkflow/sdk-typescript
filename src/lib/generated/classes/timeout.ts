@@ -23,33 +23,61 @@
 import { _Duration } from './duration';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class Timeout extends ObjectHydrator<Specification.Timeout> {
+/**
+ * Represents the intersection between the Timeout class and type
+ */
+export type TimeoutIntersection = Timeout & Specification.Timeout;
+
+/**
+ * Represents a constructor for the intersection of the Timeout class and type
+ */
+export interface TimeoutConstructor {
+  new (model?: Partial<Specification.Timeout>): TimeoutIntersection;
+}
+
+/**
+ * Represents a Timeout with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class Timeout extends ObjectHydrator<Specification.Timeout> {
+  /**
+   * Instanciates a new instance of the Timeout class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the Timeout.
+   */
   constructor(model?: Partial<Specification.Timeout>) {
     super(model);
     const self = this as unknown as Specification.Timeout & object;
     if (isObject(model)) {
       if (typeof model.after === 'object') self.after = new _Duration(model.after);
     }
-    getLifecycleHook('Timeout')?.constructor?.(this);
+    getLifecycleHooks('Timeout')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the Timeout.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new Timeout(this as any) as Timeout & Specification.Timeout;
-    getLifecycleHook('Timeout')?.preValidation?.(copy);
-    validate('Timeout', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('Timeout')?.postValidation?.(copy);
+    const copy = new Timeout(this as any) as TimeoutIntersection;
+    validate('Timeout', copy);
   }
 
+  /**
+   * Normalizes the current instance of the Timeout.
+   * Creates a copy of the Timeout, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the Timeout instance.
+   */
   normalize(): Timeout & Specification.Timeout {
-    const copy = new Timeout(this as any) as Timeout & Specification.Timeout;
-    return getLifecycleHook('Timeout')?.normalize?.(copy) || copy;
+    const copy = new Timeout(this as any) as TimeoutIntersection;
+    return getLifecycleHooks('Timeout')?.normalize?.(copy) || copy;
   }
 }
 
-export const _Timeout = Timeout as {
-  new (model?: Partial<Specification.Timeout>): Timeout & Specification.Timeout;
-};
+export const _Timeout = Timeout as TimeoutConstructor;

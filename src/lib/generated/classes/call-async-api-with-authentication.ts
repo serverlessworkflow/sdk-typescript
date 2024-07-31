@@ -25,11 +25,34 @@ import { _AuthenticationPolicyBearer } from './authentication-policy-bearer';
 import { _AuthenticationPolicyOauth2 } from './authentication-policy-oauth2';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class CallAsyncAPIWithAuthentication extends ObjectHydrator<Specification.CallAsyncAPIWithAuthentication> {
+/**
+ * Represents the intersection between the CallAsyncAPIWithAuthentication class and type
+ */
+export type CallAsyncAPIWithAuthenticationIntersection = CallAsyncAPIWithAuthentication &
+  Specification.CallAsyncAPIWithAuthentication;
+
+/**
+ * Represents a constructor for the intersection of the CallAsyncAPIWithAuthentication class and type
+ */
+export interface CallAsyncAPIWithAuthenticationConstructor {
+  new (model?: Partial<Specification.CallAsyncAPIWithAuthentication>): CallAsyncAPIWithAuthenticationIntersection;
+}
+
+/**
+ * Represents a CallAsyncAPIWithAuthentication with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class CallAsyncAPIWithAuthentication extends ObjectHydrator<Specification.CallAsyncAPIWithAuthentication> {
+  /**
+   * Instanciates a new instance of the CallAsyncAPIWithAuthentication class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the CallAsyncAPIWithAuthentication.
+   */
   constructor(model?: Partial<Specification.CallAsyncAPIWithAuthentication>) {
     super(model);
     const self = this as unknown as Specification.CallAsyncAPIWithAuthentication & object;
@@ -41,26 +64,29 @@ class CallAsyncAPIWithAuthentication extends ObjectHydrator<Specification.CallAs
       if (typeof model.oauth2 === 'object')
         self.oauth2 = new _AuthenticationPolicyOauth2(model.oauth2 as Specification.AuthenticationPolicyOauth2);
     }
-    getLifecycleHook('CallAsyncAPIWithAuthentication')?.constructor?.(this);
+    getLifecycleHooks('CallAsyncAPIWithAuthentication')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the CallAsyncAPIWithAuthentication.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new CallAsyncAPIWithAuthentication(this as any) as CallAsyncAPIWithAuthentication &
-      Specification.CallAsyncAPIWithAuthentication;
-    getLifecycleHook('CallAsyncAPIWithAuthentication')?.preValidation?.(copy);
-    validate('CallAsyncAPIWithAuthentication', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('CallAsyncAPIWithAuthentication')?.postValidation?.(copy);
+    const copy = new CallAsyncAPIWithAuthentication(this as any) as CallAsyncAPIWithAuthenticationIntersection;
+    validate('CallAsyncAPIWithAuthentication', copy);
   }
 
+  /**
+   * Normalizes the current instance of the CallAsyncAPIWithAuthentication.
+   * Creates a copy of the CallAsyncAPIWithAuthentication, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the CallAsyncAPIWithAuthentication instance.
+   */
   normalize(): CallAsyncAPIWithAuthentication & Specification.CallAsyncAPIWithAuthentication {
-    const copy = new CallAsyncAPIWithAuthentication(this as any) as CallAsyncAPIWithAuthentication &
-      Specification.CallAsyncAPIWithAuthentication;
-    return getLifecycleHook('CallAsyncAPIWithAuthentication')?.normalize?.(copy) || copy;
+    const copy = new CallAsyncAPIWithAuthentication(this as any) as CallAsyncAPIWithAuthenticationIntersection;
+    return getLifecycleHooks('CallAsyncAPIWithAuthentication')?.normalize?.(copy) || copy;
   }
 }
 
-export const _CallAsyncAPIWithAuthentication = CallAsyncAPIWithAuthentication as {
-  new (
-    model?: Partial<Specification.CallAsyncAPIWithAuthentication>,
-  ): CallAsyncAPIWithAuthentication & Specification.CallAsyncAPIWithAuthentication;
-};
+export const _CallAsyncAPIWithAuthentication =
+  CallAsyncAPIWithAuthentication as CallAsyncAPIWithAuthenticationConstructor;

@@ -27,11 +27,33 @@ import { _Timeout } from './timeout';
 import { _CallGRPCWith } from './call-grpc-with';
 import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class CallGRPC extends _TaskBase {
+/**
+ * Represents the intersection between the CallGRPC class and type
+ */
+export type CallGRPCIntersection = CallGRPC & Specification.CallGRPC;
+
+/**
+ * Represents a constructor for the intersection of the CallGRPC class and type
+ */
+export interface CallGRPCConstructor {
+  new (model?: Partial<Specification.CallGRPC>): CallGRPCIntersection;
+}
+
+/**
+ * Represents a CallGRPC with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class CallGRPC extends _TaskBase {
+  /**
+   * Instanciates a new instance of the CallGRPC class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the CallGRPC.
+   */
   constructor(model?: Partial<Specification.CallGRPC>) {
     super(model);
     const self = this as unknown as Specification.CallGRPC & object;
@@ -43,22 +65,28 @@ class CallGRPC extends _TaskBase {
       if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
       if (typeof model.with === 'object') self.with = new _CallGRPCWith(model.with);
     }
-    getLifecycleHook('CallGRPC')?.constructor?.(this);
+    getLifecycleHooks('CallGRPC')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the CallGRPC.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new CallGRPC(this as any) as CallGRPC & Specification.CallGRPC;
-    getLifecycleHook('CallGRPC')?.preValidation?.(copy);
-    validate('CallGRPC', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('CallGRPC')?.postValidation?.(copy);
+    const copy = new CallGRPC(this as any) as CallGRPCIntersection;
+    validate('CallGRPC', copy);
   }
 
+  /**
+   * Normalizes the current instance of the CallGRPC.
+   * Creates a copy of the CallGRPC, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the CallGRPC instance.
+   */
   normalize(): CallGRPC & Specification.CallGRPC {
-    const copy = new CallGRPC(this as any) as CallGRPC & Specification.CallGRPC;
-    return getLifecycleHook('CallGRPC')?.normalize?.(copy) || copy;
+    const copy = new CallGRPC(this as any) as CallGRPCIntersection;
+    return getLifecycleHooks('CallGRPC')?.normalize?.(copy) || copy;
   }
 }
 
-export const _CallGRPC = CallGRPC as {
-  new (model?: Partial<Specification.CallGRPC>): CallGRPC & Specification.CallGRPC;
-};
+export const _CallGRPC = CallGRPC as CallGRPCConstructor;

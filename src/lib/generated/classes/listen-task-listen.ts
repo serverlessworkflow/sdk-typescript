@@ -22,30 +22,57 @@
 
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class ListenTaskListen extends ObjectHydrator<Specification.ListenTaskListen> {
+/**
+ * Represents the intersection between the ListenTaskListen class and type
+ */
+export type ListenTaskListenIntersection = ListenTaskListen & Specification.ListenTaskListen;
+
+/**
+ * Represents a constructor for the intersection of the ListenTaskListen class and type
+ */
+export interface ListenTaskListenConstructor {
+  new (model?: Partial<Specification.ListenTaskListen>): ListenTaskListenIntersection;
+}
+
+/**
+ * Represents a ListenTaskListen with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class ListenTaskListen extends ObjectHydrator<Specification.ListenTaskListen> {
+  /**
+   * Instanciates a new instance of the ListenTaskListen class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the ListenTaskListen.
+   */
   constructor(model?: Partial<Specification.ListenTaskListen>) {
     super(model);
 
-    getLifecycleHook('ListenTaskListen')?.constructor?.(this);
+    getLifecycleHooks('ListenTaskListen')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the ListenTaskListen.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new ListenTaskListen(this as any) as ListenTaskListen & Specification.ListenTaskListen;
-    getLifecycleHook('ListenTaskListen')?.preValidation?.(copy);
-    validate('ListenTaskListen', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('ListenTaskListen')?.postValidation?.(copy);
+    const copy = new ListenTaskListen(this as any) as ListenTaskListenIntersection;
+    validate('ListenTaskListen', copy);
   }
 
+  /**
+   * Normalizes the current instance of the ListenTaskListen.
+   * Creates a copy of the ListenTaskListen, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the ListenTaskListen instance.
+   */
   normalize(): ListenTaskListen & Specification.ListenTaskListen {
-    const copy = new ListenTaskListen(this as any) as ListenTaskListen & Specification.ListenTaskListen;
-    return getLifecycleHook('ListenTaskListen')?.normalize?.(copy) || copy;
+    const copy = new ListenTaskListen(this as any) as ListenTaskListenIntersection;
+    return getLifecycleHooks('ListenTaskListen')?.normalize?.(copy) || copy;
   }
 }
 
-export const _ListenTaskListen = ListenTaskListen as {
-  new (model?: Partial<Specification.ListenTaskListen>): ListenTaskListen & Specification.ListenTaskListen;
-};
+export const _ListenTaskListen = ListenTaskListen as ListenTaskListenConstructor;

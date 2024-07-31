@@ -22,30 +22,57 @@
 
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class UseAuthentications extends ObjectHydrator<Specification.UseAuthentications> {
+/**
+ * Represents the intersection between the UseAuthentications class and type
+ */
+export type UseAuthenticationsIntersection = UseAuthentications & Specification.UseAuthentications;
+
+/**
+ * Represents a constructor for the intersection of the UseAuthentications class and type
+ */
+export interface UseAuthenticationsConstructor {
+  new (model?: Partial<Specification.UseAuthentications>): UseAuthenticationsIntersection;
+}
+
+/**
+ * Represents a UseAuthentications with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class UseAuthentications extends ObjectHydrator<Specification.UseAuthentications> {
+  /**
+   * Instanciates a new instance of the UseAuthentications class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the UseAuthentications.
+   */
   constructor(model?: Partial<Specification.UseAuthentications>) {
     super(model);
 
-    getLifecycleHook('UseAuthentications')?.constructor?.(this);
+    getLifecycleHooks('UseAuthentications')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the UseAuthentications.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new UseAuthentications(this as any) as UseAuthentications & Specification.UseAuthentications;
-    getLifecycleHook('UseAuthentications')?.preValidation?.(copy);
-    validate('UseAuthentications', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('UseAuthentications')?.postValidation?.(copy);
+    const copy = new UseAuthentications(this as any) as UseAuthenticationsIntersection;
+    validate('UseAuthentications', copy);
   }
 
+  /**
+   * Normalizes the current instance of the UseAuthentications.
+   * Creates a copy of the UseAuthentications, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the UseAuthentications instance.
+   */
   normalize(): UseAuthentications & Specification.UseAuthentications {
-    const copy = new UseAuthentications(this as any) as UseAuthentications & Specification.UseAuthentications;
-    return getLifecycleHook('UseAuthentications')?.normalize?.(copy) || copy;
+    const copy = new UseAuthentications(this as any) as UseAuthenticationsIntersection;
+    return getLifecycleHooks('UseAuthentications')?.normalize?.(copy) || copy;
   }
 }
 
-export const _UseAuthentications = UseAuthentications as {
-  new (model?: Partial<Specification.UseAuthentications>): UseAuthentications & Specification.UseAuthentications;
-};
+export const _UseAuthentications = UseAuthentications as UseAuthenticationsConstructor;

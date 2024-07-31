@@ -22,30 +22,57 @@
 
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class Endpoint extends ObjectHydrator<Specification.Endpoint> {
+/**
+ * Represents the intersection between the Endpoint class and type
+ */
+export type EndpointIntersection = Endpoint & Specification.Endpoint;
+
+/**
+ * Represents a constructor for the intersection of the Endpoint class and type
+ */
+export interface EndpointConstructor {
+  new (model?: Partial<Specification.Endpoint>): EndpointIntersection;
+}
+
+/**
+ * Represents a Endpoint with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class Endpoint extends ObjectHydrator<Specification.Endpoint> {
+  /**
+   * Instanciates a new instance of the Endpoint class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the Endpoint.
+   */
   constructor(model?: Partial<Specification.Endpoint>) {
     super(model);
 
-    getLifecycleHook('Endpoint')?.constructor?.(this);
+    getLifecycleHooks('Endpoint')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the Endpoint.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new Endpoint(this as any) as Endpoint & Specification.Endpoint;
-    getLifecycleHook('Endpoint')?.preValidation?.(copy);
-    validate('Endpoint', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('Endpoint')?.postValidation?.(copy);
+    const copy = new Endpoint(this as any) as EndpointIntersection;
+    validate('Endpoint', copy);
   }
 
+  /**
+   * Normalizes the current instance of the Endpoint.
+   * Creates a copy of the Endpoint, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the Endpoint instance.
+   */
   normalize(): Endpoint & Specification.Endpoint {
-    const copy = new Endpoint(this as any) as Endpoint & Specification.Endpoint;
-    return getLifecycleHook('Endpoint')?.normalize?.(copy) || copy;
+    const copy = new Endpoint(this as any) as EndpointIntersection;
+    return getLifecycleHooks('Endpoint')?.normalize?.(copy) || copy;
   }
 }
 
-export const _Endpoint = Endpoint as {
-  new (model?: Partial<Specification.Endpoint>): Endpoint & Specification.Endpoint;
-};
+export const _Endpoint = Endpoint as EndpointConstructor;

@@ -23,33 +23,61 @@
 import { _Error } from './error';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class RaiseTaskRaise extends ObjectHydrator<Specification.RaiseTaskRaise> {
+/**
+ * Represents the intersection between the RaiseTaskRaise class and type
+ */
+export type RaiseTaskRaiseIntersection = RaiseTaskRaise & Specification.RaiseTaskRaise;
+
+/**
+ * Represents a constructor for the intersection of the RaiseTaskRaise class and type
+ */
+export interface RaiseTaskRaiseConstructor {
+  new (model?: Partial<Specification.RaiseTaskRaise>): RaiseTaskRaiseIntersection;
+}
+
+/**
+ * Represents a RaiseTaskRaise with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class RaiseTaskRaise extends ObjectHydrator<Specification.RaiseTaskRaise> {
+  /**
+   * Instanciates a new instance of the RaiseTaskRaise class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the RaiseTaskRaise.
+   */
   constructor(model?: Partial<Specification.RaiseTaskRaise>) {
     super(model);
     const self = this as unknown as Specification.RaiseTaskRaise & object;
     if (isObject(model)) {
       if (typeof model.error === 'object') self.error = new _Error(model.error);
     }
-    getLifecycleHook('RaiseTaskRaise')?.constructor?.(this);
+    getLifecycleHooks('RaiseTaskRaise')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the RaiseTaskRaise.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new RaiseTaskRaise(this as any) as RaiseTaskRaise & Specification.RaiseTaskRaise;
-    getLifecycleHook('RaiseTaskRaise')?.preValidation?.(copy);
-    validate('RaiseTaskRaise', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('RaiseTaskRaise')?.postValidation?.(copy);
+    const copy = new RaiseTaskRaise(this as any) as RaiseTaskRaiseIntersection;
+    validate('RaiseTaskRaise', copy);
   }
 
+  /**
+   * Normalizes the current instance of the RaiseTaskRaise.
+   * Creates a copy of the RaiseTaskRaise, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the RaiseTaskRaise instance.
+   */
   normalize(): RaiseTaskRaise & Specification.RaiseTaskRaise {
-    const copy = new RaiseTaskRaise(this as any) as RaiseTaskRaise & Specification.RaiseTaskRaise;
-    return getLifecycleHook('RaiseTaskRaise')?.normalize?.(copy) || copy;
+    const copy = new RaiseTaskRaise(this as any) as RaiseTaskRaiseIntersection;
+    return getLifecycleHooks('RaiseTaskRaise')?.normalize?.(copy) || copy;
   }
 }
 
-export const _RaiseTaskRaise = RaiseTaskRaise as {
-  new (model?: Partial<Specification.RaiseTaskRaise>): RaiseTaskRaise & Specification.RaiseTaskRaise;
-};
+export const _RaiseTaskRaise = RaiseTaskRaise as RaiseTaskRaiseConstructor;

@@ -22,30 +22,57 @@
 
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class Duration extends ObjectHydrator<Specification.Duration> {
+/**
+ * Represents the intersection between the Duration class and type
+ */
+export type DurationIntersection = Duration & Specification.Duration;
+
+/**
+ * Represents a constructor for the intersection of the Duration class and type
+ */
+export interface DurationConstructor {
+  new (model?: Partial<Specification.Duration>): DurationIntersection;
+}
+
+/**
+ * Represents a Duration with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class Duration extends ObjectHydrator<Specification.Duration> {
+  /**
+   * Instanciates a new instance of the Duration class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the Duration.
+   */
   constructor(model?: Partial<Specification.Duration>) {
     super(model);
 
-    getLifecycleHook('Duration')?.constructor?.(this);
+    getLifecycleHooks('Duration')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the Duration.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new Duration(this as any) as Duration & Specification.Duration;
-    getLifecycleHook('Duration')?.preValidation?.(copy);
-    validate('Duration', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('Duration')?.postValidation?.(copy);
+    const copy = new Duration(this as any) as DurationIntersection;
+    validate('Duration', copy);
   }
 
+  /**
+   * Normalizes the current instance of the Duration.
+   * Creates a copy of the Duration, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the Duration instance.
+   */
   normalize(): Duration & Specification.Duration {
-    const copy = new Duration(this as any) as Duration & Specification.Duration;
-    return getLifecycleHook('Duration')?.normalize?.(copy) || copy;
+    const copy = new Duration(this as any) as DurationIntersection;
+    return getLifecycleHooks('Duration')?.normalize?.(copy) || copy;
   }
 }
 
-export const _Duration = Duration as {
-  new (model?: Partial<Specification.Duration>): Duration & Specification.Duration;
-};
+export const _Duration = Duration as DurationConstructor;

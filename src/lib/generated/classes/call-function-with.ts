@@ -22,30 +22,57 @@
 
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class CallFunctionWith extends ObjectHydrator<Specification.CallFunctionWith> {
+/**
+ * Represents the intersection between the CallFunctionWith class and type
+ */
+export type CallFunctionWithIntersection = CallFunctionWith & Specification.CallFunctionWith;
+
+/**
+ * Represents a constructor for the intersection of the CallFunctionWith class and type
+ */
+export interface CallFunctionWithConstructor {
+  new (model?: Partial<Specification.CallFunctionWith>): CallFunctionWithIntersection;
+}
+
+/**
+ * Represents a CallFunctionWith with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class CallFunctionWith extends ObjectHydrator<Specification.CallFunctionWith> {
+  /**
+   * Instanciates a new instance of the CallFunctionWith class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the CallFunctionWith.
+   */
   constructor(model?: Partial<Specification.CallFunctionWith>) {
     super(model);
 
-    getLifecycleHook('CallFunctionWith')?.constructor?.(this);
+    getLifecycleHooks('CallFunctionWith')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the CallFunctionWith.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new CallFunctionWith(this as any) as CallFunctionWith & Specification.CallFunctionWith;
-    getLifecycleHook('CallFunctionWith')?.preValidation?.(copy);
-    validate('CallFunctionWith', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('CallFunctionWith')?.postValidation?.(copy);
+    const copy = new CallFunctionWith(this as any) as CallFunctionWithIntersection;
+    validate('CallFunctionWith', copy);
   }
 
+  /**
+   * Normalizes the current instance of the CallFunctionWith.
+   * Creates a copy of the CallFunctionWith, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the CallFunctionWith instance.
+   */
   normalize(): CallFunctionWith & Specification.CallFunctionWith {
-    const copy = new CallFunctionWith(this as any) as CallFunctionWith & Specification.CallFunctionWith;
-    return getLifecycleHook('CallFunctionWith')?.normalize?.(copy) || copy;
+    const copy = new CallFunctionWith(this as any) as CallFunctionWithIntersection;
+    return getLifecycleHooks('CallFunctionWith')?.normalize?.(copy) || copy;
   }
 }
 
-export const _CallFunctionWith = CallFunctionWith as {
-  new (model?: Partial<Specification.CallFunctionWith>): CallFunctionWith & Specification.CallFunctionWith;
-};
+export const _CallFunctionWith = CallFunctionWith as CallFunctionWithConstructor;

@@ -27,11 +27,33 @@ import { _Timeout } from './timeout';
 import { _RaiseTaskRaise } from './raise-task-raise';
 import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class RaiseTask extends _TaskBase {
+/**
+ * Represents the intersection between the RaiseTask class and type
+ */
+export type RaiseTaskIntersection = RaiseTask & Specification.RaiseTask;
+
+/**
+ * Represents a constructor for the intersection of the RaiseTask class and type
+ */
+export interface RaiseTaskConstructor {
+  new (model?: Partial<Specification.RaiseTask>): RaiseTaskIntersection;
+}
+
+/**
+ * Represents a RaiseTask with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class RaiseTask extends _TaskBase {
+  /**
+   * Instanciates a new instance of the RaiseTask class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the RaiseTask.
+   */
   constructor(model?: Partial<Specification.RaiseTask>) {
     super(model);
     const self = this as unknown as Specification.RaiseTask & object;
@@ -42,22 +64,28 @@ class RaiseTask extends _TaskBase {
       if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
       if (typeof model.raise === 'object') self.raise = new _RaiseTaskRaise(model.raise);
     }
-    getLifecycleHook('RaiseTask')?.constructor?.(this);
+    getLifecycleHooks('RaiseTask')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the RaiseTask.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new RaiseTask(this as any) as RaiseTask & Specification.RaiseTask;
-    getLifecycleHook('RaiseTask')?.preValidation?.(copy);
-    validate('RaiseTask', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('RaiseTask')?.postValidation?.(copy);
+    const copy = new RaiseTask(this as any) as RaiseTaskIntersection;
+    validate('RaiseTask', copy);
   }
 
+  /**
+   * Normalizes the current instance of the RaiseTask.
+   * Creates a copy of the RaiseTask, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the RaiseTask instance.
+   */
   normalize(): RaiseTask & Specification.RaiseTask {
-    const copy = new RaiseTask(this as any) as RaiseTask & Specification.RaiseTask;
-    return getLifecycleHook('RaiseTask')?.normalize?.(copy) || copy;
+    const copy = new RaiseTask(this as any) as RaiseTaskIntersection;
+    return getLifecycleHooks('RaiseTask')?.normalize?.(copy) || copy;
   }
 }
 
-export const _RaiseTask = RaiseTask as {
-  new (model?: Partial<Specification.RaiseTask>): RaiseTask & Specification.RaiseTask;
-};
+export const _RaiseTask = RaiseTask as RaiseTaskConstructor;

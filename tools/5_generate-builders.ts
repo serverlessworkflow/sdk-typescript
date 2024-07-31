@@ -98,16 +98,15 @@ export const ${toCamelCase(name)}Builder = (model?: Specification.${name}): Arra
 /**
  * Creates the builders index file
  * @param destDir The builders directory
- * @param declarations The list of types to create the index for
+ * @param aliases The list of types to create the index for
  * @returns
  */
-async function createIndex(destDir: string, declarations: string[]): Promise<void> {
+async function createIndex(destDir: string, aliases: string[]): Promise<void> {
   try {
     const indexCode: string =
       fileHeader +
-      declarations.reduce(
-        (acc, declaration) =>
-          acc + `export * from './${toKebabCase(normalizeKnownAllCaps(declaration)) + '-builder'}';\n`,
+      aliases.reduce(
+        (acc, alias) => acc + `export * from './${toKebabCase(normalizeKnownAllCaps(alias)) + '-builder'}';\n`,
         '',
       );
     const indexFile = path.resolve(destDir, 'index.ts');
@@ -129,7 +128,7 @@ async function generate(definitionFile: string, destDir: string): Promise<void> 
     await reset(destDir);
     const definitions = await readFile(definitionFile, { encoding: 'utf-8' });
     const exportedDeclarations = getExportedDeclarations(definitions);
-    const aliases = Array.from(exportedDeclarations.keys());
+    const aliases = Array.from(exportedDeclarations.keys()).sort((a, b) => a.localeCompare(b));
     for (const [alias, node] of exportedDeclarations) {
       const exportedType = node![0].getType();
       let builderDeclaration: string = '';

@@ -23,11 +23,33 @@
 import { _Duration } from './duration';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class RetryPolicyJitter extends ObjectHydrator<Specification.RetryPolicyJitter> {
+/**
+ * Represents the intersection between the RetryPolicyJitter class and type
+ */
+export type RetryPolicyJitterIntersection = RetryPolicyJitter & Specification.RetryPolicyJitter;
+
+/**
+ * Represents a constructor for the intersection of the RetryPolicyJitter class and type
+ */
+export interface RetryPolicyJitterConstructor {
+  new (model?: Partial<Specification.RetryPolicyJitter>): RetryPolicyJitterIntersection;
+}
+
+/**
+ * Represents a RetryPolicyJitter with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class RetryPolicyJitter extends ObjectHydrator<Specification.RetryPolicyJitter> {
+  /**
+   * Instanciates a new instance of the RetryPolicyJitter class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the RetryPolicyJitter.
+   */
   constructor(model?: Partial<Specification.RetryPolicyJitter>) {
     super(model);
     const self = this as unknown as Specification.RetryPolicyJitter & object;
@@ -35,22 +57,28 @@ class RetryPolicyJitter extends ObjectHydrator<Specification.RetryPolicyJitter> 
       if (typeof model.from === 'object') self.from = new _Duration(model.from);
       if (typeof model.to === 'object') self.to = new _Duration(model.to);
     }
-    getLifecycleHook('RetryPolicyJitter')?.constructor?.(this);
+    getLifecycleHooks('RetryPolicyJitter')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the RetryPolicyJitter.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new RetryPolicyJitter(this as any) as RetryPolicyJitter & Specification.RetryPolicyJitter;
-    getLifecycleHook('RetryPolicyJitter')?.preValidation?.(copy);
-    validate('RetryPolicyJitter', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('RetryPolicyJitter')?.postValidation?.(copy);
+    const copy = new RetryPolicyJitter(this as any) as RetryPolicyJitterIntersection;
+    validate('RetryPolicyJitter', copy);
   }
 
+  /**
+   * Normalizes the current instance of the RetryPolicyJitter.
+   * Creates a copy of the RetryPolicyJitter, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the RetryPolicyJitter instance.
+   */
   normalize(): RetryPolicyJitter & Specification.RetryPolicyJitter {
-    const copy = new RetryPolicyJitter(this as any) as RetryPolicyJitter & Specification.RetryPolicyJitter;
-    return getLifecycleHook('RetryPolicyJitter')?.normalize?.(copy) || copy;
+    const copy = new RetryPolicyJitter(this as any) as RetryPolicyJitterIntersection;
+    return getLifecycleHooks('RetryPolicyJitter')?.normalize?.(copy) || copy;
   }
 }
 
-export const _RetryPolicyJitter = RetryPolicyJitter as {
-  new (model?: Partial<Specification.RetryPolicyJitter>): RetryPolicyJitter & Specification.RetryPolicyJitter;
-};
+export const _RetryPolicyJitter = RetryPolicyJitter as RetryPolicyJitterConstructor;

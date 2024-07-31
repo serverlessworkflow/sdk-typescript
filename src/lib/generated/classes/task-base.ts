@@ -26,11 +26,33 @@ import { _Export } from './export';
 import { _Timeout } from './timeout';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class TaskBase extends ObjectHydrator<Specification.TaskBase> {
+/**
+ * Represents the intersection between the TaskBase class and type
+ */
+export type TaskBaseIntersection = TaskBase & Specification.TaskBase;
+
+/**
+ * Represents a constructor for the intersection of the TaskBase class and type
+ */
+export interface TaskBaseConstructor {
+  new (model?: Partial<Specification.TaskBase>): TaskBaseIntersection;
+}
+
+/**
+ * Represents a TaskBase with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class TaskBase extends ObjectHydrator<Specification.TaskBase> {
+  /**
+   * Instanciates a new instance of the TaskBase class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the TaskBase.
+   */
   constructor(model?: Partial<Specification.TaskBase>) {
     super(model);
     const self = this as unknown as Specification.TaskBase & object;
@@ -40,22 +62,28 @@ class TaskBase extends ObjectHydrator<Specification.TaskBase> {
       if (typeof model.export === 'object') self.export = new _Export(model.export);
       if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
     }
-    getLifecycleHook('TaskBase')?.constructor?.(this);
+    getLifecycleHooks('TaskBase')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the TaskBase.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new TaskBase(this as any) as TaskBase & Specification.TaskBase;
-    getLifecycleHook('TaskBase')?.preValidation?.(copy);
-    validate('TaskBase', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('TaskBase')?.postValidation?.(copy);
+    const copy = new TaskBase(this as any) as TaskBaseIntersection;
+    validate('TaskBase', copy);
   }
 
+  /**
+   * Normalizes the current instance of the TaskBase.
+   * Creates a copy of the TaskBase, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the TaskBase instance.
+   */
   normalize(): TaskBase & Specification.TaskBase {
-    const copy = new TaskBase(this as any) as TaskBase & Specification.TaskBase;
-    return getLifecycleHook('TaskBase')?.normalize?.(copy) || copy;
+    const copy = new TaskBase(this as any) as TaskBaseIntersection;
+    return getLifecycleHooks('TaskBase')?.normalize?.(copy) || copy;
   }
 }
 
-export const _TaskBase = TaskBase as {
-  new (model?: Partial<Specification.TaskBase>): TaskBase & Specification.TaskBase;
-};
+export const _TaskBase = TaskBase as TaskBaseConstructor;

@@ -23,33 +23,61 @@
 import { _DocumentTags } from './document-tags';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class Document extends ObjectHydrator<Specification.Document> {
+/**
+ * Represents the intersection between the Document class and type
+ */
+export type DocumentIntersection = Document & Specification.Document;
+
+/**
+ * Represents a constructor for the intersection of the Document class and type
+ */
+export interface DocumentConstructor {
+  new (model?: Partial<Specification.Document>): DocumentIntersection;
+}
+
+/**
+ * Represents a Document with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class Document extends ObjectHydrator<Specification.Document> {
+  /**
+   * Instanciates a new instance of the Document class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the Document.
+   */
   constructor(model?: Partial<Specification.Document>) {
     super(model);
     const self = this as unknown as Specification.Document & object;
     if (isObject(model)) {
       if (typeof model.tags === 'object') self.tags = new _DocumentTags(model.tags);
     }
-    getLifecycleHook('Document')?.constructor?.(this);
+    getLifecycleHooks('Document')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the Document.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new Document(this as any) as Document & Specification.Document;
-    getLifecycleHook('Document')?.preValidation?.(copy);
-    validate('Document', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('Document')?.postValidation?.(copy);
+    const copy = new Document(this as any) as DocumentIntersection;
+    validate('Document', copy);
   }
 
+  /**
+   * Normalizes the current instance of the Document.
+   * Creates a copy of the Document, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the Document instance.
+   */
   normalize(): Document & Specification.Document {
-    const copy = new Document(this as any) as Document & Specification.Document;
-    return getLifecycleHook('Document')?.normalize?.(copy) || copy;
+    const copy = new Document(this as any) as DocumentIntersection;
+    return getLifecycleHooks('Document')?.normalize?.(copy) || copy;
   }
 }
 
-export const _Document = Document as {
-  new (model?: Partial<Specification.Document>): Document & Specification.Document;
-};
+export const _Document = Document as DocumentConstructor;

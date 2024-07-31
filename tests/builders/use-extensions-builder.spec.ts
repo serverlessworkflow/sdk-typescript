@@ -52,7 +52,7 @@ describe('UseExtensions builder', () => {
     expect(test).toThrow('The provided model should be an array');
   });
 
-  it('should validate', () => {
+  it('should throw when invalid', () => {
     const test = () => {
       useExtensionsBuilder([1, 2, 3] as any).build();
     };
@@ -60,7 +60,7 @@ describe('UseExtensions builder', () => {
     expect(test).toThrow(/'UseExtensions' is invalid/);
   });
 
-  it('should not validate', () => {
+  it('should not throw when validation is disabled', () => {
     const test = () => {
       useExtensionsBuilder([1, 2, 3] as any).build({ validate: false });
     };

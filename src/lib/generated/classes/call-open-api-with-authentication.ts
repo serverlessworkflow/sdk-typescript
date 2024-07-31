@@ -25,11 +25,34 @@ import { _AuthenticationPolicyBearer } from './authentication-policy-bearer';
 import { _AuthenticationPolicyOauth2 } from './authentication-policy-oauth2';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class CallOpenAPIWithAuthentication extends ObjectHydrator<Specification.CallOpenAPIWithAuthentication> {
+/**
+ * Represents the intersection between the CallOpenAPIWithAuthentication class and type
+ */
+export type CallOpenAPIWithAuthenticationIntersection = CallOpenAPIWithAuthentication &
+  Specification.CallOpenAPIWithAuthentication;
+
+/**
+ * Represents a constructor for the intersection of the CallOpenAPIWithAuthentication class and type
+ */
+export interface CallOpenAPIWithAuthenticationConstructor {
+  new (model?: Partial<Specification.CallOpenAPIWithAuthentication>): CallOpenAPIWithAuthenticationIntersection;
+}
+
+/**
+ * Represents a CallOpenAPIWithAuthentication with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class CallOpenAPIWithAuthentication extends ObjectHydrator<Specification.CallOpenAPIWithAuthentication> {
+  /**
+   * Instanciates a new instance of the CallOpenAPIWithAuthentication class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the CallOpenAPIWithAuthentication.
+   */
   constructor(model?: Partial<Specification.CallOpenAPIWithAuthentication>) {
     super(model);
     const self = this as unknown as Specification.CallOpenAPIWithAuthentication & object;
@@ -41,26 +64,28 @@ class CallOpenAPIWithAuthentication extends ObjectHydrator<Specification.CallOpe
       if (typeof model.oauth2 === 'object')
         self.oauth2 = new _AuthenticationPolicyOauth2(model.oauth2 as Specification.AuthenticationPolicyOauth2);
     }
-    getLifecycleHook('CallOpenAPIWithAuthentication')?.constructor?.(this);
+    getLifecycleHooks('CallOpenAPIWithAuthentication')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the CallOpenAPIWithAuthentication.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new CallOpenAPIWithAuthentication(this as any) as CallOpenAPIWithAuthentication &
-      Specification.CallOpenAPIWithAuthentication;
-    getLifecycleHook('CallOpenAPIWithAuthentication')?.preValidation?.(copy);
-    validate('CallOpenAPIWithAuthentication', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('CallOpenAPIWithAuthentication')?.postValidation?.(copy);
+    const copy = new CallOpenAPIWithAuthentication(this as any) as CallOpenAPIWithAuthenticationIntersection;
+    validate('CallOpenAPIWithAuthentication', copy);
   }
 
+  /**
+   * Normalizes the current instance of the CallOpenAPIWithAuthentication.
+   * Creates a copy of the CallOpenAPIWithAuthentication, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the CallOpenAPIWithAuthentication instance.
+   */
   normalize(): CallOpenAPIWithAuthentication & Specification.CallOpenAPIWithAuthentication {
-    const copy = new CallOpenAPIWithAuthentication(this as any) as CallOpenAPIWithAuthentication &
-      Specification.CallOpenAPIWithAuthentication;
-    return getLifecycleHook('CallOpenAPIWithAuthentication')?.normalize?.(copy) || copy;
+    const copy = new CallOpenAPIWithAuthentication(this as any) as CallOpenAPIWithAuthenticationIntersection;
+    return getLifecycleHooks('CallOpenAPIWithAuthentication')?.normalize?.(copy) || copy;
   }
 }
 
-export const _CallOpenAPIWithAuthentication = CallOpenAPIWithAuthentication as {
-  new (
-    model?: Partial<Specification.CallOpenAPIWithAuthentication>,
-  ): CallOpenAPIWithAuthentication & Specification.CallOpenAPIWithAuthentication;
-};
+export const _CallOpenAPIWithAuthentication = CallOpenAPIWithAuthentication as CallOpenAPIWithAuthenticationConstructor;

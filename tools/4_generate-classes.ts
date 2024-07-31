@@ -43,11 +43,34 @@ ${inFileDisclaimer}
 ${hydrationResult.imports.map((type) => `import { _${type} } from './${toKebabCase(normalizeKnownAllCaps(type))}';`).join('\n')}
 ${baseClass ? `import { _${baseClass} } from './${toKebabCase(normalizeKnownAllCaps(baseClass))}';` : "import { ObjectHydrator } from '../../hydrator';"}
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy${hydrationResult.code ? ', isObject' : ''} } from '../../utils';
+${hydrationResult.code ? `import { isObject } from '../../utils';` : ''}
+${name === 'Workflow' ? `import * as yaml from 'js-yaml';` : ''}
 
-class ${name} extends ${baseClass ? '_' + baseClass : `ObjectHydrator<Specification.${name}>`} {
+/**
+ * Represents the intersection between the ${name} class and type
+ */
+export type ${name}Intersection = ${name} & Specification.${name};
+
+/**
+ * Represents a constructor for the intersection of the ${name} class and type
+ */
+export interface ${name}Constructor {
+  new (model?: Partial<Specification.${name}>): ${name}Intersection;
+}
+
+/**
+ * Represents a ${name} with methods for validation ${name === 'Workflow' ? 'normalization, and serialization.' : 'and normalization.'}
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class ${name} extends ${baseClass ? '_' + baseClass : `ObjectHydrator<Specification.${name}>`} {
+  /**
+   * Instanciates a new instance of the ${name} class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the ${name}.
+   */
   constructor(model?: Partial<Specification.${name}>) {
     super(model);
     ${
@@ -58,25 +81,82 @@ class ${name} extends ${baseClass ? '_' + baseClass : `ObjectHydrator<Specificat
       }`
         : ''
     }
-    getLifecycleHook('${name}')?.constructor?.(this);
+    getLifecycleHooks('${name}')?.constructor?.(this);
   }
   
+  /**
+   * Validates the current instance of the ${name}.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new ${name}(this as any) as ${name} & Specification.${name};
-    getLifecycleHook('${name}')?.preValidation?.(copy);
-    validate('${name}', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('${name}')?.postValidation?.(copy);
+    const copy = new ${name}(this as any) as ${name}Intersection;
+    validate('${name}', copy);
   }
   
+  /**
+   * Normalizes the current instance of the ${name}.
+   * Creates a copy of the ${name}, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the ${name} instance.
+   */
   normalize(): ${name} & Specification.${name} {
-    const copy = new ${name}(this as any) as ${name} & Specification.${name};
-    return getLifecycleHook('${name}')?.normalize?.(copy) || copy;
+    const copy = new ${name}(this as any) as ${name}Intersection;
+    return getLifecycleHooks('${name}')?.normalize?.(copy) || copy;
+  }
+  ${
+    name === 'Workflow'
+      ? `
+  static deserialize(text: string): WorkflowIntersection {
+    const model = yaml.load(text) as Partial<Specification.Workflow>;
+    getLifecycleHooks('Workflow')?.preValidation?.(model);
+    validate('Workflow', model);
+    getLifecycleHooks('Workflow')?.postValidation?.(model);
+    return new Workflow(model) as WorkflowIntersection;
+  }
+
+  static serialize(workflow: WorkflowIntersection, format: 'yaml' | 'json' = 'yaml', normalize: boolean = true): string {
+    workflow.validate();
+    const model = normalize ? workflow.normalize() : workflow;
+    if (format === 'json') {
+      return JSON.stringify(model);
+    }
+    return yaml.dump(model);
+  }
+  
+  /**
+   * Serializes the workflow to YAML or JSON
+   * @param format The format, 'yaml' or 'json', default is 'yaml'
+   * @param normalize If the workflow should be normalized before serialization, default true
+   * @returns A string representation of the workflow
+   */
+  serialize(format: 'yaml' | 'json' = 'yaml', normalize: boolean = true): string {
+    return Workflow.serialize(this as unknown as WorkflowIntersection, format, normalize);
+  }`
+      : ''
   }
 }
 
-export const _${name} = ${name} as ({
-    new (model?: Partial<Specification.${name}>): ${name} & Specification.${name}
-});`;
+export const _${name} = ${name} as ${name}Constructor${
+    name === 'Workflow'
+      ? `& { 
+  /**
+   * Deserializes the provided string as a Workflow
+   * @param text The YAML or JSON representation of a workflow
+   * @returns A new Workflow instance
+   */
+  deserialize(text: string): WorkflowIntersection;
+  
+  /**
+   * Serializes the provided Workflow to YAML or JSON
+   * @param workflow The workflow to serialize
+   * @param format The format, 'yaml' or 'json', default is 'yaml'
+   * @param normalize If the workflow should be normalized before serialization, default true
+   * @returns A string representation of the workflow
+   */
+  serialize(workflow: WorkflowIntersection, format?: 'yaml' | 'json', normalize?: boolean): string 
+}`
+      : ''
+  };`;
 }
 
 /**
@@ -93,30 +173,46 @@ ${inFileDisclaimer}
 ${hydrationResult.imports.map((type) => `import { _${type} } from './${toKebabCase(normalizeKnownAllCaps(type))}';`)}
 import { Specification } from '../definitions';
 import { ArrayHydrator } from '../../hydrator';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class ${name} extends ArrayHydrator<${arrayTypeName}> {
+/**
+ * Represents a collection of ${arrayTypeName}.
+ * Inherits from ArrayHydrator to handle array-specific hydration.
+ */
+export class ${name} extends ArrayHydrator<${arrayTypeName}> {
+  /**
+   * Constructs a new instance of the ${name} class.
+   *
+   * @param model - Optional parameter which can be an array of objects or a number representing the array length.
+   */
   constructor(model?: Array<${arrayTypeName}> | number) {
     super(model);
     if (Array.isArray(model)) {
       ${hydrationResult.code}
     }
     Object.setPrototypeOf(this, Object.create(${name}.prototype));
-    getLifecycleHook('${name}')?.constructor?.(this);
+    getLifecycleHooks('${name}')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the ${name}.
+   * Throws if invalid.
+   */
   validate() {
     const copy = new ${name}(this);
-    getLifecycleHook('${name}')?.preValidation?.(copy);
-    validate('${name}', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('${name}')?.postValidation?.(copy);
+    validate('${name}', copy);
   }
   
+  /**
+   * Normalizes the current instance of the ${name}.
+   * Creates a copy of the ${name}, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the ${name} instance.
+   */
   normalize(): ${name} {
     const copy = new ${name}(this);
-    return getLifecycleHook('${name}')?.normalize?.(copy) || copy;
+    return getLifecycleHooks('${name}')?.normalize?.(copy) || copy;
   }
 }
 
@@ -132,7 +228,7 @@ export const _${name} = ${name}; // could be exported directly, but it makes the
 async function generate(definitionFile: string, destDir: string): Promise<void> {
   const definitions = await readFile(definitionFile, { encoding: 'utf-8' });
   const exportedDeclarations = getExportedDeclarations(definitions);
-  const aliases = Array.from(exportedDeclarations.keys());
+  const aliases = Array.from(exportedDeclarations.keys()).sort((a, b) => a.localeCompare(b));
   await reset(destDir);
   for (const [alias, node] of exportedDeclarations) {
     const exportedType = node![0].getType();

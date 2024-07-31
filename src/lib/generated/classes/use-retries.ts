@@ -23,11 +23,33 @@
 import { _RetryPolicy } from './retry-policy';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class UseRetries extends ObjectHydrator<Specification.UseRetries> {
+/**
+ * Represents the intersection between the UseRetries class and type
+ */
+export type UseRetriesIntersection = UseRetries & Specification.UseRetries;
+
+/**
+ * Represents a constructor for the intersection of the UseRetries class and type
+ */
+export interface UseRetriesConstructor {
+  new (model?: Partial<Specification.UseRetries>): UseRetriesIntersection;
+}
+
+/**
+ * Represents a UseRetries with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class UseRetries extends ObjectHydrator<Specification.UseRetries> {
+  /**
+   * Instanciates a new instance of the UseRetries class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the UseRetries.
+   */
   constructor(model?: Partial<Specification.UseRetries>) {
     super(model);
     const self = this as unknown as Specification.UseRetries & object;
@@ -39,22 +61,28 @@ class UseRetries extends ObjectHydrator<Specification.UseRetries> {
           self[key] = new _RetryPolicy(value);
         });
     }
-    getLifecycleHook('UseRetries')?.constructor?.(this);
+    getLifecycleHooks('UseRetries')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the UseRetries.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new UseRetries(this as any) as UseRetries & Specification.UseRetries;
-    getLifecycleHook('UseRetries')?.preValidation?.(copy);
-    validate('UseRetries', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('UseRetries')?.postValidation?.(copy);
+    const copy = new UseRetries(this as any) as UseRetriesIntersection;
+    validate('UseRetries', copy);
   }
 
+  /**
+   * Normalizes the current instance of the UseRetries.
+   * Creates a copy of the UseRetries, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the UseRetries instance.
+   */
   normalize(): UseRetries & Specification.UseRetries {
-    const copy = new UseRetries(this as any) as UseRetries & Specification.UseRetries;
-    return getLifecycleHook('UseRetries')?.normalize?.(copy) || copy;
+    const copy = new UseRetries(this as any) as UseRetriesIntersection;
+    return getLifecycleHooks('UseRetries')?.normalize?.(copy) || copy;
   }
 }
 
-export const _UseRetries = UseRetries as {
-  new (model?: Partial<Specification.UseRetries>): UseRetries & Specification.UseRetries;
-};
+export const _UseRetries = UseRetries as UseRetriesConstructor;

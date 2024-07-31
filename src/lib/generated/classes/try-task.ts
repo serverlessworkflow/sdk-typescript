@@ -28,11 +28,33 @@ import { _TaskList } from './task-list';
 import { _TryTaskCatch } from './try-task-catch';
 import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class TryTask extends _TaskBase {
+/**
+ * Represents the intersection between the TryTask class and type
+ */
+export type TryTaskIntersection = TryTask & Specification.TryTask;
+
+/**
+ * Represents a constructor for the intersection of the TryTask class and type
+ */
+export interface TryTaskConstructor {
+  new (model?: Partial<Specification.TryTask>): TryTaskIntersection;
+}
+
+/**
+ * Represents a TryTask with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class TryTask extends _TaskBase {
+  /**
+   * Instanciates a new instance of the TryTask class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the TryTask.
+   */
   constructor(model?: Partial<Specification.TryTask>) {
     super(model);
     const self = this as unknown as Specification.TryTask & object;
@@ -44,22 +66,28 @@ class TryTask extends _TaskBase {
       if (typeof model.try === 'object') self.try = new _TaskList(model.try);
       if (typeof model.catch === 'object') self.catch = new _TryTaskCatch(model.catch);
     }
-    getLifecycleHook('TryTask')?.constructor?.(this);
+    getLifecycleHooks('TryTask')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the TryTask.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new TryTask(this as any) as TryTask & Specification.TryTask;
-    getLifecycleHook('TryTask')?.preValidation?.(copy);
-    validate('TryTask', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('TryTask')?.postValidation?.(copy);
+    const copy = new TryTask(this as any) as TryTaskIntersection;
+    validate('TryTask', copy);
   }
 
+  /**
+   * Normalizes the current instance of the TryTask.
+   * Creates a copy of the TryTask, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the TryTask instance.
+   */
   normalize(): TryTask & Specification.TryTask {
-    const copy = new TryTask(this as any) as TryTask & Specification.TryTask;
-    return getLifecycleHook('TryTask')?.normalize?.(copy) || copy;
+    const copy = new TryTask(this as any) as TryTaskIntersection;
+    return getLifecycleHooks('TryTask')?.normalize?.(copy) || copy;
   }
 }
 
-export const _TryTask = TryTask as {
-  new (model?: Partial<Specification.TryTask>): TryTask & Specification.TryTask;
-};
+export const _TryTask = TryTask as TryTaskConstructor;

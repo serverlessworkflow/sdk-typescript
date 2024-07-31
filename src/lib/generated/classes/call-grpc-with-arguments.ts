@@ -22,32 +22,57 @@
 
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class CallGRPCWithArguments extends ObjectHydrator<Specification.CallGRPCWithArguments> {
+/**
+ * Represents the intersection between the CallGRPCWithArguments class and type
+ */
+export type CallGRPCWithArgumentsIntersection = CallGRPCWithArguments & Specification.CallGRPCWithArguments;
+
+/**
+ * Represents a constructor for the intersection of the CallGRPCWithArguments class and type
+ */
+export interface CallGRPCWithArgumentsConstructor {
+  new (model?: Partial<Specification.CallGRPCWithArguments>): CallGRPCWithArgumentsIntersection;
+}
+
+/**
+ * Represents a CallGRPCWithArguments with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class CallGRPCWithArguments extends ObjectHydrator<Specification.CallGRPCWithArguments> {
+  /**
+   * Instanciates a new instance of the CallGRPCWithArguments class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the CallGRPCWithArguments.
+   */
   constructor(model?: Partial<Specification.CallGRPCWithArguments>) {
     super(model);
 
-    getLifecycleHook('CallGRPCWithArguments')?.constructor?.(this);
+    getLifecycleHooks('CallGRPCWithArguments')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the CallGRPCWithArguments.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new CallGRPCWithArguments(this as any) as CallGRPCWithArguments & Specification.CallGRPCWithArguments;
-    getLifecycleHook('CallGRPCWithArguments')?.preValidation?.(copy);
-    validate('CallGRPCWithArguments', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('CallGRPCWithArguments')?.postValidation?.(copy);
+    const copy = new CallGRPCWithArguments(this as any) as CallGRPCWithArgumentsIntersection;
+    validate('CallGRPCWithArguments', copy);
   }
 
+  /**
+   * Normalizes the current instance of the CallGRPCWithArguments.
+   * Creates a copy of the CallGRPCWithArguments, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the CallGRPCWithArguments instance.
+   */
   normalize(): CallGRPCWithArguments & Specification.CallGRPCWithArguments {
-    const copy = new CallGRPCWithArguments(this as any) as CallGRPCWithArguments & Specification.CallGRPCWithArguments;
-    return getLifecycleHook('CallGRPCWithArguments')?.normalize?.(copy) || copy;
+    const copy = new CallGRPCWithArguments(this as any) as CallGRPCWithArgumentsIntersection;
+    return getLifecycleHooks('CallGRPCWithArguments')?.normalize?.(copy) || copy;
   }
 }
 
-export const _CallGRPCWithArguments = CallGRPCWithArguments as {
-  new (
-    model?: Partial<Specification.CallGRPCWithArguments>,
-  ): CallGRPCWithArguments & Specification.CallGRPCWithArguments;
-};
+export const _CallGRPCWithArguments = CallGRPCWithArguments as CallGRPCWithArgumentsConstructor;

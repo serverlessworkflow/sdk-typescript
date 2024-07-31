@@ -22,34 +22,57 @@
 
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class RunTaskRunWorkflowInput extends ObjectHydrator<Specification.RunTaskRunWorkflowInput> {
+/**
+ * Represents the intersection between the RunTaskRunWorkflowInput class and type
+ */
+export type RunTaskRunWorkflowInputIntersection = RunTaskRunWorkflowInput & Specification.RunTaskRunWorkflowInput;
+
+/**
+ * Represents a constructor for the intersection of the RunTaskRunWorkflowInput class and type
+ */
+export interface RunTaskRunWorkflowInputConstructor {
+  new (model?: Partial<Specification.RunTaskRunWorkflowInput>): RunTaskRunWorkflowInputIntersection;
+}
+
+/**
+ * Represents a RunTaskRunWorkflowInput with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class RunTaskRunWorkflowInput extends ObjectHydrator<Specification.RunTaskRunWorkflowInput> {
+  /**
+   * Instanciates a new instance of the RunTaskRunWorkflowInput class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the RunTaskRunWorkflowInput.
+   */
   constructor(model?: Partial<Specification.RunTaskRunWorkflowInput>) {
     super(model);
 
-    getLifecycleHook('RunTaskRunWorkflowInput')?.constructor?.(this);
+    getLifecycleHooks('RunTaskRunWorkflowInput')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the RunTaskRunWorkflowInput.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new RunTaskRunWorkflowInput(this as any) as RunTaskRunWorkflowInput &
-      Specification.RunTaskRunWorkflowInput;
-    getLifecycleHook('RunTaskRunWorkflowInput')?.preValidation?.(copy);
-    validate('RunTaskRunWorkflowInput', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('RunTaskRunWorkflowInput')?.postValidation?.(copy);
+    const copy = new RunTaskRunWorkflowInput(this as any) as RunTaskRunWorkflowInputIntersection;
+    validate('RunTaskRunWorkflowInput', copy);
   }
 
+  /**
+   * Normalizes the current instance of the RunTaskRunWorkflowInput.
+   * Creates a copy of the RunTaskRunWorkflowInput, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the RunTaskRunWorkflowInput instance.
+   */
   normalize(): RunTaskRunWorkflowInput & Specification.RunTaskRunWorkflowInput {
-    const copy = new RunTaskRunWorkflowInput(this as any) as RunTaskRunWorkflowInput &
-      Specification.RunTaskRunWorkflowInput;
-    return getLifecycleHook('RunTaskRunWorkflowInput')?.normalize?.(copy) || copy;
+    const copy = new RunTaskRunWorkflowInput(this as any) as RunTaskRunWorkflowInputIntersection;
+    return getLifecycleHooks('RunTaskRunWorkflowInput')?.normalize?.(copy) || copy;
   }
 }
 
-export const _RunTaskRunWorkflowInput = RunTaskRunWorkflowInput as {
-  new (
-    model?: Partial<Specification.RunTaskRunWorkflowInput>,
-  ): RunTaskRunWorkflowInput & Specification.RunTaskRunWorkflowInput;
-};
+export const _RunTaskRunWorkflowInput = RunTaskRunWorkflowInput as RunTaskRunWorkflowInputConstructor;

@@ -22,30 +22,57 @@
 
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy } from '../../utils';
 
-class FlowDirective extends ObjectHydrator<Specification.FlowDirective> {
+/**
+ * Represents the intersection between the FlowDirective class and type
+ */
+export type FlowDirectiveIntersection = FlowDirective & Specification.FlowDirective;
+
+/**
+ * Represents a constructor for the intersection of the FlowDirective class and type
+ */
+export interface FlowDirectiveConstructor {
+  new (model?: Partial<Specification.FlowDirective>): FlowDirectiveIntersection;
+}
+
+/**
+ * Represents a FlowDirective with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class FlowDirective extends ObjectHydrator<Specification.FlowDirective> {
+  /**
+   * Instanciates a new instance of the FlowDirective class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the FlowDirective.
+   */
   constructor(model?: Partial<Specification.FlowDirective>) {
     super(model);
 
-    getLifecycleHook('FlowDirective')?.constructor?.(this);
+    getLifecycleHooks('FlowDirective')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the FlowDirective.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new FlowDirective(this as any) as FlowDirective & Specification.FlowDirective;
-    getLifecycleHook('FlowDirective')?.preValidation?.(copy);
-    validate('FlowDirective', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('FlowDirective')?.postValidation?.(copy);
+    const copy = new FlowDirective(this as any) as FlowDirectiveIntersection;
+    validate('FlowDirective', copy);
   }
 
+  /**
+   * Normalizes the current instance of the FlowDirective.
+   * Creates a copy of the FlowDirective, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the FlowDirective instance.
+   */
   normalize(): FlowDirective & Specification.FlowDirective {
-    const copy = new FlowDirective(this as any) as FlowDirective & Specification.FlowDirective;
-    return getLifecycleHook('FlowDirective')?.normalize?.(copy) || copy;
+    const copy = new FlowDirective(this as any) as FlowDirectiveIntersection;
+    return getLifecycleHooks('FlowDirective')?.normalize?.(copy) || copy;
   }
 }
 
-export const _FlowDirective = FlowDirective as {
-  new (model?: Partial<Specification.FlowDirective>): FlowDirective & Specification.FlowDirective;
-};
+export const _FlowDirective = FlowDirective as FlowDirectiveConstructor;

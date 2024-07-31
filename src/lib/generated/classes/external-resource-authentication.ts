@@ -25,11 +25,34 @@ import { _AuthenticationPolicyBearer } from './authentication-policy-bearer';
 import { _AuthenticationPolicyOauth2 } from './authentication-policy-oauth2';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class ExternalResourceAuthentication extends ObjectHydrator<Specification.ExternalResourceAuthentication> {
+/**
+ * Represents the intersection between the ExternalResourceAuthentication class and type
+ */
+export type ExternalResourceAuthenticationIntersection = ExternalResourceAuthentication &
+  Specification.ExternalResourceAuthentication;
+
+/**
+ * Represents a constructor for the intersection of the ExternalResourceAuthentication class and type
+ */
+export interface ExternalResourceAuthenticationConstructor {
+  new (model?: Partial<Specification.ExternalResourceAuthentication>): ExternalResourceAuthenticationIntersection;
+}
+
+/**
+ * Represents a ExternalResourceAuthentication with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class ExternalResourceAuthentication extends ObjectHydrator<Specification.ExternalResourceAuthentication> {
+  /**
+   * Instanciates a new instance of the ExternalResourceAuthentication class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the ExternalResourceAuthentication.
+   */
   constructor(model?: Partial<Specification.ExternalResourceAuthentication>) {
     super(model);
     const self = this as unknown as Specification.ExternalResourceAuthentication & object;
@@ -41,26 +64,29 @@ class ExternalResourceAuthentication extends ObjectHydrator<Specification.Extern
       if (typeof model.oauth2 === 'object')
         self.oauth2 = new _AuthenticationPolicyOauth2(model.oauth2 as Specification.AuthenticationPolicyOauth2);
     }
-    getLifecycleHook('ExternalResourceAuthentication')?.constructor?.(this);
+    getLifecycleHooks('ExternalResourceAuthentication')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the ExternalResourceAuthentication.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new ExternalResourceAuthentication(this as any) as ExternalResourceAuthentication &
-      Specification.ExternalResourceAuthentication;
-    getLifecycleHook('ExternalResourceAuthentication')?.preValidation?.(copy);
-    validate('ExternalResourceAuthentication', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('ExternalResourceAuthentication')?.postValidation?.(copy);
+    const copy = new ExternalResourceAuthentication(this as any) as ExternalResourceAuthenticationIntersection;
+    validate('ExternalResourceAuthentication', copy);
   }
 
+  /**
+   * Normalizes the current instance of the ExternalResourceAuthentication.
+   * Creates a copy of the ExternalResourceAuthentication, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the ExternalResourceAuthentication instance.
+   */
   normalize(): ExternalResourceAuthentication & Specification.ExternalResourceAuthentication {
-    const copy = new ExternalResourceAuthentication(this as any) as ExternalResourceAuthentication &
-      Specification.ExternalResourceAuthentication;
-    return getLifecycleHook('ExternalResourceAuthentication')?.normalize?.(copy) || copy;
+    const copy = new ExternalResourceAuthentication(this as any) as ExternalResourceAuthenticationIntersection;
+    return getLifecycleHooks('ExternalResourceAuthentication')?.normalize?.(copy) || copy;
   }
 }
 
-export const _ExternalResourceAuthentication = ExternalResourceAuthentication as {
-  new (
-    model?: Partial<Specification.ExternalResourceAuthentication>,
-  ): ExternalResourceAuthentication & Specification.ExternalResourceAuthentication;
-};
+export const _ExternalResourceAuthentication =
+  ExternalResourceAuthentication as ExternalResourceAuthenticationConstructor;

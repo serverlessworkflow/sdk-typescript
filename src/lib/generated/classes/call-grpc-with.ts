@@ -24,11 +24,33 @@ import { _CallGRPCWithService } from './call-grpc-with-service';
 import { _CallGRPCWithArguments } from './call-grpc-with-arguments';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
-import { getLifecycleHook } from '../../lifecycle-hooks';
+import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { deepCopy, isObject } from '../../utils';
+import { isObject } from '../../utils';
 
-class CallGRPCWith extends ObjectHydrator<Specification.CallGRPCWith> {
+/**
+ * Represents the intersection between the CallGRPCWith class and type
+ */
+export type CallGRPCWithIntersection = CallGRPCWith & Specification.CallGRPCWith;
+
+/**
+ * Represents a constructor for the intersection of the CallGRPCWith class and type
+ */
+export interface CallGRPCWithConstructor {
+  new (model?: Partial<Specification.CallGRPCWith>): CallGRPCWithIntersection;
+}
+
+/**
+ * Represents a CallGRPCWith with methods for validation and normalization.
+ * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ */
+export class CallGRPCWith extends ObjectHydrator<Specification.CallGRPCWith> {
+  /**
+   * Instanciates a new instance of the CallGRPCWith class.
+   * Initializes properties based on the provided model if it is an object.
+   *
+   * @param model - Optional partial model object to initialize the CallGRPCWith.
+   */
   constructor(model?: Partial<Specification.CallGRPCWith>) {
     super(model);
     const self = this as unknown as Specification.CallGRPCWith & object;
@@ -36,22 +58,28 @@ class CallGRPCWith extends ObjectHydrator<Specification.CallGRPCWith> {
       if (typeof model.service === 'object') self.service = new _CallGRPCWithService(model.service);
       if (typeof model.arguments === 'object') self.arguments = new _CallGRPCWithArguments(model.arguments);
     }
-    getLifecycleHook('CallGRPCWith')?.constructor?.(this);
+    getLifecycleHooks('CallGRPCWith')?.constructor?.(this);
   }
 
+  /**
+   * Validates the current instance of the CallGRPCWith.
+   * Throws if invalid.
+   */
   validate() {
-    const copy = new CallGRPCWith(this as any) as CallGRPCWith & Specification.CallGRPCWith;
-    getLifecycleHook('CallGRPCWith')?.preValidation?.(copy);
-    validate('CallGRPCWith', deepCopy(copy)); // deepCopy prevents potential additional properties error for constructor, validate, normalize
-    getLifecycleHook('CallGRPCWith')?.postValidation?.(copy);
+    const copy = new CallGRPCWith(this as any) as CallGRPCWithIntersection;
+    validate('CallGRPCWith', copy);
   }
 
+  /**
+   * Normalizes the current instance of the CallGRPCWith.
+   * Creates a copy of the CallGRPCWith, invokes normalization hooks if available, and returns the normalized copy.
+   *
+   * @returns A normalized version of the CallGRPCWith instance.
+   */
   normalize(): CallGRPCWith & Specification.CallGRPCWith {
-    const copy = new CallGRPCWith(this as any) as CallGRPCWith & Specification.CallGRPCWith;
-    return getLifecycleHook('CallGRPCWith')?.normalize?.(copy) || copy;
+    const copy = new CallGRPCWith(this as any) as CallGRPCWithIntersection;
+    return getLifecycleHooks('CallGRPCWith')?.normalize?.(copy) || copy;
   }
 }
 
-export const _CallGRPCWith = CallGRPCWith as {
-  new (model?: Partial<Specification.CallGRPCWith>): CallGRPCWith & Specification.CallGRPCWith;
-};
+export const _CallGRPCWith = CallGRPCWith as CallGRPCWithConstructor;
