@@ -57,10 +57,22 @@ export class CallTask extends ObjectHydrator<Specification.CallTask> {
     super(model);
     const self = this as unknown as Specification.CallTask & object;
     if (isObject(model)) {
-      if (typeof model.input === 'object') self.input = new _Input(model.input as Specification.Input);
-      if (typeof model.output === 'object') self.output = new _Output(model.output as Specification.Output);
-      if (typeof model.export === 'object') self.export = new _Export(model.export as Specification.Export);
-      if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout as Specification.Timeout);
+      if (typeof (model as Specification.TaskBase).input === 'object')
+        (self as Specification.TaskBase).input = new _Input(
+          (model as Specification.TaskBase).input as Specification.Input,
+        );
+      if (typeof (model as Specification.TaskBase).output === 'object')
+        (self as Specification.TaskBase).output = new _Output(
+          (model as Specification.TaskBase).output as Specification.Output,
+        );
+      if (typeof (model as Specification.TaskBase).export === 'object')
+        (self as Specification.TaskBase).export = new _Export(
+          (model as Specification.TaskBase).export as Specification.Export,
+        );
+      if (typeof (model as Specification.TaskBase).timeout === 'object')
+        (self as Specification.TaskBase).timeout = new _Timeout(
+          (model as Specification.TaskBase).timeout as Specification.Timeout,
+        );
     }
     getLifecycleHooks('CallTask')?.constructor?.(this);
   }

@@ -17,6 +17,16 @@
 import { ExportedDeclarations, Project, QuoteKind, Type, Symbol as TsMorphSymbol, Node } from 'ts-morph';
 
 /**
+ * Maps a property and its the type it's declared into
+ */
+type PropertyMap = {
+  /** The declaring type */
+  parent: Type;
+  /** The property symbol */
+  property: TsMorphSymbol;
+};
+
+/**
  * Describes an object property
  */
 type PropertyInfo = {
@@ -28,6 +38,8 @@ type PropertyInfo = {
   originalType: Type;
   /** The original declaration */
   originalDeclaration: string;
+  /** The type the property belongs to */
+  parentType: Type;
   /** True if the property type is anonymous */
   isAnonymous: boolean;
   /** True if the property type has an indexed signature */
@@ -106,7 +118,7 @@ const isValueType = (type: Type): boolean =>
  * @returns The type name
  */
 export const getTypeName = (type: Type, replacement: string = '') =>
-  type.getText().replace('import("/declarations").', replacement);
+  type.getText().replace(/import\("\/declarations"\)\./g, replacement);
 
 /**
  * Returns the properties of the give type
@@ -114,17 +126,19 @@ export const getTypeName = (type: Type, replacement: string = '') =>
  * @param type The type to get the properties from
  * @returns An array of Symbol for the type's properties
  */
-const getProperties = (node: Node, type: Type): TsMorphSymbol[] =>
+const getProperties = (node: Node, type: Type): PropertyMap[] =>
   getUnderlyingTypes(type)
     .filter((t) => t.isObject())
-    .flatMap((t) => t.getProperties());
+    .flatMap((t) => t.getProperties().map((p) => ({ parent: t, property: p })));
+
 /**
  * Transforms the provided property Symbol to a PropertyInfo
  * @param property The property to transform
- * @param node The node the property belongs to
+ * @param parent The type the property is declared into
+ * @param node The root node
  * @returns The PropertyInfo for the provided property
  */
-function asPropertyInfo(property: TsMorphSymbol, node: Node): PropertyInfo {
+function asPropertyInfo(property: TsMorphSymbol, parent: Type, node: Node): PropertyInfo {
   const name = property.getName();
   const originalType = property.getTypeAtLocation(node).getNonNullableType();
   const originalDeclaration = originalType.getText();
@@ -143,6 +157,7 @@ function asPropertyInfo(property: TsMorphSymbol, node: Node): PropertyInfo {
     isAnonymous,
     hasIndexedSignature,
     type: typeTxt,
+    parentType: parent,
   };
 }
 
@@ -150,17 +165,17 @@ function asPropertyInfo(property: TsMorphSymbol, node: Node): PropertyInfo {
  * Gets a list of properties that could be hydrated
  * @param node The node containing the type
  * @param type The type to get the properties from
- * @param properties The type properties
+ * @param propertiesMap The type properties
  * @returns An array of hydratable PropertyInfo
  */
-const getHydratableProperties = (node: Node, type: Type, properties: TsMorphSymbol[]): PropertyInfo[] =>
-  properties
-    .filter((p) => {
-      const originalType = p.getTypeAtLocation(node).getNonNullableType();
+const getHydratableProperties = (node: Node, type: Type, propertiesMap: PropertyMap[]): PropertyInfo[] =>
+  propertiesMap
+    .filter((pMap) => {
+      const originalType = pMap.property.getTypeAtLocation(node).getNonNullableType();
       //debugType(originalType);
       return !isValueType(originalType);
     })
-    .map((p) => asPropertyInfo(p, node))
+    .map((pMap) => asPropertyInfo(pMap.property, pMap.parent, node))
     .concat(
       ...getUnderlyingTypes(type)
         .map((t) => t.getStringIndexType())
@@ -173,6 +188,7 @@ const getHydratableProperties = (node: Node, type: Type, properties: TsMorphSymb
             isAnonymous: t.isAnonymous(),
             hasIndexedSignature: true,
             type: getTypeName(t),
+            parentType: t,
           });
           return props;
         }, [] as PropertyInfo[]),
@@ -184,14 +200,14 @@ const getHydratableProperties = (node: Node, type: Type, properties: TsMorphSymb
  * @param properties The type properties
  * @returns An array of literal PropertyInfo
  */
-const getConstantProperties = (node: Node, properties: TsMorphSymbol[]): PropertyInfo[] =>
+const getConstantProperties = (node: Node, properties: PropertyMap[]): PropertyInfo[] =>
   properties
-    .filter((p) => {
-      const originalType = p.getTypeAtLocation(node).getNonNullableType();
+    .filter((pMap) => {
+      const originalType = pMap.property.getTypeAtLocation(node).getNonNullableType();
       //debugType(originalType);
       return originalType.isLiteral() && (!originalType.isUnion() || !originalType.isIntersection());
     })
-    .map((p) => asPropertyInfo(p, node));
+    .map((pMap) => asPropertyInfo(pMap.property, pMap.parent, node));
 
 /**
  * Gets duplicate values from an array
@@ -227,24 +243,27 @@ export function getObjectHydration(node: Node, type: Type): HydrationResult {
     ...constantProperties.map((prop) => `self.${prop.name} = ${prop.type} as const;`),
     ...namedProperties.map((prop) => {
       const propName = !type.isUnion() ? prop.name : `${prop.name} as Specification.${prop.type}`;
+      const modelCast = !type.isUnion() ? 'model' : `(model as ${getTypeName(prop.parentType, 'Specification.')})`;
+      const selfCase = !type.isUnion() ? 'self' : `(self as ${getTypeName(prop.parentType, 'Specification.')})`;
       if (!prop.isAnonymous) {
-        return `if (typeof model.${prop.name} === 'object') self.${prop.name} = new _${prop.type}(model.${propName}) ${prop.originalType.isTuple() ? `as unknown as Specification.${prop.type}` : ''};`;
+        return `if (typeof ${modelCast}.${prop.name} === 'object') ${selfCase}.${prop.name} = new _${prop.type}(${modelCast}.${propName}) ${prop.originalType.isTuple() ? `as unknown as Specification.${prop.type}` : ''};`;
       }
       if (prop.isAnonymous) {
-        return `if (typeof model.${prop.name} === 'object') self.${prop.name} = Object.fromEntries(
-            Object.entries(model.${propName}).map(([key, value]) => [key, new _${prop.type}(value)] )
+        return `if (typeof ${modelCast}.${prop.name} === 'object') ${selfCase}.${prop.name} = Object.fromEntries(
+            Object.entries(${modelCast}.${propName}).map(([key, value]) => [key, new _${prop.type}(value)] )
           );`;
       }
     }),
   ].filter((line): line is string => !!line?.trim());
   const indexedProperty = hydratableProperties.find((p) => !p.name);
   if (indexedProperty && !indexedProperty.isAnonymous) {
+    const selfCase = !type.isUnion() ? 'self' : `(self as ${getTypeName(indexedProperty.parentType)})`;
     imports.push(indexedProperty.type);
     lines.push(
       `const knownProperties: string[] = [${[...constantProperties, ...namedProperties].map((p) => `'${p.name}'`).join(',')}];`,
     );
     lines.push(`Object.entries(model).filter(([key]) => !knownProperties.includes(key)).forEach(([key, value]) => {
-      self[key] = new _${indexedProperty.type}(value);
+      ${selfCase}[key] = new _${indexedProperty.type}(value);
     });`);
   }
   const code = lines.join('\n');

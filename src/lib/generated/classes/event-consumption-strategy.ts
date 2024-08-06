@@ -56,11 +56,22 @@ export class EventConsumptionStrategy extends ObjectHydrator<Specification.Event
     super(model);
     const self = this as unknown as Specification.EventConsumptionStrategy & object;
     if (isObject(model)) {
-      if (typeof model.all === 'object')
-        self.all = new _EventConsumptionStrategyAll(model.all as Specification.EventConsumptionStrategyAll);
-      if (typeof model.any === 'object')
-        self.any = new _EventConsumptionStrategyAny(model.any as Specification.EventConsumptionStrategyAny);
-      if (typeof model.one === 'object') self.one = new _EventFilter(model.one as Specification.EventFilter);
+      if (typeof (model as { [k: string]: unknown; all: Specification.EventConsumptionStrategyAll }).all === 'object')
+        (self as { [k: string]: unknown; all: Specification.EventConsumptionStrategyAll }).all =
+          new _EventConsumptionStrategyAll(
+            (model as { [k: string]: unknown; all: Specification.EventConsumptionStrategyAll })
+              .all as Specification.EventConsumptionStrategyAll,
+          );
+      if (typeof (model as { [k: string]: unknown; any: Specification.EventConsumptionStrategyAny }).any === 'object')
+        (self as { [k: string]: unknown; any: Specification.EventConsumptionStrategyAny }).any =
+          new _EventConsumptionStrategyAny(
+            (model as { [k: string]: unknown; any: Specification.EventConsumptionStrategyAny })
+              .any as Specification.EventConsumptionStrategyAny,
+          );
+      if (typeof (model as { [k: string]: unknown; one: Specification.EventFilter }).one === 'object')
+        (self as { [k: string]: unknown; one: Specification.EventFilter }).one = new _EventFilter(
+          (model as { [k: string]: unknown; one: Specification.EventFilter }).one as Specification.EventFilter,
+        );
     }
     getLifecycleHooks('EventConsumptionStrategy')?.constructor?.(this);
   }

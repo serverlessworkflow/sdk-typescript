@@ -56,12 +56,28 @@ export class AuthenticationPolicy extends ObjectHydrator<Specification.Authentic
     super(model);
     const self = this as unknown as Specification.AuthenticationPolicy & object;
     if (isObject(model)) {
-      if (typeof model.basic === 'object')
-        self.basic = new _AuthenticationPolicyBasic(model.basic as Specification.AuthenticationPolicyBasic);
-      if (typeof model.bearer === 'object')
-        self.bearer = new _AuthenticationPolicyBearer(model.bearer as Specification.AuthenticationPolicyBearer);
-      if (typeof model.oauth2 === 'object')
-        self.oauth2 = new _AuthenticationPolicyOauth2(model.oauth2 as Specification.AuthenticationPolicyOauth2);
+      if (typeof (model as { [k: string]: unknown; basic: Specification.AuthenticationPolicyBasic }).basic === 'object')
+        (self as { [k: string]: unknown; basic: Specification.AuthenticationPolicyBasic }).basic =
+          new _AuthenticationPolicyBasic(
+            (model as { [k: string]: unknown; basic: Specification.AuthenticationPolicyBasic })
+              .basic as Specification.AuthenticationPolicyBasic,
+          );
+      if (
+        typeof (model as { [k: string]: unknown; bearer: Specification.AuthenticationPolicyBearer }).bearer === 'object'
+      )
+        (self as { [k: string]: unknown; bearer: Specification.AuthenticationPolicyBearer }).bearer =
+          new _AuthenticationPolicyBearer(
+            (model as { [k: string]: unknown; bearer: Specification.AuthenticationPolicyBearer })
+              .bearer as Specification.AuthenticationPolicyBearer,
+          );
+      if (
+        typeof (model as { [k: string]: unknown; oauth2: Specification.AuthenticationPolicyOauth2 }).oauth2 === 'object'
+      )
+        (self as { [k: string]: unknown; oauth2: Specification.AuthenticationPolicyOauth2 }).oauth2 =
+          new _AuthenticationPolicyOauth2(
+            (model as { [k: string]: unknown; oauth2: Specification.AuthenticationPolicyOauth2 })
+              .oauth2 as Specification.AuthenticationPolicyOauth2,
+          );
     }
     getLifecycleHooks('AuthenticationPolicy')?.constructor?.(this);
   }

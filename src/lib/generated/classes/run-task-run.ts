@@ -56,12 +56,25 @@ export class RunTaskRun extends ObjectHydrator<Specification.RunTaskRun> {
     super(model);
     const self = this as unknown as Specification.RunTaskRun & object;
     if (isObject(model)) {
-      if (typeof model.container === 'object')
-        self.container = new _RunTaskRunContainer(model.container as Specification.RunTaskRunContainer);
-      if (typeof model.shell === 'object')
-        self.shell = new _RunTaskRunShell(model.shell as Specification.RunTaskRunShell);
-      if (typeof model.workflow === 'object')
-        self.workflow = new _RunTaskRunWorkflow(model.workflow as Specification.RunTaskRunWorkflow);
+      if (
+        typeof (model as { [k: string]: unknown; container: Specification.RunTaskRunContainer }).container === 'object'
+      )
+        (self as { [k: string]: unknown; container: Specification.RunTaskRunContainer }).container =
+          new _RunTaskRunContainer(
+            (model as { [k: string]: unknown; container: Specification.RunTaskRunContainer })
+              .container as Specification.RunTaskRunContainer,
+          );
+      if (typeof (model as { [k: string]: unknown; shell: Specification.RunTaskRunShell }).shell === 'object')
+        (self as { [k: string]: unknown; shell: Specification.RunTaskRunShell }).shell = new _RunTaskRunShell(
+          (model as { [k: string]: unknown; shell: Specification.RunTaskRunShell })
+            .shell as Specification.RunTaskRunShell,
+        );
+      if (typeof (model as { [k: string]: unknown; workflow: Specification.RunTaskRunWorkflow }).workflow === 'object')
+        (self as { [k: string]: unknown; workflow: Specification.RunTaskRunWorkflow }).workflow =
+          new _RunTaskRunWorkflow(
+            (model as { [k: string]: unknown; workflow: Specification.RunTaskRunWorkflow })
+              .workflow as Specification.RunTaskRunWorkflow,
+          );
     }
     getLifecycleHooks('RunTaskRun')?.constructor?.(this);
   }

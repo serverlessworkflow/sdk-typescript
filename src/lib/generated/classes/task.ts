@@ -67,25 +67,88 @@ export class Task extends ObjectHydrator<Specification.Task> {
     super(model);
     const self = this as unknown as Specification.Task & object;
     if (isObject(model)) {
-      if (typeof model.input === 'object') self.input = new _Input(model.input as Specification.Input);
-      if (typeof model.output === 'object') self.output = new _Output(model.output as Specification.Output);
-      if (typeof model.export === 'object') self.export = new _Export(model.export as Specification.Export);
-      if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout as Specification.Timeout);
-      if (typeof model.fork === 'object') self.fork = new _ForkTaskFork(model.fork as Specification.ForkTaskFork);
-      if (typeof model.emit === 'object') self.emit = new _EmitTaskEmit(model.emit as Specification.EmitTaskEmit);
-      if (typeof model.for === 'object') self.for = new _ForTaskFor(model.for as Specification.ForTaskFor);
-      if (typeof model.listen === 'object')
-        self.listen = new _ListenTaskListen(model.listen as Specification.ListenTaskListen);
-      if (typeof model.raise === 'object')
-        self.raise = new _RaiseTaskRaise(model.raise as Specification.RaiseTaskRaise);
-      if (typeof model.set === 'object') self.set = new _SetTaskSet(model.set as Specification.SetTaskSet);
-      if (typeof model.switch === 'object')
-        self.switch = new _SwitchTaskSwitch(
-          model.switch as Specification.SwitchTaskSwitch,
+      if (typeof (model as Specification.TaskBase).input === 'object')
+        (self as Specification.TaskBase).input = new _Input(
+          (model as Specification.TaskBase).input as Specification.Input,
+        );
+      if (typeof (model as Specification.TaskBase).output === 'object')
+        (self as Specification.TaskBase).output = new _Output(
+          (model as Specification.TaskBase).output as Specification.Output,
+        );
+      if (typeof (model as Specification.TaskBase).export === 'object')
+        (self as Specification.TaskBase).export = new _Export(
+          (model as Specification.TaskBase).export as Specification.Export,
+        );
+      if (typeof (model as Specification.TaskBase).timeout === 'object')
+        (self as Specification.TaskBase).timeout = new _Timeout(
+          (model as Specification.TaskBase).timeout as Specification.Timeout,
+        );
+      if (typeof (model as { [k: string]: unknown; fork?: Specification.ForkTaskFork }).fork === 'object')
+        (self as { [k: string]: unknown; fork?: Specification.ForkTaskFork }).fork = new _ForkTaskFork(
+          (model as { [k: string]: unknown; fork?: Specification.ForkTaskFork }).fork as Specification.ForkTaskFork,
+        );
+      if (typeof (model as { [k: string]: unknown; emit?: Specification.EmitTaskEmit }).emit === 'object')
+        (self as { [k: string]: unknown; emit?: Specification.EmitTaskEmit }).emit = new _EmitTaskEmit(
+          (model as { [k: string]: unknown; emit?: Specification.EmitTaskEmit }).emit as Specification.EmitTaskEmit,
+        );
+      if (
+        typeof (
+          model as { [k: string]: unknown; for?: Specification.ForTaskFor; while?: string; do?: Specification.TaskList }
+        ).for === 'object'
+      )
+        (
+          self as { [k: string]: unknown; for?: Specification.ForTaskFor; while?: string; do?: Specification.TaskList }
+        ).for = new _ForTaskFor(
+          (
+            model as {
+              [k: string]: unknown;
+              for?: Specification.ForTaskFor;
+              while?: string;
+              do?: Specification.TaskList;
+            }
+          ).for as Specification.ForTaskFor,
+        );
+      if (typeof (model as { [k: string]: unknown; listen?: Specification.ListenTaskListen }).listen === 'object')
+        (self as { [k: string]: unknown; listen?: Specification.ListenTaskListen }).listen = new _ListenTaskListen(
+          (model as { [k: string]: unknown; listen?: Specification.ListenTaskListen })
+            .listen as Specification.ListenTaskListen,
+        );
+      if (typeof (model as { [k: string]: unknown; raise?: Specification.RaiseTaskRaise }).raise === 'object')
+        (self as { [k: string]: unknown; raise?: Specification.RaiseTaskRaise }).raise = new _RaiseTaskRaise(
+          (model as { [k: string]: unknown; raise?: Specification.RaiseTaskRaise })
+            .raise as Specification.RaiseTaskRaise,
+        );
+      if (typeof (model as { [k: string]: unknown; set?: Specification.SetTaskSet }).set === 'object')
+        (self as { [k: string]: unknown; set?: Specification.SetTaskSet }).set = new _SetTaskSet(
+          (model as { [k: string]: unknown; set?: Specification.SetTaskSet }).set as Specification.SetTaskSet,
+        );
+      if (typeof (model as { [k: string]: unknown; switch?: Specification.SwitchTaskSwitch }).switch === 'object')
+        (self as { [k: string]: unknown; switch?: Specification.SwitchTaskSwitch }).switch = new _SwitchTaskSwitch(
+          (model as { [k: string]: unknown; switch?: Specification.SwitchTaskSwitch })
+            .switch as Specification.SwitchTaskSwitch,
         ) as unknown as Specification.SwitchTaskSwitch;
-      if (typeof model.try === 'object') self.try = new _TaskList(model.try as Specification.TaskList);
-      if (typeof model.catch === 'object') self.catch = new _TryTaskCatch(model.catch as Specification.TryTaskCatch);
-      if (typeof model.wait === 'object') self.wait = new _Duration(model.wait as Specification.Duration);
+      if (
+        typeof (model as { [k: string]: unknown; try?: Specification.TaskList; catch?: Specification.TryTaskCatch })
+          .try === 'object'
+      )
+        (self as { [k: string]: unknown; try?: Specification.TaskList; catch?: Specification.TryTaskCatch }).try =
+          new _TaskList(
+            (model as { [k: string]: unknown; try?: Specification.TaskList; catch?: Specification.TryTaskCatch })
+              .try as Specification.TaskList,
+          );
+      if (
+        typeof (model as { [k: string]: unknown; try?: Specification.TaskList; catch?: Specification.TryTaskCatch })
+          .catch === 'object'
+      )
+        (self as { [k: string]: unknown; try?: Specification.TaskList; catch?: Specification.TryTaskCatch }).catch =
+          new _TryTaskCatch(
+            (model as { [k: string]: unknown; try?: Specification.TaskList; catch?: Specification.TryTaskCatch })
+              .catch as Specification.TryTaskCatch,
+          );
+      if (typeof (model as { [k: string]: unknown; wait?: Specification.Duration }).wait === 'object')
+        (self as { [k: string]: unknown; wait?: Specification.Duration }).wait = new _Duration(
+          (model as { [k: string]: unknown; wait?: Specification.Duration }).wait as Specification.Duration,
+        );
     }
     getLifecycleHooks('Task')?.constructor?.(this);
   }
