@@ -83,11 +83,11 @@ describe('workflow ', () => {
 
     const model = new Workflow(data);
 
-    expect(model.functions![0]!.constructor.name).toBe('Function');
-    expect(model.timeouts!.constructor.name).toBe('Timeouts');
-    expect(model.metadata!.constructor.name).toBe('Metadata');
-    expect(model.events![0]!.constructor.name).toBe('Eventdef');
-    expect(model.retries![0]!.constructor.name).toBe('Retrydef');
+    expect(model.functions?.[0]?.constructor.name).toBe('Function');
+    expect(model.timeouts?.constructor.name).toBe('Timeouts');
+    expect(model.metadata?.constructor.name).toBe('Metadata');
+    expect(model.events?.[0]?.constructor.name).toBe('Eventdef');
+    expect(model.retries?.[0]?.constructor.name).toBe('Retrydef');
   });
 
   it('should generate JSON from workflow object', () => {
@@ -95,7 +95,7 @@ describe('workflow ', () => {
       workflowBuilder()
         .id('helloworld')
         .version('1.0.0')
-        .specVersion('0.8')
+        .specVersion('0.9')
         .name('Hello World Workflow')
         .description('Inject Hello World')
         .start('Hello State')
@@ -116,7 +116,7 @@ describe('workflow ', () => {
         '"name":"Hello World Workflow",' +
         '"version":"1.0.0",' +
         '"description":"Inject Hello World",' +
-        '"specVersion":"0.8",' +
+        '"specVersion":"0.9",' +
         '"start":"Hello State",' +
         '"states":[' +
         '{' +
@@ -137,7 +137,7 @@ describe('workflow ', () => {
       workflowBuilder()
         .id('helloworld')
         .version('1.0.0')
-        .specVersion('0.8')
+        .specVersion('0.9')
         .name('Hello World Workflow')
         .description('Inject Hello World')
         .start('Hello State')
@@ -157,7 +157,7 @@ describe('workflow ', () => {
         'name: Hello World Workflow\n' +
         'version: 1.0.0\n' +
         'description: Inject Hello World\n' +
-        "specVersion: '0.8'\n" +
+        "specVersion: '0.9'\n" +
         'start: Hello State\n' +
         'states:\n' +
         '  - name: Hello State\n' +

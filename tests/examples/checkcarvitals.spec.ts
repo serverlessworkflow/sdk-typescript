@@ -34,7 +34,7 @@ describe('checkcarvitals workflow example', () => {
       .id('checkcarvitals')
       .name('Check Car Vitals Workflow')
       .version('1.0.0')
-      .specVersion('0.8')
+      .specVersion('0.9')
       .start('WhenCarIsOn')
       .states([
         eventstateBuilder()

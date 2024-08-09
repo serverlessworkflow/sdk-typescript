@@ -22,7 +22,7 @@ describe('workflow-validator, invalid state', () => {
   const validWorkflow = {
     id: 'helloworld',
     version: '1.0.0',
-    specVersion: '0.8',
+    specVersion: '0.9',
     name: 'Hello World Workflow',
     description: 'Inject Hello World',
     start: 'Hello State',
@@ -41,8 +41,7 @@ describe('workflow-validator, invalid state', () => {
   it('should return errors instance of ValidationError if the workflow provided is not valid', () => {
     const workflowWithEmptyStates = Workflow.fromSource(JSON.stringify(validWorkflow));
 
-    // @ts-ignore
-    workflowWithEmptyStates.states = [];
+    workflowWithEmptyStates.states = [] as any;
 
     const workflowValidator = new WorkflowValidator(workflowWithEmptyStates);
 

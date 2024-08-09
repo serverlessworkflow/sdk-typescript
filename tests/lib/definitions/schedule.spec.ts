@@ -24,7 +24,7 @@ describe('schedule ', () => {
     };
 
     const model = new Schedule(data);
-    expect(model.cron!.constructor.name).toBe('Crondef');
+    expect(model.cron?.constructor.name).toBe('Crondef');
   });
 
   it('should not convert primitive properties', () => {

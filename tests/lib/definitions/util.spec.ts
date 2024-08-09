@@ -37,9 +37,10 @@ describe('Util ', () => {
       Object.assign(target, source);
       overwritePropertyAsPlainType('data', target);
 
-      expect(target.data!.key).toBe('action');
-      source.data!.key = 'action2';
-      expect(target.data!.key).toBe('action');
+      expect(target.data?.key).toBe('action');
+      source.data = source.data || ({} as { key: string });
+      source.data.key = 'action2';
+      expect(target.data?.key).toBe('action');
     });
 
     it('should create a copy of data property', () => {
@@ -61,12 +62,9 @@ describe('Util ', () => {
       Object.assign(target, source);
       overwritePropertyAsPlainType('data', target);
 
-      // @ts-ignore
-      expect(target!.data['key1']).toBe('value1');
-      // @ts-ignore
-      source!.data['key1'] = 'value2';
-      // @ts-ignore
-      expect(target!.data['key1']).toBe('value1');
+      expect((target.data as any)['key1']).toBe('value1');
+      (source.data as any)['key1'] = 'value2';
+      expect((target.data as any)['key1']).toBe('value1');
     });
   });
 

@@ -1,7 +1,7 @@
 {
-  "name": "@serverlessworkflow/sdk-typescript",
-  "version": "4.0.0",
-  "schemaVersion": "0.8",
+  "name": "@severlessworkflow/sdk-typescript",
+  "version": "4.0.0-rc1",
+  "schemaVersion": "0.9",
   "description": "Typescript SDK for Serverless Workflow Specification",
   "main": "umd/index.umd.min.js",
   "browser": "umd/index.umd.min.js",
@@ -28,7 +28,7 @@
     "prebuild": "npx rimraf dist",
     "build": "npx rollup -c rollup.config.ts && npx shx mv ./dist/src/lib ./dist/lib &&  npx shx mv ./dist/src/*d.ts.map ./dist/src/*d.ts ./dist && npx rimraf ./dist/src",
     "postbuild": "npx shx cp ./package.json ./README.md ./LICENSE ./dist/",
-    "verify-publish-directory": "node -e 'if (!process.cwd().endsWith(\"dist\")) { console.error(\"Packaging/Publishing should be done from ./dist/\"); process.exitCode = 1; } process.exit();'",
+    "verify-publish-directory": "node -e \"if (!process.cwd().endsWith('dist')) { console.error('Packaging/Publishing should be done from ./dist/'); process.exitCode = 1; } process.exit();\"",
     "prepack": "npm run verify-publish-directory",
     "prepublishOnly": "npm run verify-publish-directory",
     "prepublish": "husky install"
@@ -72,7 +72,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/serverlessworkflow/sdk-typescript.git"
+    "url": "git+https://github.com/serverlessworkflow/sdk-typescript.git"
   },
   "author": {
     "name": "Serverless Workflow Contributors",

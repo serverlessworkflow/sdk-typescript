@@ -27,8 +27,8 @@ describe('Action ', () => {
 
     const model = new Action(data);
 
-    expect(model.functionRef!.constructor.name).toBe('Functionref');
-    expect(model.eventRef!.constructor.name).toBe('Eventref');
-    expect(model.actionDataFilter!.constructor.name).toBe('Actiondatafilter');
+    expect(model.functionRef?.constructor.name).toBe('Functionref');
+    expect(model.eventRef?.constructor.name).toBe('Eventref');
+    expect(model.actionDataFilter?.constructor.name).toBe('Actiondatafilter');
   });
 });

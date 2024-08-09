@@ -34,7 +34,7 @@ describe('jobmonitoring workflow example', () => {
     const workflow = workflowBuilder()
       .id('jobmonitoring')
       .version('1.0.0')
-      .specVersion('0.8')
+      .specVersion('0.9')
       .name('Job Monitoring')
       .description('Monitor finished execution of a submitted job')
       .start('SubmitJob')

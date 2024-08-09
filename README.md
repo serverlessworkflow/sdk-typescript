@@ -1,3 +1,6 @@
+> [!CAUTION]
+> This is a legacy branch. It is not officially supported by the ServerlessWorkflow organisation anymore but still accepts community contributions.
+
 ![Node CI](https://github.com/serverlessworkflow/sdk-typescript/workflows/Node%20CI/badge.svg) [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/serverlessworkflow/sdk-typescript)
 
 # Serverless Workflow Specification - Typescript SDK
@@ -17,6 +20,7 @@ With the SDK you can:
 | [v1.0.0](https://github.com/serverlessworkflow/sdk-typescript/releases/) | [v0.6](https://github.com/serverlessworkflow/specification/tree/0.6.x) |
 | [v2.0.0](https://github.com/serverlessworkflow/sdk-typescript/releases/) | [v0.7](https://github.com/serverlessworkflow/specification/tree/0.7.x) |
 | [v3.0.0](https://github.com/serverlessworkflow/sdk-typescript/releases/) | [v0.8](https://github.com/serverlessworkflow/specification/tree/0.8.x) |
+| [v4.0.0](https://github.com/serverlessworkflow/sdk-typescript/releases/) | [v0.9](https://github.com/serverlessworkflow/specification/tree/0.9.x) |
 
 
 
@@ -39,7 +43,6 @@ npm install && npm run build && npm run test
 
 
 ##### Version  >= 4.0.0
-Note: Version 4.0.0 has not been released yet.
 ```sh
 npm i @serverlessworkflow/sdk-typescript
 ```
@@ -59,7 +62,7 @@ import { workflowBuilder, injectstateBuilder, Specification } from '@serverlessw
 
 const workflow: Specification.Workflow = workflowBuilder()
   .id("helloworld")
-  .specVersion("0.8")
+  .specVersion("0.9")
   .version("1.0")
   .name("Hello World Workflow")
   .description("Inject Hello World")
@@ -107,7 +110,7 @@ import { workflowBuilder, injectstateBuilder, Specification } from '@serverlessw
 const workflow: Specification.Workflow = workflowBuilder()
   .id("helloworld")
   .version("1.0")
-  .specVersion("0.8")
+  .specVersion("0.9")
   .name("Hello World Workflow")
   .description("Inject Hello World")
   .start("Hello State")
@@ -162,7 +165,7 @@ import {Workflow} from "./workflow";
 const workflow = {
     id: 'helloworld',
     version: '1.0',
-    specVersion: '0.3',
+    specVersion: '0.9',
     name: 'Hello World Workflow',
     description: 'Inject Hello World',
     start: 'Hello State',

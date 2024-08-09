@@ -22,7 +22,7 @@ import { validators } from './validators';
  * @param data {object} The data to validate
  * @returns {boolean} True if valid, throws if invalid
  */
-export const validate = (typeName: string, data: any): boolean => {
+export const validate = (typeName: string, data: unknown): boolean => {
   const validateFn: ValidateFunction | undefined = validators.get(typeName);
 
   if (!validateFn) {
@@ -44,7 +44,7 @@ export const validate = (typeName: string, data: any): boolean => {
  * @param value The data
  * @returns {boolean} True if the provided value is an object
  */
-export const isObject = (value: any): boolean => {
+export const isObject = (value: unknown): boolean => {
   if (!value) return false;
   const type = typeof value;
   return type === 'object';

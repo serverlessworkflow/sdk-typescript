@@ -43,7 +43,7 @@ const schemas: any[] = [
 ];
 const strict: boolean = false;
 const ajv = new Ajv({ schemas, strict });
-ajv.addFormat('uri', (uri: string): boolean => true);
+ajv.addFormat('uri', (): boolean => true);
 /**
  * A Map of validation functions, where the key is the name of the schema to validate with
  */

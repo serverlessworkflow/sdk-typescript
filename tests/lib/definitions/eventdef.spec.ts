@@ -26,7 +26,7 @@ describe('Eventdef ', () => {
 
     const model = new Eventdef(data);
 
-    expect(model.correlation![0].constructor.name).toBe('CorrelationDef');
-    expect(model.metadata!.constructor.name).toBe('Metadata');
+    expect(model.correlation?.[0].constructor.name).toBe('CorrelationDef');
+    expect(model.metadata?.constructor.name).toBe('Metadata');
   });
 });

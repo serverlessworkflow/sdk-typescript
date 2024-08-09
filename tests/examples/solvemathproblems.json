@@ -3,7 +3,7 @@
   "name": "Solve Math Problems Workflow",
   "version": "1.0.0",
   "description": "Solve math problems",
-  "specVersion": "0.8",
+  "specVersion": "0.9",
   "start": "Solve",
   "states": [
     {

@@ -22,7 +22,7 @@ describe('parallel workflow example', () => {
     const workflow = workflowBuilder()
       .id('parallelexec')
       .version('1.0.0')
-      .specVersion('0.8')
+      .specVersion('0.9')
       .name('Parallel Execution Workflow')
       .description('Executes two branches in parallel')
       .start('ParallelExec')

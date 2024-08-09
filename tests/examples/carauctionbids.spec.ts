@@ -30,7 +30,7 @@ describe('carauctionbids workflow example', () => {
     const workflow = workflowBuilder()
       .id('handleCarAuctionBid')
       .version('1.0.0')
-      .specVersion('0.8')
+      .specVersion('0.9')
       .name('Car Auction Bidding Workflow')
       .description('Store a single bid whole the car auction is active')
       .start(startdefBuilder().stateName('StoreCarAuctionBid').schedule('R/PT2H').build())

@@ -2,7 +2,7 @@
   "id": "sendcloudeventonprovision",
   "name": "Send CloudEvent on provision completion",
   "version": "1.0.0",
-  "specVersion": "0.8",
+  "specVersion": "0.9",
   "start": "ProvisionOrdersState",
   "states": [
     {

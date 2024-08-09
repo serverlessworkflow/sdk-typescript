@@ -174,7 +174,7 @@ export const mergeSchemas = (
 };
 
 /** Resets the destination directory, recursively deletes everything and adds the README */
-export const reset = async (destDir: string) =>
+export const reset = async (destDir: string): Promise<void> =>
   rimrafP(destDir)
     .then(() => mkdir(destDir, { recursive: true }))
     .then(() => writeFile(path.resolve(destDir, 'README.md'), readMeDisclaimer));

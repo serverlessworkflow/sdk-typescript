@@ -36,7 +36,7 @@ describe('booklending workflow example', () => {
       .id('booklending')
       .name('Book Lending Workflow')
       .version('1.0.0')
-      .specVersion('0.8')
+      .specVersion('0.9')
       .start('Book Lending Request')
       .states([
         eventstateBuilder()

@@ -31,7 +31,7 @@ describe('provisionorder workflow example', () => {
     const workflow = workflowBuilder()
       .id('provisionorders')
       .version('1.0.0')
-      .specVersion('0.8')
+      .specVersion('0.9')
       .name('Provision Orders')
       .description('Provision Orders and handle errors thrown')
       .start('ProvisionOrder')

@@ -30,7 +30,7 @@ export class MermaidState {
     private isFirstState: boolean = false
   ) {}
 
-  sourceCode() {
+  sourceCode(): string {
     const stateDefinition = this.definitions();
     const stateTransitions = this.transitions();
 
@@ -145,7 +145,7 @@ export class MermaidState {
         const end = this.state.end as Specification.End;
 
         if (end.produceEvents) {
-          transitionLabel = 'Produced event = [' + end.produceEvents!.map((pe) => pe.eventRef).join(',') + ']';
+          transitionLabel = 'Produced event = [' + end.produceEvents.map((pe) => pe.eventRef).join(',') + ']';
         }
       }
 
@@ -211,7 +211,7 @@ export class MermaidState {
       case 'parallel':
         definition = this.parallelStateDetails();
         break;
-      case 'switch':
+      case 'switch': {
         const switchState: any = this.state;
         if (switchState.dataConditions) {
           definition = this.dataBasedSwitchStateDetails();
@@ -222,6 +222,7 @@ export class MermaidState {
           break;
         }
         throw new Error(`Unexpected switch type; \n state value= ${JSON.stringify(this.state, null, 4)}`);
+      }
       case 'inject':
         // NOTHING
         break;
@@ -243,12 +244,13 @@ export class MermaidState {
     return definition ? definition : undefined;
   }
 
-  private definitionType() {
+  private definitionType(): string {
     const type = this.state.type;
+    if (!type) return '';
     return this.stateDescription(
       this.stateKeyDiagram(this.state.name),
       'type',
-      type!.charAt(0).toUpperCase() + type!.slice(1) + ' State'
+      type.charAt(0).toUpperCase() + type.slice(1) + ' State'
     );
   }
 

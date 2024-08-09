@@ -3,7 +3,7 @@
   "name": "Car Auction Bidding Workflow",
   "version": "1.0.0",
   "description": "Store a single bid whole the car auction is active",
-  "specVersion": "0.8",
+  "specVersion": "0.9",
   "start": {
     "stateName": "StoreCarAuctionBid",
     "schedule": "R/PT2H"
