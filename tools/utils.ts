@@ -95,6 +95,9 @@ const argv = yargs(process.argv.slice(2))
   })
   .parseSync();
 /** The URL to download the schema from */
-export const schemaUrl: URL = new URL(
+export const yamlSchemaUrl: URL = new URL(
+  argv.url || `https://serverlessworkflow.io/schemas/${schemaVersion}/workflow.yaml`,
+);
+export const jsonSchemaUrl: URL = new URL(
   argv.url || `https://serverlessworkflow.io/schemas/${schemaVersion}/workflow.json`,
 );

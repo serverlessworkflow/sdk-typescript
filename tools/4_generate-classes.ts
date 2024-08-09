@@ -171,7 +171,7 @@ function getArrayLikeClassDeclaration(name: string, arrayTypeName: string, type:
 ${inFileDisclaimer}
 
 ${hydrationResult.imports.map((type) => `import { _${type} } from './${toKebabCase(normalizeKnownAllCaps(type))}';`)}
-import { Specification } from '../definitions';
+${hydrationResult.imports.length ? `import { Specification } from '../definitions';` : ''}
 import { ArrayHydrator } from '../../hydrator';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';

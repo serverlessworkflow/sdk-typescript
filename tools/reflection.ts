@@ -282,7 +282,9 @@ export function getArrayHydration(type: Type): HydrationResult {
   const arrayType = type.getArrayElementType() || getUnderlyingTypes(type)[0];
   const lines: string[] = ['if (model?.length) {', 'this.splice(0, this.length);'];
   const imports: string[] = [];
-  if (!arrayType.isAnonymous()) {
+  if (isValueType(arrayType)) {
+    lines.push(`model.forEach(item => this.push(item));`);
+  } else if (!arrayType.isAnonymous()) {
     const typeName = getTypeName(arrayType);
     imports.push(typeName);
     lines.push(`model.forEach(item => this.push(new _${typeName}(item)));`);

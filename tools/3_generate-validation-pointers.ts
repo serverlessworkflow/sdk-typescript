@@ -20,6 +20,7 @@ import { fileHeader, inFileDisclaimer } from './consts';
 import { definitionsDir, isObject, reset, schemaDir, vallidationDir } from './utils';
 import { JSONSchema } from 'json-schema-to-typescript';
 import { getExportedDeclarations } from './reflection';
+import * as yaml from 'js-yaml';
 
 const { writeFile, readFile } = fsPromises;
 
@@ -66,8 +67,8 @@ async function generate(schemaFile: string, definitionFile: string, destFile: st
   const declarations = Array.from(getExportedDeclarations(definitions).keys())
     .filter((name) => name !== 'Workflow')
     .sort((a, b) => a.localeCompare(b));
-  const schema = JSON.parse(schemaTxt) as JSONSchema;
-  const baseUri = schema.$id + '#';
+  const schema = yaml.load(schemaTxt) as JSONSchema;
+  const baseUri = schema.$id.replace('.yaml', '.json') + '#';
   const jsonPointers = [
     ['Workflow', baseUri],
     ...declarations.map((name) => [name, getJsonPointer(schema, name, baseUri)]),

@@ -17,7 +17,8 @@ import $RefParser from '@apidevtools/json-schema-ref-parser';
 import { promises as fsPromises } from 'fs';
 import * as path from 'path';
 import { URL } from 'url';
-import { schemaDir, reset, schemaUrl } from './utils';
+import { schemaDir, reset, jsonSchemaUrl, yamlSchemaUrl } from './utils';
+import * as yaml from 'js-yaml';
 
 const { writeFile, mkdir } = fsPromises;
 
@@ -29,21 +30,27 @@ const { writeFile, mkdir } = fsPromises;
  */
 const download = async (schemaUrl: URL, destDir: string): Promise<void> => {
   try {
-    await reset(destDir);
     const fileName = path.basename(schemaUrl.pathname);
+    const isJson = fileName.endsWith('.json');
     const urlBase = schemaUrl.href.replace(fileName, '');
     const $refParser = new $RefParser();
     await $refParser.resolve(schemaUrl.href);
     const externalSchemas = $refParser.$refs
       .paths()
       .filter((p, index, arr) => arr.indexOf(p) === index && p !== schemaUrl.href);
-    await writeFile(path.resolve(destDir, fileName), JSON.stringify($refParser.schema, null, 2));
+    await writeFile(
+      path.resolve(destDir, fileName),
+      isJson ? JSON.stringify($refParser.schema, null, 2) : yaml.dump($refParser.schema),
+    );
     externalSchemas.forEach(async (externalSchemaUrl: string) => {
       const externalSchema = $refParser.$refs.get(externalSchemaUrl);
       if (externalSchema) {
         const externalSchemaFileName = externalSchemaUrl.replace(urlBase, '');
         await mkdir(path.resolve(destDir, path.dirname(externalSchemaFileName)), { recursive: true });
-        await writeFile(path.resolve(destDir, externalSchemaFileName), JSON.stringify(externalSchema, null, 2));
+        await writeFile(
+          path.resolve(destDir, externalSchemaFileName),
+          isJson ? JSON.stringify(externalSchema, null, 2) : yaml.dump(externalSchema),
+        );
       }
     });
     return Promise.resolve();
@@ -52,4 +59,8 @@ const download = async (schemaUrl: URL, destDir: string): Promise<void> => {
   }
 };
 
-download(schemaUrl, schemaDir).then(console.log.bind(console)).catch(console.error.bind(console));
+reset(schemaDir)
+  .then(() => download(yamlSchemaUrl, schemaDir))
+  .then(() => download(jsonSchemaUrl, schemaDir))
+  .then(console.log.bind(console))
+  .catch(console.error.bind(console));

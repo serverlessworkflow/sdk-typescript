@@ -19,6 +19,7 @@ import { promises as fsPromises } from 'fs';
 import * as path from 'path';
 import { fileHeader, inFileDisclaimer } from './consts';
 import { definitionsDir, isObject, reset, schemaDir, toPascalCase } from './utils';
+import * as yaml from 'js-yaml';
 
 const { writeFile, readFile } = fsPromises;
 
@@ -60,6 +61,7 @@ const metadataProperties = ['title', 'description', 'default', 'type'];
  * Embellishes the provided schema to increase its compatibility with json-schema-to-typescript, the resulting schema should keep the validation properties as the input one (phase 1)
  * - adds missing type:object properties // not necessary ?
  * - adds missing titles to objects
+ * - removes extra titles on value types
  * @param schema The schema to embellish
  * @param path The current path of the schema relative to the original schema
  * @param parentTitle The title of the parent object, if any
@@ -74,7 +76,7 @@ function prepareSchema(schema: any, path: string[] = ['#'], parentTitle: string 
   }
   const newSchema = JSON.parse(JSON.stringify(schema));
   const parent = path.slice(-1)[0];
-  const schemaKeys = Object.keys(newSchema);
+  let schemaKeys = Object.keys(newSchema);
   const isItemWithAdditionalProperties =
     parent === 'additionalProperties' && path.slice(-2)[0] === 'items' && newSchema.properties; // only "useful" for SwitchTask.Switch.Cases
   if (!structuralObjectProperties.includes(parent) || isItemWithAdditionalProperties) {
@@ -85,6 +87,16 @@ function prepareSchema(schema: any, path: string[] = ['#'], parentTitle: string 
     }
     if (newSchema.title) {
       parentTitle = newSchema.title;
+    }
+    if (
+      newSchema.title &&
+      newSchema.type &&
+      newSchema.type !== 'object' &&
+      newSchema.type !== 'array' &&
+      newSchema.title != 'RuntimeExpression' // RuntimeExpression is a string but used as its own type, we want to keep its title to build a JSON pointer later
+    ) {
+      delete newSchema.title;
+      schemaKeys = schemaKeys.filter((key) => key === 'title');
     }
     if (
       !newSchema.title &&
@@ -169,8 +181,16 @@ function mutateSchema(schema: any, path: string[] = ['#']): any {
  */
 async function generate(srcFile: string, destFile: string): Promise<void> {
   const options: Partial<Options> = {
-    customName: (schema: JSONSchema, keyNameFromDefinition: string | undefined) =>
-      schema.$id?.includes('serverlessworkflow.io') ? 'Workflow' : keyNameFromDefinition,
+    customName: (schema: JSONSchema, keyNameFromDefinition: string | undefined) => {
+      if (schema.$id?.includes('serverlessworkflow.io')) {
+        return 'Workflow';
+      }
+      if (keyNameFromDefinition === 'oauth2Token') {
+        // seems to ignore the title from this object, so forcing it...
+        return schema.title;
+      }
+      return keyNameFromDefinition;
+    },
     bannerComment: `${fileHeader}
 ${inFileDisclaimer}
   
@@ -181,8 +201,11 @@ ${inFileDisclaimer}
     //unreachableDefinitions: true,
   };
   const schemaText = await readFile(srcFile, { encoding: 'utf-8' });
-  let schema = prepareSchema(JSON.parse(schemaText));
-  await writeFile(srcFile.replace('workflow', '__internal_workflow'), JSON.stringify(schema, null, 2));
+  let schema = prepareSchema(yaml.load(schemaText));
+  await writeFile(
+    srcFile.replace('workflow', '__internal_workflow').replace('.yaml', '.json'),
+    JSON.stringify(schema, null, 2).replace('workflow.yaml', 'workflow.json'),
+  );
   schema = mutateSchema(schema);
   //await writeFile(srcFile.replace('workflow', '__mutated_workflow'), JSON.stringify(schema, null, 2));
   const declarations = await compile(schema, 'Workflow', options);
@@ -192,7 +215,7 @@ ${inFileDisclaimer}
   await writeFile(path.resolve(destDir, 'index.ts'), `${fileHeader}export * as Specification from './specification';`);
 }
 
-const srcFile = path.resolve(schemaDir, 'workflow.json');
+const srcFile = path.resolve(schemaDir, 'workflow.yaml');
 const destFile = path.resolve(definitionsDir, 'specification.ts');
 
 generate(srcFile, destFile).then(console.log.bind(console)).catch(console.error.bind(console));
