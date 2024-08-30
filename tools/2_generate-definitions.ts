@@ -181,15 +181,11 @@ function mutateSchema(schema: any, path: string[] = ['#']): any {
  */
 async function generate(srcFile: string, destFile: string): Promise<void> {
   const options: Partial<Options> = {
-    customName: (schema: JSONSchema, keyNameFromDefinition: string | undefined) => {
+    customName: (schema: JSONSchema) /*, keyNameFromDefinition: string | undefined)*/ => {
       if (schema.$id?.includes('serverlessworkflow.io')) {
         return 'Workflow';
       }
-      if (keyNameFromDefinition === 'oauth2Token') {
-        // seems to ignore the title from this object, so forcing it...
-        return schema.title;
-      }
-      return keyNameFromDefinition;
+      // don't return anything to keep the default behavior
     },
     bannerComment: `${fileHeader}
 ${inFileDisclaimer}
