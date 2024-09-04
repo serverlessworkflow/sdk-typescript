@@ -109,6 +109,9 @@ function prepareSchema(schema: any, path: string[] = ['#'], parentTitle: string 
       if (parentTitle.trim()) {
         const title = !isItemWithAdditionalProperties ? parent : path.includes('switch') ? 'case' : 'item';
         newSchema.title = toPascalCase(`${parentTitle} ${title}`);
+      }
+      if (path.join('/') == '#/properties/timeout') {
+        newSchema.title = 'WorkflowTimeout';
       } else {
         newSchema.title = toPascalCase(
           path
@@ -181,6 +184,7 @@ function mutateSchema(schema: any, path: string[] = ['#']): any {
  */
 async function generate(srcFile: string, destFile: string): Promise<void> {
   const options: Partial<Options> = {
+    // prefere `prepareSchema` to set a title rather than `customName` otherwise the next step (validation pointers generation) will fail
     customName: (schema: JSONSchema) /*, keyNameFromDefinition: string | undefined)*/ => {
       if (schema.$id?.includes('serverlessworkflow.io')) {
         return 'Workflow';
