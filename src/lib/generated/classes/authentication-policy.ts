@@ -20,9 +20,11 @@
  *
  *****************************************************************************************/
 
-import { _AuthenticationPolicyBasic } from './authentication-policy-basic';
-import { _AuthenticationPolicyBearer } from './authentication-policy-bearer';
-import { _AuthenticationPolicyOauth2 } from './authentication-policy-oauth2';
+import { _BasicAuthenticationPolicyConfiguration } from './basic-authentication-policy-configuration';
+import { _BearerAuthenticationPolicyConfiguration } from './bearer-authentication-policy-configuration';
+import { _DigestAuthenticationPolicyConfiguration } from './digest-authentication-policy-configuration';
+import { _OAuth2AuthenticationPolicyConfiguration } from './oauth2-authentication-policy-configuration';
+import { _OpenIdConnectAuthenticationPolicyConfiguration } from './open-id-connect-authentication-policy-configuration';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
@@ -56,27 +58,31 @@ export class AuthenticationPolicy extends ObjectHydrator<Specification.Authentic
     super(model);
     const self = this as unknown as Specification.AuthenticationPolicy & object;
     if (isObject(model)) {
-      if (typeof (model as { [k: string]: unknown; basic: Specification.AuthenticationPolicyBasic }).basic === 'object')
-        (self as { [k: string]: unknown; basic: Specification.AuthenticationPolicyBasic }).basic =
-          new _AuthenticationPolicyBasic(
-            (model as { [k: string]: unknown; basic: Specification.AuthenticationPolicyBasic })
-              .basic as Specification.AuthenticationPolicyBasic,
-          );
-      if (
-        typeof (model as { [k: string]: unknown; bearer: Specification.AuthenticationPolicyBearer }).bearer === 'object'
-      )
-        (self as { [k: string]: unknown; bearer: Specification.AuthenticationPolicyBearer }).bearer =
-          new _AuthenticationPolicyBearer(
-            (model as { [k: string]: unknown; bearer: Specification.AuthenticationPolicyBearer })
-              .bearer as Specification.AuthenticationPolicyBearer,
-          );
-      if (
-        typeof (model as { [k: string]: unknown; oauth2: Specification.AuthenticationPolicyOauth2 }).oauth2 === 'object'
-      )
-        (self as { [k: string]: unknown; oauth2: Specification.AuthenticationPolicyOauth2 }).oauth2 =
-          new _AuthenticationPolicyOauth2(
-            (model as { [k: string]: unknown; oauth2: Specification.AuthenticationPolicyOauth2 })
-              .oauth2 as Specification.AuthenticationPolicyOauth2,
+      if (typeof (model as Specification.BasicAuthenticationPolicy).basic === 'object')
+        (self as Specification.BasicAuthenticationPolicy).basic = new _BasicAuthenticationPolicyConfiguration(
+          (model as Specification.BasicAuthenticationPolicy)
+            .basic as Specification.BasicAuthenticationPolicyConfiguration,
+        );
+      if (typeof (model as Specification.BearerAuthenticationPolicy).bearer === 'object')
+        (self as Specification.BearerAuthenticationPolicy).bearer = new _BearerAuthenticationPolicyConfiguration(
+          (model as Specification.BearerAuthenticationPolicy)
+            .bearer as Specification.BearerAuthenticationPolicyConfiguration,
+        );
+      if (typeof (model as Specification.DigestAuthenticationPolicy).digest === 'object')
+        (self as Specification.DigestAuthenticationPolicy).digest = new _DigestAuthenticationPolicyConfiguration(
+          (model as Specification.DigestAuthenticationPolicy)
+            .digest as Specification.DigestAuthenticationPolicyConfiguration,
+        );
+      if (typeof (model as Specification.OAuth2AuthenticationPolicy).oauth2 === 'object')
+        (self as Specification.OAuth2AuthenticationPolicy).oauth2 = new _OAuth2AuthenticationPolicyConfiguration(
+          (model as Specification.OAuth2AuthenticationPolicy)
+            .oauth2 as Specification.OAuth2AuthenticationPolicyConfiguration,
+        );
+      if (typeof (model as Specification.OpenIdConnectAuthenticationPolicy).oidc === 'object')
+        (self as Specification.OpenIdConnectAuthenticationPolicy).oidc =
+          new _OpenIdConnectAuthenticationPolicyConfiguration(
+            (model as Specification.OpenIdConnectAuthenticationPolicy)
+              .oidc as Specification.OpenIdConnectAuthenticationPolicyConfiguration,
           );
     }
     getLifecycleHooks('AuthenticationPolicy')?.constructor?.(this);

@@ -23,7 +23,8 @@
 import { _Input } from './input';
 import { _Output } from './output';
 import { _Export } from './export';
-import { _Timeout } from './timeout';
+import { _TaskBaseTimeout } from './task-base-timeout';
+import { _TaskMetadata } from './task-metadata';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
@@ -70,8 +71,12 @@ export class CallTask extends ObjectHydrator<Specification.CallTask> {
           (model as Specification.TaskBase).export as Specification.Export,
         );
       if (typeof (model as Specification.TaskBase).timeout === 'object')
-        (self as Specification.TaskBase).timeout = new _Timeout(
-          (model as Specification.TaskBase).timeout as Specification.Timeout,
+        (self as Specification.TaskBase).timeout = new _TaskBaseTimeout(
+          (model as Specification.TaskBase).timeout as Specification.TaskBaseTimeout,
+        );
+      if (typeof (model as Specification.TaskBase).metadata === 'object')
+        (self as Specification.TaskBase).metadata = new _TaskMetadata(
+          (model as Specification.TaskBase).metadata as Specification.TaskMetadata,
         );
     }
     getLifecycleHooks('CallTask')?.constructor?.(this);

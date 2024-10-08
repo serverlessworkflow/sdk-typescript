@@ -20,8 +20,8 @@
  *
  *****************************************************************************************/
 
-import { _EventConsumptionStrategyAll } from './event-consumption-strategy-all';
-import { _EventConsumptionStrategyAny } from './event-consumption-strategy-any';
+import { _AllEventConsumptionStrategyConfiguration } from './all-event-consumption-strategy-configuration';
+import { _AnyEventConsumptionStrategyConfiguration } from './any-event-consumption-strategy-configuration';
 import { _EventFilter } from './event-filter';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
@@ -56,21 +56,19 @@ export class EventConsumptionStrategy extends ObjectHydrator<Specification.Event
     super(model);
     const self = this as unknown as Specification.EventConsumptionStrategy & object;
     if (isObject(model)) {
-      if (typeof (model as { [k: string]: unknown; all: Specification.EventConsumptionStrategyAll }).all === 'object')
-        (self as { [k: string]: unknown; all: Specification.EventConsumptionStrategyAll }).all =
-          new _EventConsumptionStrategyAll(
-            (model as { [k: string]: unknown; all: Specification.EventConsumptionStrategyAll })
-              .all as Specification.EventConsumptionStrategyAll,
-          );
-      if (typeof (model as { [k: string]: unknown; any: Specification.EventConsumptionStrategyAny }).any === 'object')
-        (self as { [k: string]: unknown; any: Specification.EventConsumptionStrategyAny }).any =
-          new _EventConsumptionStrategyAny(
-            (model as { [k: string]: unknown; any: Specification.EventConsumptionStrategyAny })
-              .any as Specification.EventConsumptionStrategyAny,
-          );
-      if (typeof (model as { [k: string]: unknown; one: Specification.EventFilter }).one === 'object')
-        (self as { [k: string]: unknown; one: Specification.EventFilter }).one = new _EventFilter(
-          (model as { [k: string]: unknown; one: Specification.EventFilter }).one as Specification.EventFilter,
+      if (typeof (model as Specification.AllEventConsumptionStrategy).all === 'object')
+        (self as Specification.AllEventConsumptionStrategy).all = new _AllEventConsumptionStrategyConfiguration(
+          (model as Specification.AllEventConsumptionStrategy)
+            .all as Specification.AllEventConsumptionStrategyConfiguration,
+        );
+      if (typeof (model as Specification.AnyEventConsumptionStrategy).any === 'object')
+        (self as Specification.AnyEventConsumptionStrategy).any = new _AnyEventConsumptionStrategyConfiguration(
+          (model as Specification.AnyEventConsumptionStrategy)
+            .any as Specification.AnyEventConsumptionStrategyConfiguration,
+        );
+      if (typeof (model as Specification.OneEventConsumptionStrategy).one === 'object')
+        (self as Specification.OneEventConsumptionStrategy).one = new _EventFilter(
+          (model as Specification.OneEventConsumptionStrategy).one as Specification.EventFilter,
         );
     }
     getLifecycleHooks('EventConsumptionStrategy')?.constructor?.(this);

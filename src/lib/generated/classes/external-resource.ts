@@ -20,10 +20,12 @@
  *
  *****************************************************************************************/
 
+import { _Endpoint } from './endpoint';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
+import { isObject } from '../../utils';
 
 /**
  * Represents the intersection between the ExternalResource class and type
@@ -50,7 +52,10 @@ export class ExternalResource extends ObjectHydrator<Specification.ExternalResou
    */
   constructor(model?: Partial<Specification.ExternalResource>) {
     super(model);
-
+    const self = this as unknown as Specification.ExternalResource & object;
+    if (isObject(model)) {
+      if (typeof model.endpoint === 'object') self.endpoint = new _Endpoint(model.endpoint);
+    }
     getLifecycleHooks('ExternalResource')?.constructor?.(this);
   }
 

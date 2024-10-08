@@ -23,8 +23,9 @@
 import { _Input } from './input';
 import { _Output } from './output';
 import { _Export } from './export';
-import { _Timeout } from './timeout';
-import { _CallAsyncAPIWith } from './call-async-api-with';
+import { _TaskBaseTimeout } from './task-base-timeout';
+import { _TaskMetadata } from './task-metadata';
+import { _AsyncApiArguments } from './async-api-arguments';
 import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
@@ -62,8 +63,9 @@ export class CallAsyncAPI extends _TaskBase {
       if (typeof model.input === 'object') self.input = new _Input(model.input);
       if (typeof model.output === 'object') self.output = new _Output(model.output);
       if (typeof model.export === 'object') self.export = new _Export(model.export);
-      if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
-      if (typeof model.with === 'object') self.with = new _CallAsyncAPIWith(model.with);
+      if (typeof model.timeout === 'object') self.timeout = new _TaskBaseTimeout(model.timeout);
+      if (typeof model.metadata === 'object') self.metadata = new _TaskMetadata(model.metadata);
+      if (typeof model.with === 'object') self.with = new _AsyncApiArguments(model.with);
     }
     getLifecycleHooks('CallAsyncAPI')?.constructor?.(this);
   }

@@ -20,10 +20,12 @@
  *
  *****************************************************************************************/
 
+import { _ReferenceableAuthenticationPolicy } from './referenceable-authentication-policy';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
+import { isObject } from '../../utils';
 
 /**
  * Represents the intersection between the Endpoint class and type
@@ -50,7 +52,14 @@ export class Endpoint extends ObjectHydrator<Specification.Endpoint> {
    */
   constructor(model?: Partial<Specification.Endpoint>) {
     super(model);
-
+    const self = this as unknown as Specification.Endpoint & object;
+    if (isObject(model)) {
+      if (typeof (model as Specification.EndpointConfiguration).authentication === 'object')
+        (self as Specification.EndpointConfiguration).authentication = new _ReferenceableAuthenticationPolicy(
+          (model as Specification.EndpointConfiguration)
+            .authentication as Specification.ReferenceableAuthenticationPolicy,
+        );
+    }
     getLifecycleHooks('Endpoint')?.constructor?.(this);
   }
 

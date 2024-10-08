@@ -40,7 +40,5 @@ function buildingFn(model: Specification.UseExtensions, options: BuildOptions): 
  * A factory to create a builder proxy for the type `Specification.UseExtensions`
  * @returns {ArrayBuilder<Specification.UseExtensions>} A builder for `Specification.UseExtensions`
  */
-export const useExtensionsBuilder = (
-  model?: Specification.UseExtensions,
-): ArrayBuilder<{ [k: string]: Specification.Extension }> =>
-  arrayBuilder<{ [k: string]: Specification.Extension }>(model, buildingFn);
+export const useExtensionsBuilder = (model?: Specification.UseExtensions): ArrayBuilder<Specification.ExtensionItem> =>
+  arrayBuilder<Specification.ExtensionItem>(model, buildingFn);

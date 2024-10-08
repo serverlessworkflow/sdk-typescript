@@ -20,7 +20,8 @@
  *
  *****************************************************************************************/
 
-import { _DocumentTags } from './document-tags';
+import { _WorkflowTags } from './workflow-tags';
+import { _WorkflowMetadata } from './workflow-metadata';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
@@ -54,7 +55,8 @@ export class Document extends ObjectHydrator<Specification.Document> {
     super(model);
     const self = this as unknown as Specification.Document & object;
     if (isObject(model)) {
-      if (typeof model.tags === 'object') self.tags = new _DocumentTags(model.tags);
+      if (typeof model.tags === 'object') self.tags = new _WorkflowTags(model.tags);
+      if (typeof model.metadata === 'object') self.metadata = new _WorkflowMetadata(model.metadata);
     }
     getLifecycleHooks('Document')?.constructor?.(this);
   }

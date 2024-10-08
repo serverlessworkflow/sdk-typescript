@@ -20,30 +20,28 @@
  *
  *****************************************************************************************/
 
-import { _Task } from './task';
+import { _TaskItem } from './task-item';
 import { Specification } from '../definitions';
 import { ArrayHydrator } from '../../hydrator';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
 
 /**
- * Represents a collection of { [k: string]: Specification.Task; }.
+ * Represents a collection of Specification.TaskItem.
  * Inherits from ArrayHydrator to handle array-specific hydration.
  */
-export class TaskList extends ArrayHydrator<{ [k: string]: Specification.Task }> {
+export class TaskList extends ArrayHydrator<Specification.TaskItem> {
   /**
    * Constructs a new instance of the TaskList class.
    *
    * @param model - Optional parameter which can be an array of objects or a number representing the array length.
    */
-  constructor(model?: Array<{ [k: string]: Specification.Task }> | number) {
+  constructor(model?: Array<Specification.TaskItem> | number) {
     super(model);
     if (Array.isArray(model)) {
       if (model?.length) {
         this.splice(0, this.length);
-        model.forEach((item) =>
-          this.push(Object.fromEntries(Object.entries(item).map(([key, value]) => [key, new _Task(value)]))),
-        );
+        model.forEach((item) => this.push(new _TaskItem(item)));
       }
     }
     Object.setPrototypeOf(this, Object.create(TaskList.prototype));

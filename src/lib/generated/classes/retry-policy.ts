@@ -21,7 +21,8 @@
  *****************************************************************************************/
 
 import { _Duration } from './duration';
-import { _RetryPolicyLimit } from './retry-policy-limit';
+import { _RetryBackoff } from './retry-backoff';
+import { _RetryLimit } from './retry-limit';
 import { _RetryPolicyJitter } from './retry-policy-jitter';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
@@ -57,7 +58,8 @@ export class RetryPolicy extends ObjectHydrator<Specification.RetryPolicy> {
     const self = this as unknown as Specification.RetryPolicy & object;
     if (isObject(model)) {
       if (typeof model.delay === 'object') self.delay = new _Duration(model.delay);
-      if (typeof model.limit === 'object') self.limit = new _RetryPolicyLimit(model.limit);
+      if (typeof model.backoff === 'object') self.backoff = new _RetryBackoff(model.backoff);
+      if (typeof model.limit === 'object') self.limit = new _RetryLimit(model.limit);
       if (typeof model.jitter === 'object') self.jitter = new _RetryPolicyJitter(model.jitter);
     }
     getLifecycleHooks('RetryPolicy')?.constructor?.(this);

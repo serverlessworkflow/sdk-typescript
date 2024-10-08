@@ -21,6 +21,7 @@
  *****************************************************************************************/
 
 import { _Duration } from './duration';
+import { _EventConsumptionStrategy } from './event-consumption-strategy';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
@@ -56,6 +57,7 @@ export class Schedule extends ObjectHydrator<Specification.Schedule> {
     if (isObject(model)) {
       if (typeof model.every === 'object') self.every = new _Duration(model.every);
       if (typeof model.after === 'object') self.after = new _Duration(model.after);
+      if (typeof model.on === 'object') self.on = new _EventConsumptionStrategy(model.on);
     }
     getLifecycleHooks('Schedule')?.constructor?.(this);
   }

@@ -40,5 +40,5 @@ function buildingFn(model: Specification.TaskList, options: BuildOptions): Speci
  * A factory to create a builder proxy for the type `Specification.TaskList`
  * @returns {ArrayBuilder<Specification.TaskList>} A builder for `Specification.TaskList`
  */
-export const taskListBuilder = (model?: Specification.TaskList): ArrayBuilder<{ [k: string]: Specification.Task }> =>
-  arrayBuilder<{ [k: string]: Specification.Task }>(model, buildingFn);
+export const taskListBuilder = (model?: Specification.TaskList): ArrayBuilder<Specification.TaskItem> =>
+  arrayBuilder<Specification.TaskItem>(model, buildingFn);

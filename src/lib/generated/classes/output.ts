@@ -20,10 +20,12 @@
  *
  *****************************************************************************************/
 
+import { _Schema } from './schema';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
+import { isObject } from '../../utils';
 
 /**
  * Represents the intersection between the Output class and type
@@ -50,7 +52,10 @@ export class Output extends ObjectHydrator<Specification.Output> {
    */
   constructor(model?: Partial<Specification.Output>) {
     super(model);
-
+    const self = this as unknown as Specification.Output & object;
+    if (isObject(model)) {
+      if (typeof model.schema === 'object') self.schema = new _Schema(model.schema);
+    }
     getLifecycleHooks('Output')?.constructor?.(this);
   }
 

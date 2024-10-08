@@ -24,7 +24,7 @@ import { _Document } from './document';
 import { _Input } from './input';
 import { _Use } from './use';
 import { _TaskList } from './task-list';
-import { _Timeout } from './timeout';
+import { _WorkflowTimeout } from './workflow-timeout';
 import { _Output } from './output';
 import { _Schedule } from './schedule';
 import { ObjectHydrator } from '../../hydrator';
@@ -65,7 +65,7 @@ export class Workflow extends ObjectHydrator<Specification.Workflow> {
       if (typeof model.input === 'object') self.input = new _Input(model.input);
       if (typeof model.use === 'object') self.use = new _Use(model.use);
       if (typeof model.do === 'object') self.do = new _TaskList(model.do);
-      if (typeof model.timeout === 'object') self.timeout = new _Timeout(model.timeout);
+      if (typeof model.timeout === 'object') self.timeout = new _WorkflowTimeout(model.timeout);
       if (typeof model.output === 'object') self.output = new _Output(model.output);
       if (typeof model.schedule === 'object') self.schedule = new _Schedule(model.schedule);
     }

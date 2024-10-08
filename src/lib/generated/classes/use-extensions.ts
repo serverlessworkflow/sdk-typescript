@@ -20,30 +20,28 @@
  *
  *****************************************************************************************/
 
-import { _Extension } from './extension';
+import { _ExtensionItem } from './extension-item';
 import { Specification } from '../definitions';
 import { ArrayHydrator } from '../../hydrator';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
 
 /**
- * Represents a collection of { [k: string]: Specification.Extension; }.
+ * Represents a collection of Specification.ExtensionItem.
  * Inherits from ArrayHydrator to handle array-specific hydration.
  */
-export class UseExtensions extends ArrayHydrator<{ [k: string]: Specification.Extension }> {
+export class UseExtensions extends ArrayHydrator<Specification.ExtensionItem> {
   /**
    * Constructs a new instance of the UseExtensions class.
    *
    * @param model - Optional parameter which can be an array of objects or a number representing the array length.
    */
-  constructor(model?: Array<{ [k: string]: Specification.Extension }> | number) {
+  constructor(model?: Array<Specification.ExtensionItem> | number) {
     super(model);
     if (Array.isArray(model)) {
       if (model?.length) {
         this.splice(0, this.length);
-        model.forEach((item) =>
-          this.push(Object.fromEntries(Object.entries(item).map(([key, value]) => [key, new _Extension(value)]))),
-        );
+        model.forEach((item) => this.push(new _ExtensionItem(item)));
       }
     }
     Object.setPrototypeOf(this, Object.create(UseExtensions.prototype));

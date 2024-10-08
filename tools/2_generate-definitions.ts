@@ -124,6 +124,9 @@ function prepareSchema(schema: any, path: string[] = ['#'], parentTitle: string 
       parentTitle = newSchema.title;
     }
   }
+  if (schema.title === 'OpenIdConnectAuthenticationProperties') {
+    newSchema['$id'] = 'OpenIdConnectAuthenticationProperties'; // forces json-schema-to-typescript to declare it as such instead of "OAuth2AutenthicationData1"
+  }
   return Object.entries(newSchema).reduce((outputSchema, [key, value]: [string, any]) => {
     outputSchema[key] = prepareSchema(value, [...path, key], parentTitle);
     return outputSchema;
@@ -188,6 +191,9 @@ async function generate(srcFile: string, destFile: string): Promise<void> {
     customName: (schema: JSONSchema) /*, keyNameFromDefinition: string | undefined)*/ => {
       if (schema.$id?.includes('serverlessworkflow.io')) {
         return 'Workflow';
+      }
+      if (schema.$id == 'OpenIdConnectAuthenticationProperties') {
+        return schema.$id;
       }
       // don't return anything to keep the default behavior
     },

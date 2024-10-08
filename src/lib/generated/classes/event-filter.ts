@@ -20,7 +20,7 @@
  *
  *****************************************************************************************/
 
-import { _EventFilterWith } from './event-filter-with';
+import { _WithEvent } from './with-event';
 import { _EventFilterCorrelate } from './event-filter-correlate';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
@@ -55,7 +55,7 @@ export class EventFilter extends ObjectHydrator<Specification.EventFilter> {
     super(model);
     const self = this as unknown as Specification.EventFilter & object;
     if (isObject(model)) {
-      if (typeof model.with === 'object') self.with = new _EventFilterWith(model.with);
+      if (typeof model.with === 'object') self.with = new _WithEvent(model.with);
       if (typeof model.correlate === 'object') self.correlate = new _EventFilterCorrelate(model.correlate);
     }
     getLifecycleHooks('EventFilter')?.constructor?.(this);

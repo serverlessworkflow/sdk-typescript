@@ -20,7 +20,8 @@
  *
  *****************************************************************************************/
 
-import { _RetryPolicy } from './retry-policy';
+import { _CatchErrors } from './catch-errors';
+import { _TryTaskCatchRetry } from './try-task-catch-retry';
 import { _TaskList } from './task-list';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
@@ -55,7 +56,8 @@ export class TryTaskCatch extends ObjectHydrator<Specification.TryTaskCatch> {
     super(model);
     const self = this as unknown as Specification.TryTaskCatch & object;
     if (isObject(model)) {
-      if (typeof model.retry === 'object') self.retry = new _RetryPolicy(model.retry);
+      if (typeof model.errors === 'object') self.errors = new _CatchErrors(model.errors);
+      if (typeof model.retry === 'object') self.retry = new _TryTaskCatchRetry(model.retry);
       if (typeof model.do === 'object') self.do = new _TaskList(model.do);
     }
     getLifecycleHooks('TryTaskCatch')?.constructor?.(this);

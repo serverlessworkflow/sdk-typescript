@@ -20,10 +20,12 @@
  *
  *****************************************************************************************/
 
+import { _ExternalResource } from './external-resource';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
+import { isObject } from '../../utils';
 
 /**
  * Represents the intersection between the Schema class and type
@@ -50,7 +52,13 @@ export class Schema extends ObjectHydrator<Specification.Schema> {
    */
   constructor(model?: Partial<Specification.Schema>) {
     super(model);
-
+    const self = this as unknown as Specification.Schema & object;
+    if (isObject(model)) {
+      if (typeof (model as Specification.SchemaExternal).resource === 'object')
+        (self as Specification.SchemaExternal).resource = new _ExternalResource(
+          (model as Specification.SchemaExternal).resource as Specification.ExternalResource,
+        );
+    }
     getLifecycleHooks('Schema')?.constructor?.(this);
   }
 

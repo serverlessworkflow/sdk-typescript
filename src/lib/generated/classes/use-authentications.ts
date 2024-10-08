@@ -20,10 +20,12 @@
  *
  *****************************************************************************************/
 
+import { _AuthenticationPolicy } from './authentication-policy';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
+import { isObject } from '../../utils';
 
 /**
  * Represents the intersection between the UseAuthentications class and type
@@ -50,7 +52,15 @@ export class UseAuthentications extends ObjectHydrator<Specification.UseAuthenti
    */
   constructor(model?: Partial<Specification.UseAuthentications>) {
     super(model);
-
+    const self = this as unknown as Specification.UseAuthentications & object;
+    if (isObject(model)) {
+      const knownProperties: string[] = [];
+      Object.entries(model)
+        .filter(([key]) => !knownProperties.includes(key))
+        .forEach(([key, value]) => {
+          self[key] = new _AuthenticationPolicy(value);
+        });
+    }
     getLifecycleHooks('UseAuthentications')?.constructor?.(this);
   }
 

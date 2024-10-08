@@ -27,7 +27,7 @@ describe('Workflow class', () => {
     expect(type(workflow.input).is<Specification.Input | undefined>(true)).toBe(true);
     expect(type(workflow.use).is<Specification.Use | undefined>(true)).toBe(true);
     expect(type(workflow.do).is<Specification.TaskList>(true)).toBe(true);
-    expect(type(workflow.timeout).is<Specification.Timeout | undefined>(true)).toBe(true);
+    expect(type(workflow.timeout).is<Specification.WorkflowTimeout | undefined>(true)).toBe(true);
     expect(type(workflow.output).is<Specification.Output | undefined>(true)).toBe(true);
     expect(type(workflow.schedule).is<Specification.Schedule | undefined>(true)).toBe(true);
     expect(type(workflow.foobar).is<unknown>(true)).toBe(true);
