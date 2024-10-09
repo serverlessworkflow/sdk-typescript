@@ -94,9 +94,7 @@ export class Workflow extends ObjectHydrator<Specification.Workflow> {
 
   static deserialize(text: string): WorkflowIntersection {
     const model = yaml.load(text) as Partial<Specification.Workflow>;
-    getLifecycleHooks('Workflow')?.preValidation?.(model);
     validate('Workflow', model);
-    getLifecycleHooks('Workflow')?.postValidation?.(model);
     return new Workflow(model) as WorkflowIntersection;
   }
 
