@@ -67,9 +67,9 @@ export class Container extends ObjectHydrator<Specification.Container> {
    * Validates the current instance of the Container.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new Container(this as any) as ContainerIntersection;
-    validate('Container', copy);
+    validate('Container', copy, workflow);
   }
 
   /**

@@ -75,9 +75,9 @@ export class ForTask extends _TaskBase {
    * Validates the current instance of the ForTask.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new ForTask(this as any) as ForTaskIntersection;
-    validate('ForTask', copy);
+    validate('ForTask', copy, workflow);
   }
 
   /**

@@ -20,6 +20,7 @@
  *
  *****************************************************************************************/
 
+import { Specification } from '../definitions';
 import { ArrayHydrator } from '../../hydrator';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
@@ -50,9 +51,9 @@ export class OAuth2AutenthicationDataScopes extends ArrayHydrator<string> {
    * Validates the current instance of the OAuth2AutenthicationDataScopes.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new OAuth2AutenthicationDataScopes(this);
-    validate('OAuth2AutenthicationDataScopes', copy);
+    validate('OAuth2AutenthicationDataScopes', copy, workflow);
   }
 
   /**

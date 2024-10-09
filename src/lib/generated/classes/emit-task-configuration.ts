@@ -63,9 +63,9 @@ export class EmitTaskConfiguration extends ObjectHydrator<Specification.EmitTask
    * Validates the current instance of the EmitTaskConfiguration.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new EmitTaskConfiguration(this as any) as EmitTaskConfigurationIntersection;
-    validate('EmitTaskConfiguration', copy);
+    validate('EmitTaskConfiguration', copy, workflow);
   }
 
   /**

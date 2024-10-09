@@ -86,9 +86,9 @@ export class CallTask extends ObjectHydrator<Specification.CallTask> {
    * Validates the current instance of the CallTask.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new CallTask(this as any) as CallTaskIntersection;
-    validate('CallTask', copy);
+    validate('CallTask', copy, workflow);
   }
 
   /**

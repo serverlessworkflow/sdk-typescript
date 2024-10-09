@@ -52,9 +52,9 @@ export class SwitchTaskConfiguration extends ArrayHydrator<Specification.SwitchI
    * Validates the current instance of the SwitchTaskConfiguration.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new SwitchTaskConfiguration(this);
-    validate('SwitchTaskConfiguration', copy);
+    validate('SwitchTaskConfiguration', copy, workflow);
   }
 
   /**

@@ -58,9 +58,9 @@ export class EventFilterCorrelate extends ObjectHydrator<Specification.EventFilt
    * Validates the current instance of the EventFilterCorrelate.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new EventFilterCorrelate(this as any) as EventFilterCorrelateIntersection;
-    validate('EventFilterCorrelate', copy);
+    validate('EventFilterCorrelate', copy, workflow);
   }
 
   /**

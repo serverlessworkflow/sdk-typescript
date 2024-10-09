@@ -58,9 +58,9 @@ export class InlineScript extends ObjectHydrator<Specification.InlineScript> {
    * Validates the current instance of the InlineScript.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new InlineScript(this as any) as InlineScriptIntersection;
-    validate('InlineScript', copy);
+    validate('InlineScript', copy, workflow);
   }
 
   /**

@@ -63,9 +63,9 @@ export class ListenTaskConfiguration extends ObjectHydrator<Specification.Listen
    * Validates the current instance of the ListenTaskConfiguration.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new ListenTaskConfiguration(this as any) as ListenTaskConfigurationIntersection;
-    validate('ListenTaskConfiguration', copy);
+    validate('ListenTaskConfiguration', copy, workflow);
   }
 
   /**

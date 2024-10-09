@@ -58,9 +58,9 @@ export class SwitchCase extends ObjectHydrator<Specification.SwitchCase> {
    * Validates the current instance of the SwitchCase.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new SwitchCase(this as any) as SwitchCaseIntersection;
-    validate('SwitchCase', copy);
+    validate('SwitchCase', copy, workflow);
   }
 
   /**

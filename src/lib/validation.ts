@@ -21,6 +21,7 @@ import workflowSchema from './generated/schema/workflow.json';
 import { validationPointers } from './generated/validation';
 import { deepCopy } from './utils';
 import { getLifecycleHooks } from './lifecycle-hooks';
+import { Specification } from './generated/definitions';
 
 const ajv = new Ajv({
   schemas: [workflowSchema],
@@ -44,10 +45,11 @@ const validators: Map<string, ValidateFunction> = new Map<string, ValidateFuncti
  * Validates the provided data or throws an error
  * @param typeName The data type to validate
  * @param data The data to validate
+ * @param workflow A workflow instance, used for DSL level validation
  * @returns Throws if invalid
  */
-export const validate = <T>(typeName: string, data: T) => {
-  getLifecycleHooks(typeName)?.preValidation?.(data);
+export const validate = <T>(typeName: string, data: T, workflow?: Partial<Specification.Workflow>) => {
+  getLifecycleHooks(typeName)?.preValidation?.(data, workflow);
   const validateFn: ValidateFunction | undefined = validators.get(typeName);
   if (!validateFn) {
     throw Error(`Unable to find a validation function for '${typeName}'`);
@@ -61,5 +63,5 @@ ${validateFn.errors?.reduce((acc, error) => acc + `- ${error.instancePath} | ${e
 data: ${JSON.stringify(data, null, 4)}`,
     );
   }
-  getLifecycleHooks(typeName)?.postValidation?.(data);
+  getLifecycleHooks(typeName)?.postValidation?.(data, workflow);
 };

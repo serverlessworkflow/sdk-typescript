@@ -75,9 +75,9 @@ export class TryTask extends _TaskBase {
    * Validates the current instance of the TryTask.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new TryTask(this as any) as TryTaskIntersection;
-    validate('TryTask', copy);
+    validate('TryTask', copy, workflow);
   }
 
   /**

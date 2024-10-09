@@ -58,9 +58,9 @@ export class EndpointUri extends ObjectHydrator<Specification.EndpointUri> {
    * Validates the current instance of the EndpointUri.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new EndpointUri(this as any) as EndpointUriIntersection;
-    validate('EndpointUri', copy);
+    validate('EndpointUri', copy, workflow);
   }
 
   /**

@@ -74,9 +74,9 @@ export class SwitchTask extends _TaskBase {
    * Validates the current instance of the SwitchTask.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new SwitchTask(this as any) as SwitchTaskIntersection;
-    validate('SwitchTask', copy);
+    validate('SwitchTask', copy, workflow);
   }
 
   /**

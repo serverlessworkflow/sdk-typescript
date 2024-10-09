@@ -58,9 +58,9 @@ export class WithHTTPBody extends ObjectHydrator<Specification.WithHTTPBody> {
    * Validates the current instance of the WithHTTPBody.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new WithHTTPBody(this as any) as WithHTTPBodyIntersection;
-    validate('WithHTTPBody', copy);
+    validate('WithHTTPBody', copy, workflow);
   }
 
   /**

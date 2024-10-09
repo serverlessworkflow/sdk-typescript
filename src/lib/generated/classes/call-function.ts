@@ -73,9 +73,9 @@ export class CallFunction extends _TaskBase {
    * Validates the current instance of the CallFunction.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new CallFunction(this as any) as CallFunctionIntersection;
-    validate('CallFunction', copy);
+    validate('CallFunction', copy, workflow);
   }
 
   /**

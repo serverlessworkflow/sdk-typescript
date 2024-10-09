@@ -58,9 +58,9 @@ export class SchemaInline extends ObjectHydrator<Specification.SchemaInline> {
    * Validates the current instance of the SchemaInline.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new SchemaInline(this as any) as SchemaInlineIntersection;
-    validate('SchemaInline', copy);
+    validate('SchemaInline', copy, workflow);
   }
 
   /**

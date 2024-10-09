@@ -58,9 +58,9 @@ export class FunctionArguments extends ObjectHydrator<Specification.FunctionArgu
    * Validates the current instance of the FunctionArguments.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new FunctionArguments(this as any) as FunctionArgumentsIntersection;
-    validate('FunctionArguments', copy);
+    validate('FunctionArguments', copy, workflow);
   }
 
   /**

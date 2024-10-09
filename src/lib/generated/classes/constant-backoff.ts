@@ -58,9 +58,9 @@ export class ConstantBackoff extends ObjectHydrator<Specification.ConstantBackof
    * Validates the current instance of the ConstantBackoff.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new ConstantBackoff(this as any) as ConstantBackoffIntersection;
-    validate('ConstantBackoff', copy);
+    validate('ConstantBackoff', copy, workflow);
   }
 
   /**

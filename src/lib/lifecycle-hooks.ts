@@ -15,6 +15,7 @@
  *
  */
 
+import { Specification } from './generated/definitions';
 import { WorkflowHooks } from './hooks';
 
 /**
@@ -29,13 +30,15 @@ export type LifecycleHooks<T> = {
   /**
    * The hook called before the validation
    * @param instance A copy instance being validated
+   * @param workflow A workflow instance, used for DSL level validation
    */
-  preValidation?: (instance: T) => void;
+  preValidation?: (instance: T, workflow?: Partial<Specification.Workflow>) => void;
   /**
    * The hook called after the validation
    * @param instance A copy instance being validated
+   * @param workflow A workflow instance, used for DSL level validation
    */
-  postValidation?: (instance: T) => void;
+  postValidation?: (instance: T, workflow?: Partial<Specification.Workflow>) => void;
   /**
    * The hook called to normalized the instance
    * @param instance A copy of the instance to normalize

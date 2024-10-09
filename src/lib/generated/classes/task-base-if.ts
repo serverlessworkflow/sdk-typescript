@@ -58,9 +58,9 @@ export class TaskBaseIf extends ObjectHydrator<Specification.TaskBaseIf> {
    * Validates the current instance of the TaskBaseIf.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new TaskBaseIf(this as any) as TaskBaseIfIntersection;
-    validate('TaskBaseIf', copy);
+    validate('TaskBaseIf', copy, workflow);
   }
 
   /**

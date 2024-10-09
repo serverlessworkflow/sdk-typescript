@@ -61,11 +61,11 @@ export class OAuth2AuthenticationPropertiesEndpoints extends ObjectHydrator<Spec
    * Validates the current instance of the OAuth2AuthenticationPropertiesEndpoints.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new OAuth2AuthenticationPropertiesEndpoints(
       this as any,
     ) as OAuth2AuthenticationPropertiesEndpointsIntersection;
-    validate('OAuth2AuthenticationPropertiesEndpoints', copy);
+    validate('OAuth2AuthenticationPropertiesEndpoints', copy, workflow);
   }
 
   /**

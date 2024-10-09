@@ -63,9 +63,9 @@ export class ExternalScript extends ObjectHydrator<Specification.ExternalScript>
    * Validates the current instance of the ExternalScript.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new ExternalScript(this as any) as ExternalScriptIntersection;
-    validate('ExternalScript', copy);
+    validate('ExternalScript', copy, workflow);
   }
 
   /**

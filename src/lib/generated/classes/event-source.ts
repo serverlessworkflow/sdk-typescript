@@ -58,9 +58,9 @@ export class EventSource extends ObjectHydrator<Specification.EventSource> {
    * Validates the current instance of the EventSource.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new EventSource(this as any) as EventSourceIntersection;
-    validate('EventSource', copy);
+    validate('EventSource', copy, workflow);
   }
 
   /**

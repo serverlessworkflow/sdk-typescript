@@ -88,9 +88,9 @@ export class ${name} extends ${baseClass ? '_' + baseClass : `ObjectHydrator<Spe
    * Validates the current instance of the ${name}.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new ${name}(this as any) as ${name}Intersection;
-    validate('${name}', copy);
+    validate('${name}', copy, workflow);
   }
   
   /**
@@ -171,7 +171,7 @@ function getArrayLikeClassDeclaration(name: string, arrayTypeName: string, type:
 ${inFileDisclaimer}
 
 ${hydrationResult.imports.map((type) => `import { _${type} } from './${toKebabCase(normalizeKnownAllCaps(type))}';`)}
-${hydrationResult.imports.length ? `import { Specification } from '../definitions';` : ''}
+import { Specification } from '../definitions';
 import { ArrayHydrator } from '../../hydrator';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
@@ -199,9 +199,9 @@ export class ${name} extends ArrayHydrator<${arrayTypeName}> {
    * Validates the current instance of the ${name}.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new ${name}(this);
-    validate('${name}', copy);
+    validate('${name}', copy, workflow);
   }
   
   /**

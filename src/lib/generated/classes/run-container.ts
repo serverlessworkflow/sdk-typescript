@@ -63,9 +63,9 @@ export class RunContainer extends ObjectHydrator<Specification.RunContainer> {
    * Validates the current instance of the RunContainer.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new RunContainer(this as any) as RunContainerIntersection;
-    validate('RunContainer', copy);
+    validate('RunContainer', copy, workflow);
   }
 
   /**

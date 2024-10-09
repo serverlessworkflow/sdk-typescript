@@ -68,9 +68,9 @@ export class UseErrors extends ObjectHydrator<Specification.UseErrors> {
    * Validates the current instance of the UseErrors.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new UseErrors(this as any) as UseErrorsIntersection;
-    validate('UseErrors', copy);
+    validate('UseErrors', copy, workflow);
   }
 
   /**

@@ -74,9 +74,9 @@ export class CallAsyncAPI extends _TaskBase {
    * Validates the current instance of the CallAsyncAPI.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new CallAsyncAPI(this as any) as CallAsyncAPIIntersection;
-    validate('CallAsyncAPI', copy);
+    validate('CallAsyncAPI', copy, workflow);
   }
 
   /**

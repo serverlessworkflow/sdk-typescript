@@ -58,9 +58,9 @@ export class CatchErrors extends ObjectHydrator<Specification.CatchErrors> {
    * Validates the current instance of the CatchErrors.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new CatchErrors(this as any) as CatchErrorsIntersection;
-    validate('CatchErrors', copy);
+    validate('CatchErrors', copy, workflow);
   }
 
   /**

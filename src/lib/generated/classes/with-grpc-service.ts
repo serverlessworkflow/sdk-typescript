@@ -64,9 +64,9 @@ export class WithGRPCService extends ObjectHydrator<Specification.WithGRPCServic
    * Validates the current instance of the WithGRPCService.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new WithGRPCService(this as any) as WithGRPCServiceIntersection;
-    validate('WithGRPCService', copy);
+    validate('WithGRPCService', copy, workflow);
   }
 
   /**

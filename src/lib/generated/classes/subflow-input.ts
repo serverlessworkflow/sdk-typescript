@@ -58,9 +58,9 @@ export class SubflowInput extends ObjectHydrator<Specification.SubflowInput> {
    * Validates the current instance of the SubflowInput.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new SubflowInput(this as any) as SubflowInputIntersection;
-    validate('SubflowInput', copy);
+    validate('SubflowInput', copy, workflow);
   }
 
   /**

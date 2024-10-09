@@ -58,9 +58,9 @@ export class TaskMetadata extends ObjectHydrator<Specification.TaskMetadata> {
    * Validates the current instance of the TaskMetadata.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new TaskMetadata(this as any) as TaskMetadataIntersection;
-    validate('TaskMetadata', copy);
+    validate('TaskMetadata', copy, workflow);
   }
 
   /**

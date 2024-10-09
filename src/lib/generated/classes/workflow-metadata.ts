@@ -58,9 +58,9 @@ export class WorkflowMetadata extends ObjectHydrator<Specification.WorkflowMetad
    * Validates the current instance of the WorkflowMetadata.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new WorkflowMetadata(this as any) as WorkflowMetadataIntersection;
-    validate('WorkflowMetadata', copy);
+    validate('WorkflowMetadata', copy, workflow);
   }
 
   /**

@@ -59,9 +59,9 @@ export class BearerAuthenticationProperties extends ObjectHydrator<Specification
    * Validates the current instance of the BearerAuthenticationProperties.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new BearerAuthenticationProperties(this as any) as BearerAuthenticationPropertiesIntersection;
-    validate('BearerAuthenticationProperties', copy);
+    validate('BearerAuthenticationProperties', copy, workflow);
   }
 
   /**

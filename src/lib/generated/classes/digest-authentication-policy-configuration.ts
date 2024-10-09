@@ -61,11 +61,11 @@ export class DigestAuthenticationPolicyConfiguration extends ObjectHydrator<Spec
    * Validates the current instance of the DigestAuthenticationPolicyConfiguration.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new DigestAuthenticationPolicyConfiguration(
       this as any,
     ) as DigestAuthenticationPolicyConfigurationIntersection;
-    validate('DigestAuthenticationPolicyConfiguration', copy);
+    validate('DigestAuthenticationPolicyConfiguration', copy, workflow);
   }
 
   /**

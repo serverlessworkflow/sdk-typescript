@@ -58,9 +58,9 @@ export class ExponentialBackOff extends ObjectHydrator<Specification.Exponential
    * Validates the current instance of the ExponentialBackOff.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new ExponentialBackOff(this as any) as ExponentialBackOffIntersection;
-    validate('ExponentialBackOff', copy);
+    validate('ExponentialBackOff', copy, workflow);
   }
 
   /**

@@ -58,9 +58,9 @@ export class EmitEventWith extends ObjectHydrator<Specification.EmitEventWith> {
    * Validates the current instance of the EmitEventWith.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new EmitEventWith(this as any) as EmitEventWithIntersection;
-    validate('EmitEventWith', copy);
+    validate('EmitEventWith', copy, workflow);
   }
 
   /**

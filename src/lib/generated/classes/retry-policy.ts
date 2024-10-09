@@ -69,9 +69,9 @@ export class RetryPolicy extends ObjectHydrator<Specification.RetryPolicy> {
    * Validates the current instance of the RetryPolicy.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new RetryPolicy(this as any) as RetryPolicyIntersection;
-    validate('RetryPolicy', copy);
+    validate('RetryPolicy', copy, workflow);
   }
 
   /**

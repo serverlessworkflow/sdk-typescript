@@ -63,9 +63,9 @@ export class RetryLimitAttempt extends ObjectHydrator<Specification.RetryLimitAt
    * Validates the current instance of the RetryLimitAttempt.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new RetryLimitAttempt(this as any) as RetryLimitAttemptIntersection;
-    validate('RetryLimitAttempt', copy);
+    validate('RetryLimitAttempt', copy, workflow);
   }
 
   /**

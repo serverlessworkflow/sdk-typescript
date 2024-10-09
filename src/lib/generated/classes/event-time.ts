@@ -58,9 +58,9 @@ export class EventTime extends ObjectHydrator<Specification.EventTime> {
    * Validates the current instance of the EventTime.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new EventTime(this as any) as EventTimeIntersection;
-    validate('EventTime', copy);
+    validate('EventTime', copy, workflow);
   }
 
   /**

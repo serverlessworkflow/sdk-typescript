@@ -58,9 +58,9 @@ export class ContainerEnvironment extends ObjectHydrator<Specification.Container
    * Validates the current instance of the ContainerEnvironment.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new ContainerEnvironment(this as any) as ContainerEnvironmentIntersection;
-    validate('ContainerEnvironment', copy);
+    validate('ContainerEnvironment', copy, workflow);
   }
 
   /**

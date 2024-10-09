@@ -59,9 +59,9 @@ export class BasicAuthenticationProperties extends ObjectHydrator<Specification.
    * Validates the current instance of the BasicAuthenticationProperties.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new BasicAuthenticationProperties(this as any) as BasicAuthenticationPropertiesIntersection;
-    validate('BasicAuthenticationProperties', copy);
+    validate('BasicAuthenticationProperties', copy, workflow);
   }
 
   /**

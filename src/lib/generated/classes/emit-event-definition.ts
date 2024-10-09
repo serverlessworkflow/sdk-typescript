@@ -63,9 +63,9 @@ export class EmitEventDefinition extends ObjectHydrator<Specification.EmitEventD
    * Validates the current instance of the EmitEventDefinition.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new EmitEventDefinition(this as any) as EmitEventDefinitionIntersection;
-    validate('EmitEventDefinition', copy);
+    validate('EmitEventDefinition', copy, workflow);
   }
 
   /**

@@ -74,9 +74,9 @@ export class CallOpenAPI extends _TaskBase {
    * Validates the current instance of the CallOpenAPI.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new CallOpenAPI(this as any) as CallOpenAPIIntersection;
-    validate('CallOpenAPI', copy);
+    validate('CallOpenAPI', copy, workflow);
   }
 
   /**

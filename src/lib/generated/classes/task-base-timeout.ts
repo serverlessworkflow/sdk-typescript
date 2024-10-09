@@ -66,9 +66,9 @@ export class TaskBaseTimeout extends ObjectHydrator<Specification.TaskBaseTimeou
    * Validates the current instance of the TaskBaseTimeout.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new TaskBaseTimeout(this as any) as TaskBaseTimeoutIntersection;
-    validate('TaskBaseTimeout', copy);
+    validate('TaskBaseTimeout', copy, workflow);
   }
 
   /**

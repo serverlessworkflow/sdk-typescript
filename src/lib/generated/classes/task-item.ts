@@ -68,9 +68,9 @@ export class TaskItem extends ObjectHydrator<Specification.TaskItem> {
    * Validates the current instance of the TaskItem.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new TaskItem(this as any) as TaskItemIntersection;
-    validate('TaskItem', copy);
+    validate('TaskItem', copy, workflow);
   }
 
   /**

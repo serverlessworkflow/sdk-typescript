@@ -58,9 +58,9 @@ export class RetryBackoff extends ObjectHydrator<Specification.RetryBackoff> {
    * Validates the current instance of the RetryBackoff.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new RetryBackoff(this as any) as RetryBackoffIntersection;
-    validate('RetryBackoff', copy);
+    validate('RetryBackoff', copy, workflow);
   }
 
   /**

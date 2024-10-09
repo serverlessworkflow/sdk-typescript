@@ -58,9 +58,9 @@ export class LinearBackoff extends ObjectHydrator<Specification.LinearBackoff> {
    * Validates the current instance of the LinearBackoff.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new LinearBackoff(this as any) as LinearBackoffIntersection;
-    validate('LinearBackoff', copy);
+    validate('LinearBackoff', copy, workflow);
   }
 
   /**

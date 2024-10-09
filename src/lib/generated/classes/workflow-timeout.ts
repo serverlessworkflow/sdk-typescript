@@ -66,9 +66,9 @@ export class WorkflowTimeout extends ObjectHydrator<Specification.WorkflowTimeou
    * Validates the current instance of the WorkflowTimeout.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new WorkflowTimeout(this as any) as WorkflowTimeoutIntersection;
-    validate('WorkflowTimeout', copy);
+    validate('WorkflowTimeout', copy, workflow);
   }
 
   /**

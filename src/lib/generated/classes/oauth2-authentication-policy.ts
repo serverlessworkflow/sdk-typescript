@@ -64,9 +64,9 @@ export class OAuth2AuthenticationPolicy extends ObjectHydrator<Specification.OAu
    * Validates the current instance of the OAuth2AuthenticationPolicy.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new OAuth2AuthenticationPolicy(this as any) as OAuth2AuthenticationPolicyIntersection;
-    validate('OAuth2AuthenticationPolicy', copy);
+    validate('OAuth2AuthenticationPolicy', copy, workflow);
   }
 
   /**

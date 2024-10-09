@@ -65,9 +65,9 @@ export class Document extends ObjectHydrator<Specification.Document> {
    * Validates the current instance of the Document.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new Document(this as any) as DocumentIntersection;
-    validate('Document', copy);
+    validate('Document', copy, workflow);
   }
 
   /**

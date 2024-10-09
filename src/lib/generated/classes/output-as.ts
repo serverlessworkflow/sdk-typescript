@@ -58,9 +58,9 @@ export class OutputAs extends ObjectHydrator<Specification.OutputAs> {
    * Validates the current instance of the OutputAs.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new OutputAs(this as any) as OutputAsIntersection;
-    validate('OutputAs', copy);
+    validate('OutputAs', copy, workflow);
   }
 
   /**

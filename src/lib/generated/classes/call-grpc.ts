@@ -74,9 +74,9 @@ export class CallGRPC extends _TaskBase {
    * Validates the current instance of the CallGRPC.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new CallGRPC(this as any) as CallGRPCIntersection;
-    validate('CallGRPC', copy);
+    validate('CallGRPC', copy, workflow);
   }
 
   /**

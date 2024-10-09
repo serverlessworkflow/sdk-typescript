@@ -58,9 +58,9 @@ export class ShellEnvironment extends ObjectHydrator<Specification.ShellEnvironm
    * Validates the current instance of the ShellEnvironment.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new ShellEnvironment(this as any) as ShellEnvironmentIntersection;
-    validate('ShellEnvironment', copy);
+    validate('ShellEnvironment', copy, workflow);
   }
 
   /**

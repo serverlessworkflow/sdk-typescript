@@ -61,11 +61,11 @@ export class BearerAuthenticationPolicyConfiguration extends ObjectHydrator<Spec
    * Validates the current instance of the BearerAuthenticationPolicyConfiguration.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new BearerAuthenticationPolicyConfiguration(
       this as any,
     ) as BearerAuthenticationPolicyConfigurationIntersection;
-    validate('BearerAuthenticationPolicyConfiguration', copy);
+    validate('BearerAuthenticationPolicyConfiguration', copy, workflow);
   }
 
   /**

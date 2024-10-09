@@ -58,9 +58,9 @@ export class WithAsyncAPIPayload extends ObjectHydrator<Specification.WithAsyncA
    * Validates the current instance of the WithAsyncAPIPayload.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new WithAsyncAPIPayload(this as any) as WithAsyncAPIPayloadIntersection;
-    validate('WithAsyncAPIPayload', copy);
+    validate('WithAsyncAPIPayload', copy, workflow);
   }
 
   /**

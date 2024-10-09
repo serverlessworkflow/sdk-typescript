@@ -68,9 +68,9 @@ export class UseTimeouts extends ObjectHydrator<Specification.UseTimeouts> {
    * Validates the current instance of the UseTimeouts.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new UseTimeouts(this as any) as UseTimeoutsIntersection;
-    validate('UseTimeouts', copy);
+    validate('UseTimeouts', copy, workflow);
   }
 
   /**

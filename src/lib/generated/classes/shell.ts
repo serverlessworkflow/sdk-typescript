@@ -65,9 +65,9 @@ export class Shell extends ObjectHydrator<Specification.Shell> {
    * Validates the current instance of the Shell.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new Shell(this as any) as ShellIntersection;
-    validate('Shell', copy);
+    validate('Shell', copy, workflow);
   }
 
   /**

@@ -58,9 +58,9 @@ export class RuntimeExpression extends ObjectHydrator<Specification.RuntimeExpre
    * Validates the current instance of the RuntimeExpression.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new RuntimeExpression(this as any) as RuntimeExpressionIntersection;
-    validate('RuntimeExpression', copy);
+    validate('RuntimeExpression', copy, workflow);
   }
 
   /**

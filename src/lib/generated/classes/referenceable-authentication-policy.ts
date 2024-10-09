@@ -93,9 +93,9 @@ export class ReferenceableAuthenticationPolicy extends ObjectHydrator<Specificat
    * Validates the current instance of the ReferenceableAuthenticationPolicy.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new ReferenceableAuthenticationPolicy(this as any) as ReferenceableAuthenticationPolicyIntersection;
-    validate('ReferenceableAuthenticationPolicy', copy);
+    validate('ReferenceableAuthenticationPolicy', copy, workflow);
   }
 
   /**

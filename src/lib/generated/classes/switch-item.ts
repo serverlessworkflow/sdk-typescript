@@ -68,9 +68,9 @@ export class SwitchItem extends ObjectHydrator<Specification.SwitchItem> {
    * Validates the current instance of the SwitchItem.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new SwitchItem(this as any) as SwitchItemIntersection;
-    validate('SwitchItem', copy);
+    validate('SwitchItem', copy, workflow);
   }
 
   /**

@@ -67,9 +67,9 @@ export class GRPCArguments extends ObjectHydrator<Specification.GRPCArguments> {
    * Validates the current instance of the GRPCArguments.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new GRPCArguments(this as any) as GRPCArgumentsIntersection;
-    validate('GRPCArguments', copy);
+    validate('GRPCArguments', copy, workflow);
   }
 
   /**

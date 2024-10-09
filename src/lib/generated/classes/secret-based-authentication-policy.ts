@@ -59,9 +59,9 @@ export class SecretBasedAuthenticationPolicy extends ObjectHydrator<Specificatio
    * Validates the current instance of the SecretBasedAuthenticationPolicy.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new SecretBasedAuthenticationPolicy(this as any) as SecretBasedAuthenticationPolicyIntersection;
-    validate('SecretBasedAuthenticationPolicy', copy);
+    validate('SecretBasedAuthenticationPolicy', copy, workflow);
   }
 
   /**

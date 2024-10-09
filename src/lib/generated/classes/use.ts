@@ -74,9 +74,9 @@ export class Use extends ObjectHydrator<Specification.Use> {
    * Validates the current instance of the Use.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new Use(this as any) as UseIntersection;
-    validate('Use', copy);
+    validate('Use', copy, workflow);
   }
 
   /**

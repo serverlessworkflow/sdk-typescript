@@ -63,9 +63,9 @@ export class Export extends ObjectHydrator<Specification.Export> {
    * Validates the current instance of the Export.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new Export(this as any) as ExportIntersection;
-    validate('Export', copy);
+    validate('Export', copy, workflow);
   }
 
   /**

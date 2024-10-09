@@ -61,11 +61,11 @@ export class BasicAuthenticationPolicyConfiguration extends ObjectHydrator<Speci
    * Validates the current instance of the BasicAuthenticationPolicyConfiguration.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new BasicAuthenticationPolicyConfiguration(
       this as any,
     ) as BasicAuthenticationPolicyConfigurationIntersection;
-    validate('BasicAuthenticationPolicyConfiguration', copy);
+    validate('BasicAuthenticationPolicyConfiguration', copy, workflow);
   }
 
   /**

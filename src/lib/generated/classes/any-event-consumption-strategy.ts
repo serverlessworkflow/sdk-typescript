@@ -64,9 +64,9 @@ export class AnyEventConsumptionStrategy extends ObjectHydrator<Specification.An
    * Validates the current instance of the AnyEventConsumptionStrategy.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new AnyEventConsumptionStrategy(this as any) as AnyEventConsumptionStrategyIntersection;
-    validate('AnyEventConsumptionStrategy', copy);
+    validate('AnyEventConsumptionStrategy', copy, workflow);
   }
 
   /**

@@ -84,11 +84,11 @@ export class OpenIdConnectAuthenticationPolicyConfiguration extends ObjectHydrat
    * Validates the current instance of the OpenIdConnectAuthenticationPolicyConfiguration.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new OpenIdConnectAuthenticationPolicyConfiguration(
       this as any,
     ) as OpenIdConnectAuthenticationPolicyConfigurationIntersection;
-    validate('OpenIdConnectAuthenticationPolicyConfiguration', copy);
+    validate('OpenIdConnectAuthenticationPolicyConfiguration', copy, workflow);
   }
 
   /**

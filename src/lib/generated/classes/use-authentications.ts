@@ -68,9 +68,9 @@ export class UseAuthentications extends ObjectHydrator<Specification.UseAuthenti
    * Validates the current instance of the UseAuthentications.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new UseAuthentications(this as any) as UseAuthenticationsIntersection;
-    validate('UseAuthentications', copy);
+    validate('UseAuthentications', copy, workflow);
   }
 
   /**

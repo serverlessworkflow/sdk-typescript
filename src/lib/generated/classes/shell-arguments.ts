@@ -58,9 +58,9 @@ export class ShellArguments extends ObjectHydrator<Specification.ShellArguments>
    * Validates the current instance of the ShellArguments.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new ShellArguments(this as any) as ShellArgumentsIntersection;
-    validate('ShellArguments', copy);
+    validate('ShellArguments', copy, workflow);
   }
 
   /**

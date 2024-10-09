@@ -68,9 +68,9 @@ export class UseFunctions extends ObjectHydrator<Specification.UseFunctions> {
    * Validates the current instance of the UseFunctions.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new UseFunctions(this as any) as UseFunctionsIntersection;
-    validate('UseFunctions', copy);
+    validate('UseFunctions', copy, workflow);
   }
 
   /**

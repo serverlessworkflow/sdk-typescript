@@ -71,11 +71,11 @@ export class OpenIdConnectAuthenticationProperties extends ObjectHydrator<Specif
    * Validates the current instance of the OpenIdConnectAuthenticationProperties.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new OpenIdConnectAuthenticationProperties(
       this as any,
     ) as OpenIdConnectAuthenticationPropertiesIntersection;
-    validate('OpenIdConnectAuthenticationProperties', copy);
+    validate('OpenIdConnectAuthenticationProperties', copy, workflow);
   }
 
   /**

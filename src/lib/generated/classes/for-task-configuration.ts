@@ -58,9 +58,9 @@ export class ForTaskConfiguration extends ObjectHydrator<Specification.ForTaskCo
    * Validates the current instance of the ForTaskConfiguration.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new ForTaskConfiguration(this as any) as ForTaskConfigurationIntersection;
-    validate('ForTaskConfiguration', copy);
+    validate('ForTaskConfiguration', copy, workflow);
   }
 
   /**

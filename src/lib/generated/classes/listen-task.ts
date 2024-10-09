@@ -73,9 +73,9 @@ export class ListenTask extends _TaskBase {
    * Validates the current instance of the ListenTask.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new ListenTask(this as any) as ListenTaskIntersection;
-    validate('ListenTask', copy);
+    validate('ListenTask', copy, workflow);
   }
 
   /**

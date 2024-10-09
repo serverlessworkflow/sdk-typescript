@@ -58,9 +58,9 @@ export class WithEvent extends ObjectHydrator<Specification.WithEvent> {
    * Validates the current instance of the WithEvent.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new WithEvent(this as any) as WithEventIntersection;
-    validate('WithEvent', copy);
+    validate('WithEvent', copy, workflow);
   }
 
   /**

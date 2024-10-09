@@ -52,9 +52,9 @@ export class UseExtensions extends ArrayHydrator<Specification.ExtensionItem> {
    * Validates the current instance of the UseExtensions.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new UseExtensions(this);
-    validate('UseExtensions', copy);
+    validate('UseExtensions', copy, workflow);
   }
 
   /**

@@ -68,9 +68,9 @@ export class ExtensionItem extends ObjectHydrator<Specification.ExtensionItem> {
    * Validates the current instance of the ExtensionItem.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new ExtensionItem(this as any) as ExtensionItemIntersection;
-    validate('ExtensionItem', copy);
+    validate('ExtensionItem', copy, workflow);
   }
 
   /**

@@ -58,9 +58,9 @@ export class ErrorInstance extends ObjectHydrator<Specification.ErrorInstance> {
    * Validates the current instance of the ErrorInstance.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new ErrorInstance(this as any) as ErrorInstanceIntersection;
-    validate('ErrorInstance', copy);
+    validate('ErrorInstance', copy, workflow);
   }
 
   /**

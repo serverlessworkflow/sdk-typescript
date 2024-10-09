@@ -76,9 +76,9 @@ export class Workflow extends ObjectHydrator<Specification.Workflow> {
    * Validates the current instance of the Workflow.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new Workflow(this as any) as WorkflowIntersection;
-    validate('Workflow', copy);
+    validate('Workflow', copy, workflow);
   }
 
   /**

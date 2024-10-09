@@ -81,9 +81,9 @@ export class TryTaskCatchRetry extends ObjectHydrator<Specification.TryTaskCatch
    * Validates the current instance of the TryTaskCatchRetry.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new TryTaskCatchRetry(this as any) as TryTaskCatchRetryIntersection;
-    validate('TryTaskCatchRetry', copy);
+    validate('TryTaskCatchRetry', copy, workflow);
   }
 
   /**

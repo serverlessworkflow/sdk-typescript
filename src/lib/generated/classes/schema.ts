@@ -66,9 +66,9 @@ export class Schema extends ObjectHydrator<Specification.Schema> {
    * Validates the current instance of the Schema.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new Schema(this as any) as SchemaIntersection;
-    validate('Schema', copy);
+    validate('Schema', copy, workflow);
   }
 
   /**

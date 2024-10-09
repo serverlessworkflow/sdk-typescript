@@ -66,9 +66,9 @@ export class Schedule extends ObjectHydrator<Specification.Schedule> {
    * Validates the current instance of the Schedule.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new Schedule(this as any) as ScheduleIntersection;
-    validate('Schedule', copy);
+    validate('Schedule', copy, workflow);
   }
 
   /**

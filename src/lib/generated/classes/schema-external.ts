@@ -63,9 +63,9 @@ export class SchemaExternal extends ObjectHydrator<Specification.SchemaExternal>
    * Validates the current instance of the SchemaExternal.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new SchemaExternal(this as any) as SchemaExternalIntersection;
-    validate('SchemaExternal', copy);
+    validate('SchemaExternal', copy, workflow);
   }
 
   /**

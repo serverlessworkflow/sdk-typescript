@@ -66,9 +66,9 @@ export class Script extends ObjectHydrator<Specification.Script> {
    * Validates the current instance of the Script.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new Script(this as any) as ScriptIntersection;
-    validate('Script', copy);
+    validate('Script', copy, workflow);
   }
 
   /**

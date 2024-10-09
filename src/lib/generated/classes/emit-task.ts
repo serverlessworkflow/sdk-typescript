@@ -73,9 +73,9 @@ export class EmitTask extends _TaskBase {
    * Validates the current instance of the EmitTask.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new EmitTask(this as any) as EmitTaskIntersection;
-    validate('EmitTask', copy);
+    validate('EmitTask', copy, workflow);
   }
 
   /**

@@ -58,9 +58,9 @@ export class WithOpenAPIParameters extends ObjectHydrator<Specification.WithOpen
    * Validates the current instance of the WithOpenAPIParameters.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new WithOpenAPIParameters(this as any) as WithOpenAPIParametersIntersection;
-    validate('WithOpenAPIParameters', copy);
+    validate('WithOpenAPIParameters', copy, workflow);
   }
 
   /**

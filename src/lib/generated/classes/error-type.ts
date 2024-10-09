@@ -58,9 +58,9 @@ export class ErrorType extends ObjectHydrator<Specification.ErrorType> {
    * Validates the current instance of the ErrorType.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new ErrorType(this as any) as ErrorTypeIntersection;
-    validate('ErrorType', copy);
+    validate('ErrorType', copy, workflow);
   }
 
   /**

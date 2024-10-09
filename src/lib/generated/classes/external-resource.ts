@@ -63,9 +63,9 @@ export class ExternalResource extends ObjectHydrator<Specification.ExternalResou
    * Validates the current instance of the ExternalResource.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new ExternalResource(this as any) as ExternalResourceIntersection;
-    validate('ExternalResource', copy);
+    validate('ExternalResource', copy, workflow);
   }
 
   /**

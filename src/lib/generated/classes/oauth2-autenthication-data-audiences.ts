@@ -20,6 +20,7 @@
  *
  *****************************************************************************************/
 
+import { Specification } from '../definitions';
 import { ArrayHydrator } from '../../hydrator';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
@@ -50,9 +51,9 @@ export class OAuth2AutenthicationDataAudiences extends ArrayHydrator<string> {
    * Validates the current instance of the OAuth2AutenthicationDataAudiences.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new OAuth2AutenthicationDataAudiences(this);
-    validate('OAuth2AutenthicationDataAudiences', copy);
+    validate('OAuth2AutenthicationDataAudiences', copy, workflow);
   }
 
   /**

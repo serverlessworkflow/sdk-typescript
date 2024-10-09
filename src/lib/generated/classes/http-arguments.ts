@@ -69,9 +69,9 @@ export class HTTPArguments extends ObjectHydrator<Specification.HTTPArguments> {
    * Validates the current instance of the HTTPArguments.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new HTTPArguments(this as any) as HTTPArgumentsIntersection;
-    validate('HTTPArguments', copy);
+    validate('HTTPArguments', copy, workflow);
   }
 
   /**

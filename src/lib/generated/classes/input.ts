@@ -63,9 +63,9 @@ export class Input extends ObjectHydrator<Specification.Input> {
    * Validates the current instance of the Input.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new Input(this as any) as InputIntersection;
-    validate('Input', copy);
+    validate('Input', copy, workflow);
   }
 
   /**

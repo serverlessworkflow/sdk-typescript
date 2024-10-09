@@ -52,9 +52,9 @@ export class AnyEventConsumptionStrategyConfiguration extends ArrayHydrator<Spec
    * Validates the current instance of the AnyEventConsumptionStrategyConfiguration.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new AnyEventConsumptionStrategyConfiguration(this);
-    validate('AnyEventConsumptionStrategyConfiguration', copy);
+    validate('AnyEventConsumptionStrategyConfiguration', copy, workflow);
   }
 
   /**

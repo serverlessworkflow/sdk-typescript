@@ -58,9 +58,9 @@ export class WorkflowTags extends ObjectHydrator<Specification.WorkflowTags> {
    * Validates the current instance of the WorkflowTags.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new WorkflowTags(this as any) as WorkflowTagsIntersection;
-    validate('WorkflowTags', copy);
+    validate('WorkflowTags', copy, workflow);
   }
 
   /**

@@ -58,9 +58,9 @@ export class EventDataschema extends ObjectHydrator<Specification.EventDataschem
    * Validates the current instance of the EventDataschema.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new EventDataschema(this as any) as EventDataschemaIntersection;
-    validate('EventDataschema', copy);
+    validate('EventDataschema', copy, workflow);
   }
 
   /**

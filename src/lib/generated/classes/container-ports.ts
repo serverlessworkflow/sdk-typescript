@@ -58,9 +58,9 @@ export class ContainerPorts extends ObjectHydrator<Specification.ContainerPorts>
    * Validates the current instance of the ContainerPorts.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new ContainerPorts(this as any) as ContainerPortsIntersection;
-    validate('ContainerPorts', copy);
+    validate('ContainerPorts', copy, workflow);
   }
 
   /**

@@ -58,9 +58,9 @@ export class Error extends ObjectHydrator<Specification.Error> {
    * Validates the current instance of the Error.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new Error(this as any) as ErrorIntersection;
-    validate('Error', copy);
+    validate('Error', copy, workflow);
   }
 
   /**

@@ -63,9 +63,9 @@ export class RaiseTaskConfiguration extends ObjectHydrator<Specification.RaiseTa
    * Validates the current instance of the RaiseTaskConfiguration.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new RaiseTaskConfiguration(this as any) as RaiseTaskConfigurationIntersection;
-    validate('RaiseTaskConfiguration', copy);
+    validate('RaiseTaskConfiguration', copy, workflow);
   }
 
   /**

@@ -73,9 +73,9 @@ export class SetTask extends _TaskBase {
    * Validates the current instance of the SetTask.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new SetTask(this as any) as SetTaskIntersection;
-    validate('SetTask', copy);
+    validate('SetTask', copy, workflow);
   }
 
   /**

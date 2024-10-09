@@ -73,9 +73,9 @@ export class DoTask extends _TaskBase {
    * Validates the current instance of the DoTask.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new DoTask(this as any) as DoTaskIntersection;
-    validate('DoTask', copy);
+    validate('DoTask', copy, workflow);
   }
 
   /**

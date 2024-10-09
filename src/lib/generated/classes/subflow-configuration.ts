@@ -63,9 +63,9 @@ export class SubflowConfiguration extends ObjectHydrator<Specification.SubflowCo
    * Validates the current instance of the SubflowConfiguration.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new SubflowConfiguration(this as any) as SubflowConfigurationIntersection;
-    validate('SubflowConfiguration', copy);
+    validate('SubflowConfiguration', copy, workflow);
   }
 
   /**

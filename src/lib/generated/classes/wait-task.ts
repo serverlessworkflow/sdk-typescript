@@ -73,9 +73,9 @@ export class WaitTask extends _TaskBase {
    * Validates the current instance of the WaitTask.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new WaitTask(this as any) as WaitTaskIntersection;
-    validate('WaitTask', copy);
+    validate('WaitTask', copy, workflow);
   }
 
   /**

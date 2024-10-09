@@ -74,11 +74,11 @@ export class OAuth2ConnectAuthenticationProperties extends _OAuth2Autenthication
    * Validates the current instance of the OAuth2ConnectAuthenticationProperties.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new OAuth2ConnectAuthenticationProperties(
       this as any,
     ) as OAuth2ConnectAuthenticationPropertiesIntersection;
-    validate('OAuth2ConnectAuthenticationProperties', copy);
+    validate('OAuth2ConnectAuthenticationProperties', copy, workflow);
   }
 
   /**

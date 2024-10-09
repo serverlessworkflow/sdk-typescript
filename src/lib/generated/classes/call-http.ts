@@ -74,9 +74,9 @@ export class CallHTTP extends _TaskBase {
    * Validates the current instance of the CallHTTP.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new CallHTTP(this as any) as CallHTTPIntersection;
-    validate('CallHTTP', copy);
+    validate('CallHTTP', copy, workflow);
   }
 
   /**

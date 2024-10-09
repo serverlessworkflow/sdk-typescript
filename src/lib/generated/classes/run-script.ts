@@ -63,9 +63,9 @@ export class RunScript extends ObjectHydrator<Specification.RunScript> {
    * Validates the current instance of the RunScript.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new RunScript(this as any) as RunScriptIntersection;
-    validate('RunScript', copy);
+    validate('RunScript', copy, workflow);
   }
 
   /**

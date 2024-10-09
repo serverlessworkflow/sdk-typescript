@@ -73,9 +73,9 @@ export class RaiseTask extends _TaskBase {
    * Validates the current instance of the RaiseTask.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new RaiseTask(this as any) as RaiseTaskIntersection;
-    validate('RaiseTask', copy);
+    validate('RaiseTask', copy, workflow);
   }
 
   /**

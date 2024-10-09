@@ -68,9 +68,9 @@ export class UseRetries extends ObjectHydrator<Specification.UseRetries> {
    * Validates the current instance of the UseRetries.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new UseRetries(this as any) as UseRetriesIntersection;
-    validate('UseRetries', copy);
+    validate('UseRetries', copy, workflow);
   }
 
   /**

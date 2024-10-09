@@ -81,9 +81,9 @@ export class RunTaskConfiguration extends ObjectHydrator<Specification.RunTaskCo
    * Validates the current instance of the RunTaskConfiguration.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new RunTaskConfiguration(this as any) as RunTaskConfigurationIntersection;
-    validate('RunTaskConfiguration', copy);
+    validate('RunTaskConfiguration', copy, workflow);
   }
 
   /**

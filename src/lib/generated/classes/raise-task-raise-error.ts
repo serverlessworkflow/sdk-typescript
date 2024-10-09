@@ -58,9 +58,9 @@ export class RaiseTaskRaiseError extends ObjectHydrator<Specification.RaiseTaskR
    * Validates the current instance of the RaiseTaskRaiseError.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new RaiseTaskRaiseError(this as any) as RaiseTaskRaiseErrorIntersection;
-    validate('RaiseTaskRaiseError', copy);
+    validate('RaiseTaskRaiseError', copy, workflow);
   }
 
   /**

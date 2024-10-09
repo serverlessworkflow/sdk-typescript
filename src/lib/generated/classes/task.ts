@@ -190,9 +190,9 @@ export class Task extends ObjectHydrator<Specification.Task> {
    * Validates the current instance of the Task.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new Task(this as any) as TaskIntersection;
-    validate('Task', copy);
+    validate('Task', copy, workflow);
   }
 
   /**

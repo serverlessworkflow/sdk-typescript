@@ -58,9 +58,9 @@ export class OAuth2TokenDefinition extends ObjectHydrator<Specification.OAuth2To
    * Validates the current instance of the OAuth2TokenDefinition.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new OAuth2TokenDefinition(this as any) as OAuth2TokenDefinitionIntersection;
-    validate('OAuth2TokenDefinition', copy);
+    validate('OAuth2TokenDefinition', copy, workflow);
   }
 
   /**

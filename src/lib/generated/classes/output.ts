@@ -63,9 +63,9 @@ export class Output extends ObjectHydrator<Specification.Output> {
    * Validates the current instance of the Output.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new Output(this as any) as OutputIntersection;
-    validate('Output', copy);
+    validate('Output', copy, workflow);
   }
 
   /**

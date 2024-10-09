@@ -58,9 +58,9 @@ export class Duration extends ObjectHydrator<Specification.Duration> {
    * Validates the current instance of the Duration.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new Duration(this as any) as DurationIntersection;
-    validate('Duration', copy);
+    validate('Duration', copy, workflow);
   }
 
   /**

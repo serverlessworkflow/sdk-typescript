@@ -64,9 +64,9 @@ export class RetryPolicyJitter extends ObjectHydrator<Specification.RetryPolicyJ
    * Validates the current instance of the RetryPolicyJitter.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new RetryPolicyJitter(this as any) as RetryPolicyJitterIntersection;
-    validate('RetryPolicyJitter', copy);
+    validate('RetryPolicyJitter', copy, workflow);
   }
 
   /**

@@ -58,9 +58,9 @@ export class WithHTTPHeaders extends ObjectHydrator<Specification.WithHTTPHeader
    * Validates the current instance of the WithHTTPHeaders.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new WithHTTPHeaders(this as any) as WithHTTPHeadersIntersection;
-    validate('WithHTTPHeaders', copy);
+    validate('WithHTTPHeaders', copy, workflow);
   }
 
   /**

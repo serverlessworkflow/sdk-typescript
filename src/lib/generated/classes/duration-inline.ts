@@ -58,9 +58,9 @@ export class DurationInline extends ObjectHydrator<Specification.DurationInline>
    * Validates the current instance of the DurationInline.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new DurationInline(this as any) as DurationInlineIntersection;
-    validate('DurationInline', copy);
+    validate('DurationInline', copy, workflow);
   }
 
   /**

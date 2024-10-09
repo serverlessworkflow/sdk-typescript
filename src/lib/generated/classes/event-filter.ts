@@ -65,9 +65,9 @@ export class EventFilter extends ObjectHydrator<Specification.EventFilter> {
    * Validates the current instance of the EventFilter.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new EventFilter(this as any) as EventFilterIntersection;
-    validate('EventFilter', copy);
+    validate('EventFilter', copy, workflow);
   }
 
   /**

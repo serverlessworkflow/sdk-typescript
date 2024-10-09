@@ -68,9 +68,9 @@ export class AsyncApiArguments extends ObjectHydrator<Specification.AsyncApiArgu
    * Validates the current instance of the AsyncApiArguments.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new AsyncApiArguments(this as any) as AsyncApiArgumentsIntersection;
-    validate('AsyncApiArguments', copy);
+    validate('AsyncApiArguments', copy, workflow);
   }
 
   /**

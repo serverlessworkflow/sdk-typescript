@@ -58,9 +58,9 @@ export class SetTaskConfiguration extends ObjectHydrator<Specification.SetTaskCo
    * Validates the current instance of the SetTaskConfiguration.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new SetTaskConfiguration(this as any) as SetTaskConfigurationIntersection;
-    validate('SetTaskConfiguration', copy);
+    validate('SetTaskConfiguration', copy, workflow);
   }
 
   /**

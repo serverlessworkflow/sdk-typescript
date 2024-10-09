@@ -67,9 +67,9 @@ export class Endpoint extends ObjectHydrator<Specification.Endpoint> {
    * Validates the current instance of the Endpoint.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new Endpoint(this as any) as EndpointIntersection;
-    validate('Endpoint', copy);
+    validate('Endpoint', copy, workflow);
   }
 
   /**

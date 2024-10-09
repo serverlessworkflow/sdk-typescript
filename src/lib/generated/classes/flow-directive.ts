@@ -58,9 +58,9 @@ export class FlowDirective extends ObjectHydrator<Specification.FlowDirective> {
    * Validates the current instance of the FlowDirective.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new FlowDirective(this as any) as FlowDirectiveIntersection;
-    validate('FlowDirective', copy);
+    validate('FlowDirective', copy, workflow);
   }
 
   /**

@@ -63,9 +63,9 @@ export class RunWorkflow extends ObjectHydrator<Specification.RunWorkflow> {
    * Validates the current instance of the RunWorkflow.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new RunWorkflow(this as any) as RunWorkflowIntersection;
-    validate('RunWorkflow', copy);
+    validate('RunWorkflow', copy, workflow);
   }
 
   /**

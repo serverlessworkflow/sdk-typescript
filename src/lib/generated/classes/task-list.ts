@@ -52,9 +52,9 @@ export class TaskList extends ArrayHydrator<Specification.TaskItem> {
    * Validates the current instance of the TaskList.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new TaskList(this);
-    validate('TaskList', copy);
+    validate('TaskList', copy, workflow);
   }
 
   /**

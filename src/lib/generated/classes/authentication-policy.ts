@@ -92,9 +92,9 @@ export class AuthenticationPolicy extends ObjectHydrator<Specification.Authentic
    * Validates the current instance of the AuthenticationPolicy.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new AuthenticationPolicy(this as any) as AuthenticationPolicyIntersection;
-    validate('AuthenticationPolicy', copy);
+    validate('AuthenticationPolicy', copy, workflow);
   }
 
   /**

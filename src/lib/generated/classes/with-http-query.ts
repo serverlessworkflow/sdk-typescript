@@ -58,9 +58,9 @@ export class WithHTTPQuery extends ObjectHydrator<Specification.WithHTTPQuery> {
    * Validates the current instance of the WithHTTPQuery.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new WithHTTPQuery(this as any) as WithHTTPQueryIntersection;
-    validate('WithHTTPQuery', copy);
+    validate('WithHTTPQuery', copy, workflow);
   }
 
   /**

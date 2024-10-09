@@ -59,9 +59,9 @@ export class OAuth2AutenthicationDataClient extends ObjectHydrator<Specification
    * Validates the current instance of the OAuth2AutenthicationDataClient.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new OAuth2AutenthicationDataClient(this as any) as OAuth2AutenthicationDataClientIntersection;
-    validate('OAuth2AutenthicationDataClient', copy);
+    validate('OAuth2AutenthicationDataClient', copy, workflow);
   }
 
   /**

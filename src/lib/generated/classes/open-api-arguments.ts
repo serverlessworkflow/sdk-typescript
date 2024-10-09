@@ -68,9 +68,9 @@ export class OpenAPIArguments extends ObjectHydrator<Specification.OpenAPIArgume
    * Validates the current instance of the OpenAPIArguments.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new OpenAPIArguments(this as any) as OpenAPIArgumentsIntersection;
-    validate('OpenAPIArguments', copy);
+    validate('OpenAPIArguments', copy, workflow);
   }
 
   /**

@@ -63,9 +63,9 @@ export class RunShell extends ObjectHydrator<Specification.RunShell> {
    * Validates the current instance of the RunShell.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new RunShell(this as any) as RunShellIntersection;
-    validate('RunShell', copy);
+    validate('RunShell', copy, workflow);
   }
 
   /**

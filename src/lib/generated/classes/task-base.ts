@@ -71,9 +71,9 @@ export class TaskBase extends ObjectHydrator<Specification.TaskBase> {
    * Validates the current instance of the TaskBase.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new TaskBase(this as any) as TaskBaseIntersection;
-    validate('TaskBase', copy);
+    validate('TaskBase', copy, workflow);
   }
 
   /**

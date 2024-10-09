@@ -73,9 +73,9 @@ export class RunTask extends _TaskBase {
    * Validates the current instance of the RunTask.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new RunTask(this as any) as RunTaskIntersection;
-    validate('RunTask', copy);
+    validate('RunTask', copy, workflow);
   }
 
   /**

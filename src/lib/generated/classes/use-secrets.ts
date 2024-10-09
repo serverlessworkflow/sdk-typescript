@@ -20,6 +20,7 @@
  *
  *****************************************************************************************/
 
+import { Specification } from '../definitions';
 import { ArrayHydrator } from '../../hydrator';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
@@ -50,9 +51,9 @@ export class UseSecrets extends ArrayHydrator<string> {
    * Validates the current instance of the UseSecrets.
    * Throws if invalid.
    */
-  validate() {
+  validate(workflow?: Partial<Specification.Workflow>) {
     const copy = new UseSecrets(this);
-    validate('UseSecrets', copy);
+    validate('UseSecrets', copy, workflow);
   }
 
   /**
