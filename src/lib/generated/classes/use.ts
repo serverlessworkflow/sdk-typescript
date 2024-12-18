@@ -26,6 +26,7 @@ import { _UseExtensions } from './use-extensions';
 import { _UseFunctions } from './use-functions';
 import { _UseRetries } from './use-retries';
 import { _UseTimeouts } from './use-timeouts';
+import { _UseCatalogs } from './use-catalogs';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
@@ -66,6 +67,7 @@ export class Use extends ObjectHydrator<Specification.Use> {
       if (typeof model.functions === 'object') self.functions = new _UseFunctions(model.functions);
       if (typeof model.retries === 'object') self.retries = new _UseRetries(model.retries);
       if (typeof model.timeouts === 'object') self.timeouts = new _UseTimeouts(model.timeouts);
+      if (typeof model.catalogs === 'object') self.catalogs = new _UseCatalogs(model.catalogs);
     }
     getLifecycleHooks('Use')?.constructor?.(this);
   }

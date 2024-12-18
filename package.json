@@ -1,7 +1,7 @@
 {
   "name": "@serverlessworkflow/sdk",
-  "version": "1.0.0-alpha3.0",
-  "schemaVersion": "1.0.0-alpha3",
+  "version": "1.0.0-alpha5.0",
+  "schemaVersion": "1.0.0-alpha5",
   "description": "Typescript SDK for Serverless Workflow Specification",
   "main": "umd/index.umd.min.js",
   "browser": "umd/index.umd.min.js",

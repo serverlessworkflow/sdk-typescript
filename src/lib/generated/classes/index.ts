@@ -33,6 +33,7 @@ import { _CallGRPC } from './call-grpc';
 import { _CallHTTP } from './call-http';
 import { _CallOpenAPI } from './call-open-api';
 import { _CallTask } from './call-task';
+import { _Catalog } from './catalog';
 import { _CatchErrors } from './catch-errors';
 import { _ConstantBackoff } from './constant-backoff';
 import { _Container } from './container';
@@ -145,8 +146,10 @@ import { _Timeout } from './timeout';
 import { _TryTask } from './try-task';
 import { _TryTaskCatch } from './try-task-catch';
 import { _TryTaskCatchRetry } from './try-task-catch-retry';
+import { _UriTemplate } from './uri-template';
 import { _Use } from './use';
 import { _UseAuthentications } from './use-authentications';
+import { _UseCatalogs } from './use-catalogs';
 import { _UseErrors } from './use-errors';
 import { _UseExtensions } from './use-extensions';
 import { _UseFunctions } from './use-functions';
@@ -187,6 +190,7 @@ export const Classes = {
   CallHTTP: _CallHTTP,
   CallOpenAPI: _CallOpenAPI,
   CallTask: _CallTask,
+  Catalog: _Catalog,
   CatchErrors: _CatchErrors,
   ConstantBackoff: _ConstantBackoff,
   Container: _Container,
@@ -299,8 +303,10 @@ export const Classes = {
   TryTask: _TryTask,
   TryTaskCatch: _TryTaskCatch,
   TryTaskCatchRetry: _TryTaskCatchRetry,
+  UriTemplate: _UriTemplate,
   Use: _Use,
   UseAuthentications: _UseAuthentications,
+  UseCatalogs: _UseCatalogs,
   UseErrors: _UseErrors,
   UseExtensions: _UseExtensions,
   UseFunctions: _UseFunctions,

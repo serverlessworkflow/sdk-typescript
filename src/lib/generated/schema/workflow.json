@@ -1,5 +1,5 @@
 {
-  "$id": "https://serverlessworkflow.io/schemas/1.0.0-alpha3/workflow.json",
+  "$id": "https://serverlessworkflow.io/schemas/1.0.0-alpha5/workflow.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Serverless Workflow DSL - Workflow Schema.",
   "type": "object",
@@ -140,6 +140,14 @@
           "description": "The workflow's reusable timeouts.",
           "additionalProperties": {
             "$ref": "#/$defs/timeout"
+          }
+        },
+        "catalogs": {
+          "type": "object",
+          "title": "UseCatalogs",
+          "description": "The workflow's reusable catalogs.",
+          "additionalProperties": {
+            "$ref": "#/$defs/catalog"
           }
         }
       }
@@ -1466,8 +1474,7 @@
       "description": "Inline configuration of the OAuth2 authentication policy.",
       "properties": {
         "authority": {
-          "type": "string",
-          "format": "uri-template",
+          "$ref": "#/$defs/uriTemplate",
           "title": "OAuth2AutenthicationDataAuthority",
           "description": "The URI that references the OAuth2 authority to use."
         },
@@ -1659,13 +1666,12 @@
           "oneOf": [
             {
               "title": "LiteralErrorType",
-              "description": "The literal error type.",
-              "type": "string",
-              "format": "uri-template"
+              "$ref": "#/$defs/uriTemplate",
+              "description": "The literal error type."
             },
             {
-              "$ref": "#/$defs/runtimeExpression",
               "title": "ExpressionErrorType",
+              "$ref": "#/$defs/runtimeExpression",
               "description": "An expression based error type."
             }
           ]
@@ -1708,6 +1714,23 @@
         "status"
       ]
     },
+    "uriTemplate": {
+      "title": "UriTemplate",
+      "anyOf": [
+        {
+          "title": "LiteralUriTemplate",
+          "type": "string",
+          "format": "uri-template",
+          "pattern": "^[A-Za-z][A-Za-z0-9+\\-.]*://.*"
+        },
+        {
+          "title": "LiteralUri",
+          "type": "string",
+          "format": "uri",
+          "pattern": "^[A-Za-z][A-Za-z0-9+\\-.]*://.*"
+        }
+      ]
+    },
     "endpoint": {
       "title": "Endpoint",
       "description": "Represents an endpoint.",
@@ -1716,9 +1739,7 @@
           "$ref": "#/$defs/runtimeExpression"
         },
         {
-          "title": "LiteralEndpoint",
-          "type": "string",
-          "format": "uri-template"
+          "$ref": "#/$defs/uriTemplate"
         },
         {
           "title": "EndpointConfiguration",
@@ -1732,12 +1753,11 @@
                 {
                   "title": "LiteralEndpointURI",
                   "description": "The literal endpoint's URI.",
-                  "type": "string",
-                  "format": "uri-template"
+                  "$ref": "#/$defs/uriTemplate"
                 },
                 {
-                  "$ref": "#/$defs/runtimeExpression",
                   "title": "ExpressionEndpointURI",
+                  "$ref": "#/$defs/runtimeExpression",
                   "description": "An expression based endpoint's URI."
                 }
               ]
@@ -1769,9 +1789,7 @@
           "description": "Identifies the context in which an event happened.",
           "oneOf": [
             {
-              "title": "LiteralSource",
-              "type": "string",
-              "format": "uri-template"
+              "$ref": "#/$defs/uriTemplate"
             },
             {
               "$ref": "#/$defs/runtimeExpression"
@@ -1813,13 +1831,12 @@
           "oneOf": [
             {
               "title": "LiteralDataSchema",
-              "description": "The literal event data schema.",
-              "type": "string",
-              "format": "uri-template"
+              "$ref": "#/$defs/uriTemplate",
+              "description": "The literal event data schema."
             },
             {
-              "$ref": "#/$defs/runtimeExpression",
               "title": "ExpressionDataSchema",
+              "$ref": "#/$defs/runtimeExpression",
               "description": "An expression based event data schema."
             }
           ]
@@ -2234,6 +2251,22 @@
       },
       "required": [
         "after"
+      ]
+    },
+    "catalog": {
+      "type": "object",
+      "title": "Catalog",
+      "description": "The definition of a resource catalog",
+      "unevaluatedProperties": false,
+      "properties": {
+        "endpoint": {
+          "$ref": "#/$defs/endpoint",
+          "title": "CatalogEndpoint",
+          "description": "The root URL where the catalog is hosted"
+        }
+      },
+      "required": [
+        "endpoint"
       ]
     },
     "runtimeExpression": {

@@ -27,15 +27,16 @@ export type Schema = SchemaInline | SchemaExternal;
 /**
  * Represents an endpoint.
  */
-export type Endpoint = RuntimeExpression | string | EndpointConfiguration;
+export type Endpoint = RuntimeExpression | UriTemplate | EndpointConfiguration;
 /**
  * A runtime expression.
  */
 export type RuntimeExpression = string;
+export type UriTemplate = string;
 /**
  * The endpoint's URI.
  */
-export type EndpointUri = RuntimeExpression;
+export type EndpointUri = UriTemplate | RuntimeExpression;
 /**
  * Represents a referenceable authentication policy.
  */
@@ -103,7 +104,7 @@ export type InputFrom =
 /**
  * A URI reference that identifies the error type.
  */
-export type ErrorType = RuntimeExpression;
+export type ErrorType = UriTemplate | RuntimeExpression;
 /**
  * A JSON Pointer used to reference the component the error originates from.
  */
@@ -221,7 +222,7 @@ export type EmitTask = TaskBase & {
 /**
  * Identifies the context in which an event happened.
  */
-export type EventSource = RuntimeExpression;
+export type EventSource = UriTemplate | RuntimeExpression;
 /**
  * When the event occured.
  */
@@ -229,7 +230,7 @@ export type EventTime = RuntimeExpression;
 /**
  * The schema describing the event format.
  */
-export type EventDataschema = RuntimeExpression;
+export type EventDataschema = UriTemplate | RuntimeExpression;
 /**
  * Allows workflows to iterate over a collection of items, executing a defined set of subtasks for each item in the collection. This task type is instrumental in handling scenarios such as batch processing, data transformation, and repetitive operations across datasets.
  */
@@ -520,10 +521,7 @@ export interface OAuth2AuthenticationPolicy {
  * Inline configuration of the OAuth2 authentication policy.
  */
 export interface OAuth2AutenthicationData {
-  /**
-   * The URI that references the OAuth2 authority to use.
-   */
-  authority?: string;
+  authority?: UriTemplate;
   /**
    * The grant type to use.
    */
@@ -620,10 +618,7 @@ export interface OpenIdConnectAuthenticationPolicy {
  * Inline configuration of the OAuth2 authentication policy.
  */
 export interface OpenIdConnectAuthenticationProperties {
-  /**
-   * The URI that references the OAuth2 authority to use.
-   */
-  authority?: string;
+  authority?: UriTemplate;
   /**
    * The grant type to use.
    */
@@ -660,6 +655,7 @@ export interface Use {
   retries?: UseRetries;
   secrets?: UseSecrets;
   timeouts?: UseTimeouts;
+  catalogs?: UseCatalogs;
 }
 /**
  * The workflow's reusable authentication policies.
@@ -1303,6 +1299,18 @@ export interface UseRetries {
  */
 export interface UseTimeouts {
   [k: string]: Timeout;
+}
+/**
+ * The workflow's reusable catalogs.
+ */
+export interface UseCatalogs {
+  [k: string]: Catalog;
+}
+/**
+ * The definition of a resource catalog
+ */
+export interface Catalog {
+  endpoint: Endpoint;
 }
 /**
  * Schedules the workflow.
