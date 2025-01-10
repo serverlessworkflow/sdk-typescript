@@ -14,7 +14,7 @@ The npm [`@serverlessworkflow/sdk`](https://www.npmjs.com/package/@serverlesswor
 
 | Latest Releases | Conformance to Spec Version |
 | :---: | :---: |
-| [v1.0.0-alpha2.\*](https://github.com/serverlessworkflow/sdk-typescript/releases/) | [v1.0.0-alpha2](https://github.com/serverlessworkflow/specification) |
+| [v1.0.0-alpha5.\*](https://github.com/serverlessworkflow/sdk-typescript/releases/) | [v1.0.0-alpha5](https://github.com/serverlessworkflow/specification) |
 
 > [!WARNING]
 > Previous versions of the SDK were published with a typo in the scope:
@@ -58,7 +58,7 @@ The `validate` function is directly exported and can be used as `validate('Workf
 
 ### Installation
 > [!NOTE]
-> Version v1.0.0-alpha2.\* has not been released yet.
+> Version v1.0.0-alpha5.\* has not been released yet.
 
 ```sh
 npm install @serverlessworkflow/sdk
@@ -75,7 +75,7 @@ import { Classes } from '@serverlessworkflow/sdk';
 // const text = await fetch('https://myserver.com/my-workflow-definition.json');
 const text = `
 document:
-  dsl: 1.0.0-alpha2
+  dsl: 1.0.0-alpha5
   name: test
   version: 1.0.0
   namespace: default
@@ -96,7 +96,7 @@ import { Classes, Specification, validate } from '@serverlessworkflow/sdk';
 // Simply cast an object:
 const workflowDefinition = {
   document: {
-    dsl: '1.0.0-alpha2',
+    dsl: '1.0.0-alpha5',
     name: 'test',
     version: '1.0.0',
     namespace: 'default',
@@ -132,7 +132,7 @@ import { Classes, validate } from '@serverlessworkflow/sdk';
 // Simply use the constructor
 const workflowDefinition = new Classes.Workflow({
   document: {
-    dsl: '1.0.0-alpha2',
+    dsl: '1.0.0-alpha5',
     name: 'test',
     version: '1.0.0',
     namespace: 'default',
@@ -175,7 +175,7 @@ import { documentBuilder, setTaskBuilder, taskListBuilder, workflowBuilder } fro
 const workflowDefinition = workflowBuilder(/*workflowDefinitionObject*/)
   .document(
     documentBuilder()
-    .dsl('1.0.0-alpha2')
+    .dsl('1.0.0-alpha5')
     .name('test')
     .version('1.0.0')
     .namespace('default')

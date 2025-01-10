@@ -19,6 +19,7 @@ import { Specification } from '../../src/lib/generated/definitions';
 import { Classes } from '../../src/lib/generated/classes';
 
 import { schemaVersion } from '../../package.json';
+import { documentBuilder, setTaskBuilder, taskListBuilder, workflowBuilder } from '../../src';
 
 describe('Workflow (de)serialization', () => {
   it('should deserialize JSON', () => {
@@ -89,6 +90,22 @@ describe('Workflow (de)serialization', () => {
     const workflow = new Classes.Workflow(data);
     const expected = JSON.stringify(data);
     const serialized = workflow.serialize('json');
+    expect(serialized).toEqual(expected);
+  });
+
+  it('should serialize as JSON from from static method from fluently built workflow', () => {
+    const workflow = workflowBuilder()
+      .document(documentBuilder().dsl('1.0.0-alpha5').name('test').version('1.0.0').namespace('default').build())
+      .do(
+        taskListBuilder()
+          .push({
+            step1: setTaskBuilder().set({ foo: 'bar' }).build(),
+          })
+          .build(),
+      )
+      .build();
+    const expected = JSON.stringify(workflow);
+    const serialized = Classes.Workflow.serialize(workflow, 'json');
     expect(serialized).toEqual(expected);
   });
 });

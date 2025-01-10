@@ -99,16 +99,17 @@ export class Workflow extends ObjectHydrator<Specification.Workflow> {
   }
 
   static serialize(
-    workflow: WorkflowIntersection,
+    model: Partial<WorkflowIntersection>,
     format: 'yaml' | 'json' = 'yaml',
     normalize: boolean = true,
   ): string {
+    const workflow = new Workflow(model);
     workflow.validate();
-    const model = normalize ? workflow.normalize() : workflow;
+    const normalized = normalize ? workflow.normalize() : workflow;
     if (format === 'json') {
-      return JSON.stringify(model);
+      return JSON.stringify(normalized);
     }
-    return yaml.dump(model);
+    return yaml.dump(normalized);
   }
 
   /**
@@ -137,5 +138,5 @@ export const _Workflow = Workflow as WorkflowConstructor & {
    * @param normalize If the workflow should be normalized before serialization, default true
    * @returns A string representation of the workflow
    */
-  serialize(workflow: WorkflowIntersection, format?: 'yaml' | 'json', normalize?: boolean): string;
+  serialize(workflow: Partial<WorkflowIntersection>, format?: 'yaml' | 'json', normalize?: boolean): string;
 };

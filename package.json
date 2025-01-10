@@ -32,7 +32,7 @@
     "verify-publish-directory": "node -e 'if (!process.cwd().endsWith(\"dist\")) { console.error(\"Packaging/Publishing should be done from ./dist/\"); process.exitCode = 1; } process.exit();'",
     "prepack": "npm run verify-publish-directory",
     "prepublishOnly": "npm run verify-publish-directory",
-    "prepublish": "husky install"
+    "prepublish": "husky"
   },
   "dependencies": {
     "ajv": "^8.17.1",
