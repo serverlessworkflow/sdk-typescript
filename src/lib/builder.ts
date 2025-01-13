@@ -9,40 +9,137 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * oUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 /**
- * Represents a builder proxy
+ * Represents the options passed to the `build()` method
  */
-export type Builder<T> = {
-  build: () => T;
-} & {
-  [k in T extends T ? keyof T : never]-?: (arg: T[k]) => Builder<T>;
+export type BuildOptions = {
+  /**
+   * Default true
+   */
+  validate?: boolean;
+  /**
+   * Default true
+   */
+  normalize?: boolean;
 };
 
 /**
- * A factory for builders that proxy properties assignations and validate against schema on build
- * @param {Function} buildingFn The function used to validate and produce the object on build()
- * @returns {Builder} A builder proxy
+ * The type of the underlying function called on `build()` for objects
  */
-export function builder<T>(buildingFn?: (data: Partial<T>) => () => T): Builder<T> {
-  const data: Partial<T> = {};
-  const defaultBuildingFn =
-    (data: Partial<T>): (() => T) =>
-    () =>
-      data as T;
-  const proxy = new Proxy({} as Builder<T>, {
+export type BuildingFunction<TSpec, TBuilt> = (model: Partial<TSpec>, options: BuildOptions) => TBuilt;
+
+/**
+ * The type of the underlying function called on `build()` for arrays
+ */
+export type ArrayBuildingFunction<TSpec, TBuilt> = (model: Array<TSpec>, options: BuildOptions) => TBuilt;
+
+/**
+ * Represents a fluent builder proxy for an object
+ */
+export type Builder<TSpec, TBuilt = TSpec> = {
+  build: (option?: BuildOptions) => TBuilt;
+} & {
+  [K in keyof TSpec]-?: (arg: TSpec[K]) => Builder<TSpec, TBuilt>;
+};
+
+/**
+ * Represents a fluent builder proxy for an array
+ */
+export type ArrayBuilder<TSpec, TBuilt> = {
+  push: (item: TSpec) => ArrayBuilder<TSpec, TBuilt>;
+  build: (option?: BuildOptions) => TBuilt;
+};
+
+/**
+ * The default function used to build an object, basically just return the provided object
+ * @param model The object to "build"
+ * @param options The build options
+ * @returns
+ */
+function defaultBuildingFn<TSpec, TBuilt = TSpec>(model: Partial<TSpec>, options: BuildOptions): TBuilt {
+  // prevents @typescript-eslint/no-unused-vars ...
+  if (options.validate == null) {
+    options.validate = true;
+  }
+  if (options.normalize == null) {
+    options.normalize = true;
+  }
+  return model as TBuilt;
+}
+
+/**
+ * A factory for fluent builders that proxy properties assignations and can validate against schema on build()
+ * @param buildingFn The function used to validate and produce the object on build()
+ * @returns A fluent builder
+ */
+export function builder<TSpec, TBuilt = TSpec>(
+  model: Partial<TSpec> = {},
+  buildingFn: BuildingFunction<TSpec, TBuilt> = defaultBuildingFn,
+): Builder<TSpec, TBuilt> {
+  const proxy = new Proxy({} as Builder<TSpec, TBuilt>, {
     get: (_, prop) => {
       if (prop === 'build') {
-        return (buildingFn || defaultBuildingFn)(data);
+        return (options?: BuildOptions) => {
+          options = options || ({} as BuildOptions);
+          if (options.validate == null) {
+            options.validate = true;
+          }
+          if (options.normalize == null) {
+            options.normalize = true;
+          }
+          return buildingFn(model, options);
+        };
       }
-      return (value: unknown): Builder<T> => {
-        (data as any)[prop.toString()] = value;
+      return (value: unknown): Builder<TSpec, TBuilt> => {
+        (model as any)[prop.toString()] = value;
         return proxy;
       };
+    },
+    set: () => {
+      return false;
+    },
+  });
+  return proxy;
+}
+
+/**
+ * A factory for fluent builders that proxy properties assignations and can validate against schema on build()
+ * @param buildingFn The function used to validate and produce the object on build()
+ * @returns A fluent builder
+ */
+export function arrayBuilder<TSpec, TBuilt>(
+  model: Array<TSpec> = [],
+  buildingFn: ArrayBuildingFunction<TSpec, TBuilt> = defaultBuildingFn,
+): ArrayBuilder<TSpec, TBuilt> {
+  if (model != null && !Array.isArray(model)) {
+    throw new Error(`The provided model should be an array`);
+  }
+  const proxy = new Proxy({} as ArrayBuilder<TSpec, TBuilt>, {
+    get: (_, prop) => {
+      if (prop === 'build') {
+        return (options?: BuildOptions) => {
+          options = options || ({} as BuildOptions);
+          if (options.validate == null) {
+            options.validate = true;
+          }
+          if (options.normalize == null) {
+            options.normalize = true;
+          }
+          return buildingFn(model, options);
+        };
+      }
+      if (prop === 'push') {
+        return (value: TSpec): ArrayBuilder<TSpec, TBuilt> => {
+          model.push(value);
+          return proxy;
+        };
+      }
     },
     set: () => {
       return false;
