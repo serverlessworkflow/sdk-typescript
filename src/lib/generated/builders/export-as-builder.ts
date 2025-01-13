@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { ExportAsIntersection } from '../classes/export-as';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.ExportAs} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.ExportAs} The built object
+ * @returns {ExportAsIntersection} The built object
  */
-function buildingFn(model: Specification.ExportAs, options: BuildOptions): Specification.ExportAs {
+function buildingFn(model: Specification.ExportAs, options: BuildOptions): ExportAsIntersection {
   const instance = new Classes.ExportAs(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.ExportAs;
+  return (options.normalize ? instance.normalize() : instance) as ExportAsIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.ExportAs`
- * @returns {Builder<Specification.ExportAs>} A builder for `Specification.ExportAs`
+ * A factory to create a builder proxy for the type `ExportAsIntersection`
+ * @returns {Builder<ExportAsIntersection, ExportAsIntersection>} A builder for `ExportAsIntersection`
  */
-export const exportAsBuilder = (model?: Partial<Specification.ExportAs>): Builder<Specification.ExportAs> =>
-  builder<Specification.ExportAs>(model, buildingFn);
+export const exportAsBuilder = (
+  model?: Partial<Specification.ExportAs>,
+): Builder<Partial<Specification.ExportAs>, ExportAsIntersection> =>
+  builder<Specification.ExportAs, ExportAsIntersection>(model, buildingFn);

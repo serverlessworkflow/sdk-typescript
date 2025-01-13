@@ -22,28 +22,29 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { BearerAuthenticationPropertiesIntersection } from '../classes/bearer-authentication-properties';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.BearerAuthenticationProperties} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.BearerAuthenticationProperties} The built object
+ * @returns {BearerAuthenticationPropertiesIntersection} The built object
  */
 function buildingFn(
   model: Specification.BearerAuthenticationProperties,
   options: BuildOptions,
-): Specification.BearerAuthenticationProperties {
+): BearerAuthenticationPropertiesIntersection {
   const instance = new Classes.BearerAuthenticationProperties(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.BearerAuthenticationProperties;
+  return (options.normalize ? instance.normalize() : instance) as BearerAuthenticationPropertiesIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.BearerAuthenticationProperties`
- * @returns {Builder<Specification.BearerAuthenticationProperties>} A builder for `Specification.BearerAuthenticationProperties`
+ * A factory to create a builder proxy for the type `BearerAuthenticationPropertiesIntersection`
+ * @returns {Builder<BearerAuthenticationPropertiesIntersection, BearerAuthenticationPropertiesIntersection>} A builder for `BearerAuthenticationPropertiesIntersection`
  */
 export const bearerAuthenticationPropertiesBuilder = (
   model?: Partial<Specification.BearerAuthenticationProperties>,
-): Builder<Specification.BearerAuthenticationProperties> =>
-  builder<Specification.BearerAuthenticationProperties>(model, buildingFn);
+): Builder<Partial<Specification.BearerAuthenticationProperties>, BearerAuthenticationPropertiesIntersection> =>
+  builder<Specification.BearerAuthenticationProperties, BearerAuthenticationPropertiesIntersection>(model, buildingFn);

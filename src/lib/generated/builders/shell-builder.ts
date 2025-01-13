@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { ShellIntersection } from '../classes/shell';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.Shell} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.Shell} The built object
+ * @returns {ShellIntersection} The built object
  */
-function buildingFn(model: Specification.Shell, options: BuildOptions): Specification.Shell {
+function buildingFn(model: Specification.Shell, options: BuildOptions): ShellIntersection {
   const instance = new Classes.Shell(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.Shell;
+  return (options.normalize ? instance.normalize() : instance) as ShellIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.Shell`
- * @returns {Builder<Specification.Shell>} A builder for `Specification.Shell`
+ * A factory to create a builder proxy for the type `ShellIntersection`
+ * @returns {Builder<ShellIntersection, ShellIntersection>} A builder for `ShellIntersection`
  */
-export const shellBuilder = (model?: Partial<Specification.Shell>): Builder<Specification.Shell> =>
-  builder<Specification.Shell>(model, buildingFn);
+export const shellBuilder = (
+  model?: Partial<Specification.Shell>,
+): Builder<Partial<Specification.Shell>, ShellIntersection> =>
+  builder<Specification.Shell, ShellIntersection>(model, buildingFn);

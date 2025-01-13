@@ -13,30 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Classes } from '../../dist';
-const { Workflow } = Classes;
-
-const workflow = new Workflow({
-  document: {
-    dsl: '1.0.0-alpha5',
-    name: 'test',
-    version: '1.0.0',
-    namespace: 'default',
-  },
-  do: [
-    {
-      step1: {
-        set: {
-          variable: 'my first workflow',
-        },
-      },
-    },
-  ],
-});
+import {
+  documentBuilder,
+  setTaskBuilder,
+  taskListBuilder,
+  workflowBuilder,
+} from /*'@serverlessworkflow/sdk';*/ '../../dist';
 
 try {
-  workflow.validate();
-  console.log(workflow.serialize('json'));
+  const workflow = workflowBuilder()
+    .document(
+      documentBuilder().dsl('1.0.0-alpha5').name('using-fluent-api').version('1.0.0').namespace('default').build(),
+    )
+    .do(
+      taskListBuilder()
+        .push({
+          step1: setTaskBuilder().set({ foo: 'bar' }).build(),
+        })
+        .build(),
+    )
+    .build();
+  console.log(`--- YAML ---\n${workflow.serialize()}\n\n--- JSON ---\n${workflow.serialize('json')}`);
 } catch (ex) {
   console.error('Invalid workflow', ex);
 }

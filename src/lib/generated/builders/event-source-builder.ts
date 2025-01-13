@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { EventSourceIntersection } from '../classes/event-source';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.EventSource} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.EventSource} The built object
+ * @returns {EventSourceIntersection} The built object
  */
-function buildingFn(model: Specification.EventSource, options: BuildOptions): Specification.EventSource {
+function buildingFn(model: Specification.EventSource, options: BuildOptions): EventSourceIntersection {
   const instance = new Classes.EventSource(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.EventSource;
+  return (options.normalize ? instance.normalize() : instance) as EventSourceIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.EventSource`
- * @returns {Builder<Specification.EventSource>} A builder for `Specification.EventSource`
+ * A factory to create a builder proxy for the type `EventSourceIntersection`
+ * @returns {Builder<EventSourceIntersection, EventSourceIntersection>} A builder for `EventSourceIntersection`
  */
-export const eventSourceBuilder = (model?: Partial<Specification.EventSource>): Builder<Specification.EventSource> =>
-  builder<Specification.EventSource>(model, buildingFn);
+export const eventSourceBuilder = (
+  model?: Partial<Specification.EventSource>,
+): Builder<Partial<Specification.EventSource>, EventSourceIntersection> =>
+  builder<Specification.EventSource, EventSourceIntersection>(model, buildingFn);

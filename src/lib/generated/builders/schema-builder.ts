@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { SchemaIntersection } from '../classes/schema';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.Schema} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.Schema} The built object
+ * @returns {SchemaIntersection} The built object
  */
-function buildingFn(model: Specification.Schema, options: BuildOptions): Specification.Schema {
+function buildingFn(model: Specification.Schema, options: BuildOptions): SchemaIntersection {
   const instance = new Classes.Schema(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.Schema;
+  return (options.normalize ? instance.normalize() : instance) as SchemaIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.Schema`
- * @returns {Builder<Specification.Schema>} A builder for `Specification.Schema`
+ * A factory to create a builder proxy for the type `SchemaIntersection`
+ * @returns {Builder<SchemaIntersection, SchemaIntersection>} A builder for `SchemaIntersection`
  */
-export const schemaBuilder = (model?: Partial<Specification.Schema>): Builder<Specification.Schema> =>
-  builder<Specification.Schema>(model, buildingFn);
+export const schemaBuilder = (
+  model?: Partial<Specification.Schema>,
+): Builder<Partial<Specification.Schema>, SchemaIntersection> =>
+  builder<Specification.Schema, SchemaIntersection>(model, buildingFn);

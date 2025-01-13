@@ -27,6 +27,18 @@ import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
 
 /**
+ * Represents the intersection between the TaskList class and type
+ */
+export type TaskListIntersection = TaskList & Specification.TaskList;
+
+/**
+ * Represents a constructor for the intersection of the TaskList class and type
+ */
+export interface TaskListConstructor {
+  new (model?: Array<Specification.TaskItem> | number): TaskListIntersection;
+}
+
+/**
  * Represents a collection of Specification.TaskItem.
  * Inherits from ArrayHydrator to handle array-specific hydration.
  */
@@ -69,4 +81,5 @@ export class TaskList extends ArrayHydrator<Specification.TaskItem> {
   }
 }
 
-export const _TaskList = TaskList; // could be exported directly, but it makes the job of building the index more straightforward as it's consistant with "object" classes
+export const _TaskList = TaskList as unknown as TaskListConstructor;
+//export const _TaskList = TaskList; // could be exported directly, but it makes the job of building the index more straightforward as it's consistant with "object" classes

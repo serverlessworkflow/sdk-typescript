@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { RunContainerIntersection } from '../classes/run-container';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.RunContainer} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.RunContainer} The built object
+ * @returns {RunContainerIntersection} The built object
  */
-function buildingFn(model: Specification.RunContainer, options: BuildOptions): Specification.RunContainer {
+function buildingFn(model: Specification.RunContainer, options: BuildOptions): RunContainerIntersection {
   const instance = new Classes.RunContainer(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.RunContainer;
+  return (options.normalize ? instance.normalize() : instance) as RunContainerIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.RunContainer`
- * @returns {Builder<Specification.RunContainer>} A builder for `Specification.RunContainer`
+ * A factory to create a builder proxy for the type `RunContainerIntersection`
+ * @returns {Builder<RunContainerIntersection, RunContainerIntersection>} A builder for `RunContainerIntersection`
  */
-export const runContainerBuilder = (model?: Partial<Specification.RunContainer>): Builder<Specification.RunContainer> =>
-  builder<Specification.RunContainer>(model, buildingFn);
+export const runContainerBuilder = (
+  model?: Partial<Specification.RunContainer>,
+): Builder<Partial<Specification.RunContainer>, RunContainerIntersection> =>
+  builder<Specification.RunContainer, RunContainerIntersection>(model, buildingFn);

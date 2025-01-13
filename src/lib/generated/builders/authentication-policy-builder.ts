@@ -22,27 +22,29 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { AuthenticationPolicyIntersection } from '../classes/authentication-policy';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.AuthenticationPolicy} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.AuthenticationPolicy} The built object
+ * @returns {AuthenticationPolicyIntersection} The built object
  */
 function buildingFn(
   model: Specification.AuthenticationPolicy,
   options: BuildOptions,
-): Specification.AuthenticationPolicy {
+): AuthenticationPolicyIntersection {
   const instance = new Classes.AuthenticationPolicy(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.AuthenticationPolicy;
+  return (options.normalize ? instance.normalize() : instance) as AuthenticationPolicyIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.AuthenticationPolicy`
- * @returns {Builder<Specification.AuthenticationPolicy>} A builder for `Specification.AuthenticationPolicy`
+ * A factory to create a builder proxy for the type `AuthenticationPolicyIntersection`
+ * @returns {Builder<AuthenticationPolicyIntersection, AuthenticationPolicyIntersection>} A builder for `AuthenticationPolicyIntersection`
  */
 export const authenticationPolicyBuilder = (
   model?: Partial<Specification.AuthenticationPolicy>,
-): Builder<Specification.AuthenticationPolicy> => builder<Specification.AuthenticationPolicy>(model, buildingFn);
+): Builder<Partial<Specification.AuthenticationPolicy>, AuthenticationPolicyIntersection> =>
+  builder<Specification.AuthenticationPolicy, AuthenticationPolicyIntersection>(model, buildingFn);

@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { SchemaExternalIntersection } from '../classes/schema-external';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.SchemaExternal} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.SchemaExternal} The built object
+ * @returns {SchemaExternalIntersection} The built object
  */
-function buildingFn(model: Specification.SchemaExternal, options: BuildOptions): Specification.SchemaExternal {
+function buildingFn(model: Specification.SchemaExternal, options: BuildOptions): SchemaExternalIntersection {
   const instance = new Classes.SchemaExternal(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.SchemaExternal;
+  return (options.normalize ? instance.normalize() : instance) as SchemaExternalIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.SchemaExternal`
- * @returns {Builder<Specification.SchemaExternal>} A builder for `Specification.SchemaExternal`
+ * A factory to create a builder proxy for the type `SchemaExternalIntersection`
+ * @returns {Builder<SchemaExternalIntersection, SchemaExternalIntersection>} A builder for `SchemaExternalIntersection`
  */
 export const schemaExternalBuilder = (
   model?: Partial<Specification.SchemaExternal>,
-): Builder<Specification.SchemaExternal> => builder<Specification.SchemaExternal>(model, buildingFn);
+): Builder<Partial<Specification.SchemaExternal>, SchemaExternalIntersection> =>
+  builder<Specification.SchemaExternal, SchemaExternalIntersection>(model, buildingFn);

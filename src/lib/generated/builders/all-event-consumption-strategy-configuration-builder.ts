@@ -22,29 +22,31 @@
 
 import { arrayBuilder, ArrayBuilder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { AllEventConsumptionStrategyConfigurationIntersection } from '../classes/all-event-consumption-strategy-configuration';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying array
  * @param {Specification.AllEventConsumptionStrategyConfiguration} model The proxied array
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.AllEventConsumptionStrategyConfiguration} The built array
+ * @returns {AllEventConsumptionStrategyConfigurationIntersection} The built array
  */
 function buildingFn(
   model: Specification.AllEventConsumptionStrategyConfiguration,
   options: BuildOptions,
-): Specification.AllEventConsumptionStrategyConfiguration {
+): AllEventConsumptionStrategyConfigurationIntersection {
   const instance = new Classes.AllEventConsumptionStrategyConfiguration(model);
   if (options.validate) instance.validate();
-  return (
-    options.normalize ? instance.normalize() : instance
-  ) as Specification.AllEventConsumptionStrategyConfiguration;
+  return (options.normalize
+    ? instance.normalize()
+    : instance) as unknown as AllEventConsumptionStrategyConfigurationIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.AllEventConsumptionStrategyConfiguration`
- * @returns {ArrayBuilder<Specification.AllEventConsumptionStrategyConfiguration>} A builder for `Specification.AllEventConsumptionStrategyConfiguration`
+ * A factory to create a builder proxy for the type `AllEventConsumptionStrategyConfigurationIntersection`
+ * @returns {ArrayBuilder<Specification.EventFilter, AllEventConsumptionStrategyConfigurationIntersection>} A builder for `AllEventConsumptionStrategyConfigurationIntersection`
  */
 export const allEventConsumptionStrategyConfigurationBuilder = (
   model?: Specification.AllEventConsumptionStrategyConfiguration,
-): ArrayBuilder<Specification.EventFilter> => arrayBuilder<Specification.EventFilter>(model, buildingFn);
+): ArrayBuilder<Specification.EventFilter, AllEventConsumptionStrategyConfigurationIntersection> =>
+  arrayBuilder<Specification.EventFilter, AllEventConsumptionStrategyConfigurationIntersection>(model, buildingFn);

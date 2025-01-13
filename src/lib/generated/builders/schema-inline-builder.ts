@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { SchemaInlineIntersection } from '../classes/schema-inline';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.SchemaInline} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.SchemaInline} The built object
+ * @returns {SchemaInlineIntersection} The built object
  */
-function buildingFn(model: Specification.SchemaInline, options: BuildOptions): Specification.SchemaInline {
+function buildingFn(model: Specification.SchemaInline, options: BuildOptions): SchemaInlineIntersection {
   const instance = new Classes.SchemaInline(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.SchemaInline;
+  return (options.normalize ? instance.normalize() : instance) as SchemaInlineIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.SchemaInline`
- * @returns {Builder<Specification.SchemaInline>} A builder for `Specification.SchemaInline`
+ * A factory to create a builder proxy for the type `SchemaInlineIntersection`
+ * @returns {Builder<SchemaInlineIntersection, SchemaInlineIntersection>} A builder for `SchemaInlineIntersection`
  */
-export const schemaInlineBuilder = (model?: Partial<Specification.SchemaInline>): Builder<Specification.SchemaInline> =>
-  builder<Specification.SchemaInline>(model, buildingFn);
+export const schemaInlineBuilder = (
+  model?: Partial<Specification.SchemaInline>,
+): Builder<Partial<Specification.SchemaInline>, SchemaInlineIntersection> =>
+  builder<Specification.SchemaInline, SchemaInlineIntersection>(model, buildingFn);

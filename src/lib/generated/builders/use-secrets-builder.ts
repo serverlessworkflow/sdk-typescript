@@ -22,23 +22,24 @@
 
 import { arrayBuilder, ArrayBuilder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { UseSecretsIntersection } from '../classes/use-secrets';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying array
  * @param {Specification.UseSecrets} model The proxied array
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.UseSecrets} The built array
+ * @returns {UseSecretsIntersection} The built array
  */
-function buildingFn(model: Specification.UseSecrets, options: BuildOptions): Specification.UseSecrets {
+function buildingFn(model: Specification.UseSecrets, options: BuildOptions): UseSecretsIntersection {
   const instance = new Classes.UseSecrets(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.UseSecrets;
+  return (options.normalize ? instance.normalize() : instance) as unknown as UseSecretsIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.UseSecrets`
- * @returns {ArrayBuilder<Specification.UseSecrets>} A builder for `Specification.UseSecrets`
+ * A factory to create a builder proxy for the type `UseSecretsIntersection`
+ * @returns {ArrayBuilder<string, UseSecretsIntersection>} A builder for `UseSecretsIntersection`
  */
-export const useSecretsBuilder = (model?: Specification.UseSecrets): ArrayBuilder<string> =>
-  arrayBuilder<string>(model, buildingFn);
+export const useSecretsBuilder = (model?: Specification.UseSecrets): ArrayBuilder<string, UseSecretsIntersection> =>
+  arrayBuilder<string, UseSecretsIntersection>(model, buildingFn);

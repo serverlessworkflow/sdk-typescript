@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { FunctionArgumentsIntersection } from '../classes/function-arguments';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.FunctionArguments} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.FunctionArguments} The built object
+ * @returns {FunctionArgumentsIntersection} The built object
  */
-function buildingFn(model: Specification.FunctionArguments, options: BuildOptions): Specification.FunctionArguments {
+function buildingFn(model: Specification.FunctionArguments, options: BuildOptions): FunctionArgumentsIntersection {
   const instance = new Classes.FunctionArguments(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.FunctionArguments;
+  return (options.normalize ? instance.normalize() : instance) as FunctionArgumentsIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.FunctionArguments`
- * @returns {Builder<Specification.FunctionArguments>} A builder for `Specification.FunctionArguments`
+ * A factory to create a builder proxy for the type `FunctionArgumentsIntersection`
+ * @returns {Builder<FunctionArgumentsIntersection, FunctionArgumentsIntersection>} A builder for `FunctionArgumentsIntersection`
  */
 export const functionArgumentsBuilder = (
   model?: Partial<Specification.FunctionArguments>,
-): Builder<Specification.FunctionArguments> => builder<Specification.FunctionArguments>(model, buildingFn);
+): Builder<Partial<Specification.FunctionArguments>, FunctionArgumentsIntersection> =>
+  builder<Specification.FunctionArguments, FunctionArgumentsIntersection>(model, buildingFn);

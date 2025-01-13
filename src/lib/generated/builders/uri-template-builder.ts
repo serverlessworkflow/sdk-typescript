@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { UriTemplateIntersection } from '../classes/uri-template';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.UriTemplate} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.UriTemplate} The built object
+ * @returns {UriTemplateIntersection} The built object
  */
-function buildingFn(model: Specification.UriTemplate, options: BuildOptions): Specification.UriTemplate {
+function buildingFn(model: Specification.UriTemplate, options: BuildOptions): UriTemplateIntersection {
   const instance = new Classes.UriTemplate(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.UriTemplate;
+  return (options.normalize ? instance.normalize() : instance) as UriTemplateIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.UriTemplate`
- * @returns {Builder<Specification.UriTemplate>} A builder for `Specification.UriTemplate`
+ * A factory to create a builder proxy for the type `UriTemplateIntersection`
+ * @returns {Builder<UriTemplateIntersection, UriTemplateIntersection>} A builder for `UriTemplateIntersection`
  */
-export const uriTemplateBuilder = (model?: Partial<Specification.UriTemplate>): Builder<Specification.UriTemplate> =>
-  builder<Specification.UriTemplate>(model, buildingFn);
+export const uriTemplateBuilder = (
+  model?: Partial<Specification.UriTemplate>,
+): Builder<Partial<Specification.UriTemplate>, UriTemplateIntersection> =>
+  builder<Specification.UriTemplate, UriTemplateIntersection>(model, buildingFn);

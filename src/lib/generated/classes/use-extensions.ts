@@ -27,6 +27,18 @@ import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
 
 /**
+ * Represents the intersection between the UseExtensions class and type
+ */
+export type UseExtensionsIntersection = UseExtensions & Specification.UseExtensions;
+
+/**
+ * Represents a constructor for the intersection of the UseExtensions class and type
+ */
+export interface UseExtensionsConstructor {
+  new (model?: Array<Specification.ExtensionItem> | number): UseExtensionsIntersection;
+}
+
+/**
  * Represents a collection of Specification.ExtensionItem.
  * Inherits from ArrayHydrator to handle array-specific hydration.
  */
@@ -69,4 +81,5 @@ export class UseExtensions extends ArrayHydrator<Specification.ExtensionItem> {
   }
 }
 
-export const _UseExtensions = UseExtensions; // could be exported directly, but it makes the job of building the index more straightforward as it's consistant with "object" classes
+export const _UseExtensions = UseExtensions as unknown as UseExtensionsConstructor;
+//export const _UseExtensions = UseExtensions; // could be exported directly, but it makes the job of building the index more straightforward as it's consistant with "object" classes

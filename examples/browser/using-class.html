@@ -9,7 +9,7 @@
 </head>
 
 <body>
-  <div id="output"></div>
+  <pre id="output"></pre>
   <script src="../../dist/umd/index.umd.js"></script>
   <script type="text/javascript">
     (() => {
@@ -17,7 +17,7 @@
       const workflow = new Workflow({
         document: {
           dsl: '1.0.0-alpha5',
-          name: 'test',
+          name: 'using-class',
           version: '1.0.0',
           namespace: 'default',
         },
@@ -33,7 +33,7 @@
       });
       try {
         workflow.validate();
-        document.getElementById('output').innerHTML = workflow.serialize('json');
+        document.getElementById('output').innerHTML = `--- YAML ---\n${workflow.serialize()}\n\n--- JSON ---\n${workflow.serialize('json')}`;
       } catch (ex) {
         console.error('Invalid workflow', ex);
       }

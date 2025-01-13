@@ -22,28 +22,29 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { AuthenticationPolicyReferenceIntersection } from '../classes/authentication-policy-reference';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.AuthenticationPolicyReference} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.AuthenticationPolicyReference} The built object
+ * @returns {AuthenticationPolicyReferenceIntersection} The built object
  */
 function buildingFn(
   model: Specification.AuthenticationPolicyReference,
   options: BuildOptions,
-): Specification.AuthenticationPolicyReference {
+): AuthenticationPolicyReferenceIntersection {
   const instance = new Classes.AuthenticationPolicyReference(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.AuthenticationPolicyReference;
+  return (options.normalize ? instance.normalize() : instance) as AuthenticationPolicyReferenceIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.AuthenticationPolicyReference`
- * @returns {Builder<Specification.AuthenticationPolicyReference>} A builder for `Specification.AuthenticationPolicyReference`
+ * A factory to create a builder proxy for the type `AuthenticationPolicyReferenceIntersection`
+ * @returns {Builder<AuthenticationPolicyReferenceIntersection, AuthenticationPolicyReferenceIntersection>} A builder for `AuthenticationPolicyReferenceIntersection`
  */
 export const authenticationPolicyReferenceBuilder = (
   model?: Partial<Specification.AuthenticationPolicyReference>,
-): Builder<Specification.AuthenticationPolicyReference> =>
-  builder<Specification.AuthenticationPolicyReference>(model, buildingFn);
+): Builder<Partial<Specification.AuthenticationPolicyReference>, AuthenticationPolicyReferenceIntersection> =>
+  builder<Specification.AuthenticationPolicyReference, AuthenticationPolicyReferenceIntersection>(model, buildingFn);

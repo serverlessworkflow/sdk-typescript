@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { WorkflowTimeoutIntersection } from '../classes/workflow-timeout';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.WorkflowTimeout} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.WorkflowTimeout} The built object
+ * @returns {WorkflowTimeoutIntersection} The built object
  */
-function buildingFn(model: Specification.WorkflowTimeout, options: BuildOptions): Specification.WorkflowTimeout {
+function buildingFn(model: Specification.WorkflowTimeout, options: BuildOptions): WorkflowTimeoutIntersection {
   const instance = new Classes.WorkflowTimeout(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.WorkflowTimeout;
+  return (options.normalize ? instance.normalize() : instance) as WorkflowTimeoutIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.WorkflowTimeout`
- * @returns {Builder<Specification.WorkflowTimeout>} A builder for `Specification.WorkflowTimeout`
+ * A factory to create a builder proxy for the type `WorkflowTimeoutIntersection`
+ * @returns {Builder<WorkflowTimeoutIntersection, WorkflowTimeoutIntersection>} A builder for `WorkflowTimeoutIntersection`
  */
 export const workflowTimeoutBuilder = (
   model?: Partial<Specification.WorkflowTimeout>,
-): Builder<Specification.WorkflowTimeout> => builder<Specification.WorkflowTimeout>(model, buildingFn);
+): Builder<Partial<Specification.WorkflowTimeout>, WorkflowTimeoutIntersection> =>
+  builder<Specification.WorkflowTimeout, WorkflowTimeoutIntersection>(model, buildingFn);

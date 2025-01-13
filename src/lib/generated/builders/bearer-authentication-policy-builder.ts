@@ -22,28 +22,29 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { BearerAuthenticationPolicyIntersection } from '../classes/bearer-authentication-policy';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.BearerAuthenticationPolicy} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.BearerAuthenticationPolicy} The built object
+ * @returns {BearerAuthenticationPolicyIntersection} The built object
  */
 function buildingFn(
   model: Specification.BearerAuthenticationPolicy,
   options: BuildOptions,
-): Specification.BearerAuthenticationPolicy {
+): BearerAuthenticationPolicyIntersection {
   const instance = new Classes.BearerAuthenticationPolicy(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.BearerAuthenticationPolicy;
+  return (options.normalize ? instance.normalize() : instance) as BearerAuthenticationPolicyIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.BearerAuthenticationPolicy`
- * @returns {Builder<Specification.BearerAuthenticationPolicy>} A builder for `Specification.BearerAuthenticationPolicy`
+ * A factory to create a builder proxy for the type `BearerAuthenticationPolicyIntersection`
+ * @returns {Builder<BearerAuthenticationPolicyIntersection, BearerAuthenticationPolicyIntersection>} A builder for `BearerAuthenticationPolicyIntersection`
  */
 export const bearerAuthenticationPolicyBuilder = (
   model?: Partial<Specification.BearerAuthenticationPolicy>,
-): Builder<Specification.BearerAuthenticationPolicy> =>
-  builder<Specification.BearerAuthenticationPolicy>(model, buildingFn);
+): Builder<Partial<Specification.BearerAuthenticationPolicy>, BearerAuthenticationPolicyIntersection> =>
+  builder<Specification.BearerAuthenticationPolicy, BearerAuthenticationPolicyIntersection>(model, buildingFn);

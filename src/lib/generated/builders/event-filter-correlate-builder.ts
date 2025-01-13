@@ -22,27 +22,29 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { EventFilterCorrelateIntersection } from '../classes/event-filter-correlate';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.EventFilterCorrelate} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.EventFilterCorrelate} The built object
+ * @returns {EventFilterCorrelateIntersection} The built object
  */
 function buildingFn(
   model: Specification.EventFilterCorrelate,
   options: BuildOptions,
-): Specification.EventFilterCorrelate {
+): EventFilterCorrelateIntersection {
   const instance = new Classes.EventFilterCorrelate(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.EventFilterCorrelate;
+  return (options.normalize ? instance.normalize() : instance) as EventFilterCorrelateIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.EventFilterCorrelate`
- * @returns {Builder<Specification.EventFilterCorrelate>} A builder for `Specification.EventFilterCorrelate`
+ * A factory to create a builder proxy for the type `EventFilterCorrelateIntersection`
+ * @returns {Builder<EventFilterCorrelateIntersection, EventFilterCorrelateIntersection>} A builder for `EventFilterCorrelateIntersection`
  */
 export const eventFilterCorrelateBuilder = (
   model?: Partial<Specification.EventFilterCorrelate>,
-): Builder<Specification.EventFilterCorrelate> => builder<Specification.EventFilterCorrelate>(model, buildingFn);
+): Builder<Partial<Specification.EventFilterCorrelate>, EventFilterCorrelateIntersection> =>
+  builder<Specification.EventFilterCorrelate, EventFilterCorrelateIntersection>(model, buildingFn);

@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { CallOpenAPIIntersection } from '../classes/call-open-api';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.CallOpenAPI} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.CallOpenAPI} The built object
+ * @returns {CallOpenAPIIntersection} The built object
  */
-function buildingFn(model: Specification.CallOpenAPI, options: BuildOptions): Specification.CallOpenAPI {
+function buildingFn(model: Specification.CallOpenAPI, options: BuildOptions): CallOpenAPIIntersection {
   const instance = new Classes.CallOpenAPI(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.CallOpenAPI;
+  return (options.normalize ? instance.normalize() : instance) as CallOpenAPIIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.CallOpenAPI`
- * @returns {Builder<Specification.CallOpenAPI>} A builder for `Specification.CallOpenAPI`
+ * A factory to create a builder proxy for the type `CallOpenAPIIntersection`
+ * @returns {Builder<CallOpenAPIIntersection, CallOpenAPIIntersection>} A builder for `CallOpenAPIIntersection`
  */
-export const callOpenAPIBuilder = (model?: Partial<Specification.CallOpenAPI>): Builder<Specification.CallOpenAPI> =>
-  builder<Specification.CallOpenAPI>(model, buildingFn);
+export const callOpenAPIBuilder = (
+  model?: Partial<Specification.CallOpenAPI>,
+): Builder<Partial<Specification.CallOpenAPI>, CallOpenAPIIntersection> =>
+  builder<Specification.CallOpenAPI, CallOpenAPIIntersection>(model, buildingFn);

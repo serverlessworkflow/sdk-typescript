@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { WorkflowMetadataIntersection } from '../classes/workflow-metadata';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.WorkflowMetadata} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.WorkflowMetadata} The built object
+ * @returns {WorkflowMetadataIntersection} The built object
  */
-function buildingFn(model: Specification.WorkflowMetadata, options: BuildOptions): Specification.WorkflowMetadata {
+function buildingFn(model: Specification.WorkflowMetadata, options: BuildOptions): WorkflowMetadataIntersection {
   const instance = new Classes.WorkflowMetadata(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.WorkflowMetadata;
+  return (options.normalize ? instance.normalize() : instance) as WorkflowMetadataIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.WorkflowMetadata`
- * @returns {Builder<Specification.WorkflowMetadata>} A builder for `Specification.WorkflowMetadata`
+ * A factory to create a builder proxy for the type `WorkflowMetadataIntersection`
+ * @returns {Builder<WorkflowMetadataIntersection, WorkflowMetadataIntersection>} A builder for `WorkflowMetadataIntersection`
  */
 export const workflowMetadataBuilder = (
   model?: Partial<Specification.WorkflowMetadata>,
-): Builder<Specification.WorkflowMetadata> => builder<Specification.WorkflowMetadata>(model, buildingFn);
+): Builder<Partial<Specification.WorkflowMetadata>, WorkflowMetadataIntersection> =>
+  builder<Specification.WorkflowMetadata, WorkflowMetadataIntersection>(model, buildingFn);

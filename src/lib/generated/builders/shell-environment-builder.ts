@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { ShellEnvironmentIntersection } from '../classes/shell-environment';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.ShellEnvironment} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.ShellEnvironment} The built object
+ * @returns {ShellEnvironmentIntersection} The built object
  */
-function buildingFn(model: Specification.ShellEnvironment, options: BuildOptions): Specification.ShellEnvironment {
+function buildingFn(model: Specification.ShellEnvironment, options: BuildOptions): ShellEnvironmentIntersection {
   const instance = new Classes.ShellEnvironment(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.ShellEnvironment;
+  return (options.normalize ? instance.normalize() : instance) as ShellEnvironmentIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.ShellEnvironment`
- * @returns {Builder<Specification.ShellEnvironment>} A builder for `Specification.ShellEnvironment`
+ * A factory to create a builder proxy for the type `ShellEnvironmentIntersection`
+ * @returns {Builder<ShellEnvironmentIntersection, ShellEnvironmentIntersection>} A builder for `ShellEnvironmentIntersection`
  */
 export const shellEnvironmentBuilder = (
   model?: Partial<Specification.ShellEnvironment>,
-): Builder<Specification.ShellEnvironment> => builder<Specification.ShellEnvironment>(model, buildingFn);
+): Builder<Partial<Specification.ShellEnvironment>, ShellEnvironmentIntersection> =>
+  builder<Specification.ShellEnvironment, ShellEnvironmentIntersection>(model, buildingFn);

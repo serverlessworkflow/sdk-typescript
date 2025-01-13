@@ -22,27 +22,29 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { SwitchTaskConfigurationIntersection } from '../classes/switch-task-configuration';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.SwitchTaskConfiguration} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.SwitchTaskConfiguration} The built object
+ * @returns {SwitchTaskConfigurationIntersection} The built object
  */
 function buildingFn(
   model: Specification.SwitchTaskConfiguration,
   options: BuildOptions,
-): Specification.SwitchTaskConfiguration {
+): SwitchTaskConfigurationIntersection {
   const instance = new Classes.SwitchTaskConfiguration(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as unknown as Specification.SwitchTaskConfiguration;
+  return (options.normalize ? instance.normalize() : instance) as unknown as SwitchTaskConfigurationIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.SwitchTaskConfiguration`
- * @returns {Builder<Specification.SwitchTaskConfiguration>} A builder for `Specification.SwitchTaskConfiguration`
+ * A factory to create a builder proxy for the type `SwitchTaskConfigurationIntersection`
+ * @returns {Builder<SwitchTaskConfigurationIntersection, SwitchTaskConfigurationIntersection>} A builder for `SwitchTaskConfigurationIntersection`
  */
 export const switchTaskConfigurationBuilder = (
   model?: Partial<Specification.SwitchTaskConfiguration>,
-): Builder<Specification.SwitchTaskConfiguration> => builder<Specification.SwitchTaskConfiguration>(model, buildingFn);
+): Builder<Partial<Specification.SwitchTaskConfiguration>, SwitchTaskConfigurationIntersection> =>
+  builder<Specification.SwitchTaskConfiguration, SwitchTaskConfigurationIntersection>(model, buildingFn);

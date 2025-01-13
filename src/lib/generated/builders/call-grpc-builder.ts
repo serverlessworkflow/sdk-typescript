@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { CallGRPCIntersection } from '../classes/call-grpc';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.CallGRPC} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.CallGRPC} The built object
+ * @returns {CallGRPCIntersection} The built object
  */
-function buildingFn(model: Specification.CallGRPC, options: BuildOptions): Specification.CallGRPC {
+function buildingFn(model: Specification.CallGRPC, options: BuildOptions): CallGRPCIntersection {
   const instance = new Classes.CallGRPC(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.CallGRPC;
+  return (options.normalize ? instance.normalize() : instance) as CallGRPCIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.CallGRPC`
- * @returns {Builder<Specification.CallGRPC>} A builder for `Specification.CallGRPC`
+ * A factory to create a builder proxy for the type `CallGRPCIntersection`
+ * @returns {Builder<CallGRPCIntersection, CallGRPCIntersection>} A builder for `CallGRPCIntersection`
  */
-export const callGRPCBuilder = (model?: Partial<Specification.CallGRPC>): Builder<Specification.CallGRPC> =>
-  builder<Specification.CallGRPC>(model, buildingFn);
+export const callGRPCBuilder = (
+  model?: Partial<Specification.CallGRPC>,
+): Builder<Partial<Specification.CallGRPC>, CallGRPCIntersection> =>
+  builder<Specification.CallGRPC, CallGRPCIntersection>(model, buildingFn);

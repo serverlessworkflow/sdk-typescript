@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { WithHTTPQueryIntersection } from '../classes/with-http-query';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.WithHTTPQuery} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.WithHTTPQuery} The built object
+ * @returns {WithHTTPQueryIntersection} The built object
  */
-function buildingFn(model: Specification.WithHTTPQuery, options: BuildOptions): Specification.WithHTTPQuery {
+function buildingFn(model: Specification.WithHTTPQuery, options: BuildOptions): WithHTTPQueryIntersection {
   const instance = new Classes.WithHTTPQuery(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.WithHTTPQuery;
+  return (options.normalize ? instance.normalize() : instance) as WithHTTPQueryIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.WithHTTPQuery`
- * @returns {Builder<Specification.WithHTTPQuery>} A builder for `Specification.WithHTTPQuery`
+ * A factory to create a builder proxy for the type `WithHTTPQueryIntersection`
+ * @returns {Builder<WithHTTPQueryIntersection, WithHTTPQueryIntersection>} A builder for `WithHTTPQueryIntersection`
  */
 export const withHTTPQueryBuilder = (
   model?: Partial<Specification.WithHTTPQuery>,
-): Builder<Specification.WithHTTPQuery> => builder<Specification.WithHTTPQuery>(model, buildingFn);
+): Builder<Partial<Specification.WithHTTPQuery>, WithHTTPQueryIntersection> =>
+  builder<Specification.WithHTTPQuery, WithHTTPQueryIntersection>(model, buildingFn);

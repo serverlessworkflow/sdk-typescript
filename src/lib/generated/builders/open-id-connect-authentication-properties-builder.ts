@@ -22,28 +22,35 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { OpenIdConnectAuthenticationPropertiesIntersection } from '../classes/open-id-connect-authentication-properties';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.OpenIdConnectAuthenticationProperties} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.OpenIdConnectAuthenticationProperties} The built object
+ * @returns {OpenIdConnectAuthenticationPropertiesIntersection} The built object
  */
 function buildingFn(
   model: Specification.OpenIdConnectAuthenticationProperties,
   options: BuildOptions,
-): Specification.OpenIdConnectAuthenticationProperties {
+): OpenIdConnectAuthenticationPropertiesIntersection {
   const instance = new Classes.OpenIdConnectAuthenticationProperties(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.OpenIdConnectAuthenticationProperties;
+  return (options.normalize ? instance.normalize() : instance) as OpenIdConnectAuthenticationPropertiesIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.OpenIdConnectAuthenticationProperties`
- * @returns {Builder<Specification.OpenIdConnectAuthenticationProperties>} A builder for `Specification.OpenIdConnectAuthenticationProperties`
+ * A factory to create a builder proxy for the type `OpenIdConnectAuthenticationPropertiesIntersection`
+ * @returns {Builder<OpenIdConnectAuthenticationPropertiesIntersection, OpenIdConnectAuthenticationPropertiesIntersection>} A builder for `OpenIdConnectAuthenticationPropertiesIntersection`
  */
 export const openIdConnectAuthenticationPropertiesBuilder = (
   model?: Partial<Specification.OpenIdConnectAuthenticationProperties>,
-): Builder<Specification.OpenIdConnectAuthenticationProperties> =>
-  builder<Specification.OpenIdConnectAuthenticationProperties>(model, buildingFn);
+): Builder<
+  Partial<Specification.OpenIdConnectAuthenticationProperties>,
+  OpenIdConnectAuthenticationPropertiesIntersection
+> =>
+  builder<Specification.OpenIdConnectAuthenticationProperties, OpenIdConnectAuthenticationPropertiesIntersection>(
+    model,
+    buildingFn,
+  );

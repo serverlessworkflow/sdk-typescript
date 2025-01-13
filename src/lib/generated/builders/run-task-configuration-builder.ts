@@ -22,27 +22,29 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { RunTaskConfigurationIntersection } from '../classes/run-task-configuration';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.RunTaskConfiguration} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.RunTaskConfiguration} The built object
+ * @returns {RunTaskConfigurationIntersection} The built object
  */
 function buildingFn(
   model: Specification.RunTaskConfiguration,
   options: BuildOptions,
-): Specification.RunTaskConfiguration {
+): RunTaskConfigurationIntersection {
   const instance = new Classes.RunTaskConfiguration(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.RunTaskConfiguration;
+  return (options.normalize ? instance.normalize() : instance) as RunTaskConfigurationIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.RunTaskConfiguration`
- * @returns {Builder<Specification.RunTaskConfiguration>} A builder for `Specification.RunTaskConfiguration`
+ * A factory to create a builder proxy for the type `RunTaskConfigurationIntersection`
+ * @returns {Builder<RunTaskConfigurationIntersection, RunTaskConfigurationIntersection>} A builder for `RunTaskConfigurationIntersection`
  */
 export const runTaskConfigurationBuilder = (
   model?: Partial<Specification.RunTaskConfiguration>,
-): Builder<Specification.RunTaskConfiguration> => builder<Specification.RunTaskConfiguration>(model, buildingFn);
+): Builder<Partial<Specification.RunTaskConfiguration>, RunTaskConfigurationIntersection> =>
+  builder<Specification.RunTaskConfiguration, RunTaskConfigurationIntersection>(model, buildingFn);

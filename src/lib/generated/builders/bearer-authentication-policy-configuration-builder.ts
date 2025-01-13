@@ -22,28 +22,35 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { BearerAuthenticationPolicyConfigurationIntersection } from '../classes/bearer-authentication-policy-configuration';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.BearerAuthenticationPolicyConfiguration} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.BearerAuthenticationPolicyConfiguration} The built object
+ * @returns {BearerAuthenticationPolicyConfigurationIntersection} The built object
  */
 function buildingFn(
   model: Specification.BearerAuthenticationPolicyConfiguration,
   options: BuildOptions,
-): Specification.BearerAuthenticationPolicyConfiguration {
+): BearerAuthenticationPolicyConfigurationIntersection {
   const instance = new Classes.BearerAuthenticationPolicyConfiguration(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.BearerAuthenticationPolicyConfiguration;
+  return (options.normalize ? instance.normalize() : instance) as BearerAuthenticationPolicyConfigurationIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.BearerAuthenticationPolicyConfiguration`
- * @returns {Builder<Specification.BearerAuthenticationPolicyConfiguration>} A builder for `Specification.BearerAuthenticationPolicyConfiguration`
+ * A factory to create a builder proxy for the type `BearerAuthenticationPolicyConfigurationIntersection`
+ * @returns {Builder<BearerAuthenticationPolicyConfigurationIntersection, BearerAuthenticationPolicyConfigurationIntersection>} A builder for `BearerAuthenticationPolicyConfigurationIntersection`
  */
 export const bearerAuthenticationPolicyConfigurationBuilder = (
   model?: Partial<Specification.BearerAuthenticationPolicyConfiguration>,
-): Builder<Specification.BearerAuthenticationPolicyConfiguration> =>
-  builder<Specification.BearerAuthenticationPolicyConfiguration>(model, buildingFn);
+): Builder<
+  Partial<Specification.BearerAuthenticationPolicyConfiguration>,
+  BearerAuthenticationPolicyConfigurationIntersection
+> =>
+  builder<Specification.BearerAuthenticationPolicyConfiguration, BearerAuthenticationPolicyConfigurationIntersection>(
+    model,
+    buildingFn,
+  );

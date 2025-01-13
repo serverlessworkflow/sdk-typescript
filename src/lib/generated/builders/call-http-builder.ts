@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { CallHTTPIntersection } from '../classes/call-http';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.CallHTTP} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.CallHTTP} The built object
+ * @returns {CallHTTPIntersection} The built object
  */
-function buildingFn(model: Specification.CallHTTP, options: BuildOptions): Specification.CallHTTP {
+function buildingFn(model: Specification.CallHTTP, options: BuildOptions): CallHTTPIntersection {
   const instance = new Classes.CallHTTP(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.CallHTTP;
+  return (options.normalize ? instance.normalize() : instance) as CallHTTPIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.CallHTTP`
- * @returns {Builder<Specification.CallHTTP>} A builder for `Specification.CallHTTP`
+ * A factory to create a builder proxy for the type `CallHTTPIntersection`
+ * @returns {Builder<CallHTTPIntersection, CallHTTPIntersection>} A builder for `CallHTTPIntersection`
  */
-export const callHTTPBuilder = (model?: Partial<Specification.CallHTTP>): Builder<Specification.CallHTTP> =>
-  builder<Specification.CallHTTP>(model, buildingFn);
+export const callHTTPBuilder = (
+  model?: Partial<Specification.CallHTTP>,
+): Builder<Partial<Specification.CallHTTP>, CallHTTPIntersection> =>
+  builder<Specification.CallHTTP, CallHTTPIntersection>(model, buildingFn);

@@ -22,27 +22,29 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { WithOpenAPIParametersIntersection } from '../classes/with-open-api-parameters';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.WithOpenAPIParameters} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.WithOpenAPIParameters} The built object
+ * @returns {WithOpenAPIParametersIntersection} The built object
  */
 function buildingFn(
   model: Specification.WithOpenAPIParameters,
   options: BuildOptions,
-): Specification.WithOpenAPIParameters {
+): WithOpenAPIParametersIntersection {
   const instance = new Classes.WithOpenAPIParameters(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.WithOpenAPIParameters;
+  return (options.normalize ? instance.normalize() : instance) as WithOpenAPIParametersIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.WithOpenAPIParameters`
- * @returns {Builder<Specification.WithOpenAPIParameters>} A builder for `Specification.WithOpenAPIParameters`
+ * A factory to create a builder proxy for the type `WithOpenAPIParametersIntersection`
+ * @returns {Builder<WithOpenAPIParametersIntersection, WithOpenAPIParametersIntersection>} A builder for `WithOpenAPIParametersIntersection`
  */
 export const withOpenAPIParametersBuilder = (
   model?: Partial<Specification.WithOpenAPIParameters>,
-): Builder<Specification.WithOpenAPIParameters> => builder<Specification.WithOpenAPIParameters>(model, buildingFn);
+): Builder<Partial<Specification.WithOpenAPIParameters>, WithOpenAPIParametersIntersection> =>
+  builder<Specification.WithOpenAPIParameters, WithOpenAPIParametersIntersection>(model, buildingFn);

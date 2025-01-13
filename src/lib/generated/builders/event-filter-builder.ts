@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { EventFilterIntersection } from '../classes/event-filter';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.EventFilter} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.EventFilter} The built object
+ * @returns {EventFilterIntersection} The built object
  */
-function buildingFn(model: Specification.EventFilter, options: BuildOptions): Specification.EventFilter {
+function buildingFn(model: Specification.EventFilter, options: BuildOptions): EventFilterIntersection {
   const instance = new Classes.EventFilter(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.EventFilter;
+  return (options.normalize ? instance.normalize() : instance) as EventFilterIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.EventFilter`
- * @returns {Builder<Specification.EventFilter>} A builder for `Specification.EventFilter`
+ * A factory to create a builder proxy for the type `EventFilterIntersection`
+ * @returns {Builder<EventFilterIntersection, EventFilterIntersection>} A builder for `EventFilterIntersection`
  */
-export const eventFilterBuilder = (model?: Partial<Specification.EventFilter>): Builder<Specification.EventFilter> =>
-  builder<Specification.EventFilter>(model, buildingFn);
+export const eventFilterBuilder = (
+  model?: Partial<Specification.EventFilter>,
+): Builder<Partial<Specification.EventFilter>, EventFilterIntersection> =>
+  builder<Specification.EventFilter, EventFilterIntersection>(model, buildingFn);

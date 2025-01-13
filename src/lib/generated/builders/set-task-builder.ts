@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { SetTaskIntersection } from '../classes/set-task';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.SetTask} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.SetTask} The built object
+ * @returns {SetTaskIntersection} The built object
  */
-function buildingFn(model: Specification.SetTask, options: BuildOptions): Specification.SetTask {
+function buildingFn(model: Specification.SetTask, options: BuildOptions): SetTaskIntersection {
   const instance = new Classes.SetTask(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.SetTask;
+  return (options.normalize ? instance.normalize() : instance) as SetTaskIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.SetTask`
- * @returns {Builder<Specification.SetTask>} A builder for `Specification.SetTask`
+ * A factory to create a builder proxy for the type `SetTaskIntersection`
+ * @returns {Builder<SetTaskIntersection, SetTaskIntersection>} A builder for `SetTaskIntersection`
  */
-export const setTaskBuilder = (model?: Partial<Specification.SetTask>): Builder<Specification.SetTask> =>
-  builder<Specification.SetTask>(model, buildingFn);
+export const setTaskBuilder = (
+  model?: Partial<Specification.SetTask>,
+): Builder<Partial<Specification.SetTask>, SetTaskIntersection> =>
+  builder<Specification.SetTask, SetTaskIntersection>(model, buildingFn);

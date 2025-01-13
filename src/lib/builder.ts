@@ -32,28 +32,28 @@ export type BuildOptions = {
 /**
  * The type of the underlying function called on `build()` for objects
  */
-export type BuildingFunction<T> = (model: Partial<T>, options: BuildOptions) => T;
+export type BuildingFunction<TSpec, TBuilt> = (model: Partial<TSpec>, options: BuildOptions) => TBuilt;
 
 /**
  * The type of the underlying function called on `build()` for arrays
  */
-export type ArrayBuildingFunction<T> = (model: Array<T>, options: BuildOptions) => Array<T>;
+export type ArrayBuildingFunction<TSpec, TBuilt> = (model: Array<TSpec>, options: BuildOptions) => TBuilt;
 
 /**
  * Represents a fluent builder proxy for an object
  */
-export type Builder<T> = {
-  build: (option?: BuildOptions) => T;
+export type Builder<TSpec, TBuilt = TSpec> = {
+  build: (option?: BuildOptions) => TBuilt;
 } & {
-  [K in keyof T]-?: (arg: T[K]) => Builder<T>;
+  [K in keyof TSpec]-?: (arg: TSpec[K]) => Builder<TSpec, TBuilt>;
 };
 
 /**
  * Represents a fluent builder proxy for an array
  */
-export type ArrayBuilder<T> = {
-  push: (item: T) => ArrayBuilder<T>;
-  build: (option?: BuildOptions) => Array<T>;
+export type ArrayBuilder<TSpec, TBuilt> = {
+  push: (item: TSpec) => ArrayBuilder<TSpec, TBuilt>;
+  build: (option?: BuildOptions) => TBuilt;
 };
 
 /**
@@ -62,7 +62,7 @@ export type ArrayBuilder<T> = {
  * @param options The build options
  * @returns
  */
-function defaultBuildingFn<T>(model: Partial<T>, options: BuildOptions): T {
+function defaultBuildingFn<TSpec, TBuilt = TSpec>(model: Partial<TSpec>, options: BuildOptions): TBuilt {
   // prevents @typescript-eslint/no-unused-vars ...
   if (options.validate == null) {
     options.validate = true;
@@ -70,7 +70,7 @@ function defaultBuildingFn<T>(model: Partial<T>, options: BuildOptions): T {
   if (options.normalize == null) {
     options.normalize = true;
   }
-  return model as T;
+  return model as TBuilt;
 }
 
 /**
@@ -78,8 +78,11 @@ function defaultBuildingFn<T>(model: Partial<T>, options: BuildOptions): T {
  * @param buildingFn The function used to validate and produce the object on build()
  * @returns A fluent builder
  */
-export function builder<T>(model: Partial<T> = {}, buildingFn: BuildingFunction<T> = defaultBuildingFn): Builder<T> {
-  const proxy = new Proxy({} as Builder<T>, {
+export function builder<TSpec, TBuilt = TSpec>(
+  model: Partial<TSpec> = {},
+  buildingFn: BuildingFunction<TSpec, TBuilt> = defaultBuildingFn,
+): Builder<TSpec, TBuilt> {
+  const proxy = new Proxy({} as Builder<TSpec, TBuilt>, {
     get: (_, prop) => {
       if (prop === 'build') {
         return (options?: BuildOptions) => {
@@ -93,7 +96,7 @@ export function builder<T>(model: Partial<T> = {}, buildingFn: BuildingFunction<
           return buildingFn(model, options);
         };
       }
-      return (value: unknown): Builder<T> => {
+      return (value: unknown): Builder<TSpec, TBuilt> => {
         (model as any)[prop.toString()] = value;
         return proxy;
       };
@@ -110,14 +113,14 @@ export function builder<T>(model: Partial<T> = {}, buildingFn: BuildingFunction<
  * @param buildingFn The function used to validate and produce the object on build()
  * @returns A fluent builder
  */
-export function arrayBuilder<T>(
-  model: Array<T> = [],
-  buildingFn: ArrayBuildingFunction<T> = defaultBuildingFn,
-): ArrayBuilder<T> {
+export function arrayBuilder<TSpec, TBuilt>(
+  model: Array<TSpec> = [],
+  buildingFn: ArrayBuildingFunction<TSpec, TBuilt> = defaultBuildingFn,
+): ArrayBuilder<TSpec, TBuilt> {
   if (model != null && !Array.isArray(model)) {
     throw new Error(`The provided model should be an array`);
   }
-  const proxy = new Proxy({} as ArrayBuilder<T>, {
+  const proxy = new Proxy({} as ArrayBuilder<TSpec, TBuilt>, {
     get: (_, prop) => {
       if (prop === 'build') {
         return (options?: BuildOptions) => {
@@ -132,7 +135,7 @@ export function arrayBuilder<T>(
         };
       }
       if (prop === 'push') {
-        return (value: T): ArrayBuilder<T> => {
+        return (value: TSpec): ArrayBuilder<TSpec, TBuilt> => {
           model.push(value);
           return proxy;
         };

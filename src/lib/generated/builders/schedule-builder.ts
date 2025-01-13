@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { ScheduleIntersection } from '../classes/schedule';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.Schedule} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.Schedule} The built object
+ * @returns {ScheduleIntersection} The built object
  */
-function buildingFn(model: Specification.Schedule, options: BuildOptions): Specification.Schedule {
+function buildingFn(model: Specification.Schedule, options: BuildOptions): ScheduleIntersection {
   const instance = new Classes.Schedule(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.Schedule;
+  return (options.normalize ? instance.normalize() : instance) as ScheduleIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.Schedule`
- * @returns {Builder<Specification.Schedule>} A builder for `Specification.Schedule`
+ * A factory to create a builder proxy for the type `ScheduleIntersection`
+ * @returns {Builder<ScheduleIntersection, ScheduleIntersection>} A builder for `ScheduleIntersection`
  */
-export const scheduleBuilder = (model?: Partial<Specification.Schedule>): Builder<Specification.Schedule> =>
-  builder<Specification.Schedule>(model, buildingFn);
+export const scheduleBuilder = (
+  model?: Partial<Specification.Schedule>,
+): Builder<Partial<Specification.Schedule>, ScheduleIntersection> =>
+  builder<Specification.Schedule, ScheduleIntersection>(model, buildingFn);

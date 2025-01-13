@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { SubflowInputIntersection } from '../classes/subflow-input';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.SubflowInput} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.SubflowInput} The built object
+ * @returns {SubflowInputIntersection} The built object
  */
-function buildingFn(model: Specification.SubflowInput, options: BuildOptions): Specification.SubflowInput {
+function buildingFn(model: Specification.SubflowInput, options: BuildOptions): SubflowInputIntersection {
   const instance = new Classes.SubflowInput(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.SubflowInput;
+  return (options.normalize ? instance.normalize() : instance) as SubflowInputIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.SubflowInput`
- * @returns {Builder<Specification.SubflowInput>} A builder for `Specification.SubflowInput`
+ * A factory to create a builder proxy for the type `SubflowInputIntersection`
+ * @returns {Builder<SubflowInputIntersection, SubflowInputIntersection>} A builder for `SubflowInputIntersection`
  */
-export const subflowInputBuilder = (model?: Partial<Specification.SubflowInput>): Builder<Specification.SubflowInput> =>
-  builder<Specification.SubflowInput>(model, buildingFn);
+export const subflowInputBuilder = (
+  model?: Partial<Specification.SubflowInput>,
+): Builder<Partial<Specification.SubflowInput>, SubflowInputIntersection> =>
+  builder<Specification.SubflowInput, SubflowInputIntersection>(model, buildingFn);

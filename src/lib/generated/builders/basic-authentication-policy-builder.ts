@@ -22,28 +22,29 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { BasicAuthenticationPolicyIntersection } from '../classes/basic-authentication-policy';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.BasicAuthenticationPolicy} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.BasicAuthenticationPolicy} The built object
+ * @returns {BasicAuthenticationPolicyIntersection} The built object
  */
 function buildingFn(
   model: Specification.BasicAuthenticationPolicy,
   options: BuildOptions,
-): Specification.BasicAuthenticationPolicy {
+): BasicAuthenticationPolicyIntersection {
   const instance = new Classes.BasicAuthenticationPolicy(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.BasicAuthenticationPolicy;
+  return (options.normalize ? instance.normalize() : instance) as BasicAuthenticationPolicyIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.BasicAuthenticationPolicy`
- * @returns {Builder<Specification.BasicAuthenticationPolicy>} A builder for `Specification.BasicAuthenticationPolicy`
+ * A factory to create a builder proxy for the type `BasicAuthenticationPolicyIntersection`
+ * @returns {Builder<BasicAuthenticationPolicyIntersection, BasicAuthenticationPolicyIntersection>} A builder for `BasicAuthenticationPolicyIntersection`
  */
 export const basicAuthenticationPolicyBuilder = (
   model?: Partial<Specification.BasicAuthenticationPolicy>,
-): Builder<Specification.BasicAuthenticationPolicy> =>
-  builder<Specification.BasicAuthenticationPolicy>(model, buildingFn);
+): Builder<Partial<Specification.BasicAuthenticationPolicy>, BasicAuthenticationPolicyIntersection> =>
+  builder<Specification.BasicAuthenticationPolicy, BasicAuthenticationPolicyIntersection>(model, buildingFn);

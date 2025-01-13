@@ -22,28 +22,32 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { SecretBasedAuthenticationPolicyIntersection } from '../classes/secret-based-authentication-policy';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.SecretBasedAuthenticationPolicy} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.SecretBasedAuthenticationPolicy} The built object
+ * @returns {SecretBasedAuthenticationPolicyIntersection} The built object
  */
 function buildingFn(
   model: Specification.SecretBasedAuthenticationPolicy,
   options: BuildOptions,
-): Specification.SecretBasedAuthenticationPolicy {
+): SecretBasedAuthenticationPolicyIntersection {
   const instance = new Classes.SecretBasedAuthenticationPolicy(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.SecretBasedAuthenticationPolicy;
+  return (options.normalize ? instance.normalize() : instance) as SecretBasedAuthenticationPolicyIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.SecretBasedAuthenticationPolicy`
- * @returns {Builder<Specification.SecretBasedAuthenticationPolicy>} A builder for `Specification.SecretBasedAuthenticationPolicy`
+ * A factory to create a builder proxy for the type `SecretBasedAuthenticationPolicyIntersection`
+ * @returns {Builder<SecretBasedAuthenticationPolicyIntersection, SecretBasedAuthenticationPolicyIntersection>} A builder for `SecretBasedAuthenticationPolicyIntersection`
  */
 export const secretBasedAuthenticationPolicyBuilder = (
   model?: Partial<Specification.SecretBasedAuthenticationPolicy>,
-): Builder<Specification.SecretBasedAuthenticationPolicy> =>
-  builder<Specification.SecretBasedAuthenticationPolicy>(model, buildingFn);
+): Builder<Partial<Specification.SecretBasedAuthenticationPolicy>, SecretBasedAuthenticationPolicyIntersection> =>
+  builder<Specification.SecretBasedAuthenticationPolicy, SecretBasedAuthenticationPolicyIntersection>(
+    model,
+    buildingFn,
+  );

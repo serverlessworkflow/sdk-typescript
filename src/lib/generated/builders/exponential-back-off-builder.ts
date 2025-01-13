@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { ExponentialBackOffIntersection } from '../classes/exponential-back-off';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.ExponentialBackOff} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.ExponentialBackOff} The built object
+ * @returns {ExponentialBackOffIntersection} The built object
  */
-function buildingFn(model: Specification.ExponentialBackOff, options: BuildOptions): Specification.ExponentialBackOff {
+function buildingFn(model: Specification.ExponentialBackOff, options: BuildOptions): ExponentialBackOffIntersection {
   const instance = new Classes.ExponentialBackOff(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.ExponentialBackOff;
+  return (options.normalize ? instance.normalize() : instance) as ExponentialBackOffIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.ExponentialBackOff`
- * @returns {Builder<Specification.ExponentialBackOff>} A builder for `Specification.ExponentialBackOff`
+ * A factory to create a builder proxy for the type `ExponentialBackOffIntersection`
+ * @returns {Builder<ExponentialBackOffIntersection, ExponentialBackOffIntersection>} A builder for `ExponentialBackOffIntersection`
  */
 export const exponentialBackOffBuilder = (
   model?: Partial<Specification.ExponentialBackOff>,
-): Builder<Specification.ExponentialBackOff> => builder<Specification.ExponentialBackOff>(model, buildingFn);
+): Builder<Partial<Specification.ExponentialBackOff>, ExponentialBackOffIntersection> =>
+  builder<Specification.ExponentialBackOff, ExponentialBackOffIntersection>(model, buildingFn);

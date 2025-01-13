@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { ExternalScriptIntersection } from '../classes/external-script';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.ExternalScript} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.ExternalScript} The built object
+ * @returns {ExternalScriptIntersection} The built object
  */
-function buildingFn(model: Specification.ExternalScript, options: BuildOptions): Specification.ExternalScript {
+function buildingFn(model: Specification.ExternalScript, options: BuildOptions): ExternalScriptIntersection {
   const instance = new Classes.ExternalScript(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.ExternalScript;
+  return (options.normalize ? instance.normalize() : instance) as ExternalScriptIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.ExternalScript`
- * @returns {Builder<Specification.ExternalScript>} A builder for `Specification.ExternalScript`
+ * A factory to create a builder proxy for the type `ExternalScriptIntersection`
+ * @returns {Builder<ExternalScriptIntersection, ExternalScriptIntersection>} A builder for `ExternalScriptIntersection`
  */
 export const externalScriptBuilder = (
   model?: Partial<Specification.ExternalScript>,
-): Builder<Specification.ExternalScript> => builder<Specification.ExternalScript>(model, buildingFn);
+): Builder<Partial<Specification.ExternalScript>, ExternalScriptIntersection> =>
+  builder<Specification.ExternalScript, ExternalScriptIntersection>(model, buildingFn);

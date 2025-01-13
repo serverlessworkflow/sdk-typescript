@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { InlineScriptIntersection } from '../classes/inline-script';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.InlineScript} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.InlineScript} The built object
+ * @returns {InlineScriptIntersection} The built object
  */
-function buildingFn(model: Specification.InlineScript, options: BuildOptions): Specification.InlineScript {
+function buildingFn(model: Specification.InlineScript, options: BuildOptions): InlineScriptIntersection {
   const instance = new Classes.InlineScript(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.InlineScript;
+  return (options.normalize ? instance.normalize() : instance) as InlineScriptIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.InlineScript`
- * @returns {Builder<Specification.InlineScript>} A builder for `Specification.InlineScript`
+ * A factory to create a builder proxy for the type `InlineScriptIntersection`
+ * @returns {Builder<InlineScriptIntersection, InlineScriptIntersection>} A builder for `InlineScriptIntersection`
  */
-export const inlineScriptBuilder = (model?: Partial<Specification.InlineScript>): Builder<Specification.InlineScript> =>
-  builder<Specification.InlineScript>(model, buildingFn);
+export const inlineScriptBuilder = (
+  model?: Partial<Specification.InlineScript>,
+): Builder<Partial<Specification.InlineScript>, InlineScriptIntersection> =>
+  builder<Specification.InlineScript, InlineScriptIntersection>(model, buildingFn);

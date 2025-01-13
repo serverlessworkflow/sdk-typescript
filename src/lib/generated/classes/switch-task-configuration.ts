@@ -27,6 +27,18 @@ import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
 
 /**
+ * Represents the intersection between the SwitchTaskConfiguration class and type
+ */
+export type SwitchTaskConfigurationIntersection = SwitchTaskConfiguration & Specification.SwitchTaskConfiguration;
+
+/**
+ * Represents a constructor for the intersection of the SwitchTaskConfiguration class and type
+ */
+export interface SwitchTaskConfigurationConstructor {
+  new (model?: Array<Specification.SwitchItem> | number): SwitchTaskConfigurationIntersection;
+}
+
+/**
  * Represents a collection of Specification.SwitchItem.
  * Inherits from ArrayHydrator to handle array-specific hydration.
  */
@@ -69,4 +81,5 @@ export class SwitchTaskConfiguration extends ArrayHydrator<Specification.SwitchI
   }
 }
 
-export const _SwitchTaskConfiguration = SwitchTaskConfiguration; // could be exported directly, but it makes the job of building the index more straightforward as it's consistant with "object" classes
+export const _SwitchTaskConfiguration = SwitchTaskConfiguration as unknown as SwitchTaskConfigurationConstructor;
+//export const _SwitchTaskConfiguration = SwitchTaskConfiguration; // could be exported directly, but it makes the job of building the index more straightforward as it's consistant with "object" classes

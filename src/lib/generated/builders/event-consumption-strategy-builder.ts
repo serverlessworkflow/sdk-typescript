@@ -22,28 +22,29 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { EventConsumptionStrategyIntersection } from '../classes/event-consumption-strategy';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.EventConsumptionStrategy} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.EventConsumptionStrategy} The built object
+ * @returns {EventConsumptionStrategyIntersection} The built object
  */
 function buildingFn(
   model: Specification.EventConsumptionStrategy,
   options: BuildOptions,
-): Specification.EventConsumptionStrategy {
+): EventConsumptionStrategyIntersection {
   const instance = new Classes.EventConsumptionStrategy(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.EventConsumptionStrategy;
+  return (options.normalize ? instance.normalize() : instance) as EventConsumptionStrategyIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.EventConsumptionStrategy`
- * @returns {Builder<Specification.EventConsumptionStrategy>} A builder for `Specification.EventConsumptionStrategy`
+ * A factory to create a builder proxy for the type `EventConsumptionStrategyIntersection`
+ * @returns {Builder<EventConsumptionStrategyIntersection, EventConsumptionStrategyIntersection>} A builder for `EventConsumptionStrategyIntersection`
  */
 export const eventConsumptionStrategyBuilder = (
   model?: Partial<Specification.EventConsumptionStrategy>,
-): Builder<Specification.EventConsumptionStrategy> =>
-  builder<Specification.EventConsumptionStrategy>(model, buildingFn);
+): Builder<Partial<Specification.EventConsumptionStrategy>, EventConsumptionStrategyIntersection> =>
+  builder<Specification.EventConsumptionStrategy, EventConsumptionStrategyIntersection>(model, buildingFn);

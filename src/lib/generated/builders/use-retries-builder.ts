@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { UseRetriesIntersection } from '../classes/use-retries';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.UseRetries} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.UseRetries} The built object
+ * @returns {UseRetriesIntersection} The built object
  */
-function buildingFn(model: Specification.UseRetries, options: BuildOptions): Specification.UseRetries {
+function buildingFn(model: Specification.UseRetries, options: BuildOptions): UseRetriesIntersection {
   const instance = new Classes.UseRetries(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.UseRetries;
+  return (options.normalize ? instance.normalize() : instance) as UseRetriesIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.UseRetries`
- * @returns {Builder<Specification.UseRetries>} A builder for `Specification.UseRetries`
+ * A factory to create a builder proxy for the type `UseRetriesIntersection`
+ * @returns {Builder<UseRetriesIntersection, UseRetriesIntersection>} A builder for `UseRetriesIntersection`
  */
-export const useRetriesBuilder = (model?: Partial<Specification.UseRetries>): Builder<Specification.UseRetries> =>
-  builder<Specification.UseRetries>(model, buildingFn);
+export const useRetriesBuilder = (
+  model?: Partial<Specification.UseRetries>,
+): Builder<Partial<Specification.UseRetries>, UseRetriesIntersection> =>
+  builder<Specification.UseRetries, UseRetriesIntersection>(model, buildingFn);

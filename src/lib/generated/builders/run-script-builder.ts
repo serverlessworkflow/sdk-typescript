@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { RunScriptIntersection } from '../classes/run-script';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.RunScript} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.RunScript} The built object
+ * @returns {RunScriptIntersection} The built object
  */
-function buildingFn(model: Specification.RunScript, options: BuildOptions): Specification.RunScript {
+function buildingFn(model: Specification.RunScript, options: BuildOptions): RunScriptIntersection {
   const instance = new Classes.RunScript(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.RunScript;
+  return (options.normalize ? instance.normalize() : instance) as RunScriptIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.RunScript`
- * @returns {Builder<Specification.RunScript>} A builder for `Specification.RunScript`
+ * A factory to create a builder proxy for the type `RunScriptIntersection`
+ * @returns {Builder<RunScriptIntersection, RunScriptIntersection>} A builder for `RunScriptIntersection`
  */
-export const runScriptBuilder = (model?: Partial<Specification.RunScript>): Builder<Specification.RunScript> =>
-  builder<Specification.RunScript>(model, buildingFn);
+export const runScriptBuilder = (
+  model?: Partial<Specification.RunScript>,
+): Builder<Partial<Specification.RunScript>, RunScriptIntersection> =>
+  builder<Specification.RunScript, RunScriptIntersection>(model, buildingFn);

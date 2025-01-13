@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { WithGRPCServiceIntersection } from '../classes/with-grpc-service';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.WithGRPCService} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.WithGRPCService} The built object
+ * @returns {WithGRPCServiceIntersection} The built object
  */
-function buildingFn(model: Specification.WithGRPCService, options: BuildOptions): Specification.WithGRPCService {
+function buildingFn(model: Specification.WithGRPCService, options: BuildOptions): WithGRPCServiceIntersection {
   const instance = new Classes.WithGRPCService(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.WithGRPCService;
+  return (options.normalize ? instance.normalize() : instance) as WithGRPCServiceIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.WithGRPCService`
- * @returns {Builder<Specification.WithGRPCService>} A builder for `Specification.WithGRPCService`
+ * A factory to create a builder proxy for the type `WithGRPCServiceIntersection`
+ * @returns {Builder<WithGRPCServiceIntersection, WithGRPCServiceIntersection>} A builder for `WithGRPCServiceIntersection`
  */
 export const withGRPCServiceBuilder = (
   model?: Partial<Specification.WithGRPCService>,
-): Builder<Specification.WithGRPCService> => builder<Specification.WithGRPCService>(model, buildingFn);
+): Builder<Partial<Specification.WithGRPCService>, WithGRPCServiceIntersection> =>
+  builder<Specification.WithGRPCService, WithGRPCServiceIntersection>(model, buildingFn);

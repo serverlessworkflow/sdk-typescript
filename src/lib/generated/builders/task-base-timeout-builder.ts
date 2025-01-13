@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { TaskBaseTimeoutIntersection } from '../classes/task-base-timeout';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.TaskBaseTimeout} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.TaskBaseTimeout} The built object
+ * @returns {TaskBaseTimeoutIntersection} The built object
  */
-function buildingFn(model: Specification.TaskBaseTimeout, options: BuildOptions): Specification.TaskBaseTimeout {
+function buildingFn(model: Specification.TaskBaseTimeout, options: BuildOptions): TaskBaseTimeoutIntersection {
   const instance = new Classes.TaskBaseTimeout(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.TaskBaseTimeout;
+  return (options.normalize ? instance.normalize() : instance) as TaskBaseTimeoutIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.TaskBaseTimeout`
- * @returns {Builder<Specification.TaskBaseTimeout>} A builder for `Specification.TaskBaseTimeout`
+ * A factory to create a builder proxy for the type `TaskBaseTimeoutIntersection`
+ * @returns {Builder<TaskBaseTimeoutIntersection, TaskBaseTimeoutIntersection>} A builder for `TaskBaseTimeoutIntersection`
  */
 export const taskBaseTimeoutBuilder = (
   model?: Partial<Specification.TaskBaseTimeout>,
-): Builder<Specification.TaskBaseTimeout> => builder<Specification.TaskBaseTimeout>(model, buildingFn);
+): Builder<Partial<Specification.TaskBaseTimeout>, TaskBaseTimeoutIntersection> =>
+  builder<Specification.TaskBaseTimeout, TaskBaseTimeoutIntersection>(model, buildingFn);

@@ -26,6 +26,18 @@ import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
 
 /**
+ * Represents the intersection between the UseSecrets class and type
+ */
+export type UseSecretsIntersection = UseSecrets & Specification.UseSecrets;
+
+/**
+ * Represents a constructor for the intersection of the UseSecrets class and type
+ */
+export interface UseSecretsConstructor {
+  new (model?: Array<string> | number): UseSecretsIntersection;
+}
+
+/**
  * Represents a collection of string.
  * Inherits from ArrayHydrator to handle array-specific hydration.
  */
@@ -68,4 +80,5 @@ export class UseSecrets extends ArrayHydrator<string> {
   }
 }
 
-export const _UseSecrets = UseSecrets; // could be exported directly, but it makes the job of building the index more straightforward as it's consistant with "object" classes
+export const _UseSecrets = UseSecrets as unknown as UseSecretsConstructor;
+//export const _UseSecrets = UseSecrets; // could be exported directly, but it makes the job of building the index more straightforward as it's consistant with "object" classes

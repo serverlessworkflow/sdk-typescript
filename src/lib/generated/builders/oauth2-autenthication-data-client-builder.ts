@@ -22,28 +22,29 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { OAuth2AutenthicationDataClientIntersection } from '../classes/oauth2-autenthication-data-client';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.OAuth2AutenthicationDataClient} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.OAuth2AutenthicationDataClient} The built object
+ * @returns {OAuth2AutenthicationDataClientIntersection} The built object
  */
 function buildingFn(
   model: Specification.OAuth2AutenthicationDataClient,
   options: BuildOptions,
-): Specification.OAuth2AutenthicationDataClient {
+): OAuth2AutenthicationDataClientIntersection {
   const instance = new Classes.OAuth2AutenthicationDataClient(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.OAuth2AutenthicationDataClient;
+  return (options.normalize ? instance.normalize() : instance) as OAuth2AutenthicationDataClientIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.OAuth2AutenthicationDataClient`
- * @returns {Builder<Specification.OAuth2AutenthicationDataClient>} A builder for `Specification.OAuth2AutenthicationDataClient`
+ * A factory to create a builder proxy for the type `OAuth2AutenthicationDataClientIntersection`
+ * @returns {Builder<OAuth2AutenthicationDataClientIntersection, OAuth2AutenthicationDataClientIntersection>} A builder for `OAuth2AutenthicationDataClientIntersection`
  */
 export const oAuth2AutenthicationDataClientBuilder = (
   model?: Partial<Specification.OAuth2AutenthicationDataClient>,
-): Builder<Specification.OAuth2AutenthicationDataClient> =>
-  builder<Specification.OAuth2AutenthicationDataClient>(model, buildingFn);
+): Builder<Partial<Specification.OAuth2AutenthicationDataClient>, OAuth2AutenthicationDataClientIntersection> =>
+  builder<Specification.OAuth2AutenthicationDataClient, OAuth2AutenthicationDataClientIntersection>(model, buildingFn);

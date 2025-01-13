@@ -22,27 +22,29 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { EndpointConfigurationIntersection } from '../classes/endpoint-configuration';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.EndpointConfiguration} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.EndpointConfiguration} The built object
+ * @returns {EndpointConfigurationIntersection} The built object
  */
 function buildingFn(
   model: Specification.EndpointConfiguration,
   options: BuildOptions,
-): Specification.EndpointConfiguration {
+): EndpointConfigurationIntersection {
   const instance = new Classes.EndpointConfiguration(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.EndpointConfiguration;
+  return (options.normalize ? instance.normalize() : instance) as EndpointConfigurationIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.EndpointConfiguration`
- * @returns {Builder<Specification.EndpointConfiguration>} A builder for `Specification.EndpointConfiguration`
+ * A factory to create a builder proxy for the type `EndpointConfigurationIntersection`
+ * @returns {Builder<EndpointConfigurationIntersection, EndpointConfigurationIntersection>} A builder for `EndpointConfigurationIntersection`
  */
 export const endpointConfigurationBuilder = (
   model?: Partial<Specification.EndpointConfiguration>,
-): Builder<Specification.EndpointConfiguration> => builder<Specification.EndpointConfiguration>(model, buildingFn);
+): Builder<Partial<Specification.EndpointConfiguration>, EndpointConfigurationIntersection> =>
+  builder<Specification.EndpointConfiguration, EndpointConfigurationIntersection>(model, buildingFn);

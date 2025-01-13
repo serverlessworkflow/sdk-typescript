@@ -22,27 +22,29 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { RaiseTaskConfigurationIntersection } from '../classes/raise-task-configuration';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.RaiseTaskConfiguration} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.RaiseTaskConfiguration} The built object
+ * @returns {RaiseTaskConfigurationIntersection} The built object
  */
 function buildingFn(
   model: Specification.RaiseTaskConfiguration,
   options: BuildOptions,
-): Specification.RaiseTaskConfiguration {
+): RaiseTaskConfigurationIntersection {
   const instance = new Classes.RaiseTaskConfiguration(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.RaiseTaskConfiguration;
+  return (options.normalize ? instance.normalize() : instance) as RaiseTaskConfigurationIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.RaiseTaskConfiguration`
- * @returns {Builder<Specification.RaiseTaskConfiguration>} A builder for `Specification.RaiseTaskConfiguration`
+ * A factory to create a builder proxy for the type `RaiseTaskConfigurationIntersection`
+ * @returns {Builder<RaiseTaskConfigurationIntersection, RaiseTaskConfigurationIntersection>} A builder for `RaiseTaskConfigurationIntersection`
  */
 export const raiseTaskConfigurationBuilder = (
   model?: Partial<Specification.RaiseTaskConfiguration>,
-): Builder<Specification.RaiseTaskConfiguration> => builder<Specification.RaiseTaskConfiguration>(model, buildingFn);
+): Builder<Partial<Specification.RaiseTaskConfiguration>, RaiseTaskConfigurationIntersection> =>
+  builder<Specification.RaiseTaskConfiguration, RaiseTaskConfigurationIntersection>(model, buildingFn);

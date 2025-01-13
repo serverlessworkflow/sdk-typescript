@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { ConstantBackoffIntersection } from '../classes/constant-backoff';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.ConstantBackoff} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.ConstantBackoff} The built object
+ * @returns {ConstantBackoffIntersection} The built object
  */
-function buildingFn(model: Specification.ConstantBackoff, options: BuildOptions): Specification.ConstantBackoff {
+function buildingFn(model: Specification.ConstantBackoff, options: BuildOptions): ConstantBackoffIntersection {
   const instance = new Classes.ConstantBackoff(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.ConstantBackoff;
+  return (options.normalize ? instance.normalize() : instance) as ConstantBackoffIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.ConstantBackoff`
- * @returns {Builder<Specification.ConstantBackoff>} A builder for `Specification.ConstantBackoff`
+ * A factory to create a builder proxy for the type `ConstantBackoffIntersection`
+ * @returns {Builder<ConstantBackoffIntersection, ConstantBackoffIntersection>} A builder for `ConstantBackoffIntersection`
  */
 export const constantBackoffBuilder = (
   model?: Partial<Specification.ConstantBackoff>,
-): Builder<Specification.ConstantBackoff> => builder<Specification.ConstantBackoff>(model, buildingFn);
+): Builder<Partial<Specification.ConstantBackoff>, ConstantBackoffIntersection> =>
+  builder<Specification.ConstantBackoff, ConstantBackoffIntersection>(model, buildingFn);

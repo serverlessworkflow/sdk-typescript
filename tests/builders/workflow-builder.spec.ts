@@ -14,7 +14,24 @@
  * limitations under the License.
  *
  */
-import { documentBuilder, setTaskBuilder, taskListBuilder, workflowBuilder } from '../../src/lib/generated/builders';
+import {
+  basicAuthenticationPolicyBuilder,
+  basicAuthenticationPropertiesBuilder,
+  bearerAuthenticationPolicyBuilder,
+  bearerAuthenticationPropertiesBuilder,
+  callHTTPBuilder,
+  documentBuilder,
+  hTTPArgumentsBuilder,
+  oAuth2AutenthicationDataClientBuilder,
+  oAuth2AuthenticationPolicyBuilder,
+  oAuth2ConnectAuthenticationPropertiesBuilder,
+  setTaskBuilder,
+  taskListBuilder,
+  useAuthenticationsBuilder,
+  useBuilder,
+  useFunctionsBuilder,
+  workflowBuilder,
+} from '../../src/lib/generated/builders';
 import { Classes } from '../../src/lib/generated/classes';
 
 import { schemaVersion } from '../../package.json';
@@ -23,6 +40,51 @@ describe('Workflow builder', () => {
   it('should build with fluent api', () => {
     const workflow = workflowBuilder()
       .document(documentBuilder().dsl(schemaVersion).name('test').version('1.0.0').namespace('default').build())
+      .do(
+        taskListBuilder()
+          .push({
+            step1: setTaskBuilder().set({ foo: 'bar' }).build(),
+          })
+          .build(),
+      )
+      .build();
+    expect(workflow).toBeDefined();
+    expect(workflow).toBeInstanceOf(Classes.Workflow);
+  });
+
+  it('should build a complex workflow with fluent api', () => {
+    const workflow = workflowBuilder()
+      .document(documentBuilder().dsl(schemaVersion).name('test').version('1.0.0').namespace('default').build())
+      .use(
+        useBuilder()
+          .authentications(
+            useAuthenticationsBuilder({
+              myBasicAuth: basicAuthenticationPolicyBuilder()
+                .basic(basicAuthenticationPropertiesBuilder().username('user').password('password').build())
+                .build(),
+              myBearerAuth: bearerAuthenticationPolicyBuilder()
+                .bearer(bearerAuthenticationPropertiesBuilder().token('token').build())
+                .build(),
+              myOAuthAuth: oAuth2AuthenticationPolicyBuilder()
+                .oauth2(
+                  oAuth2ConnectAuthenticationPropertiesBuilder()
+                    .grant('client_credentials')
+                    .authority('https://authority.com')
+                    .client(oAuth2AutenthicationDataClientBuilder().id('clientId').secret('clientSecret').build())
+                    .build(),
+                )
+                .build(),
+            }).build(),
+          )
+          .functions(
+            useFunctionsBuilder({
+              myCustomFunction: callHTTPBuilder()
+                .with(hTTPArgumentsBuilder().method('GET').endpoint('https://myapi.com').build())
+                .build(),
+            }).build(),
+          )
+          .build(),
+      )
       .do(
         taskListBuilder()
           .push({

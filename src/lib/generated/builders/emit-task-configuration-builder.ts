@@ -22,27 +22,29 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { EmitTaskConfigurationIntersection } from '../classes/emit-task-configuration';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.EmitTaskConfiguration} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.EmitTaskConfiguration} The built object
+ * @returns {EmitTaskConfigurationIntersection} The built object
  */
 function buildingFn(
   model: Specification.EmitTaskConfiguration,
   options: BuildOptions,
-): Specification.EmitTaskConfiguration {
+): EmitTaskConfigurationIntersection {
   const instance = new Classes.EmitTaskConfiguration(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.EmitTaskConfiguration;
+  return (options.normalize ? instance.normalize() : instance) as EmitTaskConfigurationIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.EmitTaskConfiguration`
- * @returns {Builder<Specification.EmitTaskConfiguration>} A builder for `Specification.EmitTaskConfiguration`
+ * A factory to create a builder proxy for the type `EmitTaskConfigurationIntersection`
+ * @returns {Builder<EmitTaskConfigurationIntersection, EmitTaskConfigurationIntersection>} A builder for `EmitTaskConfigurationIntersection`
  */
 export const emitTaskConfigurationBuilder = (
   model?: Partial<Specification.EmitTaskConfiguration>,
-): Builder<Specification.EmitTaskConfiguration> => builder<Specification.EmitTaskConfiguration>(model, buildingFn);
+): Builder<Partial<Specification.EmitTaskConfiguration>, EmitTaskConfigurationIntersection> =>
+  builder<Specification.EmitTaskConfiguration, EmitTaskConfigurationIntersection>(model, buildingFn);

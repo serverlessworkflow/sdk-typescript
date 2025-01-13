@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { TryTaskCatchIntersection } from '../classes/try-task-catch';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.TryTaskCatch} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.TryTaskCatch} The built object
+ * @returns {TryTaskCatchIntersection} The built object
  */
-function buildingFn(model: Specification.TryTaskCatch, options: BuildOptions): Specification.TryTaskCatch {
+function buildingFn(model: Specification.TryTaskCatch, options: BuildOptions): TryTaskCatchIntersection {
   const instance = new Classes.TryTaskCatch(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.TryTaskCatch;
+  return (options.normalize ? instance.normalize() : instance) as TryTaskCatchIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.TryTaskCatch`
- * @returns {Builder<Specification.TryTaskCatch>} A builder for `Specification.TryTaskCatch`
+ * A factory to create a builder proxy for the type `TryTaskCatchIntersection`
+ * @returns {Builder<TryTaskCatchIntersection, TryTaskCatchIntersection>} A builder for `TryTaskCatchIntersection`
  */
-export const tryTaskCatchBuilder = (model?: Partial<Specification.TryTaskCatch>): Builder<Specification.TryTaskCatch> =>
-  builder<Specification.TryTaskCatch>(model, buildingFn);
+export const tryTaskCatchBuilder = (
+  model?: Partial<Specification.TryTaskCatch>,
+): Builder<Partial<Specification.TryTaskCatch>, TryTaskCatchIntersection> =>
+  builder<Specification.TryTaskCatch, TryTaskCatchIntersection>(model, buildingFn);

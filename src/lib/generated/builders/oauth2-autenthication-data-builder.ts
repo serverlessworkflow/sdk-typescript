@@ -22,28 +22,29 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { OAuth2AutenthicationDataIntersection } from '../classes/oauth2-autenthication-data';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.OAuth2AutenthicationData} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.OAuth2AutenthicationData} The built object
+ * @returns {OAuth2AutenthicationDataIntersection} The built object
  */
 function buildingFn(
   model: Specification.OAuth2AutenthicationData,
   options: BuildOptions,
-): Specification.OAuth2AutenthicationData {
+): OAuth2AutenthicationDataIntersection {
   const instance = new Classes.OAuth2AutenthicationData(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.OAuth2AutenthicationData;
+  return (options.normalize ? instance.normalize() : instance) as OAuth2AutenthicationDataIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.OAuth2AutenthicationData`
- * @returns {Builder<Specification.OAuth2AutenthicationData>} A builder for `Specification.OAuth2AutenthicationData`
+ * A factory to create a builder proxy for the type `OAuth2AutenthicationDataIntersection`
+ * @returns {Builder<OAuth2AutenthicationDataIntersection, OAuth2AutenthicationDataIntersection>} A builder for `OAuth2AutenthicationDataIntersection`
  */
 export const oAuth2AutenthicationDataBuilder = (
   model?: Partial<Specification.OAuth2AutenthicationData>,
-): Builder<Specification.OAuth2AutenthicationData> =>
-  builder<Specification.OAuth2AutenthicationData>(model, buildingFn);
+): Builder<Partial<Specification.OAuth2AutenthicationData>, OAuth2AutenthicationDataIntersection> =>
+  builder<Specification.OAuth2AutenthicationData, OAuth2AutenthicationDataIntersection>(model, buildingFn);

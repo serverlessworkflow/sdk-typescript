@@ -26,6 +26,19 @@ import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
 
 /**
+ * Represents the intersection between the OAuth2AutenthicationDataScopes class and type
+ */
+export type OAuth2AutenthicationDataScopesIntersection = OAuth2AutenthicationDataScopes &
+  Specification.OAuth2AutenthicationDataScopes;
+
+/**
+ * Represents a constructor for the intersection of the OAuth2AutenthicationDataScopes class and type
+ */
+export interface OAuth2AutenthicationDataScopesConstructor {
+  new (model?: Array<string> | number): OAuth2AutenthicationDataScopesIntersection;
+}
+
+/**
  * Represents a collection of string.
  * Inherits from ArrayHydrator to handle array-specific hydration.
  */
@@ -68,4 +81,6 @@ export class OAuth2AutenthicationDataScopes extends ArrayHydrator<string> {
   }
 }
 
-export const _OAuth2AutenthicationDataScopes = OAuth2AutenthicationDataScopes; // could be exported directly, but it makes the job of building the index more straightforward as it's consistant with "object" classes
+export const _OAuth2AutenthicationDataScopes =
+  OAuth2AutenthicationDataScopes as unknown as OAuth2AutenthicationDataScopesConstructor;
+//export const _OAuth2AutenthicationDataScopes = OAuth2AutenthicationDataScopes; // could be exported directly, but it makes the job of building the index more straightforward as it's consistant with "object" classes

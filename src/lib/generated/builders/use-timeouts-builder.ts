@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { UseTimeoutsIntersection } from '../classes/use-timeouts';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.UseTimeouts} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.UseTimeouts} The built object
+ * @returns {UseTimeoutsIntersection} The built object
  */
-function buildingFn(model: Specification.UseTimeouts, options: BuildOptions): Specification.UseTimeouts {
+function buildingFn(model: Specification.UseTimeouts, options: BuildOptions): UseTimeoutsIntersection {
   const instance = new Classes.UseTimeouts(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.UseTimeouts;
+  return (options.normalize ? instance.normalize() : instance) as UseTimeoutsIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.UseTimeouts`
- * @returns {Builder<Specification.UseTimeouts>} A builder for `Specification.UseTimeouts`
+ * A factory to create a builder proxy for the type `UseTimeoutsIntersection`
+ * @returns {Builder<UseTimeoutsIntersection, UseTimeoutsIntersection>} A builder for `UseTimeoutsIntersection`
  */
-export const useTimeoutsBuilder = (model?: Partial<Specification.UseTimeouts>): Builder<Specification.UseTimeouts> =>
-  builder<Specification.UseTimeouts>(model, buildingFn);
+export const useTimeoutsBuilder = (
+  model?: Partial<Specification.UseTimeouts>,
+): Builder<Partial<Specification.UseTimeouts>, UseTimeoutsIntersection> =>
+  builder<Specification.UseTimeouts, UseTimeoutsIntersection>(model, buildingFn);

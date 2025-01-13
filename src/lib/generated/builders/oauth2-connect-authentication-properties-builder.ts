@@ -22,28 +22,35 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { OAuth2ConnectAuthenticationPropertiesIntersection } from '../classes/oauth2-connect-authentication-properties';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.OAuth2ConnectAuthenticationProperties} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.OAuth2ConnectAuthenticationProperties} The built object
+ * @returns {OAuth2ConnectAuthenticationPropertiesIntersection} The built object
  */
 function buildingFn(
   model: Specification.OAuth2ConnectAuthenticationProperties,
   options: BuildOptions,
-): Specification.OAuth2ConnectAuthenticationProperties {
+): OAuth2ConnectAuthenticationPropertiesIntersection {
   const instance = new Classes.OAuth2ConnectAuthenticationProperties(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.OAuth2ConnectAuthenticationProperties;
+  return (options.normalize ? instance.normalize() : instance) as OAuth2ConnectAuthenticationPropertiesIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.OAuth2ConnectAuthenticationProperties`
- * @returns {Builder<Specification.OAuth2ConnectAuthenticationProperties>} A builder for `Specification.OAuth2ConnectAuthenticationProperties`
+ * A factory to create a builder proxy for the type `OAuth2ConnectAuthenticationPropertiesIntersection`
+ * @returns {Builder<OAuth2ConnectAuthenticationPropertiesIntersection, OAuth2ConnectAuthenticationPropertiesIntersection>} A builder for `OAuth2ConnectAuthenticationPropertiesIntersection`
  */
 export const oAuth2ConnectAuthenticationPropertiesBuilder = (
   model?: Partial<Specification.OAuth2ConnectAuthenticationProperties>,
-): Builder<Specification.OAuth2ConnectAuthenticationProperties> =>
-  builder<Specification.OAuth2ConnectAuthenticationProperties>(model, buildingFn);
+): Builder<
+  Partial<Specification.OAuth2ConnectAuthenticationProperties>,
+  OAuth2ConnectAuthenticationPropertiesIntersection
+> =>
+  builder<Specification.OAuth2ConnectAuthenticationProperties, OAuth2ConnectAuthenticationPropertiesIntersection>(
+    model,
+    buildingFn,
+  );

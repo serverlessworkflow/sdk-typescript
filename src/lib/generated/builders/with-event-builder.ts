@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { WithEventIntersection } from '../classes/with-event';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.WithEvent} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.WithEvent} The built object
+ * @returns {WithEventIntersection} The built object
  */
-function buildingFn(model: Specification.WithEvent, options: BuildOptions): Specification.WithEvent {
+function buildingFn(model: Specification.WithEvent, options: BuildOptions): WithEventIntersection {
   const instance = new Classes.WithEvent(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.WithEvent;
+  return (options.normalize ? instance.normalize() : instance) as WithEventIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.WithEvent`
- * @returns {Builder<Specification.WithEvent>} A builder for `Specification.WithEvent`
+ * A factory to create a builder proxy for the type `WithEventIntersection`
+ * @returns {Builder<WithEventIntersection, WithEventIntersection>} A builder for `WithEventIntersection`
  */
-export const withEventBuilder = (model?: Partial<Specification.WithEvent>): Builder<Specification.WithEvent> =>
-  builder<Specification.WithEvent>(model, buildingFn);
+export const withEventBuilder = (
+  model?: Partial<Specification.WithEvent>,
+): Builder<Partial<Specification.WithEvent>, WithEventIntersection> =>
+  builder<Specification.WithEvent, WithEventIntersection>(model, buildingFn);

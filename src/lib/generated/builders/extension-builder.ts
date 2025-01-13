@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { ExtensionIntersection } from '../classes/extension';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.Extension} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.Extension} The built object
+ * @returns {ExtensionIntersection} The built object
  */
-function buildingFn(model: Specification.Extension, options: BuildOptions): Specification.Extension {
+function buildingFn(model: Specification.Extension, options: BuildOptions): ExtensionIntersection {
   const instance = new Classes.Extension(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.Extension;
+  return (options.normalize ? instance.normalize() : instance) as ExtensionIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.Extension`
- * @returns {Builder<Specification.Extension>} A builder for `Specification.Extension`
+ * A factory to create a builder proxy for the type `ExtensionIntersection`
+ * @returns {Builder<ExtensionIntersection, ExtensionIntersection>} A builder for `ExtensionIntersection`
  */
-export const extensionBuilder = (model?: Partial<Specification.Extension>): Builder<Specification.Extension> =>
-  builder<Specification.Extension>(model, buildingFn);
+export const extensionBuilder = (
+  model?: Partial<Specification.Extension>,
+): Builder<Partial<Specification.Extension>, ExtensionIntersection> =>
+  builder<Specification.Extension, ExtensionIntersection>(model, buildingFn);

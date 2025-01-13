@@ -22,28 +22,29 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { DigestAuthenticationPolicyIntersection } from '../classes/digest-authentication-policy';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.DigestAuthenticationPolicy} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.DigestAuthenticationPolicy} The built object
+ * @returns {DigestAuthenticationPolicyIntersection} The built object
  */
 function buildingFn(
   model: Specification.DigestAuthenticationPolicy,
   options: BuildOptions,
-): Specification.DigestAuthenticationPolicy {
+): DigestAuthenticationPolicyIntersection {
   const instance = new Classes.DigestAuthenticationPolicy(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.DigestAuthenticationPolicy;
+  return (options.normalize ? instance.normalize() : instance) as DigestAuthenticationPolicyIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.DigestAuthenticationPolicy`
- * @returns {Builder<Specification.DigestAuthenticationPolicy>} A builder for `Specification.DigestAuthenticationPolicy`
+ * A factory to create a builder proxy for the type `DigestAuthenticationPolicyIntersection`
+ * @returns {Builder<DigestAuthenticationPolicyIntersection, DigestAuthenticationPolicyIntersection>} A builder for `DigestAuthenticationPolicyIntersection`
  */
 export const digestAuthenticationPolicyBuilder = (
   model?: Partial<Specification.DigestAuthenticationPolicy>,
-): Builder<Specification.DigestAuthenticationPolicy> =>
-  builder<Specification.DigestAuthenticationPolicy>(model, buildingFn);
+): Builder<Partial<Specification.DigestAuthenticationPolicy>, DigestAuthenticationPolicyIntersection> =>
+  builder<Specification.DigestAuthenticationPolicy, DigestAuthenticationPolicyIntersection>(model, buildingFn);

@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { OAuth2TokenRequestIntersection } from '../classes/oauth2-token-request';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.OAuth2TokenRequest} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.OAuth2TokenRequest} The built object
+ * @returns {OAuth2TokenRequestIntersection} The built object
  */
-function buildingFn(model: Specification.OAuth2TokenRequest, options: BuildOptions): Specification.OAuth2TokenRequest {
+function buildingFn(model: Specification.OAuth2TokenRequest, options: BuildOptions): OAuth2TokenRequestIntersection {
   const instance = new Classes.OAuth2TokenRequest(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.OAuth2TokenRequest;
+  return (options.normalize ? instance.normalize() : instance) as OAuth2TokenRequestIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.OAuth2TokenRequest`
- * @returns {Builder<Specification.OAuth2TokenRequest>} A builder for `Specification.OAuth2TokenRequest`
+ * A factory to create a builder proxy for the type `OAuth2TokenRequestIntersection`
+ * @returns {Builder<OAuth2TokenRequestIntersection, OAuth2TokenRequestIntersection>} A builder for `OAuth2TokenRequestIntersection`
  */
 export const oAuth2TokenRequestBuilder = (
   model?: Partial<Specification.OAuth2TokenRequest>,
-): Builder<Specification.OAuth2TokenRequest> => builder<Specification.OAuth2TokenRequest>(model, buildingFn);
+): Builder<Partial<Specification.OAuth2TokenRequest>, OAuth2TokenRequestIntersection> =>
+  builder<Specification.OAuth2TokenRequest, OAuth2TokenRequestIntersection>(model, buildingFn);

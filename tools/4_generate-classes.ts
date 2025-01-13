@@ -179,6 +179,19 @@ import { ArrayHydrator } from '../../hydrator';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
 
+
+/**
+ * Represents the intersection between the ${name} class and type
+ */
+export type ${name}Intersection = ${name} & Specification.${name};
+
+/**
+ * Represents a constructor for the intersection of the ${name} class and type
+ */
+export interface ${name}Constructor {
+  new (model?: Array<${arrayTypeName}> | number): ${name}Intersection;
+}
+
 /**
  * Represents a collection of ${arrayTypeName}.
  * Inherits from ArrayHydrator to handle array-specific hydration.
@@ -219,7 +232,8 @@ export class ${name} extends ArrayHydrator<${arrayTypeName}> {
   }
 }
 
-export const _${name} = ${name}; // could be exported directly, but it makes the job of building the index more straightforward as it's consistant with "object" classes
+export const _${name} = ${name} as unknown as ${name}Constructor;
+//export const _${name} = ${name}; // could be exported directly, but it makes the job of building the index more straightforward as it's consistant with "object" classes
 `;
 }
 

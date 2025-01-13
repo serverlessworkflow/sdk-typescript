@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { SwitchTaskIntersection } from '../classes/switch-task';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.SwitchTask} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.SwitchTask} The built object
+ * @returns {SwitchTaskIntersection} The built object
  */
-function buildingFn(model: Specification.SwitchTask, options: BuildOptions): Specification.SwitchTask {
+function buildingFn(model: Specification.SwitchTask, options: BuildOptions): SwitchTaskIntersection {
   const instance = new Classes.SwitchTask(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.SwitchTask;
+  return (options.normalize ? instance.normalize() : instance) as SwitchTaskIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.SwitchTask`
- * @returns {Builder<Specification.SwitchTask>} A builder for `Specification.SwitchTask`
+ * A factory to create a builder proxy for the type `SwitchTaskIntersection`
+ * @returns {Builder<SwitchTaskIntersection, SwitchTaskIntersection>} A builder for `SwitchTaskIntersection`
  */
-export const switchTaskBuilder = (model?: Partial<Specification.SwitchTask>): Builder<Specification.SwitchTask> =>
-  builder<Specification.SwitchTask>(model, buildingFn);
+export const switchTaskBuilder = (
+  model?: Partial<Specification.SwitchTask>,
+): Builder<Partial<Specification.SwitchTask>, SwitchTaskIntersection> =>
+  builder<Specification.SwitchTask, SwitchTaskIntersection>(model, buildingFn);

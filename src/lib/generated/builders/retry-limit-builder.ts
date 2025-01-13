@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { RetryLimitIntersection } from '../classes/retry-limit';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.RetryLimit} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.RetryLimit} The built object
+ * @returns {RetryLimitIntersection} The built object
  */
-function buildingFn(model: Specification.RetryLimit, options: BuildOptions): Specification.RetryLimit {
+function buildingFn(model: Specification.RetryLimit, options: BuildOptions): RetryLimitIntersection {
   const instance = new Classes.RetryLimit(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.RetryLimit;
+  return (options.normalize ? instance.normalize() : instance) as RetryLimitIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.RetryLimit`
- * @returns {Builder<Specification.RetryLimit>} A builder for `Specification.RetryLimit`
+ * A factory to create a builder proxy for the type `RetryLimitIntersection`
+ * @returns {Builder<RetryLimitIntersection, RetryLimitIntersection>} A builder for `RetryLimitIntersection`
  */
-export const retryLimitBuilder = (model?: Partial<Specification.RetryLimit>): Builder<Specification.RetryLimit> =>
-  builder<Specification.RetryLimit>(model, buildingFn);
+export const retryLimitBuilder = (
+  model?: Partial<Specification.RetryLimit>,
+): Builder<Partial<Specification.RetryLimit>, RetryLimitIntersection> =>
+  builder<Specification.RetryLimit, RetryLimitIntersection>(model, buildingFn);

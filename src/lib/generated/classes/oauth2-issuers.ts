@@ -26,6 +26,18 @@ import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
 
 /**
+ * Represents the intersection between the OAuth2Issuers class and type
+ */
+export type OAuth2IssuersIntersection = OAuth2Issuers & Specification.OAuth2Issuers;
+
+/**
+ * Represents a constructor for the intersection of the OAuth2Issuers class and type
+ */
+export interface OAuth2IssuersConstructor {
+  new (model?: Array<string> | number): OAuth2IssuersIntersection;
+}
+
+/**
  * Represents a collection of string.
  * Inherits from ArrayHydrator to handle array-specific hydration.
  */
@@ -68,4 +80,5 @@ export class OAuth2Issuers extends ArrayHydrator<string> {
   }
 }
 
-export const _OAuth2Issuers = OAuth2Issuers; // could be exported directly, but it makes the job of building the index more straightforward as it's consistant with "object" classes
+export const _OAuth2Issuers = OAuth2Issuers as unknown as OAuth2IssuersConstructor;
+//export const _OAuth2Issuers = OAuth2Issuers; // could be exported directly, but it makes the job of building the index more straightforward as it's consistant with "object" classes

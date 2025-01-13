@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { LinearBackoffIntersection } from '../classes/linear-backoff';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.LinearBackoff} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.LinearBackoff} The built object
+ * @returns {LinearBackoffIntersection} The built object
  */
-function buildingFn(model: Specification.LinearBackoff, options: BuildOptions): Specification.LinearBackoff {
+function buildingFn(model: Specification.LinearBackoff, options: BuildOptions): LinearBackoffIntersection {
   const instance = new Classes.LinearBackoff(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.LinearBackoff;
+  return (options.normalize ? instance.normalize() : instance) as LinearBackoffIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.LinearBackoff`
- * @returns {Builder<Specification.LinearBackoff>} A builder for `Specification.LinearBackoff`
+ * A factory to create a builder proxy for the type `LinearBackoffIntersection`
+ * @returns {Builder<LinearBackoffIntersection, LinearBackoffIntersection>} A builder for `LinearBackoffIntersection`
  */
 export const linearBackoffBuilder = (
   model?: Partial<Specification.LinearBackoff>,
-): Builder<Specification.LinearBackoff> => builder<Specification.LinearBackoff>(model, buildingFn);
+): Builder<Partial<Specification.LinearBackoff>, LinearBackoffIntersection> =>
+  builder<Specification.LinearBackoff, LinearBackoffIntersection>(model, buildingFn);

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Serveless Workflow</title>
+  <base href="/">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+</head>
+
+<body>
+  <pre id="output"></pre>
+  <script src="../../dist/umd/index.umd.js"></script>
+  <script type="text/javascript">
+    (() => {
+      const { Classes, Specification, validate } = serverWorkflowSdk;
+      const workflowDefinition = {
+        document: {
+          dsl: '1.0.0-alpha5',
+          name: 'using-plain-object',
+          version: '1.0.0',
+          namespace: 'default',
+        },
+        do: [
+          {
+            step1: {
+              set: {
+                variable: 'my first workflow',
+              },
+            },
+          },
+        ],
+      }/* as Specification.Workflow // <-- If you're using TypeScript*/;
+      try {
+        validate('Workflow', workflowDefinition);
+        document.getElementById('output').innerHTML = `--- YAML ---\n${Classes.Workflow.serialize(workflowDefinition)}\n\n--- JSON ---\n${Classes.Workflow.serialize(workflowDefinition, 'json')}`;
+      }
+      catch (ex) {
+        console.error('Invalid workflow', ex);
+      }
+    })();
+  </script>
+</body>
+
+</html>

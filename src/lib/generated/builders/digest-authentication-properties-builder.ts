@@ -22,28 +22,29 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { DigestAuthenticationPropertiesIntersection } from '../classes/digest-authentication-properties';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.DigestAuthenticationProperties} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.DigestAuthenticationProperties} The built object
+ * @returns {DigestAuthenticationPropertiesIntersection} The built object
  */
 function buildingFn(
   model: Specification.DigestAuthenticationProperties,
   options: BuildOptions,
-): Specification.DigestAuthenticationProperties {
+): DigestAuthenticationPropertiesIntersection {
   const instance = new Classes.DigestAuthenticationProperties(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.DigestAuthenticationProperties;
+  return (options.normalize ? instance.normalize() : instance) as DigestAuthenticationPropertiesIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.DigestAuthenticationProperties`
- * @returns {Builder<Specification.DigestAuthenticationProperties>} A builder for `Specification.DigestAuthenticationProperties`
+ * A factory to create a builder proxy for the type `DigestAuthenticationPropertiesIntersection`
+ * @returns {Builder<DigestAuthenticationPropertiesIntersection, DigestAuthenticationPropertiesIntersection>} A builder for `DigestAuthenticationPropertiesIntersection`
  */
 export const digestAuthenticationPropertiesBuilder = (
   model?: Partial<Specification.DigestAuthenticationProperties>,
-): Builder<Specification.DigestAuthenticationProperties> =>
-  builder<Specification.DigestAuthenticationProperties>(model, buildingFn);
+): Builder<Partial<Specification.DigestAuthenticationProperties>, DigestAuthenticationPropertiesIntersection> =>
+  builder<Specification.DigestAuthenticationProperties, DigestAuthenticationPropertiesIntersection>(model, buildingFn);

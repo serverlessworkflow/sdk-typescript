@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { UseCatalogsIntersection } from '../classes/use-catalogs';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.UseCatalogs} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.UseCatalogs} The built object
+ * @returns {UseCatalogsIntersection} The built object
  */
-function buildingFn(model: Specification.UseCatalogs, options: BuildOptions): Specification.UseCatalogs {
+function buildingFn(model: Specification.UseCatalogs, options: BuildOptions): UseCatalogsIntersection {
   const instance = new Classes.UseCatalogs(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.UseCatalogs;
+  return (options.normalize ? instance.normalize() : instance) as UseCatalogsIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.UseCatalogs`
- * @returns {Builder<Specification.UseCatalogs>} A builder for `Specification.UseCatalogs`
+ * A factory to create a builder proxy for the type `UseCatalogsIntersection`
+ * @returns {Builder<UseCatalogsIntersection, UseCatalogsIntersection>} A builder for `UseCatalogsIntersection`
  */
-export const useCatalogsBuilder = (model?: Partial<Specification.UseCatalogs>): Builder<Specification.UseCatalogs> =>
-  builder<Specification.UseCatalogs>(model, buildingFn);
+export const useCatalogsBuilder = (
+  model?: Partial<Specification.UseCatalogs>,
+): Builder<Partial<Specification.UseCatalogs>, UseCatalogsIntersection> =>
+  builder<Specification.UseCatalogs, UseCatalogsIntersection>(model, buildingFn);

@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { RetryBackoffIntersection } from '../classes/retry-backoff';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.RetryBackoff} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.RetryBackoff} The built object
+ * @returns {RetryBackoffIntersection} The built object
  */
-function buildingFn(model: Specification.RetryBackoff, options: BuildOptions): Specification.RetryBackoff {
+function buildingFn(model: Specification.RetryBackoff, options: BuildOptions): RetryBackoffIntersection {
   const instance = new Classes.RetryBackoff(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.RetryBackoff;
+  return (options.normalize ? instance.normalize() : instance) as RetryBackoffIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.RetryBackoff`
- * @returns {Builder<Specification.RetryBackoff>} A builder for `Specification.RetryBackoff`
+ * A factory to create a builder proxy for the type `RetryBackoffIntersection`
+ * @returns {Builder<RetryBackoffIntersection, RetryBackoffIntersection>} A builder for `RetryBackoffIntersection`
  */
-export const retryBackoffBuilder = (model?: Partial<Specification.RetryBackoff>): Builder<Specification.RetryBackoff> =>
-  builder<Specification.RetryBackoff>(model, buildingFn);
+export const retryBackoffBuilder = (
+  model?: Partial<Specification.RetryBackoff>,
+): Builder<Partial<Specification.RetryBackoff>, RetryBackoffIntersection> =>
+  builder<Specification.RetryBackoff, RetryBackoffIntersection>(model, buildingFn);

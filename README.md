@@ -49,6 +49,8 @@ The fluent builders wrap the core classes and provide a fluent API for construct
 
 The fluent builders are directly exported as `*<desired-type>*Builder`, e.g., `workflowBuilder`.
 
+By default, built objects are self-validated and self-normalized. `BuildOptions` can be passed to the `build()` method to disable validation or normalization.
+
 ### Validation Function
 The SDK includes a validation function to check if objects conform to the expected schema. This function ensures that your workflow objects are correctly structured and meet the required specifications.
 

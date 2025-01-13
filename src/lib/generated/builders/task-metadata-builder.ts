@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { TaskMetadataIntersection } from '../classes/task-metadata';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.TaskMetadata} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.TaskMetadata} The built object
+ * @returns {TaskMetadataIntersection} The built object
  */
-function buildingFn(model: Specification.TaskMetadata, options: BuildOptions): Specification.TaskMetadata {
+function buildingFn(model: Specification.TaskMetadata, options: BuildOptions): TaskMetadataIntersection {
   const instance = new Classes.TaskMetadata(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.TaskMetadata;
+  return (options.normalize ? instance.normalize() : instance) as TaskMetadataIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.TaskMetadata`
- * @returns {Builder<Specification.TaskMetadata>} A builder for `Specification.TaskMetadata`
+ * A factory to create a builder proxy for the type `TaskMetadataIntersection`
+ * @returns {Builder<TaskMetadataIntersection, TaskMetadataIntersection>} A builder for `TaskMetadataIntersection`
  */
-export const taskMetadataBuilder = (model?: Partial<Specification.TaskMetadata>): Builder<Specification.TaskMetadata> =>
-  builder<Specification.TaskMetadata>(model, buildingFn);
+export const taskMetadataBuilder = (
+  model?: Partial<Specification.TaskMetadata>,
+): Builder<Partial<Specification.TaskMetadata>, TaskMetadataIntersection> =>
+  builder<Specification.TaskMetadata, TaskMetadataIntersection>(model, buildingFn);

@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { RetryPolicyIntersection } from '../classes/retry-policy';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.RetryPolicy} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.RetryPolicy} The built object
+ * @returns {RetryPolicyIntersection} The built object
  */
-function buildingFn(model: Specification.RetryPolicy, options: BuildOptions): Specification.RetryPolicy {
+function buildingFn(model: Specification.RetryPolicy, options: BuildOptions): RetryPolicyIntersection {
   const instance = new Classes.RetryPolicy(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.RetryPolicy;
+  return (options.normalize ? instance.normalize() : instance) as RetryPolicyIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.RetryPolicy`
- * @returns {Builder<Specification.RetryPolicy>} A builder for `Specification.RetryPolicy`
+ * A factory to create a builder proxy for the type `RetryPolicyIntersection`
+ * @returns {Builder<RetryPolicyIntersection, RetryPolicyIntersection>} A builder for `RetryPolicyIntersection`
  */
-export const retryPolicyBuilder = (model?: Partial<Specification.RetryPolicy>): Builder<Specification.RetryPolicy> =>
-  builder<Specification.RetryPolicy>(model, buildingFn);
+export const retryPolicyBuilder = (
+  model?: Partial<Specification.RetryPolicy>,
+): Builder<Partial<Specification.RetryPolicy>, RetryPolicyIntersection> =>
+  builder<Specification.RetryPolicy, RetryPolicyIntersection>(model, buildingFn);

@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { GRPCArgumentsIntersection } from '../classes/grpc-arguments';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.GRPCArguments} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.GRPCArguments} The built object
+ * @returns {GRPCArgumentsIntersection} The built object
  */
-function buildingFn(model: Specification.GRPCArguments, options: BuildOptions): Specification.GRPCArguments {
+function buildingFn(model: Specification.GRPCArguments, options: BuildOptions): GRPCArgumentsIntersection {
   const instance = new Classes.GRPCArguments(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.GRPCArguments;
+  return (options.normalize ? instance.normalize() : instance) as GRPCArgumentsIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.GRPCArguments`
- * @returns {Builder<Specification.GRPCArguments>} A builder for `Specification.GRPCArguments`
+ * A factory to create a builder proxy for the type `GRPCArgumentsIntersection`
+ * @returns {Builder<GRPCArgumentsIntersection, GRPCArgumentsIntersection>} A builder for `GRPCArgumentsIntersection`
  */
 export const gRPCArgumentsBuilder = (
   model?: Partial<Specification.GRPCArguments>,
-): Builder<Specification.GRPCArguments> => builder<Specification.GRPCArguments>(model, buildingFn);
+): Builder<Partial<Specification.GRPCArguments>, GRPCArgumentsIntersection> =>
+  builder<Specification.GRPCArguments, GRPCArgumentsIntersection>(model, buildingFn);

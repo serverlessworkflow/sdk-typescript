@@ -22,28 +22,35 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { BasicAuthenticationPolicyConfigurationIntersection } from '../classes/basic-authentication-policy-configuration';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.BasicAuthenticationPolicyConfiguration} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.BasicAuthenticationPolicyConfiguration} The built object
+ * @returns {BasicAuthenticationPolicyConfigurationIntersection} The built object
  */
 function buildingFn(
   model: Specification.BasicAuthenticationPolicyConfiguration,
   options: BuildOptions,
-): Specification.BasicAuthenticationPolicyConfiguration {
+): BasicAuthenticationPolicyConfigurationIntersection {
   const instance = new Classes.BasicAuthenticationPolicyConfiguration(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.BasicAuthenticationPolicyConfiguration;
+  return (options.normalize ? instance.normalize() : instance) as BasicAuthenticationPolicyConfigurationIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.BasicAuthenticationPolicyConfiguration`
- * @returns {Builder<Specification.BasicAuthenticationPolicyConfiguration>} A builder for `Specification.BasicAuthenticationPolicyConfiguration`
+ * A factory to create a builder proxy for the type `BasicAuthenticationPolicyConfigurationIntersection`
+ * @returns {Builder<BasicAuthenticationPolicyConfigurationIntersection, BasicAuthenticationPolicyConfigurationIntersection>} A builder for `BasicAuthenticationPolicyConfigurationIntersection`
  */
 export const basicAuthenticationPolicyConfigurationBuilder = (
   model?: Partial<Specification.BasicAuthenticationPolicyConfiguration>,
-): Builder<Specification.BasicAuthenticationPolicyConfiguration> =>
-  builder<Specification.BasicAuthenticationPolicyConfiguration>(model, buildingFn);
+): Builder<
+  Partial<Specification.BasicAuthenticationPolicyConfiguration>,
+  BasicAuthenticationPolicyConfigurationIntersection
+> =>
+  builder<Specification.BasicAuthenticationPolicyConfiguration, BasicAuthenticationPolicyConfigurationIntersection>(
+    model,
+    buildingFn,
+  );

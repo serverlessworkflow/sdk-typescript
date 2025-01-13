@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { ScriptIntersection } from '../classes/script';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.Script} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.Script} The built object
+ * @returns {ScriptIntersection} The built object
  */
-function buildingFn(model: Specification.Script, options: BuildOptions): Specification.Script {
+function buildingFn(model: Specification.Script, options: BuildOptions): ScriptIntersection {
   const instance = new Classes.Script(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.Script;
+  return (options.normalize ? instance.normalize() : instance) as ScriptIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.Script`
- * @returns {Builder<Specification.Script>} A builder for `Specification.Script`
+ * A factory to create a builder proxy for the type `ScriptIntersection`
+ * @returns {Builder<ScriptIntersection, ScriptIntersection>} A builder for `ScriptIntersection`
  */
-export const scriptBuilder = (model?: Partial<Specification.Script>): Builder<Specification.Script> =>
-  builder<Specification.Script>(model, buildingFn);
+export const scriptBuilder = (
+  model?: Partial<Specification.Script>,
+): Builder<Partial<Specification.Script>, ScriptIntersection> =>
+  builder<Specification.Script, ScriptIntersection>(model, buildingFn);

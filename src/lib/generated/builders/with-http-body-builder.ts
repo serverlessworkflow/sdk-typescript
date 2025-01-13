@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { WithHTTPBodyIntersection } from '../classes/with-http-body';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.WithHTTPBody} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.WithHTTPBody} The built object
+ * @returns {WithHTTPBodyIntersection} The built object
  */
-function buildingFn(model: Specification.WithHTTPBody, options: BuildOptions): Specification.WithHTTPBody {
+function buildingFn(model: Specification.WithHTTPBody, options: BuildOptions): WithHTTPBodyIntersection {
   const instance = new Classes.WithHTTPBody(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.WithHTTPBody;
+  return (options.normalize ? instance.normalize() : instance) as WithHTTPBodyIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.WithHTTPBody`
- * @returns {Builder<Specification.WithHTTPBody>} A builder for `Specification.WithHTTPBody`
+ * A factory to create a builder proxy for the type `WithHTTPBodyIntersection`
+ * @returns {Builder<WithHTTPBodyIntersection, WithHTTPBodyIntersection>} A builder for `WithHTTPBodyIntersection`
  */
-export const withHTTPBodyBuilder = (model?: Partial<Specification.WithHTTPBody>): Builder<Specification.WithHTTPBody> =>
-  builder<Specification.WithHTTPBody>(model, buildingFn);
+export const withHTTPBodyBuilder = (
+  model?: Partial<Specification.WithHTTPBody>,
+): Builder<Partial<Specification.WithHTTPBody>, WithHTTPBodyIntersection> =>
+  builder<Specification.WithHTTPBody, WithHTTPBodyIntersection>(model, buildingFn);

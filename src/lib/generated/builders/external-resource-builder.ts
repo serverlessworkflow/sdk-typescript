@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { ExternalResourceIntersection } from '../classes/external-resource';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.ExternalResource} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.ExternalResource} The built object
+ * @returns {ExternalResourceIntersection} The built object
  */
-function buildingFn(model: Specification.ExternalResource, options: BuildOptions): Specification.ExternalResource {
+function buildingFn(model: Specification.ExternalResource, options: BuildOptions): ExternalResourceIntersection {
   const instance = new Classes.ExternalResource(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.ExternalResource;
+  return (options.normalize ? instance.normalize() : instance) as ExternalResourceIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.ExternalResource`
- * @returns {Builder<Specification.ExternalResource>} A builder for `Specification.ExternalResource`
+ * A factory to create a builder proxy for the type `ExternalResourceIntersection`
+ * @returns {Builder<ExternalResourceIntersection, ExternalResourceIntersection>} A builder for `ExternalResourceIntersection`
  */
 export const externalResourceBuilder = (
   model?: Partial<Specification.ExternalResource>,
-): Builder<Specification.ExternalResource> => builder<Specification.ExternalResource>(model, buildingFn);
+): Builder<Partial<Specification.ExternalResource>, ExternalResourceIntersection> =>
+  builder<Specification.ExternalResource, ExternalResourceIntersection>(model, buildingFn);

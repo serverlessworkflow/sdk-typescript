@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { CatchErrorsIntersection } from '../classes/catch-errors';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.CatchErrors} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.CatchErrors} The built object
+ * @returns {CatchErrorsIntersection} The built object
  */
-function buildingFn(model: Specification.CatchErrors, options: BuildOptions): Specification.CatchErrors {
+function buildingFn(model: Specification.CatchErrors, options: BuildOptions): CatchErrorsIntersection {
   const instance = new Classes.CatchErrors(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.CatchErrors;
+  return (options.normalize ? instance.normalize() : instance) as CatchErrorsIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.CatchErrors`
- * @returns {Builder<Specification.CatchErrors>} A builder for `Specification.CatchErrors`
+ * A factory to create a builder proxy for the type `CatchErrorsIntersection`
+ * @returns {Builder<CatchErrorsIntersection, CatchErrorsIntersection>} A builder for `CatchErrorsIntersection`
  */
-export const catchErrorsBuilder = (model?: Partial<Specification.CatchErrors>): Builder<Specification.CatchErrors> =>
-  builder<Specification.CatchErrors>(model, buildingFn);
+export const catchErrorsBuilder = (
+  model?: Partial<Specification.CatchErrors>,
+): Builder<Partial<Specification.CatchErrors>, CatchErrorsIntersection> =>
+  builder<Specification.CatchErrors, CatchErrorsIntersection>(model, buildingFn);

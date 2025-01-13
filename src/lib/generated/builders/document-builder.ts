@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { DocumentIntersection } from '../classes/document';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.Document} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.Document} The built object
+ * @returns {DocumentIntersection} The built object
  */
-function buildingFn(model: Specification.Document, options: BuildOptions): Specification.Document {
+function buildingFn(model: Specification.Document, options: BuildOptions): DocumentIntersection {
   const instance = new Classes.Document(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.Document;
+  return (options.normalize ? instance.normalize() : instance) as DocumentIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.Document`
- * @returns {Builder<Specification.Document>} A builder for `Specification.Document`
+ * A factory to create a builder proxy for the type `DocumentIntersection`
+ * @returns {Builder<DocumentIntersection, DocumentIntersection>} A builder for `DocumentIntersection`
  */
-export const documentBuilder = (model?: Partial<Specification.Document>): Builder<Specification.Document> =>
-  builder<Specification.Document>(model, buildingFn);
+export const documentBuilder = (
+  model?: Partial<Specification.Document>,
+): Builder<Partial<Specification.Document>, DocumentIntersection> =>
+  builder<Specification.Document, DocumentIntersection>(model, buildingFn);

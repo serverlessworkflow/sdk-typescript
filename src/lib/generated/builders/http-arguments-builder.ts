@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { HTTPArgumentsIntersection } from '../classes/http-arguments';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.HTTPArguments} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.HTTPArguments} The built object
+ * @returns {HTTPArgumentsIntersection} The built object
  */
-function buildingFn(model: Specification.HTTPArguments, options: BuildOptions): Specification.HTTPArguments {
+function buildingFn(model: Specification.HTTPArguments, options: BuildOptions): HTTPArgumentsIntersection {
   const instance = new Classes.HTTPArguments(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.HTTPArguments;
+  return (options.normalize ? instance.normalize() : instance) as HTTPArgumentsIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.HTTPArguments`
- * @returns {Builder<Specification.HTTPArguments>} A builder for `Specification.HTTPArguments`
+ * A factory to create a builder proxy for the type `HTTPArgumentsIntersection`
+ * @returns {Builder<HTTPArgumentsIntersection, HTTPArgumentsIntersection>} A builder for `HTTPArgumentsIntersection`
  */
 export const hTTPArgumentsBuilder = (
   model?: Partial<Specification.HTTPArguments>,
-): Builder<Specification.HTTPArguments> => builder<Specification.HTTPArguments>(model, buildingFn);
+): Builder<Partial<Specification.HTTPArguments>, HTTPArgumentsIntersection> =>
+  builder<Specification.HTTPArguments, HTTPArgumentsIntersection>(model, buildingFn);

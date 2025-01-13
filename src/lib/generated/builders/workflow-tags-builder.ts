@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { WorkflowTagsIntersection } from '../classes/workflow-tags';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.WorkflowTags} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.WorkflowTags} The built object
+ * @returns {WorkflowTagsIntersection} The built object
  */
-function buildingFn(model: Specification.WorkflowTags, options: BuildOptions): Specification.WorkflowTags {
+function buildingFn(model: Specification.WorkflowTags, options: BuildOptions): WorkflowTagsIntersection {
   const instance = new Classes.WorkflowTags(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.WorkflowTags;
+  return (options.normalize ? instance.normalize() : instance) as WorkflowTagsIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.WorkflowTags`
- * @returns {Builder<Specification.WorkflowTags>} A builder for `Specification.WorkflowTags`
+ * A factory to create a builder proxy for the type `WorkflowTagsIntersection`
+ * @returns {Builder<WorkflowTagsIntersection, WorkflowTagsIntersection>} A builder for `WorkflowTagsIntersection`
  */
-export const workflowTagsBuilder = (model?: Partial<Specification.WorkflowTags>): Builder<Specification.WorkflowTags> =>
-  builder<Specification.WorkflowTags>(model, buildingFn);
+export const workflowTagsBuilder = (
+  model?: Partial<Specification.WorkflowTags>,
+): Builder<Partial<Specification.WorkflowTags>, WorkflowTagsIntersection> =>
+  builder<Specification.WorkflowTags, WorkflowTagsIntersection>(model, buildingFn);

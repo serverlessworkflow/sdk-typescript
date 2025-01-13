@@ -22,23 +22,26 @@
 
 import { arrayBuilder, ArrayBuilder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { UseExtensionsIntersection } from '../classes/use-extensions';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying array
  * @param {Specification.UseExtensions} model The proxied array
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.UseExtensions} The built array
+ * @returns {UseExtensionsIntersection} The built array
  */
-function buildingFn(model: Specification.UseExtensions, options: BuildOptions): Specification.UseExtensions {
+function buildingFn(model: Specification.UseExtensions, options: BuildOptions): UseExtensionsIntersection {
   const instance = new Classes.UseExtensions(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.UseExtensions;
+  return (options.normalize ? instance.normalize() : instance) as unknown as UseExtensionsIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.UseExtensions`
- * @returns {ArrayBuilder<Specification.UseExtensions>} A builder for `Specification.UseExtensions`
+ * A factory to create a builder proxy for the type `UseExtensionsIntersection`
+ * @returns {ArrayBuilder<Specification.ExtensionItem, UseExtensionsIntersection>} A builder for `UseExtensionsIntersection`
  */
-export const useExtensionsBuilder = (model?: Specification.UseExtensions): ArrayBuilder<Specification.ExtensionItem> =>
-  arrayBuilder<Specification.ExtensionItem>(model, buildingFn);
+export const useExtensionsBuilder = (
+  model?: Specification.UseExtensions,
+): ArrayBuilder<Specification.ExtensionItem, UseExtensionsIntersection> =>
+  arrayBuilder<Specification.ExtensionItem, UseExtensionsIntersection>(model, buildingFn);

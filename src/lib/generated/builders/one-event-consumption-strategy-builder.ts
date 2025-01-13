@@ -22,28 +22,29 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { OneEventConsumptionStrategyIntersection } from '../classes/one-event-consumption-strategy';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.OneEventConsumptionStrategy} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.OneEventConsumptionStrategy} The built object
+ * @returns {OneEventConsumptionStrategyIntersection} The built object
  */
 function buildingFn(
   model: Specification.OneEventConsumptionStrategy,
   options: BuildOptions,
-): Specification.OneEventConsumptionStrategy {
+): OneEventConsumptionStrategyIntersection {
   const instance = new Classes.OneEventConsumptionStrategy(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.OneEventConsumptionStrategy;
+  return (options.normalize ? instance.normalize() : instance) as OneEventConsumptionStrategyIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.OneEventConsumptionStrategy`
- * @returns {Builder<Specification.OneEventConsumptionStrategy>} A builder for `Specification.OneEventConsumptionStrategy`
+ * A factory to create a builder proxy for the type `OneEventConsumptionStrategyIntersection`
+ * @returns {Builder<OneEventConsumptionStrategyIntersection, OneEventConsumptionStrategyIntersection>} A builder for `OneEventConsumptionStrategyIntersection`
  */
 export const oneEventConsumptionStrategyBuilder = (
   model?: Partial<Specification.OneEventConsumptionStrategy>,
-): Builder<Specification.OneEventConsumptionStrategy> =>
-  builder<Specification.OneEventConsumptionStrategy>(model, buildingFn);
+): Builder<Partial<Specification.OneEventConsumptionStrategy>, OneEventConsumptionStrategyIntersection> =>
+  builder<Specification.OneEventConsumptionStrategy, OneEventConsumptionStrategyIntersection>(model, buildingFn);

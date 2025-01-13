@@ -22,27 +22,29 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { ListenTaskConfigurationIntersection } from '../classes/listen-task-configuration';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.ListenTaskConfiguration} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.ListenTaskConfiguration} The built object
+ * @returns {ListenTaskConfigurationIntersection} The built object
  */
 function buildingFn(
   model: Specification.ListenTaskConfiguration,
   options: BuildOptions,
-): Specification.ListenTaskConfiguration {
+): ListenTaskConfigurationIntersection {
   const instance = new Classes.ListenTaskConfiguration(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.ListenTaskConfiguration;
+  return (options.normalize ? instance.normalize() : instance) as ListenTaskConfigurationIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.ListenTaskConfiguration`
- * @returns {Builder<Specification.ListenTaskConfiguration>} A builder for `Specification.ListenTaskConfiguration`
+ * A factory to create a builder proxy for the type `ListenTaskConfigurationIntersection`
+ * @returns {Builder<ListenTaskConfigurationIntersection, ListenTaskConfigurationIntersection>} A builder for `ListenTaskConfigurationIntersection`
  */
 export const listenTaskConfigurationBuilder = (
   model?: Partial<Specification.ListenTaskConfiguration>,
-): Builder<Specification.ListenTaskConfiguration> => builder<Specification.ListenTaskConfiguration>(model, buildingFn);
+): Builder<Partial<Specification.ListenTaskConfiguration>, ListenTaskConfigurationIntersection> =>
+  builder<Specification.ListenTaskConfiguration, ListenTaskConfigurationIntersection>(model, buildingFn);

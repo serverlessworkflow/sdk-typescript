@@ -27,6 +27,19 @@ import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
 
 /**
+ * Represents the intersection between the AllEventConsumptionStrategyConfiguration class and type
+ */
+export type AllEventConsumptionStrategyConfigurationIntersection = AllEventConsumptionStrategyConfiguration &
+  Specification.AllEventConsumptionStrategyConfiguration;
+
+/**
+ * Represents a constructor for the intersection of the AllEventConsumptionStrategyConfiguration class and type
+ */
+export interface AllEventConsumptionStrategyConfigurationConstructor {
+  new (model?: Array<Specification.EventFilter> | number): AllEventConsumptionStrategyConfigurationIntersection;
+}
+
+/**
  * Represents a collection of Specification.EventFilter.
  * Inherits from ArrayHydrator to handle array-specific hydration.
  */
@@ -69,4 +82,6 @@ export class AllEventConsumptionStrategyConfiguration extends ArrayHydrator<Spec
   }
 }
 
-export const _AllEventConsumptionStrategyConfiguration = AllEventConsumptionStrategyConfiguration; // could be exported directly, but it makes the job of building the index more straightforward as it's consistant with "object" classes
+export const _AllEventConsumptionStrategyConfiguration =
+  AllEventConsumptionStrategyConfiguration as unknown as AllEventConsumptionStrategyConfigurationConstructor;
+//export const _AllEventConsumptionStrategyConfiguration = AllEventConsumptionStrategyConfiguration; // could be exported directly, but it makes the job of building the index more straightforward as it's consistant with "object" classes

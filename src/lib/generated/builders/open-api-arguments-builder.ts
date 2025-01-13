@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { OpenAPIArgumentsIntersection } from '../classes/open-api-arguments';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.OpenAPIArguments} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.OpenAPIArguments} The built object
+ * @returns {OpenAPIArgumentsIntersection} The built object
  */
-function buildingFn(model: Specification.OpenAPIArguments, options: BuildOptions): Specification.OpenAPIArguments {
+function buildingFn(model: Specification.OpenAPIArguments, options: BuildOptions): OpenAPIArgumentsIntersection {
   const instance = new Classes.OpenAPIArguments(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.OpenAPIArguments;
+  return (options.normalize ? instance.normalize() : instance) as OpenAPIArgumentsIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.OpenAPIArguments`
- * @returns {Builder<Specification.OpenAPIArguments>} A builder for `Specification.OpenAPIArguments`
+ * A factory to create a builder proxy for the type `OpenAPIArgumentsIntersection`
+ * @returns {Builder<OpenAPIArgumentsIntersection, OpenAPIArgumentsIntersection>} A builder for `OpenAPIArgumentsIntersection`
  */
 export const openAPIArgumentsBuilder = (
   model?: Partial<Specification.OpenAPIArguments>,
-): Builder<Specification.OpenAPIArguments> => builder<Specification.OpenAPIArguments>(model, buildingFn);
+): Builder<Partial<Specification.OpenAPIArguments>, OpenAPIArgumentsIntersection> =>
+  builder<Specification.OpenAPIArguments, OpenAPIArgumentsIntersection>(model, buildingFn);

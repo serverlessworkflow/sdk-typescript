@@ -22,23 +22,26 @@
 
 import { arrayBuilder, ArrayBuilder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { TaskListIntersection } from '../classes/task-list';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying array
  * @param {Specification.TaskList} model The proxied array
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.TaskList} The built array
+ * @returns {TaskListIntersection} The built array
  */
-function buildingFn(model: Specification.TaskList, options: BuildOptions): Specification.TaskList {
+function buildingFn(model: Specification.TaskList, options: BuildOptions): TaskListIntersection {
   const instance = new Classes.TaskList(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.TaskList;
+  return (options.normalize ? instance.normalize() : instance) as unknown as TaskListIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.TaskList`
- * @returns {ArrayBuilder<Specification.TaskList>} A builder for `Specification.TaskList`
+ * A factory to create a builder proxy for the type `TaskListIntersection`
+ * @returns {ArrayBuilder<Specification.TaskItem, TaskListIntersection>} A builder for `TaskListIntersection`
  */
-export const taskListBuilder = (model?: Specification.TaskList): ArrayBuilder<Specification.TaskItem> =>
-  arrayBuilder<Specification.TaskItem>(model, buildingFn);
+export const taskListBuilder = (
+  model?: Specification.TaskList,
+): ArrayBuilder<Specification.TaskItem, TaskListIntersection> =>
+  arrayBuilder<Specification.TaskItem, TaskListIntersection>(model, buildingFn);

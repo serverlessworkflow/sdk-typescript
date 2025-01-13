@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { RuntimeExpressionIntersection } from '../classes/runtime-expression';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.RuntimeExpression} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.RuntimeExpression} The built object
+ * @returns {RuntimeExpressionIntersection} The built object
  */
-function buildingFn(model: Specification.RuntimeExpression, options: BuildOptions): Specification.RuntimeExpression {
+function buildingFn(model: Specification.RuntimeExpression, options: BuildOptions): RuntimeExpressionIntersection {
   const instance = new Classes.RuntimeExpression(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.RuntimeExpression;
+  return (options.normalize ? instance.normalize() : instance) as RuntimeExpressionIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.RuntimeExpression`
- * @returns {Builder<Specification.RuntimeExpression>} A builder for `Specification.RuntimeExpression`
+ * A factory to create a builder proxy for the type `RuntimeExpressionIntersection`
+ * @returns {Builder<RuntimeExpressionIntersection, RuntimeExpressionIntersection>} A builder for `RuntimeExpressionIntersection`
  */
 export const runtimeExpressionBuilder = (
   model?: Partial<Specification.RuntimeExpression>,
-): Builder<Specification.RuntimeExpression> => builder<Specification.RuntimeExpression>(model, buildingFn);
+): Builder<Partial<Specification.RuntimeExpression>, RuntimeExpressionIntersection> =>
+  builder<Specification.RuntimeExpression, RuntimeExpressionIntersection>(model, buildingFn);

@@ -22,28 +22,29 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { OAuth2AuthenticationPolicyIntersection } from '../classes/oauth2-authentication-policy';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.OAuth2AuthenticationPolicy} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.OAuth2AuthenticationPolicy} The built object
+ * @returns {OAuth2AuthenticationPolicyIntersection} The built object
  */
 function buildingFn(
   model: Specification.OAuth2AuthenticationPolicy,
   options: BuildOptions,
-): Specification.OAuth2AuthenticationPolicy {
+): OAuth2AuthenticationPolicyIntersection {
   const instance = new Classes.OAuth2AuthenticationPolicy(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.OAuth2AuthenticationPolicy;
+  return (options.normalize ? instance.normalize() : instance) as OAuth2AuthenticationPolicyIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.OAuth2AuthenticationPolicy`
- * @returns {Builder<Specification.OAuth2AuthenticationPolicy>} A builder for `Specification.OAuth2AuthenticationPolicy`
+ * A factory to create a builder proxy for the type `OAuth2AuthenticationPolicyIntersection`
+ * @returns {Builder<OAuth2AuthenticationPolicyIntersection, OAuth2AuthenticationPolicyIntersection>} A builder for `OAuth2AuthenticationPolicyIntersection`
  */
 export const oAuth2AuthenticationPolicyBuilder = (
   model?: Partial<Specification.OAuth2AuthenticationPolicy>,
-): Builder<Specification.OAuth2AuthenticationPolicy> =>
-  builder<Specification.OAuth2AuthenticationPolicy>(model, buildingFn);
+): Builder<Partial<Specification.OAuth2AuthenticationPolicy>, OAuth2AuthenticationPolicyIntersection> =>
+  builder<Specification.OAuth2AuthenticationPolicy, OAuth2AuthenticationPolicyIntersection>(model, buildingFn);

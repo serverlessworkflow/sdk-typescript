@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { RunShellIntersection } from '../classes/run-shell';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.RunShell} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.RunShell} The built object
+ * @returns {RunShellIntersection} The built object
  */
-function buildingFn(model: Specification.RunShell, options: BuildOptions): Specification.RunShell {
+function buildingFn(model: Specification.RunShell, options: BuildOptions): RunShellIntersection {
   const instance = new Classes.RunShell(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.RunShell;
+  return (options.normalize ? instance.normalize() : instance) as RunShellIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.RunShell`
- * @returns {Builder<Specification.RunShell>} A builder for `Specification.RunShell`
+ * A factory to create a builder proxy for the type `RunShellIntersection`
+ * @returns {Builder<RunShellIntersection, RunShellIntersection>} A builder for `RunShellIntersection`
  */
-export const runShellBuilder = (model?: Partial<Specification.RunShell>): Builder<Specification.RunShell> =>
-  builder<Specification.RunShell>(model, buildingFn);
+export const runShellBuilder = (
+  model?: Partial<Specification.RunShell>,
+): Builder<Partial<Specification.RunShell>, RunShellIntersection> =>
+  builder<Specification.RunShell, RunShellIntersection>(model, buildingFn);

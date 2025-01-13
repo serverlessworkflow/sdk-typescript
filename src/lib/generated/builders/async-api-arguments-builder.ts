@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { AsyncApiArgumentsIntersection } from '../classes/async-api-arguments';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.AsyncApiArguments} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.AsyncApiArguments} The built object
+ * @returns {AsyncApiArgumentsIntersection} The built object
  */
-function buildingFn(model: Specification.AsyncApiArguments, options: BuildOptions): Specification.AsyncApiArguments {
+function buildingFn(model: Specification.AsyncApiArguments, options: BuildOptions): AsyncApiArgumentsIntersection {
   const instance = new Classes.AsyncApiArguments(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.AsyncApiArguments;
+  return (options.normalize ? instance.normalize() : instance) as AsyncApiArgumentsIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.AsyncApiArguments`
- * @returns {Builder<Specification.AsyncApiArguments>} A builder for `Specification.AsyncApiArguments`
+ * A factory to create a builder proxy for the type `AsyncApiArgumentsIntersection`
+ * @returns {Builder<AsyncApiArgumentsIntersection, AsyncApiArgumentsIntersection>} A builder for `AsyncApiArgumentsIntersection`
  */
 export const asyncApiArgumentsBuilder = (
   model?: Partial<Specification.AsyncApiArguments>,
-): Builder<Specification.AsyncApiArguments> => builder<Specification.AsyncApiArguments>(model, buildingFn);
+): Builder<Partial<Specification.AsyncApiArguments>, AsyncApiArgumentsIntersection> =>
+  builder<Specification.AsyncApiArguments, AsyncApiArgumentsIntersection>(model, buildingFn);

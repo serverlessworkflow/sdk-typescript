@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { CatalogIntersection } from '../classes/catalog';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.Catalog} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.Catalog} The built object
+ * @returns {CatalogIntersection} The built object
  */
-function buildingFn(model: Specification.Catalog, options: BuildOptions): Specification.Catalog {
+function buildingFn(model: Specification.Catalog, options: BuildOptions): CatalogIntersection {
   const instance = new Classes.Catalog(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.Catalog;
+  return (options.normalize ? instance.normalize() : instance) as CatalogIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.Catalog`
- * @returns {Builder<Specification.Catalog>} A builder for `Specification.Catalog`
+ * A factory to create a builder proxy for the type `CatalogIntersection`
+ * @returns {Builder<CatalogIntersection, CatalogIntersection>} A builder for `CatalogIntersection`
  */
-export const catalogBuilder = (model?: Partial<Specification.Catalog>): Builder<Specification.Catalog> =>
-  builder<Specification.Catalog>(model, buildingFn);
+export const catalogBuilder = (
+  model?: Partial<Specification.Catalog>,
+): Builder<Partial<Specification.Catalog>, CatalogIntersection> =>
+  builder<Specification.Catalog, CatalogIntersection>(model, buildingFn);

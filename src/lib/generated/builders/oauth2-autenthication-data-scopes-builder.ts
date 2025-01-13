@@ -22,27 +22,29 @@
 
 import { arrayBuilder, ArrayBuilder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { OAuth2AutenthicationDataScopesIntersection } from '../classes/oauth2-autenthication-data-scopes';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying array
  * @param {Specification.OAuth2AutenthicationDataScopes} model The proxied array
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.OAuth2AutenthicationDataScopes} The built array
+ * @returns {OAuth2AutenthicationDataScopesIntersection} The built array
  */
 function buildingFn(
   model: Specification.OAuth2AutenthicationDataScopes,
   options: BuildOptions,
-): Specification.OAuth2AutenthicationDataScopes {
+): OAuth2AutenthicationDataScopesIntersection {
   const instance = new Classes.OAuth2AutenthicationDataScopes(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.OAuth2AutenthicationDataScopes;
+  return (options.normalize ? instance.normalize() : instance) as unknown as OAuth2AutenthicationDataScopesIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.OAuth2AutenthicationDataScopes`
- * @returns {ArrayBuilder<Specification.OAuth2AutenthicationDataScopes>} A builder for `Specification.OAuth2AutenthicationDataScopes`
+ * A factory to create a builder proxy for the type `OAuth2AutenthicationDataScopesIntersection`
+ * @returns {ArrayBuilder<string, OAuth2AutenthicationDataScopesIntersection>} A builder for `OAuth2AutenthicationDataScopesIntersection`
  */
 export const oAuth2AutenthicationDataScopesBuilder = (
   model?: Specification.OAuth2AutenthicationDataScopes,
-): ArrayBuilder<string> => arrayBuilder<string>(model, buildingFn);
+): ArrayBuilder<string, OAuth2AutenthicationDataScopesIntersection> =>
+  arrayBuilder<string, OAuth2AutenthicationDataScopesIntersection>(model, buildingFn);

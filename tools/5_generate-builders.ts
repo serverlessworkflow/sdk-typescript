@@ -44,25 +44,26 @@ ${inFileDisclaimer}
 
 import { builder, Builder, BuildOptions } from "../../builder";
 import { Classes } from "../classes";
+import { ${name}Intersection } from '../classes/${toKebabCase(normalizeKnownAllCaps(name))}';
 import { Specification } from "../definitions";
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.${name}} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.${name}} The built object
+ * @returns {${name}Intersection} The built object
  */
-function buildingFn(model: Specification.${name}, options: BuildOptions): Specification.${name} {
+function buildingFn(model: Specification.${name}, options: BuildOptions): ${name}Intersection {
   const instance = new Classes.${name}(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) ${type.isTuple() ? 'as unknown ' : ''}as Specification.${name};
+  return (options.normalize ? instance.normalize() : instance) ${type.isTuple() ? 'as unknown ' : ''}as ${name}Intersection;
 }
 
 /**
- * A factory to create a builder proxy for the type \`Specification.${name}\`
- * @returns {Builder<Specification.${name}>} A builder for \`Specification.${name}\`
+ * A factory to create a builder proxy for the type \`${name}Intersection\`
+ * @returns {Builder<${name}Intersection, ${name}Intersection>} A builder for \`${name}Intersection\`
  */
-export const ${toCamelCase(name)}Builder = (model?: Partial<Specification.${name}>): Builder<Specification.${name}> => builder<Specification.${name}>(model, buildingFn);`;
+export const ${toCamelCase(name)}Builder = (model?: Partial<Specification.${name}>): Builder<Partial<Specification.${name}>, ${name}Intersection> => builder<Specification.${name}, ${name}Intersection>(model, buildingFn);`;
 
 /**
  * Creates an array builder for the provided type
@@ -75,25 +76,26 @@ ${inFileDisclaimer}
 
 import { arrayBuilder, ArrayBuilder, BuildOptions } from "../../builder";
 import { Classes } from "../classes";
+import { ${name}Intersection } from '../classes/${toKebabCase(normalizeKnownAllCaps(name))}';
 import { Specification } from "../definitions";
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying array
  * @param {Specification.${name}} model The proxied array
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.${name}} The built array
+ * @returns {${name}Intersection} The built array
  */
-function buildingFn(model: Specification.${name}, options: BuildOptions): Specification.${name} {
+function buildingFn(model: Specification.${name}, options: BuildOptions): ${name}Intersection {
   const instance = new Classes.${name}(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.${name};
+  return (options.normalize ? instance.normalize() : instance) as unknown as ${name}Intersection;
 }
 
 /**
- * A factory to create a builder proxy for the type \`Specification.${name}\`
- * @returns {ArrayBuilder<Specification.${name}>} A builder for \`Specification.${name}\`
+ * A factory to create a builder proxy for the type \`${name}Intersection\`
+ * @returns {ArrayBuilder<${arrayTypeName}, ${name}Intersection>} A builder for \`${name}Intersection\`
  */
-export const ${toCamelCase(name)}Builder = (model?: Specification.${name}): ArrayBuilder<${arrayTypeName}> => arrayBuilder<${arrayTypeName}>(model, buildingFn);`;
+export const ${toCamelCase(name)}Builder = (model?: Specification.${name}): ArrayBuilder<${arrayTypeName}, ${name}Intersection> => arrayBuilder<${arrayTypeName}, ${name}Intersection>(model, buildingFn);`;
 
 /**
  * Creates the builders index file

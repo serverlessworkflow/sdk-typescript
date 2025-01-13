@@ -22,27 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { WithAsyncAPIPayloadIntersection } from '../classes/with-async-api-payload';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.WithAsyncAPIPayload} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.WithAsyncAPIPayload} The built object
+ * @returns {WithAsyncAPIPayloadIntersection} The built object
  */
-function buildingFn(
-  model: Specification.WithAsyncAPIPayload,
-  options: BuildOptions,
-): Specification.WithAsyncAPIPayload {
+function buildingFn(model: Specification.WithAsyncAPIPayload, options: BuildOptions): WithAsyncAPIPayloadIntersection {
   const instance = new Classes.WithAsyncAPIPayload(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.WithAsyncAPIPayload;
+  return (options.normalize ? instance.normalize() : instance) as WithAsyncAPIPayloadIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.WithAsyncAPIPayload`
- * @returns {Builder<Specification.WithAsyncAPIPayload>} A builder for `Specification.WithAsyncAPIPayload`
+ * A factory to create a builder proxy for the type `WithAsyncAPIPayloadIntersection`
+ * @returns {Builder<WithAsyncAPIPayloadIntersection, WithAsyncAPIPayloadIntersection>} A builder for `WithAsyncAPIPayloadIntersection`
  */
 export const withAsyncAPIPayloadBuilder = (
   model?: Partial<Specification.WithAsyncAPIPayload>,
-): Builder<Specification.WithAsyncAPIPayload> => builder<Specification.WithAsyncAPIPayload>(model, buildingFn);
+): Builder<Partial<Specification.WithAsyncAPIPayload>, WithAsyncAPIPayloadIntersection> =>
+  builder<Specification.WithAsyncAPIPayload, WithAsyncAPIPayloadIntersection>(model, buildingFn);

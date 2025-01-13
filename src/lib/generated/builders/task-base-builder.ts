@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { TaskBaseIntersection } from '../classes/task-base';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.TaskBase} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.TaskBase} The built object
+ * @returns {TaskBaseIntersection} The built object
  */
-function buildingFn(model: Specification.TaskBase, options: BuildOptions): Specification.TaskBase {
+function buildingFn(model: Specification.TaskBase, options: BuildOptions): TaskBaseIntersection {
   const instance = new Classes.TaskBase(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.TaskBase;
+  return (options.normalize ? instance.normalize() : instance) as TaskBaseIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.TaskBase`
- * @returns {Builder<Specification.TaskBase>} A builder for `Specification.TaskBase`
+ * A factory to create a builder proxy for the type `TaskBaseIntersection`
+ * @returns {Builder<TaskBaseIntersection, TaskBaseIntersection>} A builder for `TaskBaseIntersection`
  */
-export const taskBaseBuilder = (model?: Partial<Specification.TaskBase>): Builder<Specification.TaskBase> =>
-  builder<Specification.TaskBase>(model, buildingFn);
+export const taskBaseBuilder = (
+  model?: Partial<Specification.TaskBase>,
+): Builder<Partial<Specification.TaskBase>, TaskBaseIntersection> =>
+  builder<Specification.TaskBase, TaskBaseIntersection>(model, buildingFn);

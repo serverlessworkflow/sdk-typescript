@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { UseFunctionsIntersection } from '../classes/use-functions';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.UseFunctions} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.UseFunctions} The built object
+ * @returns {UseFunctionsIntersection} The built object
  */
-function buildingFn(model: Specification.UseFunctions, options: BuildOptions): Specification.UseFunctions {
+function buildingFn(model: Specification.UseFunctions, options: BuildOptions): UseFunctionsIntersection {
   const instance = new Classes.UseFunctions(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.UseFunctions;
+  return (options.normalize ? instance.normalize() : instance) as UseFunctionsIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.UseFunctions`
- * @returns {Builder<Specification.UseFunctions>} A builder for `Specification.UseFunctions`
+ * A factory to create a builder proxy for the type `UseFunctionsIntersection`
+ * @returns {Builder<UseFunctionsIntersection, UseFunctionsIntersection>} A builder for `UseFunctionsIntersection`
  */
-export const useFunctionsBuilder = (model?: Partial<Specification.UseFunctions>): Builder<Specification.UseFunctions> =>
-  builder<Specification.UseFunctions>(model, buildingFn);
+export const useFunctionsBuilder = (
+  model?: Partial<Specification.UseFunctions>,
+): Builder<Partial<Specification.UseFunctions>, UseFunctionsIntersection> =>
+  builder<Specification.UseFunctions, UseFunctionsIntersection>(model, buildingFn);

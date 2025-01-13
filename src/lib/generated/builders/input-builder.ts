@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { InputIntersection } from '../classes/input';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.Input} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.Input} The built object
+ * @returns {InputIntersection} The built object
  */
-function buildingFn(model: Specification.Input, options: BuildOptions): Specification.Input {
+function buildingFn(model: Specification.Input, options: BuildOptions): InputIntersection {
   const instance = new Classes.Input(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.Input;
+  return (options.normalize ? instance.normalize() : instance) as InputIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.Input`
- * @returns {Builder<Specification.Input>} A builder for `Specification.Input`
+ * A factory to create a builder proxy for the type `InputIntersection`
+ * @returns {Builder<InputIntersection, InputIntersection>} A builder for `InputIntersection`
  */
-export const inputBuilder = (model?: Partial<Specification.Input>): Builder<Specification.Input> =>
-  builder<Specification.Input>(model, buildingFn);
+export const inputBuilder = (
+  model?: Partial<Specification.Input>,
+): Builder<Partial<Specification.Input>, InputIntersection> =>
+  builder<Specification.Input, InputIntersection>(model, buildingFn);

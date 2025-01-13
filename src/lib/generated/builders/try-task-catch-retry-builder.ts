@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { TryTaskCatchRetryIntersection } from '../classes/try-task-catch-retry';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.TryTaskCatchRetry} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.TryTaskCatchRetry} The built object
+ * @returns {TryTaskCatchRetryIntersection} The built object
  */
-function buildingFn(model: Specification.TryTaskCatchRetry, options: BuildOptions): Specification.TryTaskCatchRetry {
+function buildingFn(model: Specification.TryTaskCatchRetry, options: BuildOptions): TryTaskCatchRetryIntersection {
   const instance = new Classes.TryTaskCatchRetry(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.TryTaskCatchRetry;
+  return (options.normalize ? instance.normalize() : instance) as TryTaskCatchRetryIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.TryTaskCatchRetry`
- * @returns {Builder<Specification.TryTaskCatchRetry>} A builder for `Specification.TryTaskCatchRetry`
+ * A factory to create a builder proxy for the type `TryTaskCatchRetryIntersection`
+ * @returns {Builder<TryTaskCatchRetryIntersection, TryTaskCatchRetryIntersection>} A builder for `TryTaskCatchRetryIntersection`
  */
 export const tryTaskCatchRetryBuilder = (
   model?: Partial<Specification.TryTaskCatchRetry>,
-): Builder<Specification.TryTaskCatchRetry> => builder<Specification.TryTaskCatchRetry>(model, buildingFn);
+): Builder<Partial<Specification.TryTaskCatchRetry>, TryTaskCatchRetryIntersection> =>
+  builder<Specification.TryTaskCatchRetry, TryTaskCatchRetryIntersection>(model, buildingFn);

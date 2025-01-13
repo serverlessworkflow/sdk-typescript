@@ -22,28 +22,29 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { BasicAuthenticationPropertiesIntersection } from '../classes/basic-authentication-properties';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.BasicAuthenticationProperties} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.BasicAuthenticationProperties} The built object
+ * @returns {BasicAuthenticationPropertiesIntersection} The built object
  */
 function buildingFn(
   model: Specification.BasicAuthenticationProperties,
   options: BuildOptions,
-): Specification.BasicAuthenticationProperties {
+): BasicAuthenticationPropertiesIntersection {
   const instance = new Classes.BasicAuthenticationProperties(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.BasicAuthenticationProperties;
+  return (options.normalize ? instance.normalize() : instance) as BasicAuthenticationPropertiesIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.BasicAuthenticationProperties`
- * @returns {Builder<Specification.BasicAuthenticationProperties>} A builder for `Specification.BasicAuthenticationProperties`
+ * A factory to create a builder proxy for the type `BasicAuthenticationPropertiesIntersection`
+ * @returns {Builder<BasicAuthenticationPropertiesIntersection, BasicAuthenticationPropertiesIntersection>} A builder for `BasicAuthenticationPropertiesIntersection`
  */
 export const basicAuthenticationPropertiesBuilder = (
   model?: Partial<Specification.BasicAuthenticationProperties>,
-): Builder<Specification.BasicAuthenticationProperties> =>
-  builder<Specification.BasicAuthenticationProperties>(model, buildingFn);
+): Builder<Partial<Specification.BasicAuthenticationProperties>, BasicAuthenticationPropertiesIntersection> =>
+  builder<Specification.BasicAuthenticationProperties, BasicAuthenticationPropertiesIntersection>(model, buildingFn);

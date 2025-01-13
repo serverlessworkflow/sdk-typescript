@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { FlowDirectiveIntersection } from '../classes/flow-directive';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.FlowDirective} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.FlowDirective} The built object
+ * @returns {FlowDirectiveIntersection} The built object
  */
-function buildingFn(model: Specification.FlowDirective, options: BuildOptions): Specification.FlowDirective {
+function buildingFn(model: Specification.FlowDirective, options: BuildOptions): FlowDirectiveIntersection {
   const instance = new Classes.FlowDirective(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.FlowDirective;
+  return (options.normalize ? instance.normalize() : instance) as FlowDirectiveIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.FlowDirective`
- * @returns {Builder<Specification.FlowDirective>} A builder for `Specification.FlowDirective`
+ * A factory to create a builder proxy for the type `FlowDirectiveIntersection`
+ * @returns {Builder<FlowDirectiveIntersection, FlowDirectiveIntersection>} A builder for `FlowDirectiveIntersection`
  */
 export const flowDirectiveBuilder = (
   model?: Partial<Specification.FlowDirective>,
-): Builder<Specification.FlowDirective> => builder<Specification.FlowDirective>(model, buildingFn);
+): Builder<Partial<Specification.FlowDirective>, FlowDirectiveIntersection> =>
+  builder<Specification.FlowDirective, FlowDirectiveIntersection>(model, buildingFn);

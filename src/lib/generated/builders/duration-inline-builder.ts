@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { DurationInlineIntersection } from '../classes/duration-inline';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.DurationInline} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.DurationInline} The built object
+ * @returns {DurationInlineIntersection} The built object
  */
-function buildingFn(model: Specification.DurationInline, options: BuildOptions): Specification.DurationInline {
+function buildingFn(model: Specification.DurationInline, options: BuildOptions): DurationInlineIntersection {
   const instance = new Classes.DurationInline(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.DurationInline;
+  return (options.normalize ? instance.normalize() : instance) as DurationInlineIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.DurationInline`
- * @returns {Builder<Specification.DurationInline>} A builder for `Specification.DurationInline`
+ * A factory to create a builder proxy for the type `DurationInlineIntersection`
+ * @returns {Builder<DurationInlineIntersection, DurationInlineIntersection>} A builder for `DurationInlineIntersection`
  */
 export const durationInlineBuilder = (
   model?: Partial<Specification.DurationInline>,
-): Builder<Specification.DurationInline> => builder<Specification.DurationInline>(model, buildingFn);
+): Builder<Partial<Specification.DurationInline>, DurationInlineIntersection> =>
+  builder<Specification.DurationInline, DurationInlineIntersection>(model, buildingFn);

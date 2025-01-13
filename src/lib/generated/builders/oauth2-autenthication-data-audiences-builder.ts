@@ -22,27 +22,31 @@
 
 import { arrayBuilder, ArrayBuilder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { OAuth2AutenthicationDataAudiencesIntersection } from '../classes/oauth2-autenthication-data-audiences';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying array
  * @param {Specification.OAuth2AutenthicationDataAudiences} model The proxied array
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.OAuth2AutenthicationDataAudiences} The built array
+ * @returns {OAuth2AutenthicationDataAudiencesIntersection} The built array
  */
 function buildingFn(
   model: Specification.OAuth2AutenthicationDataAudiences,
   options: BuildOptions,
-): Specification.OAuth2AutenthicationDataAudiences {
+): OAuth2AutenthicationDataAudiencesIntersection {
   const instance = new Classes.OAuth2AutenthicationDataAudiences(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.OAuth2AutenthicationDataAudiences;
+  return (options.normalize
+    ? instance.normalize()
+    : instance) as unknown as OAuth2AutenthicationDataAudiencesIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.OAuth2AutenthicationDataAudiences`
- * @returns {ArrayBuilder<Specification.OAuth2AutenthicationDataAudiences>} A builder for `Specification.OAuth2AutenthicationDataAudiences`
+ * A factory to create a builder proxy for the type `OAuth2AutenthicationDataAudiencesIntersection`
+ * @returns {ArrayBuilder<string, OAuth2AutenthicationDataAudiencesIntersection>} A builder for `OAuth2AutenthicationDataAudiencesIntersection`
  */
 export const oAuth2AutenthicationDataAudiencesBuilder = (
   model?: Specification.OAuth2AutenthicationDataAudiences,
-): ArrayBuilder<string> => arrayBuilder<string>(model, buildingFn);
+): ArrayBuilder<string, OAuth2AutenthicationDataAudiencesIntersection> =>
+  arrayBuilder<string, OAuth2AutenthicationDataAudiencesIntersection>(model, buildingFn);

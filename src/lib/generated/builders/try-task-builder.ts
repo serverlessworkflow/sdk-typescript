@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { TryTaskIntersection } from '../classes/try-task';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.TryTask} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.TryTask} The built object
+ * @returns {TryTaskIntersection} The built object
  */
-function buildingFn(model: Specification.TryTask, options: BuildOptions): Specification.TryTask {
+function buildingFn(model: Specification.TryTask, options: BuildOptions): TryTaskIntersection {
   const instance = new Classes.TryTask(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.TryTask;
+  return (options.normalize ? instance.normalize() : instance) as TryTaskIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.TryTask`
- * @returns {Builder<Specification.TryTask>} A builder for `Specification.TryTask`
+ * A factory to create a builder proxy for the type `TryTaskIntersection`
+ * @returns {Builder<TryTaskIntersection, TryTaskIntersection>} A builder for `TryTaskIntersection`
  */
-export const tryTaskBuilder = (model?: Partial<Specification.TryTask>): Builder<Specification.TryTask> =>
-  builder<Specification.TryTask>(model, buildingFn);
+export const tryTaskBuilder = (
+  model?: Partial<Specification.TryTask>,
+): Builder<Partial<Specification.TryTask>, TryTaskIntersection> =>
+  builder<Specification.TryTask, TryTaskIntersection>(model, buildingFn);

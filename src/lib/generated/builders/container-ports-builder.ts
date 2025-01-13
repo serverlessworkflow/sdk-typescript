@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { ContainerPortsIntersection } from '../classes/container-ports';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.ContainerPorts} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.ContainerPorts} The built object
+ * @returns {ContainerPortsIntersection} The built object
  */
-function buildingFn(model: Specification.ContainerPorts, options: BuildOptions): Specification.ContainerPorts {
+function buildingFn(model: Specification.ContainerPorts, options: BuildOptions): ContainerPortsIntersection {
   const instance = new Classes.ContainerPorts(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.ContainerPorts;
+  return (options.normalize ? instance.normalize() : instance) as ContainerPortsIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.ContainerPorts`
- * @returns {Builder<Specification.ContainerPorts>} A builder for `Specification.ContainerPorts`
+ * A factory to create a builder proxy for the type `ContainerPortsIntersection`
+ * @returns {Builder<ContainerPortsIntersection, ContainerPortsIntersection>} A builder for `ContainerPortsIntersection`
  */
 export const containerPortsBuilder = (
   model?: Partial<Specification.ContainerPorts>,
-): Builder<Specification.ContainerPorts> => builder<Specification.ContainerPorts>(model, buildingFn);
+): Builder<Partial<Specification.ContainerPorts>, ContainerPortsIntersection> =>
+  builder<Specification.ContainerPorts, ContainerPortsIntersection>(model, buildingFn);

@@ -22,28 +22,35 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { DigestAuthenticationPolicyConfigurationIntersection } from '../classes/digest-authentication-policy-configuration';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.DigestAuthenticationPolicyConfiguration} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.DigestAuthenticationPolicyConfiguration} The built object
+ * @returns {DigestAuthenticationPolicyConfigurationIntersection} The built object
  */
 function buildingFn(
   model: Specification.DigestAuthenticationPolicyConfiguration,
   options: BuildOptions,
-): Specification.DigestAuthenticationPolicyConfiguration {
+): DigestAuthenticationPolicyConfigurationIntersection {
   const instance = new Classes.DigestAuthenticationPolicyConfiguration(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.DigestAuthenticationPolicyConfiguration;
+  return (options.normalize ? instance.normalize() : instance) as DigestAuthenticationPolicyConfigurationIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.DigestAuthenticationPolicyConfiguration`
- * @returns {Builder<Specification.DigestAuthenticationPolicyConfiguration>} A builder for `Specification.DigestAuthenticationPolicyConfiguration`
+ * A factory to create a builder proxy for the type `DigestAuthenticationPolicyConfigurationIntersection`
+ * @returns {Builder<DigestAuthenticationPolicyConfigurationIntersection, DigestAuthenticationPolicyConfigurationIntersection>} A builder for `DigestAuthenticationPolicyConfigurationIntersection`
  */
 export const digestAuthenticationPolicyConfigurationBuilder = (
   model?: Partial<Specification.DigestAuthenticationPolicyConfiguration>,
-): Builder<Specification.DigestAuthenticationPolicyConfiguration> =>
-  builder<Specification.DigestAuthenticationPolicyConfiguration>(model, buildingFn);
+): Builder<
+  Partial<Specification.DigestAuthenticationPolicyConfiguration>,
+  DigestAuthenticationPolicyConfigurationIntersection
+> =>
+  builder<Specification.DigestAuthenticationPolicyConfiguration, DigestAuthenticationPolicyConfigurationIntersection>(
+    model,
+    buildingFn,
+  );

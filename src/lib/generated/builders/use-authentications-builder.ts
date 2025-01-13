@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { UseAuthenticationsIntersection } from '../classes/use-authentications';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.UseAuthentications} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.UseAuthentications} The built object
+ * @returns {UseAuthenticationsIntersection} The built object
  */
-function buildingFn(model: Specification.UseAuthentications, options: BuildOptions): Specification.UseAuthentications {
+function buildingFn(model: Specification.UseAuthentications, options: BuildOptions): UseAuthenticationsIntersection {
   const instance = new Classes.UseAuthentications(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.UseAuthentications;
+  return (options.normalize ? instance.normalize() : instance) as UseAuthenticationsIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.UseAuthentications`
- * @returns {Builder<Specification.UseAuthentications>} A builder for `Specification.UseAuthentications`
+ * A factory to create a builder proxy for the type `UseAuthenticationsIntersection`
+ * @returns {Builder<UseAuthenticationsIntersection, UseAuthenticationsIntersection>} A builder for `UseAuthenticationsIntersection`
  */
 export const useAuthenticationsBuilder = (
   model?: Partial<Specification.UseAuthentications>,
-): Builder<Specification.UseAuthentications> => builder<Specification.UseAuthentications>(model, buildingFn);
+): Builder<Partial<Specification.UseAuthentications>, UseAuthenticationsIntersection> =>
+  builder<Specification.UseAuthentications, UseAuthenticationsIntersection>(model, buildingFn);

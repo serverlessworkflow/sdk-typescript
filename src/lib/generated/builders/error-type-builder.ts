@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { ErrorTypeIntersection } from '../classes/error-type';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.ErrorType} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.ErrorType} The built object
+ * @returns {ErrorTypeIntersection} The built object
  */
-function buildingFn(model: Specification.ErrorType, options: BuildOptions): Specification.ErrorType {
+function buildingFn(model: Specification.ErrorType, options: BuildOptions): ErrorTypeIntersection {
   const instance = new Classes.ErrorType(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.ErrorType;
+  return (options.normalize ? instance.normalize() : instance) as ErrorTypeIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.ErrorType`
- * @returns {Builder<Specification.ErrorType>} A builder for `Specification.ErrorType`
+ * A factory to create a builder proxy for the type `ErrorTypeIntersection`
+ * @returns {Builder<ErrorTypeIntersection, ErrorTypeIntersection>} A builder for `ErrorTypeIntersection`
  */
-export const errorTypeBuilder = (model?: Partial<Specification.ErrorType>): Builder<Specification.ErrorType> =>
-  builder<Specification.ErrorType>(model, buildingFn);
+export const errorTypeBuilder = (
+  model?: Partial<Specification.ErrorType>,
+): Builder<Partial<Specification.ErrorType>, ErrorTypeIntersection> =>
+  builder<Specification.ErrorType, ErrorTypeIntersection>(model, buildingFn);

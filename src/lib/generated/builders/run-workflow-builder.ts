@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { RunWorkflowIntersection } from '../classes/run-workflow';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.RunWorkflow} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.RunWorkflow} The built object
+ * @returns {RunWorkflowIntersection} The built object
  */
-function buildingFn(model: Specification.RunWorkflow, options: BuildOptions): Specification.RunWorkflow {
+function buildingFn(model: Specification.RunWorkflow, options: BuildOptions): RunWorkflowIntersection {
   const instance = new Classes.RunWorkflow(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.RunWorkflow;
+  return (options.normalize ? instance.normalize() : instance) as RunWorkflowIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.RunWorkflow`
- * @returns {Builder<Specification.RunWorkflow>} A builder for `Specification.RunWorkflow`
+ * A factory to create a builder proxy for the type `RunWorkflowIntersection`
+ * @returns {Builder<RunWorkflowIntersection, RunWorkflowIntersection>} A builder for `RunWorkflowIntersection`
  */
-export const runWorkflowBuilder = (model?: Partial<Specification.RunWorkflow>): Builder<Specification.RunWorkflow> =>
-  builder<Specification.RunWorkflow>(model, buildingFn);
+export const runWorkflowBuilder = (
+  model?: Partial<Specification.RunWorkflow>,
+): Builder<Partial<Specification.RunWorkflow>, RunWorkflowIntersection> =>
+  builder<Specification.RunWorkflow, RunWorkflowIntersection>(model, buildingFn);

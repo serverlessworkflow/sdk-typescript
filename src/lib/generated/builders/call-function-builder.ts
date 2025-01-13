@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { CallFunctionIntersection } from '../classes/call-function';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.CallFunction} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.CallFunction} The built object
+ * @returns {CallFunctionIntersection} The built object
  */
-function buildingFn(model: Specification.CallFunction, options: BuildOptions): Specification.CallFunction {
+function buildingFn(model: Specification.CallFunction, options: BuildOptions): CallFunctionIntersection {
   const instance = new Classes.CallFunction(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.CallFunction;
+  return (options.normalize ? instance.normalize() : instance) as CallFunctionIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.CallFunction`
- * @returns {Builder<Specification.CallFunction>} A builder for `Specification.CallFunction`
+ * A factory to create a builder proxy for the type `CallFunctionIntersection`
+ * @returns {Builder<CallFunctionIntersection, CallFunctionIntersection>} A builder for `CallFunctionIntersection`
  */
-export const callFunctionBuilder = (model?: Partial<Specification.CallFunction>): Builder<Specification.CallFunction> =>
-  builder<Specification.CallFunction>(model, buildingFn);
+export const callFunctionBuilder = (
+  model?: Partial<Specification.CallFunction>,
+): Builder<Partial<Specification.CallFunction>, CallFunctionIntersection> =>
+  builder<Specification.CallFunction, CallFunctionIntersection>(model, buildingFn);

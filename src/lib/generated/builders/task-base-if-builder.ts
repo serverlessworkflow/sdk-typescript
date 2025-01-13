@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { TaskBaseIfIntersection } from '../classes/task-base-if';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.TaskBaseIf} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.TaskBaseIf} The built object
+ * @returns {TaskBaseIfIntersection} The built object
  */
-function buildingFn(model: Specification.TaskBaseIf, options: BuildOptions): Specification.TaskBaseIf {
+function buildingFn(model: Specification.TaskBaseIf, options: BuildOptions): TaskBaseIfIntersection {
   const instance = new Classes.TaskBaseIf(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.TaskBaseIf;
+  return (options.normalize ? instance.normalize() : instance) as TaskBaseIfIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.TaskBaseIf`
- * @returns {Builder<Specification.TaskBaseIf>} A builder for `Specification.TaskBaseIf`
+ * A factory to create a builder proxy for the type `TaskBaseIfIntersection`
+ * @returns {Builder<TaskBaseIfIntersection, TaskBaseIfIntersection>} A builder for `TaskBaseIfIntersection`
  */
-export const taskBaseIfBuilder = (model?: Partial<Specification.TaskBaseIf>): Builder<Specification.TaskBaseIf> =>
-  builder<Specification.TaskBaseIf>(model, buildingFn);
+export const taskBaseIfBuilder = (
+  model?: Partial<Specification.TaskBaseIf>,
+): Builder<Partial<Specification.TaskBaseIf>, TaskBaseIfIntersection> =>
+  builder<Specification.TaskBaseIf, TaskBaseIfIntersection>(model, buildingFn);

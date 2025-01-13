@@ -22,28 +22,35 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { OAuth2AuthenticationPolicyConfigurationIntersection } from '../classes/oauth2-authentication-policy-configuration';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.OAuth2AuthenticationPolicyConfiguration} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.OAuth2AuthenticationPolicyConfiguration} The built object
+ * @returns {OAuth2AuthenticationPolicyConfigurationIntersection} The built object
  */
 function buildingFn(
   model: Specification.OAuth2AuthenticationPolicyConfiguration,
   options: BuildOptions,
-): Specification.OAuth2AuthenticationPolicyConfiguration {
+): OAuth2AuthenticationPolicyConfigurationIntersection {
   const instance = new Classes.OAuth2AuthenticationPolicyConfiguration(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.OAuth2AuthenticationPolicyConfiguration;
+  return (options.normalize ? instance.normalize() : instance) as OAuth2AuthenticationPolicyConfigurationIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.OAuth2AuthenticationPolicyConfiguration`
- * @returns {Builder<Specification.OAuth2AuthenticationPolicyConfiguration>} A builder for `Specification.OAuth2AuthenticationPolicyConfiguration`
+ * A factory to create a builder proxy for the type `OAuth2AuthenticationPolicyConfigurationIntersection`
+ * @returns {Builder<OAuth2AuthenticationPolicyConfigurationIntersection, OAuth2AuthenticationPolicyConfigurationIntersection>} A builder for `OAuth2AuthenticationPolicyConfigurationIntersection`
  */
 export const oAuth2AuthenticationPolicyConfigurationBuilder = (
   model?: Partial<Specification.OAuth2AuthenticationPolicyConfiguration>,
-): Builder<Specification.OAuth2AuthenticationPolicyConfiguration> =>
-  builder<Specification.OAuth2AuthenticationPolicyConfiguration>(model, buildingFn);
+): Builder<
+  Partial<Specification.OAuth2AuthenticationPolicyConfiguration>,
+  OAuth2AuthenticationPolicyConfigurationIntersection
+> =>
+  builder<Specification.OAuth2AuthenticationPolicyConfiguration, OAuth2AuthenticationPolicyConfigurationIntersection>(
+    model,
+    buildingFn,
+  );

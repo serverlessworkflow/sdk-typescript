@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { EmitEventWithIntersection } from '../classes/emit-event-with';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.EmitEventWith} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.EmitEventWith} The built object
+ * @returns {EmitEventWithIntersection} The built object
  */
-function buildingFn(model: Specification.EmitEventWith, options: BuildOptions): Specification.EmitEventWith {
+function buildingFn(model: Specification.EmitEventWith, options: BuildOptions): EmitEventWithIntersection {
   const instance = new Classes.EmitEventWith(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.EmitEventWith;
+  return (options.normalize ? instance.normalize() : instance) as EmitEventWithIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.EmitEventWith`
- * @returns {Builder<Specification.EmitEventWith>} A builder for `Specification.EmitEventWith`
+ * A factory to create a builder proxy for the type `EmitEventWithIntersection`
+ * @returns {Builder<EmitEventWithIntersection, EmitEventWithIntersection>} A builder for `EmitEventWithIntersection`
  */
 export const emitEventWithBuilder = (
   model?: Partial<Specification.EmitEventWith>,
-): Builder<Specification.EmitEventWith> => builder<Specification.EmitEventWith>(model, buildingFn);
+): Builder<Partial<Specification.EmitEventWith>, EmitEventWithIntersection> =>
+  builder<Specification.EmitEventWith, EmitEventWithIntersection>(model, buildingFn);

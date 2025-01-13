@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { UseErrorsIntersection } from '../classes/use-errors';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.UseErrors} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.UseErrors} The built object
+ * @returns {UseErrorsIntersection} The built object
  */
-function buildingFn(model: Specification.UseErrors, options: BuildOptions): Specification.UseErrors {
+function buildingFn(model: Specification.UseErrors, options: BuildOptions): UseErrorsIntersection {
   const instance = new Classes.UseErrors(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.UseErrors;
+  return (options.normalize ? instance.normalize() : instance) as UseErrorsIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.UseErrors`
- * @returns {Builder<Specification.UseErrors>} A builder for `Specification.UseErrors`
+ * A factory to create a builder proxy for the type `UseErrorsIntersection`
+ * @returns {Builder<UseErrorsIntersection, UseErrorsIntersection>} A builder for `UseErrorsIntersection`
  */
-export const useErrorsBuilder = (model?: Partial<Specification.UseErrors>): Builder<Specification.UseErrors> =>
-  builder<Specification.UseErrors>(model, buildingFn);
+export const useErrorsBuilder = (
+  model?: Partial<Specification.UseErrors>,
+): Builder<Partial<Specification.UseErrors>, UseErrorsIntersection> =>
+  builder<Specification.UseErrors, UseErrorsIntersection>(model, buildingFn);

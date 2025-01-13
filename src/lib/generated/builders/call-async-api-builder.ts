@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { CallAsyncAPIIntersection } from '../classes/call-async-api';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.CallAsyncAPI} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.CallAsyncAPI} The built object
+ * @returns {CallAsyncAPIIntersection} The built object
  */
-function buildingFn(model: Specification.CallAsyncAPI, options: BuildOptions): Specification.CallAsyncAPI {
+function buildingFn(model: Specification.CallAsyncAPI, options: BuildOptions): CallAsyncAPIIntersection {
   const instance = new Classes.CallAsyncAPI(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.CallAsyncAPI;
+  return (options.normalize ? instance.normalize() : instance) as CallAsyncAPIIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.CallAsyncAPI`
- * @returns {Builder<Specification.CallAsyncAPI>} A builder for `Specification.CallAsyncAPI`
+ * A factory to create a builder proxy for the type `CallAsyncAPIIntersection`
+ * @returns {Builder<CallAsyncAPIIntersection, CallAsyncAPIIntersection>} A builder for `CallAsyncAPIIntersection`
  */
-export const callAsyncAPIBuilder = (model?: Partial<Specification.CallAsyncAPI>): Builder<Specification.CallAsyncAPI> =>
-  builder<Specification.CallAsyncAPI>(model, buildingFn);
+export const callAsyncAPIBuilder = (
+  model?: Partial<Specification.CallAsyncAPI>,
+): Builder<Partial<Specification.CallAsyncAPI>, CallAsyncAPIIntersection> =>
+  builder<Specification.CallAsyncAPI, CallAsyncAPIIntersection>(model, buildingFn);

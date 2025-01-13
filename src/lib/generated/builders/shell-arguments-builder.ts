@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { ShellArgumentsIntersection } from '../classes/shell-arguments';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.ShellArguments} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.ShellArguments} The built object
+ * @returns {ShellArgumentsIntersection} The built object
  */
-function buildingFn(model: Specification.ShellArguments, options: BuildOptions): Specification.ShellArguments {
+function buildingFn(model: Specification.ShellArguments, options: BuildOptions): ShellArgumentsIntersection {
   const instance = new Classes.ShellArguments(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.ShellArguments;
+  return (options.normalize ? instance.normalize() : instance) as ShellArgumentsIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.ShellArguments`
- * @returns {Builder<Specification.ShellArguments>} A builder for `Specification.ShellArguments`
+ * A factory to create a builder proxy for the type `ShellArgumentsIntersection`
+ * @returns {Builder<ShellArgumentsIntersection, ShellArgumentsIntersection>} A builder for `ShellArgumentsIntersection`
  */
 export const shellArgumentsBuilder = (
   model?: Partial<Specification.ShellArguments>,
-): Builder<Specification.ShellArguments> => builder<Specification.ShellArguments>(model, buildingFn);
+): Builder<Partial<Specification.ShellArguments>, ShellArgumentsIntersection> =>
+  builder<Specification.ShellArguments, ShellArgumentsIntersection>(model, buildingFn);

@@ -22,24 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { EventDataschemaIntersection } from '../classes/event-dataschema';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.EventDataschema} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.EventDataschema} The built object
+ * @returns {EventDataschemaIntersection} The built object
  */
-function buildingFn(model: Specification.EventDataschema, options: BuildOptions): Specification.EventDataschema {
+function buildingFn(model: Specification.EventDataschema, options: BuildOptions): EventDataschemaIntersection {
   const instance = new Classes.EventDataschema(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.EventDataschema;
+  return (options.normalize ? instance.normalize() : instance) as EventDataschemaIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.EventDataschema`
- * @returns {Builder<Specification.EventDataschema>} A builder for `Specification.EventDataschema`
+ * A factory to create a builder proxy for the type `EventDataschemaIntersection`
+ * @returns {Builder<EventDataschemaIntersection, EventDataschemaIntersection>} A builder for `EventDataschemaIntersection`
  */
 export const eventDataschemaBuilder = (
   model?: Partial<Specification.EventDataschema>,
-): Builder<Specification.EventDataschema> => builder<Specification.EventDataschema>(model, buildingFn);
+): Builder<Partial<Specification.EventDataschema>, EventDataschemaIntersection> =>
+  builder<Specification.EventDataschema, EventDataschemaIntersection>(model, buildingFn);

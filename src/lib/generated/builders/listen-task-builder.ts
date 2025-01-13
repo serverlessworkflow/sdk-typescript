@@ -22,23 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
+import { ListenTaskIntersection } from '../classes/listen-task';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
  * @param {Specification.ListenTask} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {Specification.ListenTask} The built object
+ * @returns {ListenTaskIntersection} The built object
  */
-function buildingFn(model: Specification.ListenTask, options: BuildOptions): Specification.ListenTask {
+function buildingFn(model: Specification.ListenTask, options: BuildOptions): ListenTaskIntersection {
   const instance = new Classes.ListenTask(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as Specification.ListenTask;
+  return (options.normalize ? instance.normalize() : instance) as ListenTaskIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `Specification.ListenTask`
- * @returns {Builder<Specification.ListenTask>} A builder for `Specification.ListenTask`
+ * A factory to create a builder proxy for the type `ListenTaskIntersection`
+ * @returns {Builder<ListenTaskIntersection, ListenTaskIntersection>} A builder for `ListenTaskIntersection`
  */
-export const listenTaskBuilder = (model?: Partial<Specification.ListenTask>): Builder<Specification.ListenTask> =>
-  builder<Specification.ListenTask>(model, buildingFn);
+export const listenTaskBuilder = (
+  model?: Partial<Specification.ListenTask>,
+): Builder<Partial<Specification.ListenTask>, ListenTaskIntersection> =>
+  builder<Specification.ListenTask, ListenTaskIntersection>(model, buildingFn);
