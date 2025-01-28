@@ -28,59 +28,59 @@ import { validate } from '../../validation';
 import { isObject } from '../../utils';
 
 /**
- * Represents the intersection between the TaskBaseTimeout class and type
+ * Represents the intersection between the TaskTimeout class and type
  */
-export type TaskBaseTimeoutIntersection = TaskBaseTimeout & Specification.TaskBaseTimeout;
+export type TaskTimeoutIntersection = TaskTimeout & Specification.TaskTimeout;
 
 /**
- * Represents a constructor for the intersection of the TaskBaseTimeout class and type
+ * Represents a constructor for the intersection of the TaskTimeout class and type
  */
-export interface TaskBaseTimeoutConstructor {
-  new (model?: Partial<Specification.TaskBaseTimeout>): TaskBaseTimeoutIntersection;
+export interface TaskTimeoutConstructor {
+  new (model?: Partial<Specification.TaskTimeout>): TaskTimeoutIntersection;
 }
 
 /**
- * Represents a TaskBaseTimeout with methods for validation and normalization.
+ * Represents a TaskTimeout with methods for validation and normalization.
  * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
  */
-export class TaskBaseTimeout extends ObjectHydrator<Specification.TaskBaseTimeout> {
+export class TaskTimeout extends ObjectHydrator<Specification.TaskTimeout> {
   /**
-   * Instanciates a new instance of the TaskBaseTimeout class.
+   * Instanciates a new instance of the TaskTimeout class.
    * Initializes properties based on the provided model if it is an object.
    *
-   * @param model - Optional partial model object to initialize the TaskBaseTimeout.
+   * @param model - Optional partial model object to initialize the TaskTimeout.
    */
-  constructor(model?: Partial<Specification.TaskBaseTimeout>) {
+  constructor(model?: Partial<Specification.TaskTimeout>) {
     super(model);
-    const self = this as unknown as Specification.TaskBaseTimeout & object;
+    const self = this as unknown as Specification.TaskTimeout & object;
     if (isObject(model)) {
       if (typeof (model as Specification.Timeout).after === 'object')
         (self as Specification.Timeout).after = new _Duration(
           (model as Specification.Timeout).after as Specification.Duration,
         );
     }
-    getLifecycleHooks('TaskBaseTimeout')?.constructor?.(this);
+    getLifecycleHooks('TaskTimeout')?.constructor?.(this);
   }
 
   /**
-   * Validates the current instance of the TaskBaseTimeout.
+   * Validates the current instance of the TaskTimeout.
    * Throws if invalid.
    */
   validate(workflow?: Partial<Specification.Workflow>) {
-    const copy = new TaskBaseTimeout(this as any) as TaskBaseTimeoutIntersection;
-    validate('TaskBaseTimeout', copy, workflow);
+    const copy = new TaskTimeout(this as any) as TaskTimeoutIntersection;
+    validate('TaskTimeout', copy, workflow);
   }
 
   /**
-   * Normalizes the current instance of the TaskBaseTimeout.
-   * Creates a copy of the TaskBaseTimeout, invokes normalization hooks if available, and returns the normalized copy.
+   * Normalizes the current instance of the TaskTimeout.
+   * Creates a copy of the TaskTimeout, invokes normalization hooks if available, and returns the normalized copy.
    *
-   * @returns A normalized version of the TaskBaseTimeout instance.
+   * @returns A normalized version of the TaskTimeout instance.
    */
-  normalize(): TaskBaseTimeout & Specification.TaskBaseTimeout {
-    const copy = new TaskBaseTimeout(this as any) as TaskBaseTimeoutIntersection;
-    return getLifecycleHooks('TaskBaseTimeout')?.normalize?.(copy) || copy;
+  normalize(): TaskTimeout & Specification.TaskTimeout {
+    const copy = new TaskTimeout(this as any) as TaskTimeoutIntersection;
+    return getLifecycleHooks('TaskTimeout')?.normalize?.(copy) || copy;
   }
 }
 
-export const _TaskBaseTimeout = TaskBaseTimeout as TaskBaseTimeoutConstructor;
+export const _TaskTimeout = TaskTimeout as TaskTimeoutConstructor;

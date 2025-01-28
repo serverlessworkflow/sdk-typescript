@@ -157,12 +157,18 @@ export type ExportAs =
   | {
       [k: string]: unknown;
     };
-export type TaskBaseTimeout = Timeout | string;
+export type TaskTimeout = Timeout | string;
 export type Duration = DurationInline | string;
 /**
  * Represents different transition options for a workflow.
  */
 export type FlowDirective = ('continue' | 'exit' | 'end') | string;
+/**
+ * The Async API call arguments.
+ */
+export type AsyncApiArguments = {
+  [k: string]: unknown;
+};
 /**
  * Defines the GRPC call to perform.
  */
@@ -232,6 +238,14 @@ export type EventTime = RuntimeExpression;
  */
 export type EventDataschema = UriTemplate | RuntimeExpression;
 /**
+ * The event's payload data
+ */
+export type EventData =
+  | RuntimeExpression
+  | {
+      [k: string]: unknown;
+    };
+/**
  * Allows workflows to iterate over a collection of items, executing a defined set of subtasks for each item in the collection. This task type is instrumental in handling scenarios such as batch processing, data transformation, and repetitive operations across datasets.
  */
 export type ForTask = TaskBase & {
@@ -248,6 +262,7 @@ export type ForTask = TaskBase & {
  */
 export type ListenTask = TaskBase & {
   listen?: ListenTaskConfiguration;
+  foreach?: SubscriptionIterator;
   [k: string]: unknown;
 };
 /**
@@ -265,6 +280,11 @@ export type AllEventConsumptionStrategyConfiguration = EventFilter[];
  * A list containing any of the events to consume.
  */
 export type AnyEventConsumptionStrategyConfiguration = EventFilter[];
+export type AnyEventConsumptionStrategyUntil = string | AnyEventUntilConsumed;
+export type AnyEventUntilConsumed = EventConsumptionStrategy & {
+  until?: never;
+  [k: string]: unknown;
+};
 /**
  * Intentionally triggers and propagates errors.
  */
@@ -272,7 +292,7 @@ export type RaiseTask = TaskBase & {
   raise?: RaiseTaskConfiguration;
   [k: string]: unknown;
 };
-export type RaiseTaskRaiseError = Error | string;
+export type RaiseTaskError = Error | string;
 /**
  * Provides the capability to execute external containers, shell commands, scripts, or workflows.
  */
@@ -729,7 +749,7 @@ export interface TaskBase {
   input?: Input;
   output?: Output;
   export?: Export;
-  timeout?: TaskBaseTimeout;
+  timeout?: TaskTimeout;
   then?: FlowDirective;
   metadata?: TaskMetadata;
   [k: string]: unknown;
@@ -786,36 +806,6 @@ export interface TaskMetadata {
   [k: string]: unknown;
 }
 /**
- * The Async API call arguments.
- */
-export interface AsyncApiArguments {
-  document: ExternalResource;
-  /**
-   * A reference to the AsyncAPI operation to call.
-   */
-  operationRef: string;
-  /**
-   * A a reference to the server to call the specified AsyncAPI operation on. If not set, default to the first server matching the operation's channel.
-   */
-  server?: string;
-  /**
-   * The name of the message to use. If not set, defaults to the first message defined by the operation.
-   */
-  message?: string;
-  /**
-   * The name of the binding to use. If not set, defaults to the first binding defined by the operation.
-   */
-  binding?: string;
-  payload?: WithAsyncAPIPayload;
-  authentication?: ReferenceableAuthenticationPolicy;
-}
-/**
- * The payload to call the AsyncAPI operation with, if any.
- */
-export interface WithAsyncAPIPayload {
-  [k: string]: unknown;
-}
-/**
  * The GRPC call arguments.
  */
 export interface GRPCArguments {
@@ -857,30 +847,34 @@ export interface HTTPArguments {
    */
   method: string;
   endpoint: Endpoint;
-  headers?: WithHTTPHeaders;
-  body?: WithHTTPBody;
-  query?: WithHTTPQuery;
+  headers?: HTTPHeaders;
+  body?: HTTPBody;
+  query?: HTTPQuery;
   /**
    * The http call output format. Defaults to 'content'.
    */
   output?: 'raw' | 'content' | 'response';
+  /**
+   * Specifies whether redirection status codes (`300–399`) should be treated as errors.
+   */
+  redirect?: boolean;
 }
 /**
  * A name/value mapping of the headers, if any, of the HTTP request to perform.
  */
-export interface WithHTTPHeaders {
+export interface HTTPHeaders {
   [k: string]: unknown;
 }
 /**
  * The body, if any, of the HTTP request to perform.
  */
-export interface WithHTTPBody {
+export interface HTTPBody {
   [k: string]: unknown;
 }
 /**
  * A name/value mapping of the query parameters, if any, of the HTTP request to perform.
  */
-export interface WithHTTPQuery {
+export interface HTTPQuery {
   [k: string]: unknown;
 }
 /**
@@ -898,6 +892,10 @@ export interface OpenAPIArguments {
    * The http call output format. Defaults to 'content'.
    */
   output?: 'raw' | 'content' | 'response';
+  /**
+   * Specifies whether redirection status codes (`300–399`) should be treated as errors.
+   */
+  redirect?: boolean;
 }
 /**
  * A name/value mapping of the parameters of the OpenAPI operation to call.
@@ -957,6 +955,7 @@ export interface EmitEventWith {
    */
   datacontenttype?: string;
   dataschema?: EventDataschema;
+  data?: EventData;
   [k: string]: unknown;
 }
 /**
@@ -981,6 +980,10 @@ export interface ForTaskConfiguration {
  */
 export interface ListenTaskConfiguration {
   to: EventConsumptionStrategy;
+  /**
+   * Specifies how events are read during the listen operation.
+   */
+  read?: 'data' | 'envelope' | 'raw';
 }
 export interface AllEventConsumptionStrategy {
   all: AllEventConsumptionStrategyConfiguration;
@@ -1016,6 +1019,7 @@ export interface WithEvent {
    */
   datacontenttype?: string;
   dataschema?: EventDataschema;
+  data?: EventData;
   [k: string]: unknown;
 }
 /**
@@ -1036,6 +1040,7 @@ export interface EventFilterCorrelate {
 }
 export interface AnyEventConsumptionStrategy {
   any: AnyEventConsumptionStrategyConfiguration;
+  until?: AnyEventConsumptionStrategyUntil;
   [k: string]: unknown;
 }
 export interface OneEventConsumptionStrategy {
@@ -1043,10 +1048,26 @@ export interface OneEventConsumptionStrategy {
   [k: string]: unknown;
 }
 /**
+ * Configures the iteration over each item (event or message) consumed by a subscription.
+ */
+export interface SubscriptionIterator {
+  /**
+   * The name of the variable used to store the current item being enumerated.
+   */
+  item?: string;
+  /**
+   * The name of the variable used to store the index of the current item being enumerated.
+   */
+  at?: string;
+  do?: TaskList;
+  output?: Output;
+  export?: Export;
+}
+/**
  * The definition of the error to raise.
  */
 export interface RaiseTaskConfiguration {
-  error: RaiseTaskRaiseError;
+  error: RaiseTaskError;
 }
 /**
  * Enables the execution of external processes encapsulated within a containerized environment.
@@ -1064,12 +1085,17 @@ export interface Container {
    */
   image: string;
   /**
+   * A runtime expression, if any, used to give specific name to the container.
+   */
+  name?: string;
+  /**
    * The command, if any, to execute on the container.
    */
   command?: string;
   ports?: ContainerPorts;
   volumes?: ContainerVolumes;
   environment?: ContainerEnvironment;
+  lifetime?: ContainerLifetime;
 }
 /**
  * The container's port mappings, if any.
@@ -1088,6 +1114,16 @@ export interface ContainerVolumes {
  */
 export interface ContainerEnvironment {
   [k: string]: unknown;
+}
+/**
+ * The configuration of a container's lifetime
+ */
+export interface ContainerLifetime {
+  /**
+   * The container cleanup policy to use
+   */
+  cleanup: 'always' | 'never' | 'eventually';
+  after?: Duration;
 }
 /**
  * Enables the execution of custom scripts or code within a workflow, empowering workflows to perform specialized logic, data processing, or integration tasks by executing user-defined scripts written in various programming languages.
@@ -1201,20 +1237,47 @@ export interface TryTaskCatch {
    */
   as?: string;
   /**
-   * A runtime expression used to determine whether or not to catch the filtered error.
+   * A runtime expression used to determine whether to catch the filtered error.
    */
   when?: string;
   /**
-   * A runtime expression used to determine whether or not to catch the filtered error.
+   * A runtime expression used to determine whether not to catch the filtered error.
    */
   exceptWhen?: string;
   retry?: TryTaskCatchRetry;
   do?: TaskList;
 }
 /**
- * The configuration of a concept used to catch errors.
+ * static error filter
  */
 export interface CatchErrors {
+  with?: ErrorFilter;
+  [k: string]: unknown;
+}
+/**
+ * Error filtering base on static values. For error filtering on dynamic values, use catch.when property
+ */
+export interface ErrorFilter {
+  /**
+   * if present, means this value should be used for filtering
+   */
+  type?: string;
+  /**
+   * if present, means this value should be used for filtering
+   */
+  status?: number;
+  /**
+   * if present, means this value should be used for filtering
+   */
+  instance?: string;
+  /**
+   * if present, means this value should be used for filtering
+   */
+  title?: string;
+  /**
+   * if present, means this value should be used for filtering
+   */
+  details?: string;
   [k: string]: unknown;
 }
 /**
@@ -1307,7 +1370,7 @@ export interface UseCatalogs {
   [k: string]: Catalog;
 }
 /**
- * The definition of a resource catalog
+ * The definition of a resource catalog.
  */
 export interface Catalog {
   endpoint: Endpoint;

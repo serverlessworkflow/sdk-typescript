@@ -98,6 +98,9 @@ function prepareSchema(schema: any, path: string[] = ['#'], parentTitle: string 
       delete newSchema.title;
       schemaKeys = schemaKeys.filter((key) => key === 'title');
     }
+    if (path.join('/') == '#/properties/timeout') {
+      newSchema.title = 'WorkflowTimeout';
+    }
     if (
       !newSchema.title &&
       (!newSchema.type || newSchema.type === 'object' || newSchema.type === 'array') && // only naming object or array types
@@ -109,9 +112,6 @@ function prepareSchema(schema: any, path: string[] = ['#'], parentTitle: string 
       if (parentTitle.trim()) {
         const title = !isItemWithAdditionalProperties ? parent : path.includes('switch') ? 'case' : 'item';
         newSchema.title = toPascalCase(`${parentTitle} ${title}`);
-      }
-      if (path.join('/') == '#/properties/timeout') {
-        newSchema.title = 'WorkflowTimeout';
       } else {
         newSchema.title = toPascalCase(
           path

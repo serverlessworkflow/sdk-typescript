@@ -23,12 +23,13 @@
 import { _Input } from './input';
 import { _Output } from './output';
 import { _Export } from './export';
-import { _TaskBaseTimeout } from './task-base-timeout';
+import { _TaskTimeout } from './task-timeout';
 import { _TaskMetadata } from './task-metadata';
 import { _ForkTaskConfiguration } from './fork-task-configuration';
 import { _EmitTaskConfiguration } from './emit-task-configuration';
 import { _ForTaskConfiguration } from './for-task-configuration';
 import { _ListenTaskConfiguration } from './listen-task-configuration';
+import { _SubscriptionIterator } from './subscription-iterator';
 import { _RaiseTaskConfiguration } from './raise-task-configuration';
 import { _RunTaskConfiguration } from './run-task-configuration';
 import { _SetTaskConfiguration } from './set-task-configuration';
@@ -82,8 +83,8 @@ export class Task extends ObjectHydrator<Specification.Task> {
           (model as Specification.TaskBase).export as Specification.Export,
         );
       if (typeof (model as Specification.TaskBase).timeout === 'object')
-        (self as Specification.TaskBase).timeout = new _TaskBaseTimeout(
-          (model as Specification.TaskBase).timeout as Specification.TaskBaseTimeout,
+        (self as Specification.TaskBase).timeout = new _TaskTimeout(
+          (model as Specification.TaskBase).timeout as Specification.TaskTimeout,
         );
       if (typeof (model as Specification.TaskBase).metadata === 'object')
         (self as Specification.TaskBase).metadata = new _TaskMetadata(
@@ -129,13 +130,53 @@ export class Task extends ObjectHydrator<Specification.Task> {
           ).for as Specification.ForTaskConfiguration,
         );
       if (
-        typeof (model as { [k: string]: unknown; listen?: Specification.ListenTaskConfiguration }).listen === 'object'
+        typeof (
+          model as {
+            [k: string]: unknown;
+            listen?: Specification.ListenTaskConfiguration;
+            foreach?: Specification.SubscriptionIterator;
+          }
+        ).listen === 'object'
       )
-        (self as { [k: string]: unknown; listen?: Specification.ListenTaskConfiguration }).listen =
-          new _ListenTaskConfiguration(
-            (model as { [k: string]: unknown; listen?: Specification.ListenTaskConfiguration })
-              .listen as Specification.ListenTaskConfiguration,
-          );
+        (
+          self as {
+            [k: string]: unknown;
+            listen?: Specification.ListenTaskConfiguration;
+            foreach?: Specification.SubscriptionIterator;
+          }
+        ).listen = new _ListenTaskConfiguration(
+          (
+            model as {
+              [k: string]: unknown;
+              listen?: Specification.ListenTaskConfiguration;
+              foreach?: Specification.SubscriptionIterator;
+            }
+          ).listen as Specification.ListenTaskConfiguration,
+        );
+      if (
+        typeof (
+          model as {
+            [k: string]: unknown;
+            listen?: Specification.ListenTaskConfiguration;
+            foreach?: Specification.SubscriptionIterator;
+          }
+        ).foreach === 'object'
+      )
+        (
+          self as {
+            [k: string]: unknown;
+            listen?: Specification.ListenTaskConfiguration;
+            foreach?: Specification.SubscriptionIterator;
+          }
+        ).foreach = new _SubscriptionIterator(
+          (
+            model as {
+              [k: string]: unknown;
+              listen?: Specification.ListenTaskConfiguration;
+              foreach?: Specification.SubscriptionIterator;
+            }
+          ).foreach as Specification.SubscriptionIterator,
+        );
       if (typeof (model as { [k: string]: unknown; raise?: Specification.RaiseTaskConfiguration }).raise === 'object')
         (self as { [k: string]: unknown; raise?: Specification.RaiseTaskConfiguration }).raise =
           new _RaiseTaskConfiguration(

@@ -95,7 +95,7 @@ describe('Workflow (de)serialization', () => {
 
   it('should serialize as JSON from from static method from fluently built workflow', () => {
     const workflow = workflowBuilder()
-      .document(documentBuilder().dsl('1.0.0-alpha5').name('test').version('1.0.0').namespace('default').build())
+      .document(documentBuilder().dsl('1.0.0').name('test').version('1.0.0').namespace('default').build())
       .do(
         taskListBuilder()
           .push({

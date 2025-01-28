@@ -22,26 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
-import { WithAsyncAPIPayloadIntersection } from '../classes/with-async-api-payload';
+import { HTTPBodyIntersection } from '../classes/http-body';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.WithAsyncAPIPayload} model The proxied object
+ * @param {Specification.HTTPBody} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {WithAsyncAPIPayloadIntersection} The built object
+ * @returns {HTTPBodyIntersection} The built object
  */
-function buildingFn(model: Specification.WithAsyncAPIPayload, options: BuildOptions): WithAsyncAPIPayloadIntersection {
-  const instance = new Classes.WithAsyncAPIPayload(model);
+function buildingFn(model: Specification.HTTPBody, options: BuildOptions): HTTPBodyIntersection {
+  const instance = new Classes.HTTPBody(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as WithAsyncAPIPayloadIntersection;
+  return (options.normalize ? instance.normalize() : instance) as HTTPBodyIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `WithAsyncAPIPayloadIntersection`
- * @returns {Builder<WithAsyncAPIPayloadIntersection, WithAsyncAPIPayloadIntersection>} A builder for `WithAsyncAPIPayloadIntersection`
+ * A factory to create a builder proxy for the type `HTTPBodyIntersection`
+ * @returns {Builder<HTTPBodyIntersection, HTTPBodyIntersection>} A builder for `HTTPBodyIntersection`
  */
-export const withAsyncAPIPayloadBuilder = (
-  model?: Partial<Specification.WithAsyncAPIPayload>,
-): Builder<Partial<Specification.WithAsyncAPIPayload>, WithAsyncAPIPayloadIntersection> =>
-  builder<Specification.WithAsyncAPIPayload, WithAsyncAPIPayloadIntersection>(model, buildingFn);
+export const hTTPBodyBuilder = (
+  model?: Partial<Specification.HTTPBody>,
+): Builder<Partial<Specification.HTTPBody>, HTTPBodyIntersection> =>
+  builder<Specification.HTTPBody, HTTPBodyIntersection>(model, buildingFn);

@@ -16,7 +16,7 @@
       const { workflowBuilder, documentBuilder, taskListBuilder, setTaskBuilder } = serverWorkflowSdk;
       try {
         const workflow = workflowBuilder()
-          .document(documentBuilder().dsl('1.0.0-alpha5').name('using-fluent-api').version('1.0.0').namespace('default').build())
+          .document(documentBuilder().dsl('1.0.0').name('using-fluent-api').version('1.0.0').namespace('default').build())
           .do(
             taskListBuilder()
               .push({

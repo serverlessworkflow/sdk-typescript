@@ -18,6 +18,8 @@ import { _AllEventConsumptionStrategy } from './all-event-consumption-strategy';
 import { _AllEventConsumptionStrategyConfiguration } from './all-event-consumption-strategy-configuration';
 import { _AnyEventConsumptionStrategy } from './any-event-consumption-strategy';
 import { _AnyEventConsumptionStrategyConfiguration } from './any-event-consumption-strategy-configuration';
+import { _AnyEventConsumptionStrategyUntil } from './any-event-consumption-strategy-until';
+import { _AnyEventUntilConsumed } from './any-event-until-consumed';
 import { _AsyncApiArguments } from './async-api-arguments';
 import { _AuthenticationPolicy } from './authentication-policy';
 import { _AuthenticationPolicyReference } from './authentication-policy-reference';
@@ -38,6 +40,7 @@ import { _CatchErrors } from './catch-errors';
 import { _ConstantBackoff } from './constant-backoff';
 import { _Container } from './container';
 import { _ContainerEnvironment } from './container-environment';
+import { _ContainerLifetime } from './container-lifetime';
 import { _ContainerPorts } from './container-ports';
 import { _ContainerVolumes } from './container-volumes';
 import { _DigestAuthenticationPolicy } from './digest-authentication-policy';
@@ -55,9 +58,11 @@ import { _Endpoint } from './endpoint';
 import { _EndpointConfiguration } from './endpoint-configuration';
 import { _EndpointUri } from './endpoint-uri';
 import { _Error } from './error';
+import { _ErrorFilter } from './error-filter';
 import { _ErrorInstance } from './error-instance';
 import { _ErrorType } from './error-type';
 import { _EventConsumptionStrategy } from './event-consumption-strategy';
+import { _EventData } from './event-data';
 import { _EventDataschema } from './event-dataschema';
 import { _EventFilter } from './event-filter';
 import { _EventFilterCorrelate } from './event-filter-correlate';
@@ -78,6 +83,9 @@ import { _ForTaskConfiguration } from './for-task-configuration';
 import { _FunctionArguments } from './function-arguments';
 import { _GRPCArguments } from './grpc-arguments';
 import { _HTTPArguments } from './http-arguments';
+import { _HTTPBody } from './http-body';
+import { _HTTPHeaders } from './http-headers';
+import { _HTTPQuery } from './http-query';
 import { _InlineScript } from './inline-script';
 import { _Input } from './input';
 import { _InputFrom } from './input-from';
@@ -104,7 +112,7 @@ import { _Output } from './output';
 import { _OutputAs } from './output-as';
 import { _RaiseTask } from './raise-task';
 import { _RaiseTaskConfiguration } from './raise-task-configuration';
-import { _RaiseTaskRaiseError } from './raise-task-raise-error';
+import { _RaiseTaskError } from './raise-task-error';
 import { _ReferenceableAuthenticationPolicy } from './referenceable-authentication-policy';
 import { _RetryBackoff } from './retry-backoff';
 import { _RetryLimit } from './retry-limit';
@@ -131,6 +139,7 @@ import { _ShellArguments } from './shell-arguments';
 import { _ShellEnvironment } from './shell-environment';
 import { _SubflowConfiguration } from './subflow-configuration';
 import { _SubflowInput } from './subflow-input';
+import { _SubscriptionIterator } from './subscription-iterator';
 import { _SwitchCase } from './switch-case';
 import { _SwitchItem } from './switch-item';
 import { _SwitchTask } from './switch-task';
@@ -138,10 +147,10 @@ import { _SwitchTaskConfiguration } from './switch-task-configuration';
 import { _Task } from './task';
 import { _TaskBase } from './task-base';
 import { _TaskBaseIf } from './task-base-if';
-import { _TaskBaseTimeout } from './task-base-timeout';
 import { _TaskItem } from './task-item';
 import { _TaskList } from './task-list';
 import { _TaskMetadata } from './task-metadata';
+import { _TaskTimeout } from './task-timeout';
 import { _Timeout } from './timeout';
 import { _TryTask } from './try-task';
 import { _TryTaskCatch } from './try-task-catch';
@@ -157,13 +166,9 @@ import { _UseRetries } from './use-retries';
 import { _UseSecrets } from './use-secrets';
 import { _UseTimeouts } from './use-timeouts';
 import { _WaitTask } from './wait-task';
-import { _WithAsyncAPIPayload } from './with-async-api-payload';
 import { _WithEvent } from './with-event';
 import { _WithGRPCArguments } from './with-grpc-arguments';
 import { _WithGRPCService } from './with-grpc-service';
-import { _WithHTTPBody } from './with-http-body';
-import { _WithHTTPHeaders } from './with-http-headers';
-import { _WithHTTPQuery } from './with-http-query';
 import { _WithOpenAPIParameters } from './with-open-api-parameters';
 import { _Workflow } from './workflow';
 import { _WorkflowMetadata } from './workflow-metadata';
@@ -175,6 +180,8 @@ export const Classes = {
   AllEventConsumptionStrategyConfiguration: _AllEventConsumptionStrategyConfiguration,
   AnyEventConsumptionStrategy: _AnyEventConsumptionStrategy,
   AnyEventConsumptionStrategyConfiguration: _AnyEventConsumptionStrategyConfiguration,
+  AnyEventConsumptionStrategyUntil: _AnyEventConsumptionStrategyUntil,
+  AnyEventUntilConsumed: _AnyEventUntilConsumed,
   AsyncApiArguments: _AsyncApiArguments,
   AuthenticationPolicy: _AuthenticationPolicy,
   AuthenticationPolicyReference: _AuthenticationPolicyReference,
@@ -195,6 +202,7 @@ export const Classes = {
   ConstantBackoff: _ConstantBackoff,
   Container: _Container,
   ContainerEnvironment: _ContainerEnvironment,
+  ContainerLifetime: _ContainerLifetime,
   ContainerPorts: _ContainerPorts,
   ContainerVolumes: _ContainerVolumes,
   DigestAuthenticationPolicy: _DigestAuthenticationPolicy,
@@ -212,9 +220,11 @@ export const Classes = {
   EndpointConfiguration: _EndpointConfiguration,
   EndpointUri: _EndpointUri,
   Error: _Error,
+  ErrorFilter: _ErrorFilter,
   ErrorInstance: _ErrorInstance,
   ErrorType: _ErrorType,
   EventConsumptionStrategy: _EventConsumptionStrategy,
+  EventData: _EventData,
   EventDataschema: _EventDataschema,
   EventFilter: _EventFilter,
   EventFilterCorrelate: _EventFilterCorrelate,
@@ -235,6 +245,9 @@ export const Classes = {
   FunctionArguments: _FunctionArguments,
   GRPCArguments: _GRPCArguments,
   HTTPArguments: _HTTPArguments,
+  HTTPBody: _HTTPBody,
+  HTTPHeaders: _HTTPHeaders,
+  HTTPQuery: _HTTPQuery,
   InlineScript: _InlineScript,
   Input: _Input,
   InputFrom: _InputFrom,
@@ -261,7 +274,7 @@ export const Classes = {
   OutputAs: _OutputAs,
   RaiseTask: _RaiseTask,
   RaiseTaskConfiguration: _RaiseTaskConfiguration,
-  RaiseTaskRaiseError: _RaiseTaskRaiseError,
+  RaiseTaskError: _RaiseTaskError,
   ReferenceableAuthenticationPolicy: _ReferenceableAuthenticationPolicy,
   RetryBackoff: _RetryBackoff,
   RetryLimit: _RetryLimit,
@@ -288,6 +301,7 @@ export const Classes = {
   ShellEnvironment: _ShellEnvironment,
   SubflowConfiguration: _SubflowConfiguration,
   SubflowInput: _SubflowInput,
+  SubscriptionIterator: _SubscriptionIterator,
   SwitchCase: _SwitchCase,
   SwitchItem: _SwitchItem,
   SwitchTask: _SwitchTask,
@@ -295,10 +309,10 @@ export const Classes = {
   Task: _Task,
   TaskBase: _TaskBase,
   TaskBaseIf: _TaskBaseIf,
-  TaskBaseTimeout: _TaskBaseTimeout,
   TaskItem: _TaskItem,
   TaskList: _TaskList,
   TaskMetadata: _TaskMetadata,
+  TaskTimeout: _TaskTimeout,
   Timeout: _Timeout,
   TryTask: _TryTask,
   TryTaskCatch: _TryTaskCatch,
@@ -314,13 +328,9 @@ export const Classes = {
   UseSecrets: _UseSecrets,
   UseTimeouts: _UseTimeouts,
   WaitTask: _WaitTask,
-  WithAsyncAPIPayload: _WithAsyncAPIPayload,
   WithEvent: _WithEvent,
   WithGRPCArguments: _WithGRPCArguments,
   WithGRPCService: _WithGRPCService,
-  WithHTTPBody: _WithHTTPBody,
-  WithHTTPHeaders: _WithHTTPHeaders,
-  WithHTTPQuery: _WithHTTPQuery,
   WithOpenAPIParameters: _WithOpenAPIParameters,
   Workflow: _Workflow,
   WorkflowMetadata: _WorkflowMetadata,

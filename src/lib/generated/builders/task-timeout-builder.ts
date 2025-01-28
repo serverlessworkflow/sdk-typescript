@@ -22,26 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
-import { RaiseTaskRaiseErrorIntersection } from '../classes/raise-task-raise-error';
+import { TaskTimeoutIntersection } from '../classes/task-timeout';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.RaiseTaskRaiseError} model The proxied object
+ * @param {Specification.TaskTimeout} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {RaiseTaskRaiseErrorIntersection} The built object
+ * @returns {TaskTimeoutIntersection} The built object
  */
-function buildingFn(model: Specification.RaiseTaskRaiseError, options: BuildOptions): RaiseTaskRaiseErrorIntersection {
-  const instance = new Classes.RaiseTaskRaiseError(model);
+function buildingFn(model: Specification.TaskTimeout, options: BuildOptions): TaskTimeoutIntersection {
+  const instance = new Classes.TaskTimeout(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as RaiseTaskRaiseErrorIntersection;
+  return (options.normalize ? instance.normalize() : instance) as TaskTimeoutIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `RaiseTaskRaiseErrorIntersection`
- * @returns {Builder<RaiseTaskRaiseErrorIntersection, RaiseTaskRaiseErrorIntersection>} A builder for `RaiseTaskRaiseErrorIntersection`
+ * A factory to create a builder proxy for the type `TaskTimeoutIntersection`
+ * @returns {Builder<TaskTimeoutIntersection, TaskTimeoutIntersection>} A builder for `TaskTimeoutIntersection`
  */
-export const raiseTaskRaiseErrorBuilder = (
-  model?: Partial<Specification.RaiseTaskRaiseError>,
-): Builder<Partial<Specification.RaiseTaskRaiseError>, RaiseTaskRaiseErrorIntersection> =>
-  builder<Specification.RaiseTaskRaiseError, RaiseTaskRaiseErrorIntersection>(model, buildingFn);
+export const taskTimeoutBuilder = (
+  model?: Partial<Specification.TaskTimeout>,
+): Builder<Partial<Specification.TaskTimeout>, TaskTimeoutIntersection> =>
+  builder<Specification.TaskTimeout, TaskTimeoutIntersection>(model, buildingFn);

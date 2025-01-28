@@ -23,6 +23,7 @@
 import { _ContainerPorts } from './container-ports';
 import { _ContainerVolumes } from './container-volumes';
 import { _ContainerEnvironment } from './container-environment';
+import { _ContainerLifetime } from './container-lifetime';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
@@ -59,6 +60,7 @@ export class Container extends ObjectHydrator<Specification.Container> {
       if (typeof model.ports === 'object') self.ports = new _ContainerPorts(model.ports);
       if (typeof model.volumes === 'object') self.volumes = new _ContainerVolumes(model.volumes);
       if (typeof model.environment === 'object') self.environment = new _ContainerEnvironment(model.environment);
+      if (typeof model.lifetime === 'object') self.lifetime = new _ContainerLifetime(model.lifetime);
     }
     getLifecycleHooks('Container')?.constructor?.(this);
   }

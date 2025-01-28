@@ -19,14 +19,20 @@ import { callAsyncAPIBuilder } from '../../src/lib/generated/builders';
 import { Classes } from '../../src/lib/generated/classes';
 
 const document = { endpoint: 'https://example.com', name: 'example' };
-const operationRef = 'operationRef';
+const operation = 'operationRef';
+const subscription = {
+  consume: {
+    until: '${ .condition }',
+  },
+};
 
 describe('CallAsyncAPI builder', () => {
   it('should build with fluent api', () => {
     const callAsyncAPI = callAsyncAPIBuilder()
       .with({
         document,
-        operationRef,
+        operation,
+        subscription,
       })
       .build();
     expect(callAsyncAPI).toBeDefined();
@@ -34,14 +40,16 @@ describe('CallAsyncAPI builder', () => {
     expect(callAsyncAPI.call).toBe('asyncapi');
     expect(callAsyncAPI.with).toBeDefined();
     expect(callAsyncAPI.with!.document).toEqual(document);
-    expect(callAsyncAPI.with!.operationRef).toBe(operationRef);
+    expect(callAsyncAPI.with!.operation).toBe(operation);
+    expect(callAsyncAPI.with!.subscription).toEqual(subscription);
   });
 
   it('should build with input', () => {
     const data = {
       with: {
         document,
-        operationRef,
+        operation,
+        subscription,
       },
     };
     const callAsyncAPI = callAsyncAPIBuilder(data).build();
@@ -50,7 +58,8 @@ describe('CallAsyncAPI builder', () => {
     expect(callAsyncAPI.call).toBe('asyncapi');
     expect(callAsyncAPI.with).toBeDefined();
     expect(callAsyncAPI.with!.document).toEqual(document);
-    expect(callAsyncAPI.with!.operationRef).toBe(operationRef);
+    expect(callAsyncAPI.with!.operation).toBe(operation);
+    expect(callAsyncAPI.with!.subscription).toEqual(subscription);
   });
 
   it('should throw when invalid', () => {

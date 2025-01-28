@@ -21,6 +21,7 @@
  *****************************************************************************************/
 
 import { _AnyEventConsumptionStrategyConfiguration } from './any-event-consumption-strategy-configuration';
+import { _AnyEventConsumptionStrategyUntil } from './any-event-consumption-strategy-until';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
@@ -56,6 +57,7 @@ export class AnyEventConsumptionStrategy extends ObjectHydrator<Specification.An
     const self = this as unknown as Specification.AnyEventConsumptionStrategy & object;
     if (isObject(model)) {
       if (typeof model.any === 'object') self.any = new _AnyEventConsumptionStrategyConfiguration(model.any);
+      if (typeof model.until === 'object') self.until = new _AnyEventConsumptionStrategyUntil(model.until);
     }
     getLifecycleHooks('AnyEventConsumptionStrategy')?.constructor?.(this);
   }

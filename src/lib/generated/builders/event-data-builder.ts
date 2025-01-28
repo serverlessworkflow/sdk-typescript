@@ -22,26 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
-import { WithHTTPHeadersIntersection } from '../classes/with-http-headers';
+import { EventDataIntersection } from '../classes/event-data';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.WithHTTPHeaders} model The proxied object
+ * @param {Specification.EventData} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {WithHTTPHeadersIntersection} The built object
+ * @returns {EventDataIntersection} The built object
  */
-function buildingFn(model: Specification.WithHTTPHeaders, options: BuildOptions): WithHTTPHeadersIntersection {
-  const instance = new Classes.WithHTTPHeaders(model);
+function buildingFn(model: Specification.EventData, options: BuildOptions): EventDataIntersection {
+  const instance = new Classes.EventData(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as WithHTTPHeadersIntersection;
+  return (options.normalize ? instance.normalize() : instance) as EventDataIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `WithHTTPHeadersIntersection`
- * @returns {Builder<WithHTTPHeadersIntersection, WithHTTPHeadersIntersection>} A builder for `WithHTTPHeadersIntersection`
+ * A factory to create a builder proxy for the type `EventDataIntersection`
+ * @returns {Builder<EventDataIntersection, EventDataIntersection>} A builder for `EventDataIntersection`
  */
-export const withHTTPHeadersBuilder = (
-  model?: Partial<Specification.WithHTTPHeaders>,
-): Builder<Partial<Specification.WithHTTPHeaders>, WithHTTPHeadersIntersection> =>
-  builder<Specification.WithHTTPHeaders, WithHTTPHeadersIntersection>(model, buildingFn);
+export const eventDataBuilder = (
+  model?: Partial<Specification.EventData>,
+): Builder<Partial<Specification.EventData>, EventDataIntersection> =>
+  builder<Specification.EventData, EventDataIntersection>(model, buildingFn);

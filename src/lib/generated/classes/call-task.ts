@@ -23,7 +23,7 @@
 import { _Input } from './input';
 import { _Output } from './output';
 import { _Export } from './export';
-import { _TaskBaseTimeout } from './task-base-timeout';
+import { _TaskTimeout } from './task-timeout';
 import { _TaskMetadata } from './task-metadata';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
@@ -71,8 +71,8 @@ export class CallTask extends ObjectHydrator<Specification.CallTask> {
           (model as Specification.TaskBase).export as Specification.Export,
         );
       if (typeof (model as Specification.TaskBase).timeout === 'object')
-        (self as Specification.TaskBase).timeout = new _TaskBaseTimeout(
-          (model as Specification.TaskBase).timeout as Specification.TaskBaseTimeout,
+        (self as Specification.TaskBase).timeout = new _TaskTimeout(
+          (model as Specification.TaskBase).timeout as Specification.TaskTimeout,
         );
       if (typeof (model as Specification.TaskBase).metadata === 'object')
         (self as Specification.TaskBase).metadata = new _TaskMetadata(

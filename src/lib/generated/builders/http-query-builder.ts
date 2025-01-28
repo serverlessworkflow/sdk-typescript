@@ -22,26 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
-import { TaskBaseTimeoutIntersection } from '../classes/task-base-timeout';
+import { HTTPQueryIntersection } from '../classes/http-query';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.TaskBaseTimeout} model The proxied object
+ * @param {Specification.HTTPQuery} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {TaskBaseTimeoutIntersection} The built object
+ * @returns {HTTPQueryIntersection} The built object
  */
-function buildingFn(model: Specification.TaskBaseTimeout, options: BuildOptions): TaskBaseTimeoutIntersection {
-  const instance = new Classes.TaskBaseTimeout(model);
+function buildingFn(model: Specification.HTTPQuery, options: BuildOptions): HTTPQueryIntersection {
+  const instance = new Classes.HTTPQuery(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as TaskBaseTimeoutIntersection;
+  return (options.normalize ? instance.normalize() : instance) as HTTPQueryIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `TaskBaseTimeoutIntersection`
- * @returns {Builder<TaskBaseTimeoutIntersection, TaskBaseTimeoutIntersection>} A builder for `TaskBaseTimeoutIntersection`
+ * A factory to create a builder proxy for the type `HTTPQueryIntersection`
+ * @returns {Builder<HTTPQueryIntersection, HTTPQueryIntersection>} A builder for `HTTPQueryIntersection`
  */
-export const taskBaseTimeoutBuilder = (
-  model?: Partial<Specification.TaskBaseTimeout>,
-): Builder<Partial<Specification.TaskBaseTimeout>, TaskBaseTimeoutIntersection> =>
-  builder<Specification.TaskBaseTimeout, TaskBaseTimeoutIntersection>(model, buildingFn);
+export const hTTPQueryBuilder = (
+  model?: Partial<Specification.HTTPQuery>,
+): Builder<Partial<Specification.HTTPQuery>, HTTPQueryIntersection> =>
+  builder<Specification.HTTPQuery, HTTPQueryIntersection>(model, buildingFn);

@@ -26,53 +26,53 @@ import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
 
 /**
- * Represents the intersection between the WithHTTPBody class and type
+ * Represents the intersection between the HTTPHeaders class and type
  */
-export type WithHTTPBodyIntersection = WithHTTPBody & Specification.WithHTTPBody;
+export type HTTPHeadersIntersection = HTTPHeaders & Specification.HTTPHeaders;
 
 /**
- * Represents a constructor for the intersection of the WithHTTPBody class and type
+ * Represents a constructor for the intersection of the HTTPHeaders class and type
  */
-export interface WithHTTPBodyConstructor {
-  new (model?: Partial<Specification.WithHTTPBody>): WithHTTPBodyIntersection;
+export interface HTTPHeadersConstructor {
+  new (model?: Partial<Specification.HTTPHeaders>): HTTPHeadersIntersection;
 }
 
 /**
- * Represents a WithHTTPBody with methods for validation and normalization.
+ * Represents a HTTPHeaders with methods for validation and normalization.
  * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
  */
-export class WithHTTPBody extends ObjectHydrator<Specification.WithHTTPBody> {
+export class HTTPHeaders extends ObjectHydrator<Specification.HTTPHeaders> {
   /**
-   * Instanciates a new instance of the WithHTTPBody class.
+   * Instanciates a new instance of the HTTPHeaders class.
    * Initializes properties based on the provided model if it is an object.
    *
-   * @param model - Optional partial model object to initialize the WithHTTPBody.
+   * @param model - Optional partial model object to initialize the HTTPHeaders.
    */
-  constructor(model?: Partial<Specification.WithHTTPBody>) {
+  constructor(model?: Partial<Specification.HTTPHeaders>) {
     super(model);
 
-    getLifecycleHooks('WithHTTPBody')?.constructor?.(this);
+    getLifecycleHooks('HTTPHeaders')?.constructor?.(this);
   }
 
   /**
-   * Validates the current instance of the WithHTTPBody.
+   * Validates the current instance of the HTTPHeaders.
    * Throws if invalid.
    */
   validate(workflow?: Partial<Specification.Workflow>) {
-    const copy = new WithHTTPBody(this as any) as WithHTTPBodyIntersection;
-    validate('WithHTTPBody', copy, workflow);
+    const copy = new HTTPHeaders(this as any) as HTTPHeadersIntersection;
+    validate('HTTPHeaders', copy, workflow);
   }
 
   /**
-   * Normalizes the current instance of the WithHTTPBody.
-   * Creates a copy of the WithHTTPBody, invokes normalization hooks if available, and returns the normalized copy.
+   * Normalizes the current instance of the HTTPHeaders.
+   * Creates a copy of the HTTPHeaders, invokes normalization hooks if available, and returns the normalized copy.
    *
-   * @returns A normalized version of the WithHTTPBody instance.
+   * @returns A normalized version of the HTTPHeaders instance.
    */
-  normalize(): WithHTTPBody & Specification.WithHTTPBody {
-    const copy = new WithHTTPBody(this as any) as WithHTTPBodyIntersection;
-    return getLifecycleHooks('WithHTTPBody')?.normalize?.(copy) || copy;
+  normalize(): HTTPHeaders & Specification.HTTPHeaders {
+    const copy = new HTTPHeaders(this as any) as HTTPHeadersIntersection;
+    return getLifecycleHooks('HTTPHeaders')?.normalize?.(copy) || copy;
   }
 }
 
-export const _WithHTTPBody = WithHTTPBody as WithHTTPBodyConstructor;
+export const _HTTPHeaders = HTTPHeaders as HTTPHeadersConstructor;

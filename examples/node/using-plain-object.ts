@@ -2,7 +2,7 @@ import { Classes, Specification, validate } from /*'@serverlessworkflow/sdk';*/ 
 
 const workflowDefinition = {
   document: {
-    dsl: '1.0.0-alpha5',
+    dsl: '1.0.0',
     name: 'using-plain-object',
     version: '1.0.0',
     namespace: 'default',
