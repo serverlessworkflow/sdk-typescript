@@ -22,26 +22,29 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
-import { WithHTTPBodyIntersection } from '../classes/with-http-body';
+import { AnyEventUntilConsumedIntersection } from '../classes/any-event-until-consumed';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.WithHTTPBody} model The proxied object
+ * @param {Specification.AnyEventUntilConsumed} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {WithHTTPBodyIntersection} The built object
+ * @returns {AnyEventUntilConsumedIntersection} The built object
  */
-function buildingFn(model: Specification.WithHTTPBody, options: BuildOptions): WithHTTPBodyIntersection {
-  const instance = new Classes.WithHTTPBody(model);
+function buildingFn(
+  model: Specification.AnyEventUntilConsumed,
+  options: BuildOptions,
+): AnyEventUntilConsumedIntersection {
+  const instance = new Classes.AnyEventUntilConsumed(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as WithHTTPBodyIntersection;
+  return (options.normalize ? instance.normalize() : instance) as AnyEventUntilConsumedIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `WithHTTPBodyIntersection`
- * @returns {Builder<WithHTTPBodyIntersection, WithHTTPBodyIntersection>} A builder for `WithHTTPBodyIntersection`
+ * A factory to create a builder proxy for the type `AnyEventUntilConsumedIntersection`
+ * @returns {Builder<AnyEventUntilConsumedIntersection, AnyEventUntilConsumedIntersection>} A builder for `AnyEventUntilConsumedIntersection`
  */
-export const withHTTPBodyBuilder = (
-  model?: Partial<Specification.WithHTTPBody>,
-): Builder<Partial<Specification.WithHTTPBody>, WithHTTPBodyIntersection> =>
-  builder<Specification.WithHTTPBody, WithHTTPBodyIntersection>(model, buildingFn);
+export const anyEventUntilConsumedBuilder = (
+  model?: Partial<Specification.AnyEventUntilConsumed>,
+): Builder<Partial<Specification.AnyEventUntilConsumed>, AnyEventUntilConsumedIntersection> =>
+  builder<Specification.AnyEventUntilConsumed, AnyEventUntilConsumedIntersection>(model, buildingFn);

@@ -23,7 +23,7 @@
 import { _Input } from './input';
 import { _Output } from './output';
 import { _Export } from './export';
-import { _TaskBaseTimeout } from './task-base-timeout';
+import { _TaskTimeout } from './task-timeout';
 import { _TaskMetadata } from './task-metadata';
 import { _TaskList } from './task-list';
 import { _TryTaskCatch } from './try-task-catch';
@@ -63,7 +63,7 @@ export class TryTask extends _TaskBase {
       if (typeof model.input === 'object') self.input = new _Input(model.input);
       if (typeof model.output === 'object') self.output = new _Output(model.output);
       if (typeof model.export === 'object') self.export = new _Export(model.export);
-      if (typeof model.timeout === 'object') self.timeout = new _TaskBaseTimeout(model.timeout);
+      if (typeof model.timeout === 'object') self.timeout = new _TaskTimeout(model.timeout);
       if (typeof model.metadata === 'object') self.metadata = new _TaskMetadata(model.metadata);
       if (typeof model.try === 'object') self.try = new _TaskList(model.try);
       if (typeof model.catch === 'object') self.catch = new _TryTaskCatch(model.catch);

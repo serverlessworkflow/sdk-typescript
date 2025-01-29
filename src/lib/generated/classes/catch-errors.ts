@@ -20,10 +20,12 @@
  *
  *****************************************************************************************/
 
+import { _ErrorFilter } from './error-filter';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
+import { isObject } from '../../utils';
 
 /**
  * Represents the intersection between the CatchErrors class and type
@@ -50,7 +52,10 @@ export class CatchErrors extends ObjectHydrator<Specification.CatchErrors> {
    */
   constructor(model?: Partial<Specification.CatchErrors>) {
     super(model);
-
+    const self = this as unknown as Specification.CatchErrors & object;
+    if (isObject(model)) {
+      if (typeof model.with === 'object') self.with = new _ErrorFilter(model.with);
+    }
     getLifecycleHooks('CatchErrors')?.constructor?.(this);
   }
 

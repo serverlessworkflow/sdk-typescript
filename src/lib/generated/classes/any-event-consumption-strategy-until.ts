@@ -22,7 +22,6 @@
 
 import { _AllEventConsumptionStrategyConfiguration } from './all-event-consumption-strategy-configuration';
 import { _AnyEventConsumptionStrategyConfiguration } from './any-event-consumption-strategy-configuration';
-import { _AnyEventConsumptionStrategyUntil } from './any-event-consumption-strategy-until';
 import { _EventFilter } from './event-filter';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
@@ -31,31 +30,32 @@ import { validate } from '../../validation';
 import { isObject } from '../../utils';
 
 /**
- * Represents the intersection between the EventConsumptionStrategy class and type
+ * Represents the intersection between the AnyEventConsumptionStrategyUntil class and type
  */
-export type EventConsumptionStrategyIntersection = EventConsumptionStrategy & Specification.EventConsumptionStrategy;
+export type AnyEventConsumptionStrategyUntilIntersection = AnyEventConsumptionStrategyUntil &
+  Specification.AnyEventConsumptionStrategyUntil;
 
 /**
- * Represents a constructor for the intersection of the EventConsumptionStrategy class and type
+ * Represents a constructor for the intersection of the AnyEventConsumptionStrategyUntil class and type
  */
-export interface EventConsumptionStrategyConstructor {
-  new (model?: Partial<Specification.EventConsumptionStrategy>): EventConsumptionStrategyIntersection;
+export interface AnyEventConsumptionStrategyUntilConstructor {
+  new (model?: Partial<Specification.AnyEventConsumptionStrategyUntil>): AnyEventConsumptionStrategyUntilIntersection;
 }
 
 /**
- * Represents a EventConsumptionStrategy with methods for validation and normalization.
+ * Represents a AnyEventConsumptionStrategyUntil with methods for validation and normalization.
  * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
  */
-export class EventConsumptionStrategy extends ObjectHydrator<Specification.EventConsumptionStrategy> {
+export class AnyEventConsumptionStrategyUntil extends ObjectHydrator<Specification.AnyEventConsumptionStrategyUntil> {
   /**
-   * Instanciates a new instance of the EventConsumptionStrategy class.
+   * Instanciates a new instance of the AnyEventConsumptionStrategyUntil class.
    * Initializes properties based on the provided model if it is an object.
    *
-   * @param model - Optional partial model object to initialize the EventConsumptionStrategy.
+   * @param model - Optional partial model object to initialize the AnyEventConsumptionStrategyUntil.
    */
-  constructor(model?: Partial<Specification.EventConsumptionStrategy>) {
+  constructor(model?: Partial<Specification.AnyEventConsumptionStrategyUntil>) {
     super(model);
-    const self = this as unknown as Specification.EventConsumptionStrategy & object;
+    const self = this as unknown as Specification.AnyEventConsumptionStrategyUntil & object;
     if (isObject(model)) {
       if (typeof (model as Specification.AllEventConsumptionStrategy).all === 'object')
         (self as Specification.AllEventConsumptionStrategy).all = new _AllEventConsumptionStrategyConfiguration(
@@ -67,37 +67,34 @@ export class EventConsumptionStrategy extends ObjectHydrator<Specification.Event
           (model as Specification.AnyEventConsumptionStrategy)
             .any as Specification.AnyEventConsumptionStrategyConfiguration,
         );
-      if (typeof (model as Specification.AnyEventConsumptionStrategy).until === 'object')
-        (self as Specification.AnyEventConsumptionStrategy).until = new _AnyEventConsumptionStrategyUntil(
-          (model as Specification.AnyEventConsumptionStrategy).until as Specification.AnyEventConsumptionStrategyUntil,
-        );
       if (typeof (model as Specification.OneEventConsumptionStrategy).one === 'object')
         (self as Specification.OneEventConsumptionStrategy).one = new _EventFilter(
           (model as Specification.OneEventConsumptionStrategy).one as Specification.EventFilter,
         );
     }
-    getLifecycleHooks('EventConsumptionStrategy')?.constructor?.(this);
+    getLifecycleHooks('AnyEventConsumptionStrategyUntil')?.constructor?.(this);
   }
 
   /**
-   * Validates the current instance of the EventConsumptionStrategy.
+   * Validates the current instance of the AnyEventConsumptionStrategyUntil.
    * Throws if invalid.
    */
   validate(workflow?: Partial<Specification.Workflow>) {
-    const copy = new EventConsumptionStrategy(this as any) as EventConsumptionStrategyIntersection;
-    validate('EventConsumptionStrategy', copy, workflow);
+    const copy = new AnyEventConsumptionStrategyUntil(this as any) as AnyEventConsumptionStrategyUntilIntersection;
+    validate('AnyEventConsumptionStrategyUntil', copy, workflow);
   }
 
   /**
-   * Normalizes the current instance of the EventConsumptionStrategy.
-   * Creates a copy of the EventConsumptionStrategy, invokes normalization hooks if available, and returns the normalized copy.
+   * Normalizes the current instance of the AnyEventConsumptionStrategyUntil.
+   * Creates a copy of the AnyEventConsumptionStrategyUntil, invokes normalization hooks if available, and returns the normalized copy.
    *
-   * @returns A normalized version of the EventConsumptionStrategy instance.
+   * @returns A normalized version of the AnyEventConsumptionStrategyUntil instance.
    */
-  normalize(): EventConsumptionStrategy & Specification.EventConsumptionStrategy {
-    const copy = new EventConsumptionStrategy(this as any) as EventConsumptionStrategyIntersection;
-    return getLifecycleHooks('EventConsumptionStrategy')?.normalize?.(copy) || copy;
+  normalize(): AnyEventConsumptionStrategyUntil & Specification.AnyEventConsumptionStrategyUntil {
+    const copy = new AnyEventConsumptionStrategyUntil(this as any) as AnyEventConsumptionStrategyUntilIntersection;
+    return getLifecycleHooks('AnyEventConsumptionStrategyUntil')?.normalize?.(copy) || copy;
   }
 }
 
-export const _EventConsumptionStrategy = EventConsumptionStrategy as EventConsumptionStrategyConstructor;
+export const _AnyEventConsumptionStrategyUntil =
+  AnyEventConsumptionStrategyUntil as AnyEventConsumptionStrategyUntilConstructor;

@@ -1,5 +1,5 @@
 {
-  "$id": "https://serverlessworkflow.io/schemas/1.0.0-alpha5/workflow.json",
+  "$id": "https://serverlessworkflow.io/schemas/1.0.0/workflow.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Serverless Workflow DSL - Workflow Schema.",
   "type": "object",
@@ -158,6 +158,7 @@
       "description": "Defines the task(s) the workflow must perform."
     },
     "timeout": {
+      "title": "DoTimeout",
       "oneOf": [
         {
           "$ref": "#/$defs/timeout",
@@ -246,6 +247,7 @@
           "description": "Export task output to context."
         },
         "timeout": {
+          "title": "TaskTimeout",
           "oneOf": [
             {
               "$ref": "#/$defs/timeout",
@@ -341,43 +343,95 @@
               "properties": {
                 "document": {
                   "$ref": "#/$defs/externalResource",
-                  "title": "WithAsyncAPIDocument",
+                  "title": "AsyncAPIDocument",
                   "description": "The document that defines the AsyncAPI operation to call."
                 },
-                "operationRef": {
+                "channel": {
                   "type": "string",
-                  "title": "WithAsyncAPIOperation",
+                  "title": "With",
+                  "description": "The name of the channel on which to perform the operation. Used only in case the referenced document uses AsyncAPI v2.6.0."
+                },
+                "operation": {
+                  "type": "string",
+                  "title": "AsyncAPIOperation",
                   "description": "A reference to the AsyncAPI operation to call."
                 },
                 "server": {
+                  "$ref": "#/$defs/asyncApiServer",
+                  "title": "AsyncAPIServer",
+                  "description": "An object used to configure to the server to call the specified AsyncAPI operation on."
+                },
+                "protocol": {
                   "type": "string",
-                  "title": "WithAsyncAPIServer",
-                  "description": "A a reference to the server to call the specified AsyncAPI operation on. If not set, default to the first server matching the operation's channel."
+                  "title": "AsyncApiProtocol",
+                  "description": "The protocol to use to select the target server.",
+                  "enum": [
+                    "amqp",
+                    "amqp1",
+                    "anypointmq",
+                    "googlepubsub",
+                    "http",
+                    "ibmmq",
+                    "jms",
+                    "kafka",
+                    "mercure",
+                    "mqtt",
+                    "mqtt5",
+                    "nats",
+                    "pulsar",
+                    "redis",
+                    "sns",
+                    "solace",
+                    "sqs",
+                    "stomp",
+                    "ws"
+                  ]
                 },
                 "message": {
-                  "type": "string",
-                  "title": "WithAsyncAPIMessage",
-                  "description": "The name of the message to use. If not set, defaults to the first message defined by the operation."
+                  "$ref": "#/$defs/asyncApiOutboundMessage",
+                  "title": "AsyncApiMessage",
+                  "description": "An object used to configure the message to publish using the target operation."
                 },
-                "binding": {
-                  "type": "string",
-                  "title": "WithAsyncAPIBinding",
-                  "description": "The name of the binding to use. If not set, defaults to the first binding defined by the operation."
-                },
-                "payload": {
-                  "type": "object",
-                  "title": "WithAsyncAPIPayload",
-                  "description": "The payload to call the AsyncAPI operation with, if any."
+                "subscription": {
+                  "$ref": "#/$defs/asyncApiSubscription",
+                  "title": "AsyncApiSubscription",
+                  "description": "An object used to configure the subscription to messages consumed using the target operation."
                 },
                 "authentication": {
                   "$ref": "#/$defs/referenceableAuthenticationPolicy",
-                  "title": "WithAsyncAPIAuthentication",
+                  "title": "AsyncAPIAuthentication",
                   "description": "The authentication policy, if any, to use when calling the AsyncAPI operation."
                 }
               },
-              "required": [
-                "document",
-                "operationRef"
+              "oneOf": [
+                {
+                  "required": [
+                    "document",
+                    "operation",
+                    "message"
+                  ]
+                },
+                {
+                  "required": [
+                    "document",
+                    "operation",
+                    "subscription"
+                  ]
+                },
+                {
+                  "required": [
+                    "document",
+                    "channel",
+                    "message"
+                  ]
+                },
+                {
+                  "required": [
+                    "document",
+                    "channel",
+                    "subscription"
+                  ]
+                }
               ],
               "unevaluatedProperties": false
             }
@@ -485,38 +539,43 @@
               "properties": {
                 "method": {
                   "type": "string",
-                  "title": "WithHTTPMethod",
+                  "title": "HTTPMethod",
                   "description": "The HTTP method of the HTTP request to perform."
                 },
                 "endpoint": {
-                  "title": "WithHTTPEndpoint",
+                  "title": "HTTPEndpoint",
                   "description": "The HTTP endpoint to send the request to.",
                   "$ref": "#/$defs/endpoint"
                 },
                 "headers": {
                   "type": "object",
-                  "title": "WithHTTPHeaders",
+                  "title": "HTTPHeaders",
                   "description": "A name/value mapping of the headers, if any, of the HTTP request to perform."
                 },
                 "body": {
-                  "title": "WithHTTPBody",
+                  "title": "HTTPBody",
                   "description": "The body, if any, of the HTTP request to perform."
                 },
                 "query": {
                   "type": "object",
-                  "title": "WithHTTPQuery",
+                  "title": "HTTPQuery",
                   "description": "A name/value mapping of the query parameters, if any, of the HTTP request to perform.",
                   "additionalProperties": true
                 },
                 "output": {
                   "type": "string",
-                  "title": "WithHTTPOutput",
+                  "title": "HTTPOutput",
                   "description": "The http call output format. Defaults to 'content'.",
                   "enum": [
                     "raw",
                     "content",
                     "response"
                   ]
+                },
+                "redirect": {
+                  "type": "boolean",
+                  "title": "HttpRedirect",
+                  "description": "Specifies whether redirection status codes (`300–399`) should be treated as errors."
                 }
               },
               "required": [
@@ -577,6 +636,11 @@
                   ],
                   "title": "WithOpenAPIOutput",
                   "description": "The http call output format. Defaults to 'content'."
+                },
+                "redirect": {
+                  "type": "boolean",
+                  "title": "HttpRedirect",
+                  "description": "Specifies whether redirection status codes (`300–399`) should be treated as errors."
                 }
               },
               "required": [
@@ -779,11 +843,27 @@
               "$ref": "#/$defs/eventConsumptionStrategy",
               "title": "ListenTo",
               "description": "Defines the event(s) to listen to."
+            },
+            "read": {
+              "type": "string",
+              "enum": [
+                "data",
+                "envelope",
+                "raw"
+              ],
+              "default": "data",
+              "title": "ListenAndReadAs",
+              "description": "Specifies how events are read during the listen operation."
             }
           },
           "required": [
             "to"
           ]
+        },
+        "foreach": {
+          "$ref": "#/$defs/subscriptionIterator",
+          "title": "ListenIterator",
+          "description": "Configures the iterator, if any, for processing consumed event(s)."
         }
       }
     },
@@ -804,6 +884,7 @@
           "unevaluatedProperties": false,
           "properties": {
             "error": {
+              "title": "RaiseTaskError",
               "oneOf": [
                 {
                   "$ref": "#/$defs/error",
@@ -845,6 +926,19 @@
               "default": true,
               "title": "AwaitProcessCompletion",
               "description": "Whether to await the process completion before continuing."
+            },
+            "return": {
+              "type": "string",
+              "title": "ProcessReturnType",
+              "description": "Configures the output of the process.",
+              "enum": [
+                "stdout",
+                "stderr",
+                "code",
+                "all",
+                "none"
+              ],
+              "default": "stdout"
             }
           },
           "oneOf": [
@@ -862,6 +956,11 @@
                       "type": "string",
                       "title": "ContainerImage",
                       "description": "The name of the container image to run."
+                    },
+                    "name": {
+                      "type": "string",
+                      "title": "ContainerName",
+                      "description": "A runtime expression, if any, used to give specific name to the container."
                     },
                     "command": {
                       "type": "string",
@@ -882,6 +981,11 @@
                       "type": "object",
                       "title": "ContainerEnvironment",
                       "description": "A key/value mapping of the environment variables, if any, to use when running the configured process."
+                    },
+                    "lifetime": {
+                      "$ref": "#/$defs/containerLifetime",
+                      "title": "ContainerLifetime",
+                      "description": "An object, if any, used to configure the container's lifetime"
                     }
                   },
                   "required": [
@@ -1134,7 +1238,12 @@
             "errors": {
               "type": "object",
               "title": "CatchErrors",
-              "description": "The configuration of a concept used to catch errors."
+              "properties": {
+                "with": {
+                  "$ref": "#/$defs/errorFilter"
+                }
+              },
+              "description": "static error filter"
             },
             "as": {
               "type": "string",
@@ -1144,12 +1253,12 @@
             "when": {
               "type": "string",
               "title": "CatchWhen",
-              "description": "A runtime expression used to determine whether or not to catch the filtered error."
+              "description": "A runtime expression used to determine whether to catch the filtered error."
             },
             "exceptWhen": {
               "type": "string",
               "title": "CatchExceptWhen",
-              "description": "A runtime expression used to determine whether or not to catch the filtered error."
+              "description": "A runtime expression used to determine whether not to catch the filtered error."
             },
             "retry": {
               "oneOf": [
@@ -1196,6 +1305,7 @@
       "description": "Represents different transition options for a workflow.",
       "anyOf": [
         {
+          "title": "FlowDirectiveEnum",
           "type": "string",
           "enum": [
             "continue",
@@ -1714,6 +1824,34 @@
         "status"
       ]
     },
+    "errorFilter": {
+      "type": "object",
+      "title": "ErrorFilter",
+      "description": "Error filtering base on static values. For error filtering on dynamic values, use catch.when property",
+      "minProperties": 1,
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "if present, means this value should be used for filtering"
+        },
+        "status": {
+          "type": "integer",
+          "description": "if present, means this value should be used for filtering"
+        },
+        "instance": {
+          "type": "string",
+          "description": "if present, means this value should be used for filtering"
+        },
+        "title": {
+          "type": "string",
+          "description": "if present, means this value should be used for filtering"
+        },
+        "details": {
+          "type": "string",
+          "description": "if present, means this value should be used for filtering"
+        }
+      }
+    },
     "uriTemplate": {
       "title": "UriTemplate",
       "anyOf": [
@@ -1840,6 +1978,16 @@
               "description": "An expression based event data schema."
             }
           ]
+        },
+        "data": {
+          "title": "EventData",
+          "description": "The event's payload data",
+          "anyOf": [
+            {
+              "$ref": "#/$defs/runtimeExpression"
+            },
+            {}
+          ]
         }
       },
       "additionalProperties": true
@@ -1876,6 +2024,29 @@
               "items": {
                 "$ref": "#/$defs/eventFilter"
               }
+            },
+            "until": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "title": "AnyEventUntilCondition",
+                  "description": "A runtime expression condition evaluated after consuming an event and which determines whether or not to continue listening."
+                },
+                {
+                  "allOf": [
+                    {
+                      "$ref": "#/$defs/eventConsumptionStrategy",
+                      "description": "The strategy that defines the event(s) to consume to stop listening."
+                    },
+                    {
+                      "properties": {
+                        "until": false
+                      }
+                    }
+                  ],
+                  "title": "AnyEventUntilConsumed"
+                }
+              ]
             }
           },
           "required": [
@@ -2256,13 +2427,13 @@
     "catalog": {
       "type": "object",
       "title": "Catalog",
-      "description": "The definition of a resource catalog",
+      "description": "The definition of a resource catalog.",
       "unevaluatedProperties": false,
       "properties": {
         "endpoint": {
           "$ref": "#/$defs/endpoint",
           "title": "CatalogEndpoint",
-          "description": "The root URL where the catalog is hosted"
+          "description": "The root URL where the catalog is hosted."
         }
       },
       "required": [
@@ -2274,6 +2445,250 @@
       "title": "RuntimeExpression",
       "description": "A runtime expression.",
       "pattern": "^\\s*\\$\\{.+\\}\\s*$"
+    },
+    "containerLifetime": {
+      "type": "object",
+      "title": "ContainerLifetime",
+      "description": "The configuration of a container's lifetime",
+      "unevaluatedProperties": false,
+      "properties": {
+        "cleanup": {
+          "type": "string",
+          "title": "ContainerCleanupPolicy",
+          "description": "The container cleanup policy to use",
+          "enum": [
+            "always",
+            "never",
+            "eventually"
+          ],
+          "default": "never"
+        },
+        "after": {
+          "$ref": "#/$defs/duration",
+          "title": "ContainerLifetimeDuration",
+          "description": "The duration after which to cleanup the container, in case the cleanup policy has been set to 'eventually'"
+        }
+      },
+      "required": [
+        "cleanup"
+      ],
+      "if": {
+        "properties": {
+          "cleanup": {
+            "const": "eventually"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "after"
+        ]
+      },
+      "else": {
+        "not": {
+          "required": [
+            "after"
+          ]
+        }
+      }
+    },
+    "processResult": {
+      "type": "object",
+      "title": "ProcessResult",
+      "description": "The object returned by a run task when its return type has been set 'all'.",
+      "unevaluatedProperties": false,
+      "properties": {
+        "code": {
+          "type": "integer",
+          "title": "ProcessExitCode",
+          "description": "The process's exit code."
+        },
+        "stdout": {
+          "type": "string",
+          "title": "ProcessStandardOutput",
+          "description": "The content of the process's STDOUT."
+        },
+        "stderr": {
+          "type": "string",
+          "title": "ProcessStandardError",
+          "description": "The content of the process's STDERR."
+        }
+      },
+      "required": [
+        "code",
+        "stdout",
+        "stderr"
+      ]
+    },
+    "asyncApiServer": {
+      "type": "object",
+      "title": "AsyncApiServer",
+      "description": "Configures the target server of an AsyncAPI operation.",
+      "unevaluatedProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "AsyncApiServerName",
+          "description": "The target server's name."
+        },
+        "variables": {
+          "type": "object",
+          "title": "AsyncApiServerVariables",
+          "description": "The target server's variables, if any."
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "asyncApiOutboundMessage": {
+      "type": "object",
+      "title": "AsyncApiOutboundMessage",
+      "description": "An object used to configure the message to publish using the target operation.",
+      "unevaluatedProperties": false,
+      "properties": {
+        "payload": {
+          "type": "object",
+          "title": "AsyncApiMessagePayload",
+          "description": "The message's payload, if any.",
+          "additionalProperties": true
+        },
+        "headers": {
+          "type": "object",
+          "title": "AsyncApiMessageHeaders",
+          "description": "The message's headers, if any.",
+          "additionalProperties": true
+        }
+      }
+    },
+    "asyncApiInboundMessage": {
+      "type": "object",
+      "title": "AsyncApiInboundMessage",
+      "description": "Represents a message counsumed by an AsyncAPI subscription.",
+      "allOf": [
+        {
+          "$ref": "#/$defs/asyncApiOutboundMessage"
+        }
+      ],
+      "properties": {
+        "correlationId": {
+          "type": "string",
+          "title": "AsyncApiMessageCorrelationId",
+          "description": "The message's correlation id, if any."
+        }
+      }
+    },
+    "asyncApiSubscription": {
+      "type": "object",
+      "title": "AsyncApiSubscription",
+      "description": "An object used to configure the subscription to messages consumed using the target operation.",
+      "unevaluatedProperties": false,
+      "properties": {
+        "filter": {
+          "$ref": "#/$defs/runtimeExpression",
+          "title": "AsyncApiSubscriptionCorrelation",
+          "description": "A runtime expression, if any, used to filter consumed messages."
+        },
+        "consume": {
+          "$ref": "#/$defs/asyncApiMessageConsumptionPolicy",
+          "title": "AsyncApiMessageConsumptionPolicy",
+          "description": "An object used to configure the subscription's message consumption policy."
+        },
+        "foreach": {
+          "$ref": "#/$defs/subscriptionIterator",
+          "title": "AsyncApiSubscriptionIterator",
+          "description": "Configures the iterator, if any, for processing consumed messages(s)."
+        }
+      },
+      "required": [
+        "consume"
+      ]
+    },
+    "asyncApiMessageConsumptionPolicy": {
+      "type": "object",
+      "title": "AsyncApiMessageConsumptionPolicy",
+      "description": "An object used to configure a subscription's message consumption policy.",
+      "unevaluatedProperties": false,
+      "properties": {
+        "for": {
+          "$ref": "#/$defs/duration",
+          "title": "AsyncApiMessageConsumptionPolicyFor",
+          "description": "Specifies the time period over which messages will be consumed."
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "amount": {
+              "type": "integer",
+              "description": "The amount of (filtered) messages to consume before disposing of the subscription."
+            }
+          },
+          "title": "AsyncApiMessageConsumptionPolicyAmount",
+          "required": [
+            "amount"
+          ]
+        },
+        {
+          "properties": {
+            "while": {
+              "$ref": "#/$defs/runtimeExpression",
+              "description": "A runtime expression evaluated after each consumed (filtered) message to decide if message consumption should continue."
+            }
+          },
+          "title": "AsyncApiMessageConsumptionPolicyWhile",
+          "required": [
+            "while"
+          ]
+        },
+        {
+          "properties": {
+            "until": {
+              "$ref": "#/$defs/runtimeExpression",
+              "description": "A runtime expression evaluated before each consumed (filtered) message to decide if message consumption should continue."
+            }
+          },
+          "title": "AsyncApiMessageConsumptionPolicyUntil",
+          "required": [
+            "until"
+          ]
+        }
+      ]
+    },
+    "subscriptionIterator": {
+      "type": "object",
+      "title": "SubscriptionIterator",
+      "description": "Configures the iteration over each item (event or message) consumed by a subscription.",
+      "unevaluatedProperties": false,
+      "properties": {
+        "item": {
+          "type": "string",
+          "title": "SubscriptionIteratorItem",
+          "description": "The name of the variable used to store the current item being enumerated.",
+          "default": "item"
+        },
+        "at": {
+          "type": "string",
+          "title": "SubscriptionIteratorIndex",
+          "description": "The name of the variable used to store the index of the current item being enumerated.",
+          "default": "index"
+        },
+        "do": {
+          "$ref": "#/$defs/taskList",
+          "title": "SubscriptionIteratorTasks",
+          "description": "The tasks to perform for each consumed item."
+        },
+        "output": {
+          "$ref": "#/$defs/output",
+          "title": "SubscriptionIteratorOutput",
+          "description": "An object, if any, used to customize the item's output and to document its schema."
+        },
+        "export": {
+          "$ref": "#/$defs/export",
+          "title": "SubscriptionIteratorExport",
+          "description": "An object, if any, used to customize the content of the workflow context."
+        }
+      }
     }
   }
 }

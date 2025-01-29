@@ -20,7 +20,7 @@
  *
  *****************************************************************************************/
 
-import { _RaiseTaskRaiseError } from './raise-task-raise-error';
+import { _RaiseTaskError } from './raise-task-error';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
@@ -54,7 +54,7 @@ export class RaiseTaskConfiguration extends ObjectHydrator<Specification.RaiseTa
     super(model);
     const self = this as unknown as Specification.RaiseTaskConfiguration & object;
     if (isObject(model)) {
-      if (typeof model.error === 'object') self.error = new _RaiseTaskRaiseError(model.error);
+      if (typeof model.error === 'object') self.error = new _RaiseTaskError(model.error);
     }
     getLifecycleHooks('RaiseTaskConfiguration')?.constructor?.(this);
   }

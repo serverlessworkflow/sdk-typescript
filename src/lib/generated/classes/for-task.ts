@@ -23,7 +23,7 @@
 import { _Input } from './input';
 import { _Output } from './output';
 import { _Export } from './export';
-import { _TaskBaseTimeout } from './task-base-timeout';
+import { _TaskTimeout } from './task-timeout';
 import { _TaskMetadata } from './task-metadata';
 import { _ForTaskConfiguration } from './for-task-configuration';
 import { _TaskList } from './task-list';
@@ -63,7 +63,7 @@ export class ForTask extends _TaskBase {
       if (typeof model.input === 'object') self.input = new _Input(model.input);
       if (typeof model.output === 'object') self.output = new _Output(model.output);
       if (typeof model.export === 'object') self.export = new _Export(model.export);
-      if (typeof model.timeout === 'object') self.timeout = new _TaskBaseTimeout(model.timeout);
+      if (typeof model.timeout === 'object') self.timeout = new _TaskTimeout(model.timeout);
       if (typeof model.metadata === 'object') self.metadata = new _TaskMetadata(model.metadata);
       if (typeof model.for === 'object') self.for = new _ForTaskConfiguration(model.for);
       if (typeof model.do === 'object') self.do = new _TaskList(model.do);

@@ -20,14 +20,10 @@
  *
  *****************************************************************************************/
 
-import { _ExternalResource } from './external-resource';
-import { _WithAsyncAPIPayload } from './with-async-api-payload';
-import { _ReferenceableAuthenticationPolicy } from './referenceable-authentication-policy';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
-import { isObject } from '../../utils';
 
 /**
  * Represents the intersection between the AsyncApiArguments class and type
@@ -54,13 +50,7 @@ export class AsyncApiArguments extends ObjectHydrator<Specification.AsyncApiArgu
    */
   constructor(model?: Partial<Specification.AsyncApiArguments>) {
     super(model);
-    const self = this as unknown as Specification.AsyncApiArguments & object;
-    if (isObject(model)) {
-      if (typeof model.document === 'object') self.document = new _ExternalResource(model.document);
-      if (typeof model.payload === 'object') self.payload = new _WithAsyncAPIPayload(model.payload);
-      if (typeof model.authentication === 'object')
-        self.authentication = new _ReferenceableAuthenticationPolicy(model.authentication);
-    }
+
     getLifecycleHooks('AsyncApiArguments')?.constructor?.(this);
   }
 
