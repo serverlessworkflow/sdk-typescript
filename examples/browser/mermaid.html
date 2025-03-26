@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Serveless Workflow</title>
+  <base href="/">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+</head>
+
+<body>
+  <pre id="output"></pre>
+  <script src="../../dist/umd/index.umd.js"></script>
+  <pre class="mermaid" id="diagram-container"></div>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    (() => {
+      const { Classes, Specification, validate, convertToMermaidCode } = serverWorkflowSdk;
+      const workflowDefinition = {
+        document: {
+          dsl: '1.0.0',
+          name: 'using-plain-object',
+          version: '1.0.0',
+          namespace: 'default',
+        },
+        do: [
+          {
+            step1: {
+              set: {
+                variable: 'my first workflow',
+              },
+            },
+          },
+        ],
+      }/* as Specification.Workflow // <-- If you're using TypeScript*/;
+      try {
+        validate('Workflow', workflowDefinition);
+        const diagramContainerEl = document.getElementById('diagram-container');
+        const mermaidCode = convertToMermaidCode(workflowDefinition);
+        diagramContainerEl.innerText = mermaidCode;
+        document.getElementById('output').innerHTML = `--- YAML ---\n${Classes.Workflow.serialize(workflowDefinition)}\n\n--- JSON ---\n${Classes.Workflow.serialize(workflowDefinition, 'json')}\n\n--- MERMAID ---\n${mermaidCode}`;
+        mermaid.initialize({ startOnLoad: true });
+      }
+      catch (ex) {
+        console.error('Invalid workflow', ex);
+      }
+    })();
+  </script>
+</body>
+
+</html>
