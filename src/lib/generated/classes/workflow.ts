@@ -33,6 +33,8 @@ import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
 import { isObject } from '../../utils';
 import * as yaml from 'js-yaml';
+import { buildGraph, Graph } from '../../graph-builder';
+import { convertToMermaidCode } from '../../mermaid-converter';
 
 /**
  * Represents the intersection between the Workflow class and type
@@ -112,6 +114,14 @@ export class Workflow extends ObjectHydrator<Specification.Workflow> {
     return yaml.dump(normalized);
   }
 
+  static toGraph(model: Partial<WorkflowIntersection>): Graph {
+    return buildGraph(model as unknown as WorkflowIntersection);
+  }
+
+  static toMermaidCode(model: Partial<WorkflowIntersection>): string {
+    return convertToMermaidCode(model as unknown as WorkflowIntersection);
+  }
+
   /**
    * Serializes the workflow to YAML or JSON
    * @param format The format, 'yaml' or 'json', default is 'yaml'
@@ -120,6 +130,22 @@ export class Workflow extends ObjectHydrator<Specification.Workflow> {
    */
   serialize(format: 'yaml' | 'json' = 'yaml', normalize: boolean = true): string {
     return Workflow.serialize(this as unknown as WorkflowIntersection, format, normalize);
+  }
+
+  /**
+   * Creates a directed graph representation of the workflow
+   * @returns A directed graph of the workflow
+   */
+  toGraph(): Graph {
+    return Workflow.toGraph(this as unknown as WorkflowIntersection);
+  }
+
+  /**
+   * Generates the MermaidJS code corresponding to the workflow
+   * @returns The MermaidJS code
+   */
+  toMermaidCode(): string {
+    return Workflow.toMermaidCode(this as unknown as WorkflowIntersection);
   }
 }
 
@@ -139,4 +165,18 @@ export const _Workflow = Workflow as WorkflowConstructor & {
    * @returns A string representation of the workflow
    */
   serialize(workflow: Partial<WorkflowIntersection>, format?: 'yaml' | 'json', normalize?: boolean): string;
+
+  /**
+   * Creates a directed graph representation of the provided workflow
+   * @param workflow The workflow to convert
+   * @returns A directed graph of the provided workflow
+   */
+  toGraph(workflow: Partial<WorkflowIntersection>): Graph;
+
+  /**
+   * Generates the MermaidJS code corresponding to the provided workflow
+   * @param workflow The workflow to convert
+   * @returns The MermaidJS code
+   */
+  toMermaidCode(workflow: Partial<WorkflowIntersection>): string;
 };

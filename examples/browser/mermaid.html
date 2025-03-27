@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Serveless Workflow</title>
+  <base href="/">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+</head>
+
+<body>
+  <p>YAML or JSON:</p>
+  <textarea id="input" rows="50" cols="100"></textarea>
+  <div id="diagram-container"></div>
+  <pre id="output"></pre>
+  <script src="../../dist/umd/index.umd.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    (async () => {
+      const { Classes, Specification, validate, convertToMermaidCode } = serverWorkflowSdk;
+      const workflowDefinition = {
+  "document": {
+    "dsl": "1.0.0",
+    "namespace": "examples",
+    "name": "accumulate-room-readings",
+    "version": "0.1.0"
+  },
+  "do": [
+    {
+      "consumeReading": {
+        "listen": {
+          "to": {
+            "all": [
+              {
+                "with": {
+                  "source": "https://my.home.com/sensor",
+                  "type": "my.home.sensors.temperature"
+                },
+                "correlate": {
+                  "roomId": {
+                    "from": ".roomid"
+                  }
+                }
+              },
+              {
+                "with": {
+                  "source": "https://my.home.com/sensor",
+                  "type": "my.home.sensors.humidity"
+                },
+                "correlate": {
+                  "roomId": {
+                    "from": ".roomid"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "output": {
+          "as": ".data.reading"
+        }
+      }
+    },
+    {
+      "logReading": {
+        "for": {
+          "each": "reading",
+          "in": ".readings"
+        },
+        "do": [
+          {
+            "callOrderService": {
+              "call": "openapi",
+              "with": {
+                "document": {
+                  "endpoint": "http://myorg.io/ordersservices.json"
+                },
+                "operationId": "logreading"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "generateReport": {
+        "call": "openapi",
+        "with": {
+          "document": {
+            "endpoint": "http://myorg.io/ordersservices.json"
+          },
+          "operationId": "produceReport"
+        }
+      }
+    }
+  ],
+  "timeout": {
+    "after": {
+      "hours": 1
+    }
+  }
+}/* as Specification.Workflow // <-- If you're using TypeScript*/;
+      const diagramContainerEl = document.getElementById('diagram-container');  
+      const inputTextarea = document.getElementById('input');
+      const processWorkflow = async () => {
+        try {
+            const workflow = Classes.Workflow.deserialize(inputTextarea.value);
+            const mermaidCode = convertToMermaidCode(workflow);
+            document.getElementById('output').innerHTML = `--- YAML ---\n${Classes.Workflow.serialize(workflow)}\n\n--- JSON ---\n${Classes.Workflow.serialize(workflow, 'json')}\n\n--- MERMAID ---\n${mermaidCode}`;
+            mermaid.initialize({ startOnLoad: false });
+            const { svg, bindFunctions } = await mermaid.render('sw-diagram', mermaidCode);
+            diagramContainerEl.innerHTML = svg;
+          }
+          catch (ex) {
+            console.error('Invalid workflow', ex);
+          }
+      };
+      let debounceHandle;
+      inputTextarea.addEventListener('keyup', () => {
+        if (debounceHandle) {
+          clearTimeout(debounceHandle);
+        }
+        debounceHandle = setTimeout(processWorkflow, 300);
+      });
+      inputTextarea.value = JSON.stringify(workflowDefinition, null, 4);
+      await processWorkflow();
+    })();
+  </script>
+</body>
+
+</html>
