@@ -110,7 +110,7 @@ do:
     set:
       variable: 'my first workflow'
 `;
-const workflowDefinition = Classes.Workflow.deserialize(text);
+const workflow = Classes.Workflow.deserialize(text);
 ```
 
 #### Create a Workflow Definition by Casting an Object
@@ -120,7 +120,7 @@ You can type-cast an object to match the structure of a workflow definition:
 import { Classes, Specification, validate } from '@serverlessworkflow/sdk';
 
 // Simply cast an object:
-const workflowDefinition = {
+const workflow = {
   document: {
     dsl: '1.0.0',
     name: 'test',
@@ -140,9 +140,9 @@ const workflowDefinition = {
 
 // Validate it
 try {
-  validate('Workflow', workflowDefinition);
+  validate('Workflow', workflow);
   // Serialize it
-  const definitionTxt = Classes.Workflow.serialize(workflowDefinition);
+  const definitionTxt = Classes.Workflow.serialize(workflow);
 }
 catch (ex) {
   // Invalid workflow definition
@@ -156,7 +156,7 @@ You can create a workflow definition by calling a constructor:
 import { Classes, validate } from '@serverlessworkflow/sdk';
 
 // Simply use the constructor
-const workflowDefinition = new Classes.Workflow({
+const workflow = new Classes.Workflow({
   document: {
     dsl: '1.0.0',
     name: 'test',
@@ -173,7 +173,7 @@ const workflowDefinition = new Classes.Workflow({
     },
   */],
 });
-workflowDefinition.do.push({
+workflow.do.push({
   step1: new Classes.SetTask({
     set: {
       variable: 'my first workflow',
@@ -183,9 +183,9 @@ workflowDefinition.do.push({
 
 // Validate it
 try {
-  workflowDefinition.validate();
+  workflow.validate();
   // Serialize it
-  const definitionTxt = workflowDefinition.serialize();
+  const definitionTxt = workflow.serialize();
 }
 catch (ex) {
   // Invalid workflow definition
@@ -198,7 +198,7 @@ You can use the fluent API to build a validated and normalized workflow definiti
 ```typescript
 import { documentBuilder, setTaskBuilder, taskListBuilder, workflowBuilder } from '@serverlessworkflow/sdk';
 
-const workflowDefinition = workflowBuilder(/*workflowDefinitionObject*/)
+const workflow = workflowBuilder(/*workflowObject*/)
   .document(
     documentBuilder()
     .dsl('1.0.0')
@@ -230,12 +230,12 @@ You can serialize a workflow definition either by using its `serialize` method i
 ```typescript
 import { Classes } from '@serverlessworkflow/sdk';
 
-// const workflowDefinition = <Your preferred method>;
-if (workflowDefinition instanceof Classes.Workflow) {
-  const yaml = workflowDefinition.serialize(/*'yaml' | 'json' */);
+// const workflow = <Your preferred method>;
+if (workflow instanceof Classes.Workflow) {
+  const yaml = workflow.serialize(/*'yaml' | 'json' */);
 }
 else {
-  const json = Classes.Workflow.serialize(workflowDefinition, 'json');
+  const json = Classes.Workflow.serialize(workflow, 'json');
 }
 ```
 > [!NOTE]
@@ -247,13 +247,13 @@ Validation can be achieved in two ways: via the `validate` function or the insta
 ```typescript
 import { Classes, validate } from '@serverlessworkflow/sdk';
 
-const workflowDefinition = /* <Your preferred method> */;
+const workflow = /* <Your preferred method> */;
 try {
-  if (workflowDefinition instanceof Classes.Workflow) {
-    workflowDefinition.validate();
+  if (workflow instanceof Classes.Workflow) {
+    workflow.validate();
   }
   else {
-    validate('Workflow', workflowDefinition);
+    validate('Workflow', workflow);
   }
 }
 catch (ex) {
@@ -262,12 +262,14 @@ catch (ex) {
 ```
 
 #### Generate a directed graph
-A [directed graph](https://en.wikipedia.org/wiki/Directed_graph) of a workflow can be generated using the `buildGraph` function:
+A [directed graph](https://en.wikipedia.org/wiki/Directed_graph) of a workflow can be generated using the `buildGraph` function, or alternatives:
+- Workflow instance `.toGraph();`
+- Static `Classes.Workflow.toGraph(workflow)`
 
 ```typescript
 import { buildGraph } from '@serverlessworkflow/sdk';
 
-const workflowDefinition = {
+const workflow = {
   document: {
     dsl: '1.0.0',
     name: 'using-plain-object',
@@ -284,7 +286,9 @@ const workflowDefinition = {
     },
   ],
 };
-const graph = buildGraph(workflowDefinition);
+const graph = buildGraph(workflow);
+// const workflow = new Classes.Workflow({...}); const graph = workflow.toGraph();
+// const graph = Classes.Workflow.toGraph(workflow);
 /*{
   id: 'root',
   type: 'root',
@@ -298,12 +302,14 @@ const graph = buildGraph(workflowDefinition);
 ```
 
 #### Generate a MermaidJS flowchart
-Generating a [MermaidJS](https://mermaid.js.org/) flowchart can be achieved in two ways: using the `convertToMermaidCode` or the legacy `MermaidDiagram` class.
+Generating a [MermaidJS](https://mermaid.js.org/) flowchart can be achieved in two ways: using the `convertToMermaidCode`, the legacy `MermaidDiagram` class, or alternatives:
+- Workflow instance `.toMermaidCode();`
+- Static `Classes.Workflow.toMermaidCode(workflow)`
 
 ```typescript
 import { convertToMermaidCode, MermaidDiagram } from '@serverlessworkflow/sdk';
 
-const workflowDefinition = {
+const workflow = {
   document: {
     dsl: '1.0.0',
     name: 'using-plain-object',
@@ -320,7 +326,10 @@ const workflowDefinition = {
     },
   ],
 };
-const mermaidCode = convertToMermaidCode(workflowDefinition) /* or new MermaidDiagram(workflowDefinition).sourceCode() */;
+const mermaidCode = convertToMermaidCode(workflow) /* or  */;
+// const mermaidCode = new MermaidDiagram(workflow).sourceCode();
+// const workflow = new Classes.Workflow({...}); const mermaidCode = workflow.toMermaidCode();
+// const mermaidCode = Classes.Workflow.toMermaidCode(workflow);
 /*
 flowchart TD
     root-entry-node(( ))
