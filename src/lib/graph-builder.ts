@@ -19,7 +19,10 @@ import {
 const entrySuffix = '-entry-node';
 const exitSuffix = '-exit-node';
 
+const rooId = 'root';
+
 const doReference = '/do';
+const forReference = '/for';
 const catchReference = '/catch';
 const branchReference = '/fork/branches';
 const tryReference = '/try';
@@ -76,8 +79,6 @@ export type GraphEdge = GraphElement & {
   sourceId: string;
   /** The unique identifier of the node where the edge terminates. */
   destinationId: string;
-  /** Indicates whether to ignore rendering an end arrow. */
-  ignoreEndArrow?: boolean;
 };
 
 /**
@@ -100,9 +101,8 @@ export type Graph = GraphNode & {
  * Context information used when processing tasks in a workflow graph.
  */
 type TaskContext = {
-  workflow: Workflow;
   graph: Graph;
-  subgraph?: Graph;
+  reference: string;
   taskList: Map<string, Task>;
   taskName?: string | null;
   taskReference: string;
@@ -111,13 +111,15 @@ type TaskContext = {
 /**
  * Identity information for a transition between tasks.
  */
-type TransitionIdentity = {
-  /** Name of the transition. */
+type TransitionInfo = {
+  /** Name of the task to transition to. */
   name: string;
   /** Index position in the task list. */
   index: number;
   /** Optional reference to the associated task. */
   task?: Task;
+  /** Optional label of the transition */
+  label?: string;
 };
 
 /**
@@ -154,19 +156,19 @@ function mapTasks(tasksList: TaskItem[] | null | undefined): Map<string, Task> {
  */
 function initGraph(
   type: GraphNodeType,
-  id: string = 'root',
+  id: string = rooId,
   label: string | null | undefined = undefined,
   parent: Graph | null | undefined = undefined,
 ): Graph {
   const entryNode: GraphNode = {
-    type: id === 'root' ? GraphNodeType.Start : GraphNodeType.Entry,
+    type: id === rooId ? GraphNodeType.Start : GraphNodeType.Entry,
     id: `${id}${entrySuffix}`,
   };
   const exitNode: GraphNode = {
-    type: id === 'root' ? GraphNodeType.End : GraphNodeType.Exit,
+    type: id === rooId ? GraphNodeType.End : GraphNodeType.Exit,
     id: `${id}${exitSuffix}`,
   };
-  return {
+  const graph = {
     id,
     label,
     type,
@@ -176,6 +178,8 @@ function initGraph(
     nodes: [entryNode, exitNode],
     edges: [],
   };
+  if (parent) parent.nodes.push(graph);
+  return graph;
 }
 
 /**
@@ -187,8 +191,8 @@ function initGraph(
 export function buildGraph(workflow: Workflow): Graph {
   const graph = initGraph(GraphNodeType.Root);
   buildTransitions(graph.entryNode, {
-    workflow,
     graph,
+    reference: doReference,
     taskList: mapTasks(workflow.do),
     taskReference: doReference,
   });
@@ -206,7 +210,7 @@ function getNextTask(
   tasksList: Map<string, Task>,
   taskName: string | null | undefined = undefined,
   transition: string | null | undefined = undefined,
-): TransitionIdentity {
+): TransitionInfo {
   if (!tasksList?.size) throw new Error('The task list cannot be empty. No tasks list to get the next task from.');
   const currentTask: Task | undefined = tasksList.get(taskName || '');
   transition = transition || currentTask?.then || '';
@@ -237,15 +241,38 @@ function getNextTask(
 }
 
 /**
+ * Builds the provided transition from the source node
+ * @param sourceNode The node to build the transition from
+ * @param transition The transition to follow
+ * @param context The context in which the transition is built
+ */
+function buildTransition(sourceNode: GraphNode | Graph, transition: TransitionInfo, context: TaskContext) {
+  const exitAnchor = (sourceNode as Graph).exitNode || sourceNode;
+  if (transition.index != -1) {
+    const destinationNode = buildTaskNode({
+      ...context,
+      taskReference: `${context.reference}/${transition.index}/${transition.name}`,
+      taskName: transition.name,
+    });
+    buildEdge(context.graph, exitAnchor, (destinationNode as Graph).entryNode || destinationNode, transition.label);
+  } else if (transition.name === FlowDirective.Exit) {
+    buildEdge(context.graph, exitAnchor, context.graph.exitNode, transition.label);
+  } else if (transition.name === FlowDirective.End) {
+    buildEdge(context.graph, exitAnchor, context.graph.exitNode, transition.label);
+  } else throw new Error('Invalid transition');
+}
+
+/**
  * Builds all the possible transitions from the provided node in the provided context
- * @param node The node to build the transitions for
+ * @param sourceNode The node to build the transitions from
  * @param context The context in which the transitions are built
  */
-function buildTransitions(node: GraphNode | Graph, context: TaskContext) {
-  const transitions: TransitionIdentity[] = [];
+function buildTransitions(sourceNode: GraphNode | Graph, context: TaskContext) {
+  const transitions: TransitionInfo[] = [];
   let nextTransition = getNextTask(context.taskList, context.taskName);
   transitions.push(nextTransition);
   while (nextTransition?.task?.if) {
+    nextTransition.label = nextTransition?.task?.if;
     nextTransition = getNextTask(context.taskList, nextTransition.name, FlowDirective.Continue);
     transitions.push(nextTransition);
   }
@@ -256,21 +283,7 @@ function buildTransitions(node: GraphNode | Graph, context: TaskContext) {
           (t) => t.index === transition.index && t.name === transition.name && t.task === transition.task,
         ) === index,
     )
-    .forEach((transition) => {
-      const exitAnchor = (node as Graph).exitNode || node;
-      if (transition.index != -1) {
-        const destinationNode = buildTaskNode({
-          ...context,
-          taskReference: `${context.taskReference}/${transition.index}/${transition.name}`,
-          taskName: transition.name,
-        });
-        buildEdge(context.subgraph || context.graph, exitAnchor, (node as Graph).entryNode || destinationNode);
-      } else if (transition.name === FlowDirective.Exit) {
-        buildEdge(context.subgraph || context.graph, exitAnchor, (context.subgraph || context.graph).exitNode);
-      } else if (transition.name === FlowDirective.End) {
-        buildEdge(context.subgraph || context.graph, exitAnchor, context.graph.exitNode);
-      } else throw new Error('Invalid transition');
-    });
+    .forEach((transition) => buildTransition(sourceNode, transition, context));
 }
 
 /**
@@ -308,7 +321,7 @@ function buildGenericTaskNode(type: GraphNodeType, context: TaskContext): GraphN
     id: context.taskReference,
     label: context.taskName,
   };
-  (context.subgraph || context.graph).nodes.push(node);
+  context.graph.nodes.push(node);
   buildTransitions(node, context);
   return node;
 }
@@ -332,16 +345,12 @@ function buildCallTaskNode(task: CallTask, context: TaskContext): GraphNode {
  * @returns A graph for the provided task
  */
 function buildDoTaskNode(task: DoTask, context: TaskContext): Graph {
-  const subgraph: Graph = initGraph(
-    GraphNodeType.Do,
-    context.taskReference,
-    context.taskName,
-    context.subgraph || context.graph,
-  );
+  const subgraph: Graph = initGraph(GraphNodeType.Do, context.taskReference, context.taskName, context.graph);
   const doContext: TaskContext = {
     ...context,
+    graph: subgraph,
+    reference: context.taskReference + doReference,
     taskList: mapTasks(task.do),
-    taskReference: context.taskReference,
     taskName: null,
   };
   buildTransitions(subgraph.entryNode, doContext);
@@ -368,11 +377,12 @@ function buildEmitTaskNode(task: EmitTask, context: TaskContext): GraphNode {
  * @returns A graph for the provided task
  */
 function buildForTaskNode(task: ForTask, context: TaskContext): Graph {
-  const subgraph: Graph = initGraph(GraphNodeType.For, context.taskReference, context.taskName);
+  const subgraph: Graph = initGraph(GraphNodeType.For, context.taskReference, context.taskName, context.graph);
   const forContext: TaskContext = {
     ...context,
+    graph: subgraph,
+    reference: subgraph.id + forReference + doReference,
     taskList: mapTasks(task.do),
-    taskReference: subgraph.id,
     taskName: null,
   };
   buildTransitions(subgraph.entryNode, forContext);
@@ -387,15 +397,17 @@ function buildForTaskNode(task: ForTask, context: TaskContext): Graph {
  * @returns A graph for the provided task
  */
 function buildForkTaskNode(task: ForkTask, context: TaskContext): Graph {
-  const subgraph: Graph = initGraph(GraphNodeType.Fork, context.taskReference, context.taskName);
+  const subgraph: Graph = initGraph(GraphNodeType.Fork, context.taskReference, context.taskName, context.graph);
   for (let i = 0, c = task.fork?.branches.length || 0; i < c; i++) {
     const branchItem = task.fork?.branches[i];
     if (!branchItem) continue;
     const [branchName] = Object.entries(branchItem)[0];
     const branchContext: TaskContext = {
       ...context,
+      graph: subgraph,
+      reference: `${context.taskReference}${branchReference}`,
       taskList: mapTasks([branchItem]),
-      taskReference: `${context.taskReference}${branchReference}/${i}/`,
+      taskReference: `${context.taskReference}${branchReference}/${i}/${branchName}`,
       taskName: branchName,
     };
     const branchNode = buildTaskNode(branchContext);
@@ -461,30 +473,14 @@ function buildSetTaskNode(task: SetTask, context: TaskContext): GraphNode {
  * @returns A graph node for the provided task
  */
 function buildSwitchTaskNode(task: SwitchTask, context: TaskContext): GraphNode {
-  const node: GraphNode = {
-    type: GraphNodeType.Switch,
-    id: context.taskReference,
-    label: context.taskName,
-  };
-  (context.subgraph || context.graph).nodes.push(node);
+  const node: GraphNode = buildGenericTaskNode(GraphNodeType.Switch, context);
   let hasDefaultCase = false;
   task.switch?.forEach((switchItem) => {
-    const [, switchCase] = Object.entries(switchItem)[0];
+    const [caseName, switchCase] = Object.entries(switchItem)[0];
     if (!switchCase.when) hasDefaultCase = true;
     const transition = getNextTask(context.taskList, context.taskName, switchCase.then);
-    const exitAnchor = (node as Graph).exitNode || node;
-    if (transition.index != -1) {
-      const destinationNode = buildTaskNode({
-        ...context,
-        taskReference: `${context.taskReference}/${transition.index}/${transition.name}`,
-        taskName: transition.name,
-      });
-      buildEdge(context.subgraph || context.graph, exitAnchor, (node as Graph).entryNode || destinationNode);
-    } else if (transition.name === FlowDirective.Exit) {
-      buildEdge(context.subgraph || context.graph, exitAnchor, (context.subgraph || context.graph).exitNode);
-    } else if (transition.name === FlowDirective.End) {
-      buildEdge(context.subgraph || context.graph, exitAnchor, context.graph.exitNode);
-    } else throw new Error('Invalid transition');
+    transition.label = caseName;
+    buildTransition(node, transition, context);
   });
   if (!hasDefaultCase) {
     buildTransitions(node, context);
@@ -503,23 +499,23 @@ function buildTryCatchTaskNode(task: TryTask, context: TaskContext): Graph {
     GraphNodeType.TryCatch,
     context.taskReference,
     context.taskName,
-    context.subgraph || context.graph,
+    context.graph,
   );
   const trySubgraph: Graph = initGraph(
     GraphNodeType.Try,
     context.taskReference + tryReference,
     context.taskName + ' (try)',
-    context.subgraph || context.graph,
+    containerSubgraph,
   );
-  containerSubgraph.nodes.push(trySubgraph);
   buildEdge(containerSubgraph, containerSubgraph.entryNode, trySubgraph.entryNode);
   const tryContext: TaskContext = {
     ...context,
+    graph: trySubgraph,
+    reference: trySubgraph.id,
     taskList: mapTasks(task.try),
-    taskReference: trySubgraph.id,
     taskName: null,
   };
-  buildTransitions(trySubgraph, tryContext);
+  buildTransitions(trySubgraph.entryNode, tryContext);
   if (!task.catch?.do?.length) {
     const catchNode: GraphNode = {
       type: GraphNodeType.Catch,
@@ -532,21 +528,22 @@ function buildTryCatchTaskNode(task: TryTask, context: TaskContext): Graph {
   } else {
     const catchSubgraph: Graph = initGraph(
       GraphNodeType.Catch,
-      context.taskReference + catchReference,
+      context.taskReference + catchReference + doReference,
       context.taskName + ' (catch)',
-      context.subgraph || context.graph,
+      containerSubgraph,
     );
-    containerSubgraph.nodes.push(catchSubgraph);
     buildEdge(containerSubgraph, trySubgraph.exitNode, catchSubgraph.entryNode);
     const catchContext: TaskContext = {
       ...context,
+      graph: catchSubgraph,
+      reference: catchSubgraph.id,
       taskList: mapTasks(task.catch.do),
-      taskReference: catchSubgraph.id,
       taskName: null,
     };
-    buildTransitions(catchSubgraph, catchContext);
+    buildTransitions(catchSubgraph.entryNode, catchContext);
     buildEdge(containerSubgraph, catchSubgraph.exitNode, containerSubgraph.exitNode);
   }
+  buildTransitions(containerSubgraph, context);
   return containerSubgraph;
 }
 
@@ -579,10 +576,9 @@ function buildEdge(graph: Graph, source: GraphNode, destination: GraphNode, labe
   }
   edge = {
     label,
-    id: `${source.id}-${destination.id}-${label}`,
+    id: `${source.id}-${destination.id}${label ? `-${label}` : ''}`,
     sourceId: source.id,
     destinationId: destination.id,
-    ignoreEndArrow: destination.id.endsWith(entrySuffix) || destination.id.endsWith(exitSuffix),
   };
   graph.edges.push(edge);
 }
