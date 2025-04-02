@@ -696,6 +696,8 @@ const flattenNodes = (node: Graph | GraphNode): Array<Graph | GraphNode> => [
     ...node,
     entryNode: undefined,
     exitNode: undefined,
+    nodes: undefined,
+    edges: undefined,
   },
   ...((node as Graph).nodes || [])
     .filter((n) => n !== (node as Graph).entryNode && n !== (node as Graph).exitNode)
