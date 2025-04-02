@@ -79,7 +79,7 @@ export function convertToMermaidCode(workflow: Workflow): string {
     convertGraphToCode(graph) +
     `
 
-classDef hidden display: none;`
+classDef hidden width: 1px, height: 0px, opacity: 0;` // should be "classDef hidden display: none;" but it can induce a Mermaid bug - https://github.com/mermaid-js/mermaid/issues/6452
   );
 }
 

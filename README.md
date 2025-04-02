@@ -340,7 +340,7 @@ flowchart TD
     root-entry-node --> /do/0/step1
 
 
-classDef hidden display: none;
+classDef hidden width: 1px, height: 0px, opacity: 0;
 */
 ```
 
@@ -353,7 +353,7 @@ flowchart TD
     root-entry-node --> /do/0/step1
 
 
-classDef hidden display: none;
+classDef hidden width: 1px, height: 0px, opacity: 0;
 ```
 
 You can refer to the mermaid browser example for a live demo.

@@ -24,7 +24,7 @@ do:
     root-entry-node --> /do/0/initialize
 
 
-classDef hidden display: none;`.trim(),
+classDef hidden width: 1px, height: 0px, opacity: 0;`.trim(),
     );
   });
 
@@ -49,7 +49,7 @@ do:
     root-entry-node --> /do/0/initialize
 
 
-classDef hidden display: none;`.trim(),
+classDef hidden width: 1px, height: 0px, opacity: 0;`.trim(),
     );
   });
 
@@ -81,7 +81,7 @@ classDef hidden display: none;`.trim(),
     root-entry-node --> /do/0/initialize
 
 
-classDef hidden display: none;`.trim(),
+classDef hidden width: 1px, height: 0px, opacity: 0;`.trim(),
     );
   });
 
@@ -106,7 +106,7 @@ do:
     root-entry-node --> /do/0/initialize
 
 
-classDef hidden display: none;`.trim(),
+classDef hidden width: 1px, height: 0px, opacity: 0;`.trim(),
     );
   });
 
@@ -133,7 +133,7 @@ do:
     root-entry-node --> root-exit-node
 
 
-classDef hidden display: none;`.trim(),
+classDef hidden width: 1px, height: 0px, opacity: 0;`.trim(),
     );
   });
 
@@ -176,7 +176,7 @@ do:
     root-entry-node --- /do/0/checkup-entry-node
 
 
-classDef hidden display: none;`.trim(),
+classDef hidden width: 1px, height: 0px, opacity: 0;`.trim(),
     );
   });
 });
