@@ -24,7 +24,7 @@ do:
     root-entry-node --> /do/0/initialize
 
 
-classDef hidden width: 1px, height: 0px, opacity: 0;`.trim(),
+classDef hidden width: 1px, height: 1px;`.trim(),
     );
   });
 
@@ -49,7 +49,7 @@ do:
     root-entry-node --> /do/0/initialize
 
 
-classDef hidden width: 1px, height: 0px, opacity: 0;`.trim(),
+classDef hidden width: 1px, height: 1px;`.trim(),
     );
   });
 
@@ -81,7 +81,7 @@ classDef hidden width: 1px, height: 0px, opacity: 0;`.trim(),
     root-entry-node --> /do/0/initialize
 
 
-classDef hidden width: 1px, height: 0px, opacity: 0;`.trim(),
+classDef hidden width: 1px, height: 1px;`.trim(),
     );
   });
 
@@ -106,7 +106,7 @@ do:
     root-entry-node --> /do/0/initialize
 
 
-classDef hidden width: 1px, height: 0px, opacity: 0;`.trim(),
+classDef hidden width: 1px, height: 1px;`.trim(),
     );
   });
 
@@ -133,7 +133,7 @@ do:
     root-entry-node --> root-exit-node
 
 
-classDef hidden width: 1px, height: 0px, opacity: 0;`.trim(),
+classDef hidden width: 1px, height: 1px;`.trim(),
     );
   });
 
@@ -166,17 +166,15 @@ do:
     root-entry-node(( ))
     root-exit-node((( )))
     subgraph /do/0/checkup ["checkup"]
-        /do/0/checkup-entry-node:::hidden
-        /do/0/checkup-exit-node:::hidden
         /do/0/checkup/for/do/0/waitForCheckup["waitForCheckup"]
-        /do/0/checkup/for/do/0/waitForCheckup --- /do/0/checkup-exit-node
-        /do/0/checkup-entry-node --> /do/0/checkup/for/do/0/waitForCheckup
+        
     end
-    /do/0/checkup-exit-node --> root-exit-node
-    root-entry-node --- /do/0/checkup-entry-node
+    /do/0/checkup/for/do/0/waitForCheckup["waitForCheckup"]
+    root-entry-node --> /do/0/checkup/for/do/0/waitForCheckup
+    /do/0/checkup/for/do/0/waitForCheckup --> root-exit-node
 
 
-classDef hidden width: 1px, height: 0px, opacity: 0;`.trim(),
+classDef hidden width: 1px, height: 1px;`.trim(),
     );
   });
 });

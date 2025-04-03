@@ -84,7 +84,7 @@ export type GraphEdge = GraphElement & {
   /** The unique identifier of the node where the edge originates. */
   sourceId: string;
   /** The unique identifier of the node where the edge terminates. */
-  destinationId: string;
+  targetId: string;
 };
 
 /**
@@ -115,6 +115,8 @@ type TaskContext = {
   taskName?: string;
   /** The current reference. */
   taskReference: string;
+  /** The ids of edges already visited */
+  knownEdges: GraphEdge[];
 };
 
 /**
@@ -195,26 +197,6 @@ function initGraph(
 }
 
 /**
- * Constructs a graph representation based on the given workflow.
- *
- * @param workflow The workflow to be converted into a graph structure.
- * @param simplifyGraph A boolean indicating whether the graph should be flattened and free of internal entry/exit nodes.
- * @returns A graph representation of the workflow.
- */
-export function buildGraph(workflow: Workflow, simplifyGraph: boolean = false): Graph {
-  const graph = initGraph(GraphNodeType.Root);
-  if (!graph.entryNode) throw new Error('The root graph should have an entry node.');
-  buildTransitions(graph.entryNode, {
-    graph,
-    taskListReference: doReference,
-    taskList: mapTasks(workflow.do),
-    taskReference: doReference,
-  });
-  if (!simplifyGraph) return graph;
-  return flattenGraph(graph);
-}
-
-/**
  * Gets the next task to be executed in the workflow
  * @param tasksList The list of task to resolve the next task from
  * @param taskName The current task name, if any
@@ -279,17 +261,23 @@ function getEndNode(graph: Graph): GraphNode {
 function buildTransition(sourceNode: GraphNode | Graph, transition: TransitionInfo, context: TaskContext) {
   const exitAnchor = (sourceNode as Graph).exitNode || sourceNode;
   if (transition.index != -1) {
-    const destinationNode = buildTaskNode({
+    const targetNode = buildTaskNode({
       ...context,
       taskReference: `${context.taskListReference}/${transition.index}/${transition.name}`,
       taskName: transition.name,
     });
-    buildEdge(context.graph, exitAnchor, (destinationNode as Graph).entryNode || destinationNode, transition.label);
+    buildEdge(
+      context.graph,
+      context.knownEdges,
+      exitAnchor,
+      (targetNode as Graph).entryNode || targetNode,
+      transition.label,
+    );
   } else if (transition.name === FlowDirective.Exit) {
     if (!exists(context.graph.exitNode)) throw new Error(`Missing exit node on graph id '${context.graph.id}'`);
-    buildEdge(context.graph, exitAnchor, context.graph.exitNode, transition.label);
+    buildEdge(context.graph, context.knownEdges, exitAnchor, context.graph.exitNode, transition.label);
   } else if (transition.name === FlowDirective.End) {
-    buildEdge(context.graph, exitAnchor, getEndNode(context.graph), transition.label);
+    buildEdge(context.graph, context.knownEdges, exitAnchor, getEndNode(context.graph), transition.label);
   } else throw new Error('Invalid transition');
 }
 
@@ -323,6 +311,8 @@ function buildTransitions(sourceNode: GraphNode | Graph, context: TaskContext) {
  * @returns A graph or node for the provided context
  */
 function buildTaskNode(context: TaskContext): GraphNode | Graph {
+  const existingNode = context.graph.nodes.find((node) => node.id === context.taskReference);
+  if (existingNode) return existingNode;
   const task = context.taskList.get(context.taskName!);
   if (!task) throw new Error(`Unabled to find the task '${context.taskName}' in the current context`);
   if (task.call) return buildCallTaskNode(task, context);
@@ -447,8 +437,8 @@ function buildForkTaskNode(task: ForkTask, context: TaskContext): Graph {
     const branchNode = buildTaskNode(branchContext);
     if (!exists(subgraph.entryNode)) throw new Error(`Missing 'entryNode' on graph id '${subgraph.id}'`);
     if (!exists(subgraph.exitNode)) throw new Error(`Missing 'exitNode' on graph id '${subgraph.id}'`);
-    buildEdge(subgraph, subgraph.entryNode, (branchNode as Graph).entryNode || branchNode);
-    buildEdge(subgraph, (branchNode as Graph).exitNode || branchNode, subgraph.exitNode);
+    buildEdge(subgraph, context.knownEdges, subgraph.entryNode, (branchNode as Graph).entryNode || branchNode);
+    buildEdge(subgraph, context.knownEdges, (branchNode as Graph).exitNode || branchNode, subgraph.exitNode);
   }
   buildTransitions(subgraph, context);
   return subgraph;
@@ -546,7 +536,7 @@ function buildTryCatchTaskNode(task: TryTask, context: TaskContext): Graph {
   if (!exists(containerSubgraph.entryNode))
     throw new Error(`Missing 'entryNode' on graph id '${containerSubgraph.id}'`);
   if (!exists(trySubgraph.entryNode)) throw new Error(`Missing 'entryNode' on graph id '${trySubgraph.id}'`);
-  buildEdge(containerSubgraph, containerSubgraph.entryNode, trySubgraph.entryNode);
+  buildEdge(containerSubgraph, context.knownEdges, containerSubgraph.entryNode, trySubgraph.entryNode);
   const tryContext: TaskContext = {
     ...context,
     graph: trySubgraph,
@@ -567,8 +557,8 @@ function buildTryCatchTaskNode(task: TryTask, context: TaskContext): Graph {
     if (!exists(trySubgraph.exitNode)) throw new Error(`Missing 'exitNode' on graph id '${trySubgraph.id}'`);
     if (!exists(containerSubgraph.exitNode))
       throw new Error(`Missing 'exitNode' on graph id '${containerSubgraph.id}'`);
-    buildEdge(containerSubgraph, trySubgraph.exitNode, catchNode);
-    buildEdge(containerSubgraph, catchNode, containerSubgraph.exitNode);
+    buildEdge(containerSubgraph, context.knownEdges, trySubgraph.exitNode, catchNode);
+    buildEdge(containerSubgraph, context.knownEdges, catchNode, containerSubgraph.exitNode);
   } else {
     const catchSubgraph: Graph = initGraph(
       GraphNodeType.Catch,
@@ -579,7 +569,7 @@ function buildTryCatchTaskNode(task: TryTask, context: TaskContext): Graph {
     if (!exists(trySubgraph.exitNode)) throw new Error(`Missing 'exitNode' on graph id '${trySubgraph.id}'`);
     if (!exists(catchSubgraph.entryNode))
       throw new Error(`Missing 'entryNode' on graph id '${catchSubgraph.entryNode}'`);
-    buildEdge(containerSubgraph, trySubgraph.exitNode, catchSubgraph.entryNode);
+    buildEdge(containerSubgraph, context.knownEdges, trySubgraph.exitNode, catchSubgraph.entryNode);
     const catchContext: TaskContext = {
       ...context,
       graph: catchSubgraph,
@@ -591,7 +581,7 @@ function buildTryCatchTaskNode(task: TryTask, context: TaskContext): Graph {
     if (!exists(catchSubgraph.exitNode)) throw new Error(`Missing 'exitNode' on graph id '${catchSubgraph.exitNode}'`);
     if (!exists(containerSubgraph.exitNode))
       throw new Error(`Missing 'exitNode' on graph id '${containerSubgraph.exitNode}'`);
-    buildEdge(containerSubgraph, catchSubgraph.exitNode, containerSubgraph.exitNode);
+    buildEdge(containerSubgraph, context.knownEdges, catchSubgraph.exitNode, containerSubgraph.exitNode);
   }
   buildTransitions(containerSubgraph, context);
   return containerSubgraph;
@@ -613,24 +603,24 @@ function buildWaitTaskNode(task: WaitTask, context: TaskContext): GraphNode {
  * Builds an edge between two elements
  * @param graph The graph element containing the nodes
  * @param source The origin node
- * @param destination The destination node
+ * @param target The target node
  * @param label The edge label, if any
  */
-function buildEdge(graph: Graph, source: GraphNode, destination: GraphNode, label: string = '') {
-  let edge = graph.edges.find((e) => e.sourceId === source.id && e.destinationId === destination.id);
+function buildEdge(graph: Graph, knownEdges: GraphEdge[], source: GraphNode, target: GraphNode, label: string = '') {
+  let edge = knownEdges.find((e) => e.sourceId === source.id && e.targetId === target.id);
   if (edge) {
-    if (label) {
+    if (label && !edge.label?.includes(label)) {
       edge.label = edge.label + (edge.label ? ' / ' : '') + label;
     }
-    return edge;
   }
   edge = {
     label,
-    id: `${source.id}-${destination.id}${label ? `-${label}` : ''}`,
+    id: `${source.id}-${target.id}${label ? `-${label}` : ''}`,
     sourceId: source.id,
-    destinationId: destination.id,
+    targetId: target.id,
   };
   graph.edges.push(edge);
+  knownEdges.push(edge);
 }
 
 /**
@@ -638,42 +628,46 @@ function buildEdge(graph: Graph, source: GraphNode, destination: GraphNode, labe
  * @param edges
  */
 const remapEdges = (edges: GraphEdge[]): GraphEdge[] => {
-  let newEdges = [...edges];
+  let remappedEdges = [...edges.map((e) => ({ ...e }))];
   const leadsToPort = (edge: GraphEdge) =>
-    edge.destinationId !== 'root-exit-node' &&
-    (edge.destinationId.endsWith('-entry-node') || edge.destinationId.endsWith('-exit-node'));
-  const entryExitEdges = edges.filter(leadsToPort);
-  const remap = (source: GraphEdge, destinations: GraphEdge[]) => {
-    destinations.forEach((destination) => {
-      newEdges = newEdges.filter((e) => e !== destination);
-      if (!leadsToPort(destination)) {
-        const sourceId = source.sourceId;
-        const destinationId = destination.destinationId;
-        const label = `${source.label}${source.label && destination.label ? ' / ' : ''}${destination.label}`;
-        const id = `${sourceId}-${destinationId}${label ? `-${label}` : ''}`;
+    edge.targetId !== 'root-exit-node' &&
+    (edge.targetId.endsWith('-entry-node') || edge.targetId.endsWith('-exit-node'));
+  const isPortToPort = (edge: GraphEdge) =>
+    edge.sourceId !== 'root-entry-node' &&
+    edge.targetId !== 'root-exit-node' &&
+    (edge.sourceId.endsWith('-entry-node') || edge.sourceId.endsWith('-exit-node'));
+  const edgesLeadingToPort = edges.filter((e) => leadsToPort(e) && !isPortToPort(e));
+  const remap = (lead: GraphEdge, tails: GraphEdge[]) => {
+    tails.forEach((tail) => {
+      remappedEdges = remappedEdges.filter((e) => e.id !== tail.id);
+      if (!leadsToPort(tail)) {
+        const sourceId = lead.sourceId;
+        const targetId = tail.targetId;
+        const label = `${lead.label}${lead.label && tail.label ? ' / ' : ''}${tail.label}`;
+        const id = `${sourceId}-${targetId}${label ? `-${label}` : ''}`;
         const newEdge: GraphEdge = {
           id,
           sourceId,
-          destinationId,
+          targetId,
           label,
         };
-        newEdges.push(newEdge);
+        remappedEdges.push(newEdge);
       } else {
         remap(
-          source,
-          edges.filter((e) => e.sourceId === destination.destinationId),
+          lead,
+          edges.filter((e) => e.sourceId === tail.targetId),
         );
       }
     });
   };
-  entryExitEdges.forEach((source) => {
-    newEdges = newEdges.filter((e) => e !== source);
+  edgesLeadingToPort.forEach((lead) => {
+    remappedEdges = remappedEdges.filter((e) => e.id !== lead.id);
     remap(
-      source,
-      edges.filter((e) => e.sourceId === source.destinationId),
+      lead,
+      edges.filter((e) => e.sourceId === lead.targetId),
     );
   });
-  return newEdges;
+  return remappedEdges;
 };
 
 /**
@@ -699,9 +693,7 @@ const flattenNodes = (node: Graph | GraphNode): Array<Graph | GraphNode> => [
     nodes: undefined,
     edges: undefined,
   },
-  ...((node as Graph).nodes || [])
-    .filter((n) => n !== (node as Graph).entryNode && n !== (node as Graph).exitNode)
-    .flatMap(flattenNodes),
+  ...((node as Graph).nodes || []).flatMap(flattenNodes),
 ];
 
 /**
@@ -711,11 +703,34 @@ const flattenNodes = (node: Graph | GraphNode): Array<Graph | GraphNode> => [
  */
 function flattenGraph(graph: Graph): Graph {
   const edges = remapEdges(flattenEdges(graph));
-  const nodes = graph.nodes.flatMap((node) => flattenNodes(node)); // keep the root entry/exit nodes
+  const nodes = graph.nodes
+    .flatMap((node) => flattenNodes(node))
+    .filter((node) => node.type !== GraphNodeType.Entry && node.type !== GraphNodeType.Exit);
   const newGraph: Graph = {
     ...graph,
     nodes,
     edges,
   };
   return newGraph;
+}
+
+/**
+ * Constructs a graph representation based on the given workflow.
+ *
+ * @param workflow The workflow to be converted into a graph structure.
+ * @param simplifyGraph A boolean indicating whether the graph should be flattened and free of internal entry/exit nodes.
+ * @returns A graph representation of the workflow.
+ */
+export function buildGraph(workflow: Workflow, simplifyGraph: boolean = false): Graph {
+  const graph = initGraph(GraphNodeType.Root);
+  if (!graph.entryNode) throw new Error('The root graph should have an entry node.');
+  buildTransitions(graph.entryNode, {
+    graph,
+    taskListReference: doReference,
+    taskList: mapTasks(workflow.do),
+    taskReference: doReference,
+    knownEdges: [],
+  });
+  if (!simplifyGraph) return graph;
+  return flattenGraph(graph);
 }

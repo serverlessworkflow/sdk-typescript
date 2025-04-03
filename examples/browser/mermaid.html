@@ -106,7 +106,7 @@
         try {
             const workflow = Classes.Workflow.deserialize(inputTextarea.value);
             const mermaidCode = convertToMermaidCode(workflow);
-            document.getElementById('output').innerHTML = `--- YAML ---\n${Classes.Workflow.serialize(workflow)}\n\n--- JSON ---\n${Classes.Workflow.serialize(workflow, 'json')}\n\n--- MERMAID ---\n${mermaidCode}`;
+            document.getElementById('output').innerHTML = `--- MERMAID ---\n${mermaidCode}`;
             mermaid.initialize({ startOnLoad: false });
             const { svg, bindFunctions } = await mermaid.render('sw-diagram', mermaidCode);
             diagramContainerEl.innerHTML = svg;
