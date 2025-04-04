@@ -27,10 +27,6 @@ const catchReference = '/catch';
 const branchReference = '/fork/branches';
 const tryReference = '/try';
 
-function exists<T>(obj: T | undefined): obj is T {
-  return !!obj;
-}
-
 /**
  * Represents a generic within a graph.
  * This serves as a base type for nodes, edges, and graphs.
@@ -75,6 +71,8 @@ export type GraphNode = GraphElement & {
   type: GraphNodeType;
   /** The parent graph, if any. */
   parent?: Graph;
+  /** The related task */
+  task?: Task;
 };
 
 /**
@@ -161,6 +159,7 @@ function mapTasks(tasksList: TaskItem[] | undefined): Map<string, Task> {
  *
  * @param type The type of the graph node.
  * @param id Unique identifier for the graph.
+ * @param task The related task
  * @param label Optional label for the graph.
  * @param parent Optional parent graph if this is a subgraph.
  * @returns A newly created Graph instance.
@@ -168,6 +167,7 @@ function mapTasks(tasksList: TaskItem[] | undefined): Map<string, Task> {
 function initGraph(
   type: GraphNodeType,
   id: string = rootId,
+  task: Task | undefined = undefined,
   label: string | undefined = undefined,
   parent: Graph | undefined = undefined,
 ): Graph {
@@ -176,6 +176,7 @@ function initGraph(
     label,
     type,
     parent,
+    task,
     nodes: [],
     edges: [],
   };
@@ -274,7 +275,7 @@ function buildTransition(sourceNode: GraphNode | Graph, transition: TransitionIn
       transition.label,
     );
   } else if (transition.name === FlowDirective.Exit) {
-    if (!exists(context.graph.exitNode)) throw new Error(`Missing exit node on graph id '${context.graph.id}'`);
+    if (!context.graph.exitNode) throw new Error(`Missing exit node on graph id '${context.graph.id}'`);
     buildEdge(context.graph, context.knownEdges, exitAnchor, context.graph.exitNode, transition.label);
   } else if (transition.name === FlowDirective.End) {
     buildEdge(context.graph, context.knownEdges, exitAnchor, getEndNode(context.graph), transition.label);
@@ -336,8 +337,9 @@ function buildTaskNode(context: TaskContext): GraphNode | Graph {
  * @param context The context to build the graph node for
  * @returns A graph node for the provided context
  */
-function buildGenericTaskNode(type: GraphNodeType, context: TaskContext): GraphNode {
+function buildGenericTaskNode(task: Task, type: GraphNodeType, context: TaskContext): GraphNode {
   const node: GraphNode = {
+    task,
     type,
     parent: context.graph,
     id: context.taskReference,
@@ -355,7 +357,7 @@ function buildGenericTaskNode(type: GraphNodeType, context: TaskContext): GraphN
  * @returns A graph node for the provided task
  */
 function buildCallTaskNode(task: CallTask, context: TaskContext): GraphNode {
-  const node = buildGenericTaskNode(GraphNodeType.Call, context);
+  const node = buildGenericTaskNode(task, GraphNodeType.Call, context);
   // TODO: add some details about the task?
   return node;
 }
@@ -367,7 +369,7 @@ function buildCallTaskNode(task: CallTask, context: TaskContext): GraphNode {
  * @returns A graph for the provided task
  */
 function buildDoTaskNode(task: DoTask, context: TaskContext): Graph {
-  const subgraph: Graph = initGraph(GraphNodeType.Do, context.taskReference, context.taskName, context.graph);
+  const subgraph: Graph = initGraph(GraphNodeType.Do, context.taskReference, task, context.taskName, context.graph);
   const doContext: TaskContext = {
     ...context,
     graph: subgraph,
@@ -375,7 +377,7 @@ function buildDoTaskNode(task: DoTask, context: TaskContext): Graph {
     taskList: mapTasks(task.do),
     taskName: undefined,
   };
-  if (!exists(subgraph.entryNode)) throw new Error(`Missing 'entryNode' on graph id '${subgraph.id}'`);
+  if (!subgraph.entryNode) throw new Error(`Missing 'entryNode' on graph id '${subgraph.id}'`);
   buildTransitions(subgraph.entryNode, doContext);
   buildTransitions(subgraph, context);
   return subgraph;
@@ -388,7 +390,7 @@ function buildDoTaskNode(task: DoTask, context: TaskContext): Graph {
  * @returns A graph node for the provided task
  */
 function buildEmitTaskNode(task: EmitTask, context: TaskContext): GraphNode {
-  const node = buildGenericTaskNode(GraphNodeType.Emit, context);
+  const node = buildGenericTaskNode(task, GraphNodeType.Emit, context);
   // TODO: add some details about the task?
   return node;
 }
@@ -400,7 +402,7 @@ function buildEmitTaskNode(task: EmitTask, context: TaskContext): GraphNode {
  * @returns A graph for the provided task
  */
 function buildForTaskNode(task: ForTask, context: TaskContext): Graph {
-  const subgraph: Graph = initGraph(GraphNodeType.For, context.taskReference, context.taskName, context.graph);
+  const subgraph: Graph = initGraph(GraphNodeType.For, context.taskReference, task, context.taskName, context.graph);
   const forContext: TaskContext = {
     ...context,
     graph: subgraph,
@@ -408,7 +410,7 @@ function buildForTaskNode(task: ForTask, context: TaskContext): Graph {
     taskList: mapTasks(task.do),
     taskName: undefined,
   };
-  if (!exists(subgraph.entryNode)) throw new Error(`Missing 'entryNode' on graph id '${subgraph.id}'`);
+  if (!subgraph.entryNode) throw new Error(`Missing 'entryNode' on graph id '${subgraph.id}'`);
   buildTransitions(subgraph.entryNode, forContext);
   buildTransitions(subgraph, context);
   return subgraph;
@@ -421,7 +423,7 @@ function buildForTaskNode(task: ForTask, context: TaskContext): Graph {
  * @returns A graph for the provided task
  */
 function buildForkTaskNode(task: ForkTask, context: TaskContext): Graph {
-  const subgraph: Graph = initGraph(GraphNodeType.Fork, context.taskReference, context.taskName, context.graph);
+  const subgraph: Graph = initGraph(GraphNodeType.Fork, context.taskReference, task, context.taskName, context.graph);
   for (let i = 0, c = task.fork?.branches.length || 0; i < c; i++) {
     const branchItem = task.fork?.branches[i];
     if (!branchItem) continue;
@@ -435,8 +437,8 @@ function buildForkTaskNode(task: ForkTask, context: TaskContext): Graph {
       taskName: branchName,
     };
     const branchNode = buildTaskNode(branchContext);
-    if (!exists(subgraph.entryNode)) throw new Error(`Missing 'entryNode' on graph id '${subgraph.id}'`);
-    if (!exists(subgraph.exitNode)) throw new Error(`Missing 'exitNode' on graph id '${subgraph.id}'`);
+    if (!subgraph.entryNode) throw new Error(`Missing 'entryNode' on graph id '${subgraph.id}'`);
+    if (!subgraph.exitNode) throw new Error(`Missing 'exitNode' on graph id '${subgraph.id}'`);
     buildEdge(subgraph, context.knownEdges, subgraph.entryNode, (branchNode as Graph).entryNode || branchNode);
     buildEdge(subgraph, context.knownEdges, (branchNode as Graph).exitNode || branchNode, subgraph.exitNode);
   }
@@ -451,7 +453,7 @@ function buildForkTaskNode(task: ForkTask, context: TaskContext): Graph {
  * @returns A graph node for the provided task
  */
 function buildListenTaskNode(task: ListenTask, context: TaskContext): GraphNode {
-  const node = buildGenericTaskNode(GraphNodeType.Listen, context);
+  const node = buildGenericTaskNode(task, GraphNodeType.Listen, context);
   // TODO: add some details about the task?
   return node;
 }
@@ -463,7 +465,7 @@ function buildListenTaskNode(task: ListenTask, context: TaskContext): GraphNode 
  * @returns A graph node for the provided task
  */
 function buildRaiseTaskNode(task: RaiseTask, context: TaskContext): GraphNode {
-  const node = buildGenericTaskNode(GraphNodeType.Raise, context);
+  const node = buildGenericTaskNode(task, GraphNodeType.Raise, context);
   // TODO: add some details about the task?
   return node;
 }
@@ -475,7 +477,7 @@ function buildRaiseTaskNode(task: RaiseTask, context: TaskContext): GraphNode {
  * @returns A graph node for the provided task
  */
 function buildRunTaskNode(task: RunTask, context: TaskContext): GraphNode {
-  const node = buildGenericTaskNode(GraphNodeType.Run, context);
+  const node = buildGenericTaskNode(task, GraphNodeType.Run, context);
   // TODO: add some details about the task?
   return node;
 }
@@ -487,7 +489,7 @@ function buildRunTaskNode(task: RunTask, context: TaskContext): GraphNode {
  * @returns A graph node for the provided task
  */
 function buildSetTaskNode(task: SetTask, context: TaskContext): GraphNode {
-  const node = buildGenericTaskNode(GraphNodeType.Set, context);
+  const node = buildGenericTaskNode(task, GraphNodeType.Set, context);
   // TODO: add some details about the task?
   return node;
 }
@@ -499,7 +501,7 @@ function buildSetTaskNode(task: SetTask, context: TaskContext): GraphNode {
  * @returns A graph node for the provided task
  */
 function buildSwitchTaskNode(task: SwitchTask, context: TaskContext): GraphNode {
-  const node: GraphNode = buildGenericTaskNode(GraphNodeType.Switch, context);
+  const node: GraphNode = buildGenericTaskNode(task, GraphNodeType.Switch, context);
   let hasDefaultCase = false;
   task.switch?.forEach((switchItem) => {
     const [caseName, switchCase] = Object.entries(switchItem)[0];
@@ -524,18 +526,19 @@ function buildTryCatchTaskNode(task: TryTask, context: TaskContext): Graph {
   const containerSubgraph: Graph = initGraph(
     GraphNodeType.TryCatch,
     context.taskReference,
+    task,
     context.taskName,
     context.graph,
   );
   const trySubgraph: Graph = initGraph(
     GraphNodeType.Try,
     context.taskReference + tryReference,
+    task,
     context.taskName + ' (try)',
     containerSubgraph,
   );
-  if (!exists(containerSubgraph.entryNode))
-    throw new Error(`Missing 'entryNode' on graph id '${containerSubgraph.id}'`);
-  if (!exists(trySubgraph.entryNode)) throw new Error(`Missing 'entryNode' on graph id '${trySubgraph.id}'`);
+  if (!containerSubgraph.entryNode) throw new Error(`Missing 'entryNode' on graph id '${containerSubgraph.id}'`);
+  if (!trySubgraph.entryNode) throw new Error(`Missing 'entryNode' on graph id '${trySubgraph.id}'`);
   buildEdge(containerSubgraph, context.knownEdges, containerSubgraph.entryNode, trySubgraph.entryNode);
   const tryContext: TaskContext = {
     ...context,
@@ -544,31 +547,31 @@ function buildTryCatchTaskNode(task: TryTask, context: TaskContext): Graph {
     taskList: mapTasks(task.try),
     taskName: undefined,
   };
-  if (!exists(trySubgraph.entryNode)) throw new Error(`Missing 'entryNode' on graph id '${trySubgraph.id}'`);
+  if (!trySubgraph.entryNode) throw new Error(`Missing 'entryNode' on graph id '${trySubgraph.id}'`);
   buildTransitions(trySubgraph.entryNode, tryContext);
   if (!task.catch?.do?.length) {
     const catchNode: GraphNode = {
+      task,
       type: GraphNodeType.Catch,
       parent: containerSubgraph,
       id: context.taskReference + catchReference,
       label: context.taskName + ' (catch)',
     };
     containerSubgraph.nodes.push(catchNode);
-    if (!exists(trySubgraph.exitNode)) throw new Error(`Missing 'exitNode' on graph id '${trySubgraph.id}'`);
-    if (!exists(containerSubgraph.exitNode))
-      throw new Error(`Missing 'exitNode' on graph id '${containerSubgraph.id}'`);
+    if (!trySubgraph.exitNode) throw new Error(`Missing 'exitNode' on graph id '${trySubgraph.id}'`);
+    if (!containerSubgraph.exitNode) throw new Error(`Missing 'exitNode' on graph id '${containerSubgraph.id}'`);
     buildEdge(containerSubgraph, context.knownEdges, trySubgraph.exitNode, catchNode);
     buildEdge(containerSubgraph, context.knownEdges, catchNode, containerSubgraph.exitNode);
   } else {
     const catchSubgraph: Graph = initGraph(
       GraphNodeType.Catch,
       context.taskReference + catchReference + doReference,
+      task,
       context.taskName + ' (catch)',
       containerSubgraph,
     );
-    if (!exists(trySubgraph.exitNode)) throw new Error(`Missing 'exitNode' on graph id '${trySubgraph.id}'`);
-    if (!exists(catchSubgraph.entryNode))
-      throw new Error(`Missing 'entryNode' on graph id '${catchSubgraph.entryNode}'`);
+    if (!trySubgraph.exitNode) throw new Error(`Missing 'exitNode' on graph id '${trySubgraph.id}'`);
+    if (!catchSubgraph.entryNode) throw new Error(`Missing 'entryNode' on graph id '${catchSubgraph.entryNode}'`);
     buildEdge(containerSubgraph, context.knownEdges, trySubgraph.exitNode, catchSubgraph.entryNode);
     const catchContext: TaskContext = {
       ...context,
@@ -578,9 +581,8 @@ function buildTryCatchTaskNode(task: TryTask, context: TaskContext): Graph {
       taskName: undefined,
     };
     buildTransitions(catchSubgraph.entryNode, catchContext);
-    if (!exists(catchSubgraph.exitNode)) throw new Error(`Missing 'exitNode' on graph id '${catchSubgraph.exitNode}'`);
-    if (!exists(containerSubgraph.exitNode))
-      throw new Error(`Missing 'exitNode' on graph id '${containerSubgraph.exitNode}'`);
+    if (!catchSubgraph.exitNode) throw new Error(`Missing 'exitNode' on graph id '${catchSubgraph.exitNode}'`);
+    if (!containerSubgraph.exitNode) throw new Error(`Missing 'exitNode' on graph id '${containerSubgraph.exitNode}'`);
     buildEdge(containerSubgraph, context.knownEdges, catchSubgraph.exitNode, containerSubgraph.exitNode);
   }
   buildTransitions(containerSubgraph, context);
@@ -594,7 +596,7 @@ function buildTryCatchTaskNode(task: TryTask, context: TaskContext): Graph {
  * @returns A graph node for the provided task
  */
 function buildWaitTaskNode(task: WaitTask, context: TaskContext): GraphNode {
-  const node = buildGenericTaskNode(GraphNodeType.Wait, context);
+  const node = buildGenericTaskNode(task, GraphNodeType.Wait, context);
   // TODO: add some details about the task?
   return node;
 }
@@ -627,7 +629,7 @@ function buildEdge(graph: Graph, knownEdges: GraphEdge[], source: GraphNode, tar
  * Remaps edges by getting rid of routes leading to entry/exit nodes
  * @param edges
  */
-const remapEdges = (edges: GraphEdge[]): GraphEdge[] => {
+export const remapEdges = (edges: GraphEdge[]): GraphEdge[] => {
   let remappedEdges = [...edges.map((e) => ({ ...e }))];
   const leadsToPort = (edge: GraphEdge) =>
     edge.targetId !== 'root-exit-node' &&
@@ -675,7 +677,7 @@ const remapEdges = (edges: GraphEdge[]): GraphEdge[] => {
  * @param graph The graph to flatten the edges of
  * @returns All the edge declared in the graph and its subgraphs
  */
-const flattenEdges = (graph: Graph): GraphEdge[] => [
+export const flattenEdges = (graph: Graph): GraphEdge[] => [
   ...(graph.edges || []),
   ...((graph.nodes || []).filter((node) => (node as Graph).edges?.length) as Graph[]).flatMap(flattenEdges),
 ];
@@ -685,7 +687,7 @@ const flattenEdges = (graph: Graph): GraphEdge[] => [
  * @param graph The graph/node to flatten the nodes of
  * @returns All the nodes and subnodes declared in the graph
  */
-const flattenNodes = (node: Graph | GraphNode): Array<Graph | GraphNode> => [
+export const flattenNodes = (node: Graph | GraphNode): Array<Graph | GraphNode> => [
   {
     ...node,
     entryNode: undefined,
@@ -701,7 +703,7 @@ const flattenNodes = (node: Graph | GraphNode): Array<Graph | GraphNode> => [
  * @param graph The target graph
  * @returns The modified graph
  */
-function flattenGraph(graph: Graph): Graph {
+export function flattenGraph(graph: Graph): Graph {
   const edges = remapEdges(flattenEdges(graph));
   const nodes = graph.nodes
     .flatMap((node) => flattenNodes(node))
@@ -718,7 +720,7 @@ function flattenGraph(graph: Graph): Graph {
  * Constructs a graph representation based on the given workflow.
  *
  * @param workflow The workflow to be converted into a graph structure.
- * @param simplifyGraph A boolean indicating whether the graph should be flattened and free of internal entry/exit nodes.
+ * @param simplifyGraph A boolean indicating whether the graph nodes & edges should be flattened and free of internal entry/exit nodes.
  * @returns A graph representation of the workflow.
  */
 export function buildGraph(workflow: Workflow, simplifyGraph: boolean = false): Graph {
