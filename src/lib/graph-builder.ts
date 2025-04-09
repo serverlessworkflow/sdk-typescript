@@ -209,7 +209,12 @@ function getNextTask(
   taskName: string | undefined = undefined,
   transition: string | undefined = undefined,
 ): TransitionInfo {
-  if (!tasksList?.size) throw new Error('The task list cannot be empty. No tasks list to get the next task from.');
+  if (!tasksList?.size) {
+    return {
+      name: FlowDirective.Exit,
+      index: -1,
+    };
+  }
   const currentTask: Task | undefined = tasksList.get(taskName || '');
   transition = transition || currentTask?.then || '';
   if (transition == FlowDirective.End || transition == FlowDirective.Exit) {

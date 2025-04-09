@@ -136,4 +136,11 @@ do:
     expect(forSubgraph.nodes.length).toBe(3); // entry --> waitForCheckup --> exit
     expect(forSubgraph.edges.length).toBe(2);
   });
+
+  it('should build an empty graph', () => {
+    const graph = buildGraph({} as Specification.Workflow);
+    expect(graph).toBeDefined();
+    expect(graph.nodes.length).toBe(2); // start --> end
+    expect(graph.edges.length).toBe(1);
+  });
 });
