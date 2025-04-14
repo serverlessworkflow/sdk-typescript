@@ -13,7 +13,7 @@ do:
   - initialize:
       set:
         foo: bar`);
-    const graph = buildGraph(workflow, true);
+    const graph = buildGraph(workflow, true, true);
     expect(graph).toBeDefined();
     expect(graph.nodes.length).toBe(3); // start --> initialize --> end
     expect(graph.edges.length).toBe(2);
@@ -42,7 +42,7 @@ do:
                     type: com.fake.petclinic.pets.checkup.completed.v2
             output:
               as: '.pets + [{ "id": $pet.id }]'`);
-    const graph = buildGraph(workflow, true);
+    const graph = buildGraph(workflow, true, true);
     expect(graph).toBeDefined();
     expect(graph.nodes.length).toBe(4); // start --[--> waitForCheckup --]--> end
     expect(graph.edges.length).toBe(2);

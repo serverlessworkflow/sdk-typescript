@@ -1,5 +1,5 @@
 import { Workflow } from './generated/definitions/specification';
-import { buildGraph, Graph, GraphEdge, GraphNode, GraphNodeType } from './graph-builder';
+import { buildGraph, FlatGraph, FlatGraphNode, GraphEdge, GraphNodeType } from './graph-builder';
 
 /**
  * Adds indentation to each line of the provided code
@@ -14,18 +14,17 @@ const indent = (code: string) =>
 
 /**
  * Converts a graph to Mermaid code
- * @param graph The graph to convert
  * @param root The root graph
+ * @param subgraphNode The graph to convert
  * @returns The converted graph
  */
-function convertGraphToCode(graph: Graph, root: Graph): string {
-  const isRoot: boolean = graph === root;
-  const nodes = isRoot ? graph.nodes : root.nodes.filter((node) => node.parent?.id === graph.id);
-  const edges = isRoot ? graph.edges : [];
-  const code = `${isRoot ? 'flowchart TD' : `subgraph ${graph.id} ["${graph.label || graph.id}"]`}
-${indent(nodes.map((node) => convertNodeToCode(node, root)).join('\n'))}
+function convertGraphToCode(root: FlatGraph, subgraphNode?: FlatGraphNode): string {
+  const nodes = !subgraphNode ? root.nodes : root.nodes.filter((n) => n.parentId === subgraphNode.id);
+  const edges = !subgraphNode ? root.edges : [];
+  const code = `${!subgraphNode ? 'flowchart TD' : `subgraph ${subgraphNode.id} ["${subgraphNode.label || subgraphNode.id}"]`}
+${indent(nodes.map((node) => convertNodeToCode(root, node)).join('\n'))}
 ${indent(edges.map((edge) => convertEdgeToCode(edge)).join('\n'))}
-${isRoot ? '' : 'end'}`;
+${!subgraphNode ? '' : 'end'}`;
   return code;
 }
 
@@ -35,10 +34,10 @@ ${isRoot ? '' : 'end'}`;
  * @param graph The root graph
  * @returns The converted node
  */
-function convertNodeToCode(node: GraphNode | Graph, root: Graph): string {
+function convertNodeToCode(root: FlatGraph, node: FlatGraphNode): string {
   let code = '';
-  if (root.nodes.filter((n) => n.parent?.id === node.id).length) {
-    code = convertGraphToCode(node as Graph, root);
+  if (root.nodes.filter((n) => n.parentId === node.id).length) {
+    code = convertGraphToCode(root, node);
   } else {
     code = node.id;
     switch (node.type) {
@@ -78,9 +77,9 @@ function convertEdgeToCode(edge: GraphEdge): string {
  * @returns The Mermaid diagram
  */
 export function convertToMermaidCode(workflow: Workflow): string {
-  const graph = buildGraph(workflow, true);
+  const graph = buildGraph(workflow, true, true);
   return (
-    convertGraphToCode(graph, graph) +
+    convertGraphToCode(graph) +
     `
 
 classDef hidden width: 1px, height: 1px;` // should be "classDef hidden display: none;" but it can induce a Mermaid bug - https://github.com/mermaid-js/mermaid/issues/6452

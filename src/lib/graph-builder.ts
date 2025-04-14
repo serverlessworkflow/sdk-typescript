@@ -28,17 +28,6 @@ const branchReference = '/fork/branches';
 const tryReference = '/try';
 
 /**
- * Represents a generic within a graph.
- * This serves as a base type for nodes, edges, and graphs.
- */
-export type GraphElement = {
-  /** A unique identifier for this graph element. */
-  id: string;
-  /** An optional label to provide additional context or naming. */
-  label?: string;
-};
-
-/**
  * Enumeration of possible node types in a graph.
  */
 export enum GraphNodeType {
@@ -64,6 +53,17 @@ export enum GraphNodeType {
 }
 
 /**
+ * Represents a generic within a graph.
+ * This serves as a base type for nodes, edges, and graphs.
+ */
+export type GraphElement = {
+  /** A unique identifier for this graph element. */
+  id: string;
+  /** An optional label to provide additional context or naming. */
+  label?: string;
+};
+
+/**
  * Represents a node within the graph.
  */
 export type GraphNode = GraphElement & {
@@ -73,6 +73,14 @@ export type GraphNode = GraphElement & {
   parent?: Graph;
   /** The related task */
   task?: Task;
+};
+
+/**
+ * Represents a flattened node within the graph.
+ */
+export type FlatGraphNode = Omit<GraphNode, 'parent'> & {
+  /** The id of parent graph, if any. */
+  parentId?: string;
 };
 
 /**
@@ -90,7 +98,21 @@ export type GraphEdge = GraphElement & {
  */
 export type Graph = GraphNode & {
   /** A collection of nodes that belong to this graph. */
-  nodes: GraphNode[];
+  nodes: Array<Graph | GraphNode>;
+  /** A collection of edges that define relationships between nodes. */
+  edges: GraphEdge[];
+  /** The entry node of the graph, if any. */
+  entryNode?: GraphNode;
+  /** The exit node of the graph, if any. */
+  exitNode?: GraphNode;
+};
+
+/**
+ * Represents a flattened graph.
+ */
+export type FlatGraph = FlatGraphNode & {
+  /** A collection of nodes that belong to this graph. */
+  nodes: FlatGraphNode[];
   /** A collection of edges that define relationships between nodes. */
   edges: GraphEdge[];
   /** The entry node of the graph, if any. */
@@ -226,6 +248,7 @@ function getNextTask(
   let index: number = 0;
   if (transition && transition != FlowDirective.Continue) {
     index = Array.from(tasksList.keys()).indexOf(transition);
+    if (index === -1) throw new Error(`Unable to find task to transition to '${transition}' from '${taskName}'`);
   } else if (currentTask) {
     index = Array.from(tasksList.values()).indexOf(currentTask) + 1;
     if (index >= tasksList.size) {
@@ -363,7 +386,6 @@ function buildGenericTaskNode(task: Task, type: GraphNodeType, context: TaskCont
  */
 function buildCallTaskNode(task: CallTask, context: TaskContext): GraphNode {
   const node = buildGenericTaskNode(task, GraphNodeType.Call, context);
-  // TODO: add some details about the task?
   return node;
 }
 
@@ -396,7 +418,6 @@ function buildDoTaskNode(task: DoTask, context: TaskContext): Graph {
  */
 function buildEmitTaskNode(task: EmitTask, context: TaskContext): GraphNode {
   const node = buildGenericTaskNode(task, GraphNodeType.Emit, context);
-  // TODO: add some details about the task?
   return node;
 }
 
@@ -459,7 +480,6 @@ function buildForkTaskNode(task: ForkTask, context: TaskContext): Graph {
  */
 function buildListenTaskNode(task: ListenTask, context: TaskContext): GraphNode {
   const node = buildGenericTaskNode(task, GraphNodeType.Listen, context);
-  // TODO: add some details about the task?
   return node;
 }
 
@@ -471,7 +491,6 @@ function buildListenTaskNode(task: ListenTask, context: TaskContext): GraphNode 
  */
 function buildRaiseTaskNode(task: RaiseTask, context: TaskContext): GraphNode {
   const node = buildGenericTaskNode(task, GraphNodeType.Raise, context);
-  // TODO: add some details about the task?
   return node;
 }
 
@@ -483,7 +502,6 @@ function buildRaiseTaskNode(task: RaiseTask, context: TaskContext): GraphNode {
  */
 function buildRunTaskNode(task: RunTask, context: TaskContext): GraphNode {
   const node = buildGenericTaskNode(task, GraphNodeType.Run, context);
-  // TODO: add some details about the task?
   return node;
 }
 
@@ -495,7 +513,6 @@ function buildRunTaskNode(task: RunTask, context: TaskContext): GraphNode {
  */
 function buildSetTaskNode(task: SetTask, context: TaskContext): GraphNode {
   const node = buildGenericTaskNode(task, GraphNodeType.Set, context);
-  // TODO: add some details about the task?
   return node;
 }
 
@@ -602,7 +619,6 @@ function buildTryCatchTaskNode(task: TryTask, context: TaskContext): Graph {
  */
 function buildWaitTaskNode(task: WaitTask, context: TaskContext): GraphNode {
   const node = buildGenericTaskNode(task, GraphNodeType.Wait, context);
-  // TODO: add some details about the task?
   return node;
 }
 
@@ -692,13 +708,13 @@ export const flattenEdges = (graph: Graph): GraphEdge[] => [
  * @param graph The graph/node to flatten the nodes of
  * @returns All the nodes and subnodes declared in the graph
  */
-export const flattenNodes = (node: Graph | GraphNode): Array<Graph | GraphNode> => [
+export const flattenNodes = (node: Graph | GraphNode): FlatGraphNode[] => [
   {
-    ...node,
-    entryNode: undefined,
-    exitNode: undefined,
-    nodes: undefined,
-    edges: undefined,
+    id: node.id,
+    label: node.label,
+    type: node.type,
+    task: node.task,
+    parentId: node.parent?.id,
   },
   ...((node as Graph).nodes || []).flatMap(flattenNodes),
 ];
@@ -708,12 +724,12 @@ export const flattenNodes = (node: Graph | GraphNode): Array<Graph | GraphNode> 
  * @param graph The target graph
  * @returns The modified graph
  */
-export function flattenGraph(graph: Graph): Graph {
+export function reshapeGraph(graph: Graph): FlatGraph {
   const edges = remapEdges(flattenEdges(graph));
   const nodes = graph.nodes
     .flatMap((node) => flattenNodes(node))
     .filter((node) => node.type !== GraphNodeType.Entry && node.type !== GraphNodeType.Exit);
-  const newGraph: Graph = {
+  const newGraph: FlatGraph = {
     ...graph,
     nodes,
     edges,
@@ -725,10 +741,15 @@ export function flattenGraph(graph: Graph): Graph {
  * Constructs a graph representation based on the given workflow.
  *
  * @param workflow The workflow to be converted into a graph structure.
- * @param simplifyGraph A boolean indicating whether the graph nodes & edges should be flattened and free of internal entry/exit nodes.
+ * @param flattenGraph A boolean indicating whether the graph nodes & edges should be flattened.
+ * @param removePorts A boolean indicationg whether the port nodes should be removed.
  * @returns A graph representation of the workflow.
  */
-export function buildGraph(workflow: Workflow, simplifyGraph: boolean = false): Graph {
+export function buildGraph(
+  workflow: Workflow,
+  flattenGraph: boolean = false,
+  removePorts: boolean = false,
+): Graph | FlatGraph {
   const graph = initGraph(GraphNodeType.Root);
   if (!graph.entryNode) throw new Error('The root graph should have an entry node.');
   buildTransitions(graph.entryNode, {
@@ -738,6 +759,17 @@ export function buildGraph(workflow: Workflow, simplifyGraph: boolean = false): 
     taskReference: doReference,
     knownEdges: [],
   });
-  if (!simplifyGraph) return graph;
-  return flattenGraph(graph);
+  if (removePorts && !flattenGraph) throw new Error(`Ports can only be removed if the graph has been flattened.`);
+  if (!flattenGraph) return graph;
+  const flatGraph = {
+    ...graph,
+    edges: flattenEdges(graph),
+    nodes: graph.nodes.flatMap(flattenNodes),
+  };
+  if (!removePorts) return flatGraph;
+  return {
+    ...flatGraph,
+    edges: remapEdges(flatGraph.edges),
+    nodes: flatGraph.nodes.filter((node) => node.type !== GraphNodeType.Entry && node.type !== GraphNodeType.Exit),
+  };
 }
