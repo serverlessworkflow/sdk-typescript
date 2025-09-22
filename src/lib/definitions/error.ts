@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { End } from './end';
-import { Transition } from './transition';
+import { toPlainObject } from 'lodash';
+import { IEnd, End } from './end';
+import { ITransition, Transition } from './transition';
 import {
   cleanSourceModelProperty,
   normalizeEnd,
@@ -24,7 +25,17 @@ import {
   setEndValueIfNoTransition,
 } from './utils';
 
-export class Error {
+export interface IError {
+  sourceModel?: IError;
+  errorRef: string;
+  errorRefs?: [string, ...string[]];
+  transition: string | ITransition;
+  end?: boolean | IEnd;
+
+  normalize(): IError;
+}
+
+export class Error implements IError {
   sourceModel?: Error;
   /**
    * Reference to a unique workflow error definition. Used of errorRefs is not used
@@ -48,9 +59,9 @@ export class Error {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Error} without deleted properties.
+   * @returns {Specification.IError} without deleted properties.
    */
-  normalize = (): Error => {
+  normalize(): IError {
     const clone = new Error(this);
 
     normalizeEnd(clone);
@@ -59,6 +70,7 @@ export class Error {
     setEndValueIfNoTransition(clone);
 
     cleanSourceModelProperty(clone);
-    return clone;
-  };
+
+    return toPlainObject(clone);
+  }
 }

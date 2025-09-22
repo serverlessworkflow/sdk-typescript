@@ -16,29 +16,36 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
+import { toPlainObject } from 'lodash';
 import { setEndValueIfNoTransition } from '../definitions/utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Eventstate} data The underlying object
- * @returns {Specification.Eventstate} The validated underlying object
+ * @param {Specification.IEventstate} data The underlying object
+ * @returns {Specification.IEventstate} The validated underlying object
  */
-function eventstateBuildingFn(data: Specification.Eventstate): () => Specification.Eventstate {
+function eventstateBuildingFn(data: Specification.IEventstate): () => Specification.IEventstate {
   return () => {
     const model = new Specification.Eventstate(data);
 
     setEndValueIfNoTransition(model);
 
-    validate('Eventstate', model.normalize());
-    return model;
+    if (hasProperty(model, 'normalize')) {
+      validate('Eventstate', (model as any).normalize());
+    } else {
+      validate('Eventstate', model);
+    }
+
+    return toPlainObject(model);
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Eventstate`
- * @returns {Specification.Eventstate} A builder for `Specification.Eventstate`
+ * @returns {Specification.IEventstate} A builder for `Specification.Eventstate`
  */
-export function eventstateBuilder(): Builder<Specification.Eventstate> {
-  return builder<Specification.Eventstate>(eventstateBuildingFn);
+export function eventstateBuilder(): Builder<Specification.IEventstate> {
+  return builder<Specification.IEventstate>(eventstateBuildingFn);
 }

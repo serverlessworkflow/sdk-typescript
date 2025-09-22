@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Actiondatafilter } from './actiondatafilter';
-import { Eventref } from './eventref';
-import { Functionref } from './functionref';
+import { IActiondatafilter, Actiondatafilter } from './actiondatafilter';
+import { IEventref, Eventref } from './eventref';
+import { IFunctionref, Functionref } from './functionref';
 import {
   cleanSourceModelProperty,
   normalizeEventRef,
@@ -27,10 +27,28 @@ import {
   overwriteSleep,
   overwriteSubFlowRef,
 } from './utils';
-import { Subflowref } from './subflowref';
-import { Sleep } from './sleep';
+import { ISubflowref, Subflowref } from './subflowref';
+import { ISleep, Sleep } from './sleep';
+import { toPlainObject } from 'lodash';
 
-export class Action {
+export interface IAction {
+  sourceModel?: IAction;
+  id?: string;
+  name?: string;
+  functionRef?: string | IFunctionref;
+  eventRef?: IEventref;
+  subFlowRef?: string | ISubflowref;
+  sleep?: ISleep;
+  retryRef?: string;
+  nonRetryableErrors?: [string, ...string[]];
+  retryableErrors?: [string, ...string[]];
+  actionDataFilter?: IActiondatafilter;
+  condition?: string;
+
+  normalize(): IAction;
+}
+
+export class Action implements IAction {
   sourceModel?: Action;
   /**
    * Unique action identifier
@@ -76,9 +94,9 @@ export class Action {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Action} without deleted properties.
+   * @returns {Specification.IAction} without deleted properties.
    */
-  normalize = (): Action => {
+  normalize(): IAction {
     const clone = new Action(this);
 
     normalizeSubFlowRef(clone);
@@ -87,6 +105,6 @@ export class Action {
 
     cleanSourceModelProperty(clone);
 
-    return clone;
-  };
+    return toPlainObject(clone);
+  }
 }

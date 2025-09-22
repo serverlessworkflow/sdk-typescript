@@ -17,7 +17,7 @@
 /**
  * Serverless Workflow specification - workflow schema
  */
-export type Workflow /* Serverless Workflow specification - workflow schema */ =
+export type Workflow = /* Serverless Workflow specification - workflow schema */
   | {
       /**
        * Workflow unique identifier
@@ -89,8 +89,8 @@ export type Workflow /* Serverless Workflow specification - workflow schema */ =
        * State definitions
        */
       states: [
-        (
-          | /* Causes the workflow execution to sleep for a specified duration */ Sleepstate
+        /* Causes the workflow execution to sleep for a specified duration */ (
+          | Sleepstate
           | /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ Eventstate
           | /* Defines actions be performed. Does not wait for incoming events */ Operationstate
           | /* Consists of a number of states that are executed in parallel */ Parallelstate
@@ -99,8 +99,8 @@ export type Workflow /* Serverless Workflow specification - workflow schema */ =
           | /* Execute a set of defined actions or workflows for each element of a data array */ Foreachstate
           | /* This state performs an action, then waits for the callback event that denotes completion of the action */ Callbackstate
         ),
-        ...(
-          | /* Causes the workflow execution to sleep for a specified duration */ Sleepstate
+        .../* Causes the workflow execution to sleep for a specified duration */ (
+          | Sleepstate
           | /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ Eventstate
           | /* Defines actions be performed. Does not wait for incoming events */ Operationstate
           | /* Consists of a number of states that are executed in parallel */ Parallelstate
@@ -182,8 +182,8 @@ export type Workflow /* Serverless Workflow specification - workflow schema */ =
        * State definitions
        */
       states: [
-        (
-          | /* Causes the workflow execution to sleep for a specified duration */ Sleepstate
+        /* Causes the workflow execution to sleep for a specified duration */ (
+          | Sleepstate
           | /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ Eventstate
           | /* Defines actions be performed. Does not wait for incoming events */ Operationstate
           | /* Consists of a number of states that are executed in parallel */ Parallelstate
@@ -192,8 +192,8 @@ export type Workflow /* Serverless Workflow specification - workflow schema */ =
           | /* Execute a set of defined actions or workflows for each element of a data array */ Foreachstate
           | /* This state performs an action, then waits for the callback event that denotes completion of the action */ Callbackstate
         ),
-        ...(
-          | /* Causes the workflow execution to sleep for a specified duration */ Sleepstate
+        .../* Causes the workflow execution to sleep for a specified duration */ (
+          | Sleepstate
           | /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ Eventstate
           | /* Defines actions be performed. Does not wait for incoming events */ Operationstate
           | /* Consists of a number of states that are executed in parallel */ Parallelstate
@@ -302,7 +302,6 @@ export type Action =
  * Single actions definition execution timeout duration (ISO 8601 duration format)
  */
 export type ActionExecTimeout = string;
-
 export interface Actiondatafilter {
   /**
    * Workflow expression that selects state data that the state action can use
@@ -321,9 +320,7 @@ export interface Actiondatafilter {
    */
   toStateData?: string;
 }
-
 export type Auth = string /* uri */ | [Authdef, ...Authdef[]];
-
 export interface Authdef {
   /**
    * Unique auth definition name
@@ -333,32 +330,36 @@ export interface Authdef {
    * Defines the auth type
    */
   scheme?: 'basic' | 'bearer' | 'oauth2';
-  properties: string | Basicpropsdef | Bearerpropsdef | Oauth2propsdef;
+  properties:
+    | string
+    | /* Basic auth information */ Basicpropsdef
+    | /* Bearer auth information */ Bearerpropsdef
+    | /* OAuth2 information */ Oauth2propsdef;
 }
-
-export type Basicpropsdef =
-  | string
-  | {
-      /**
-       * String or a workflow expression. Contains the user name
-       */
-      username: string;
-      /**
-       * String or a workflow expression. Contains the user password
-       */
-      password: string;
-      metadata?: /* Metadata information */ Metadata;
-    };
-export type Bearerpropsdef =
-  | string
-  | {
-      /**
-       * String or a workflow expression. Contains the token
-       */
-      token: string;
-      metadata?: /* Metadata information */ Metadata;
-    };
-
+/**
+ * Basic auth information
+ */
+export interface Basicpropsdef {
+  /**
+   * String or a workflow expression. Contains the user name
+   */
+  username: string;
+  /**
+   * String or a workflow expression. Contains the user password
+   */
+  password: string;
+  metadata?: /* Metadata information */ Metadata;
+}
+/**
+ * Bearer auth information
+ */
+export interface Bearerpropsdef {
+  /**
+   * String or a workflow expression. Contains the token
+   */
+  token: string;
+  metadata?: /* Metadata information */ Metadata;
+}
 /**
  * Branch Definition
  */
@@ -379,12 +380,10 @@ export interface Branch {
    */
   actions: Action[];
 }
-
 /**
  * Single branch execution timeout duration (ISO 8601 duration format)
  */
 export type BranchExecTimeout = string;
-
 /**
  * This state performs an action, then waits for the callback event that denotes completion of the action
  */
@@ -447,7 +446,6 @@ export interface Callbackstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
-
 export type Continueasdef =
   | string
   | {
@@ -472,7 +470,6 @@ export type Continueasdef =
        */
       workflowExecTimeout?: WorkflowExecTimeout;
     };
-
 /**
  * CloudEvent correlation definition
  */
@@ -486,7 +483,6 @@ export interface CorrelationDef {
    */
   contextAttributeValue?: string;
 }
-
 export type Crondef =
   | string
   | {
@@ -499,7 +495,6 @@ export type Crondef =
        */
       validUntil?: string;
     };
-
 /**
  * Permits transitions to other states based on data conditions
  */
@@ -548,14 +543,13 @@ export interface Databasedswitchstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
-
-export type Datacondition /* Switch state data based condition */ =
+export type Datacondition = /* Switch state data based condition */
   | Transitiondatacondition
   | /* Switch state data based condition */ Enddatacondition;
 /**
  * DefaultCondition definition. Can be either a transition or end definition
  */
-export type Defaultconditiondef /* DefaultCondition definition. Can be either a transition or end definition */ =
+export type Defaultconditiondef = /* DefaultCondition definition. Can be either a transition or end definition */
   | {
       transition: Transition;
       end?: End;
@@ -581,7 +575,6 @@ export type End =
       compensate?: boolean;
       continueAs?: Continueasdef;
     };
-
 /**
  * Switch state data based condition
  */
@@ -600,7 +593,6 @@ export interface Enddatacondition {
   end: End;
   metadata?: /* Metadata information */ Metadata;
 }
-
 /**
  * Switch state data event condition
  */
@@ -623,7 +615,6 @@ export interface Enddeventcondition {
   eventDataFilter?: Eventdatafilter;
   metadata?: /* Metadata information */ Metadata;
 }
-
 export type Error =
   | {
       /**
@@ -673,7 +664,6 @@ export type Error =
       transition?: Transition;
       end: End;
     };
-
 export interface Errordef {
   /**
    * Domain-specific error name
@@ -688,13 +678,11 @@ export interface Errordef {
    */
   description?: string;
 }
-
 export type Errors = string /* uri */ | [Errordef, ...Errordef[]];
 /**
  * Timeout duration to wait for consuming defined events (ISO 8601 duration format)
  */
 export type EventTimeout = string;
-
 /**
  * Permits transitions to other states based on events
  */
@@ -744,11 +732,9 @@ export interface Eventbasedswitchstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
-
-export type Eventcondition /* Switch state data event condition */ =
+export type Eventcondition = /* Switch state data event condition */
   | Transitioneventcondition
   | /* Switch state data event condition */ Enddeventcondition;
-
 export interface Eventdatafilter {
   /**
    * If set to false, event payload is not added/merged to state data. In this case 'data' and 'toStateData' should be ignored. Default is true.
@@ -763,7 +749,6 @@ export interface Eventdatafilter {
    */
   toStateData?: string;
 }
-
 export interface Eventdef {
   /**
    * Unique event name
@@ -797,7 +782,6 @@ export interface Eventdef {
    */
   metadata?: /* Metadata information */ Metadata;
 }
-
 /**
  * Event References
  */
@@ -833,98 +817,96 @@ export interface Eventref {
    */
   invoke?: 'sync' | 'async';
 }
-
 export type Events = string /* uri */ | [Eventdef, ...Eventdef[]];
 /**
  * This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel
  */
 export type Eventstate =
   /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */
-  | {
-      /**
-       * Unique State id
-       */
-      id?: string;
-      /**
-       * State name
-       */
-      name: string;
-      /**
-       * State type
-       */
-      type: 'event';
-      /**
-       * If true consuming one of the defined events causes its associated actions to be performed. If false all of the defined events must be consumed in order for actions to be performed
-       */
-      exclusive?: boolean;
-      /**
-       * Define the events to be consumed and optional actions to be performed
-       */
-      onEvents: Onevents[];
-      /**
-       * State specific timeouts
-       */
-      timeouts?: {
-        stateExecTimeout?: StateExecTimeout;
-        actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
-        eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
+    | {
+        /**
+         * Unique State id
+         */
+        id?: string;
+        /**
+         * State name
+         */
+        name: string;
+        /**
+         * State type
+         */
+        type: 'event';
+        /**
+         * If true consuming one of the defined events causes its associated actions to be performed. If false all of the defined events must be consumed in order for actions to be performed
+         */
+        exclusive?: boolean;
+        /**
+         * Define the events to be consumed and optional actions to be performed
+         */
+        onEvents: Onevents[];
+        /**
+         * State specific timeouts
+         */
+        timeouts?: {
+          stateExecTimeout?: StateExecTimeout;
+          actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+          eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
+        };
+        stateDataFilter?: Statedatafilter;
+        /**
+         * States error handling definitions
+         */
+        onErrors?: Error[];
+        transition?: Transition;
+        end: End;
+        /**
+         * Unique Name of a workflow state which is responsible for compensation of this state
+         */
+        compensatedBy?: string;
+        metadata?: /* Metadata information */ Metadata;
+      }
+    | {
+        /**
+         * Unique State id
+         */
+        id?: string;
+        /**
+         * State name
+         */
+        name: string;
+        /**
+         * State type
+         */
+        type: 'event';
+        /**
+         * If true consuming one of the defined events causes its associated actions to be performed. If false all of the defined events must be consumed in order for actions to be performed
+         */
+        exclusive?: boolean;
+        /**
+         * Define the events to be consumed and optional actions to be performed
+         */
+        onEvents: Onevents[];
+        /**
+         * State specific timeouts
+         */
+        timeouts?: {
+          stateExecTimeout?: StateExecTimeout;
+          actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
+          eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
+        };
+        stateDataFilter?: Statedatafilter;
+        /**
+         * States error handling definitions
+         */
+        onErrors?: Error[];
+        transition: Transition;
+        end?: End;
+        /**
+         * Unique Name of a workflow state which is responsible for compensation of this state
+         */
+        compensatedBy?: string;
+        metadata?: /* Metadata information */ Metadata;
       };
-      stateDataFilter?: Statedatafilter;
-      /**
-       * States error handling definitions
-       */
-      onErrors?: Error[];
-      transition?: Transition;
-      end: End;
-      /**
-       * Unique Name of a workflow state which is responsible for compensation of this state
-       */
-      compensatedBy?: string;
-      metadata?: /* Metadata information */ Metadata;
-    }
-  | {
-      /**
-       * Unique State id
-       */
-      id?: string;
-      /**
-       * State name
-       */
-      name: string;
-      /**
-       * State type
-       */
-      type: 'event';
-      /**
-       * If true consuming one of the defined events causes its associated actions to be performed. If false all of the defined events must be consumed in order for actions to be performed
-       */
-      exclusive?: boolean;
-      /**
-       * Define the events to be consumed and optional actions to be performed
-       */
-      onEvents: Onevents[];
-      /**
-       * State specific timeouts
-       */
-      timeouts?: {
-        stateExecTimeout?: StateExecTimeout;
-        actionExecTimeout?: /* Single actions definition execution timeout duration (ISO 8601 duration format) */ ActionExecTimeout;
-        eventTimeout?: /* Timeout duration to wait for consuming defined events (ISO 8601 duration format) */ EventTimeout;
-      };
-      stateDataFilter?: Statedatafilter;
-      /**
-       * States error handling definitions
-       */
-      onErrors?: Error[];
-      transition: Transition;
-      end?: End;
-      /**
-       * Unique Name of a workflow state which is responsible for compensation of this state
-       */
-      compensatedBy?: string;
-      metadata?: /* Metadata information */ Metadata;
-    };
-
 /**
  * Execute a set of defined actions or workflows for each element of a data array
  */
@@ -998,7 +980,6 @@ export interface Foreachstate {
   mode?: 'sequential' | 'parallel';
   metadata?: /* Metadata information */ Metadata;
 }
-
 export interface Function {
   /**
    * Unique function name
@@ -1018,7 +999,6 @@ export interface Function {
   authRef?: string;
   metadata?: /* Metadata information */ Metadata;
 }
-
 export type Functionref =
   | string
   | {
@@ -1042,7 +1022,6 @@ export type Functionref =
       invoke?: 'sync' | 'async';
     };
 export type Functions = string /* uri */ | [Function, ...Function[]];
-
 /**
  * Inject static data into state data. Does not perform any actions
  */
@@ -1093,64 +1072,62 @@ export interface Injectstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
-
 /**
  * Metadata information
  */
 export interface Metadata {
   [name: string]: string;
 }
-
-export type Oauth2propsdef =
-  | string
-  | {
-      /**
-       * String or a workflow expression. Contains the authority information
-       */
-      authority?: string;
-      /**
-       * Defines the grant type
-       */
-      grantType: 'password' | 'clientCredentials' | 'tokenExchange';
-      /**
-       * String or a workflow expression. Contains the client identifier
-       */
-      clientId: string;
-      /**
-       * Workflow secret or a workflow expression. Contains the client secret
-       */
-      clientSecret?: string;
-      /**
-       * Array containing strings or workflow expressions. Contains the OAuth2 scopes
-       */
-      scopes?: [string, ...string[]];
-      /**
-       * String or a workflow expression. Contains the user name. Used only if grantType is 'resourceOwner'
-       */
-      username?: string;
-      /**
-       * String or a workflow expression. Contains the user password. Used only if grantType is 'resourceOwner'
-       */
-      password?: string;
-      /**
-       * Array containing strings or workflow expressions. Contains the OAuth2 audiences
-       */
-      audiences?: [string, ...string[]];
-      /**
-       * String or a workflow expression. Contains the subject token
-       */
-      subjectToken?: string;
-      /**
-       * String or a workflow expression. Contains the requested subject
-       */
-      requestedSubject?: string;
-      /**
-       * String or a workflow expression. Contains the requested issuer
-       */
-      requestedIssuer?: string;
-      metadata?: /* Metadata information */ Metadata;
-    };
-
+/**
+ * OAuth2 information
+ */
+export interface Oauth2propsdef {
+  /**
+   * String or a workflow expression. Contains the authority information
+   */
+  authority?: string;
+  /**
+   * Defines the grant type
+   */
+  grantType: 'password' | 'clientCredentials' | 'tokenExchange';
+  /**
+   * String or a workflow expression. Contains the client identifier
+   */
+  clientId: string;
+  /**
+   * Workflow secret or a workflow expression. Contains the client secret
+   */
+  clientSecret?: string;
+  /**
+   * Array containing strings or workflow expressions. Contains the OAuth2 scopes
+   */
+  scopes?: [string, ...string[]];
+  /**
+   * String or a workflow expression. Contains the user name. Used only if grantType is 'resourceOwner'
+   */
+  username?: string;
+  /**
+   * String or a workflow expression. Contains the user password. Used only if grantType is 'resourceOwner'
+   */
+  password?: string;
+  /**
+   * Array containing strings or workflow expressions. Contains the OAuth2 audiences
+   */
+  audiences?: [string, ...string[]];
+  /**
+   * String or a workflow expression. Contains the subject token
+   */
+  subjectToken?: string;
+  /**
+   * String or a workflow expression. Contains the requested subject
+   */
+  requestedSubject?: string;
+  /**
+   * String or a workflow expression. Contains the requested issuer
+   */
+  requestedIssuer?: string;
+  metadata?: /* Metadata information */ Metadata;
+}
 export interface Onevents {
   /**
    * References one or more unique event names in the defined workflow events
@@ -1169,7 +1146,6 @@ export interface Onevents {
    */
   eventDataFilter?: Eventdatafilter;
 }
-
 /**
  * Defines actions be performed. Does not wait for incoming events
  */
@@ -1227,7 +1203,6 @@ export interface Operationstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
-
 /**
  * Consists of a number of states that are executed in parallel
  */
@@ -1289,7 +1264,6 @@ export interface Parallelstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
-
 /**
  * Produce an event and set its data
  */
@@ -1313,9 +1287,7 @@ export interface Produceeventdef {
     [name: string]: string;
   };
 }
-
 export type Retries = string /* uri */ | [Retrydef, ...Retrydef[]];
-
 export interface Retrydef {
   /**
    * Unique retry strategy name
@@ -1346,7 +1318,6 @@ export interface Retrydef {
    */
   jitter?: number | string;
 }
-
 export type Schedule =
   | string
   | /* Start state schedule definition */ (
@@ -1405,7 +1376,6 @@ export type Sleep =
        */
       after: string;
     };
-
 /**
  * Causes the workflow execution to sleep for a specified duration
  */
@@ -1458,7 +1428,6 @@ export interface Sleepstate {
   usedForCompensation?: boolean;
   metadata?: /* Metadata information */ Metadata;
 }
-
 export type Startdef =
   | string
   | {
@@ -1483,7 +1452,6 @@ export type StateExecTimeout =
        */
       total: string;
     };
-
 export interface Statedatafilter {
   /**
    * Workflow expression to filter the state data input
@@ -1494,7 +1462,6 @@ export interface Statedatafilter {
    */
   output?: string;
 }
-
 export type Subflowref =
   | string
   | {
@@ -1515,7 +1482,7 @@ export type Subflowref =
        */
       invoke?: 'sync' | 'async';
     };
-export type Switchstate /* Permits transitions to other states based on data conditions */ =
+export type Switchstate = /* Permits transitions to other states based on data conditions */
   | Databasedswitchstate
   | /* Permits transitions to other states based on events */ Eventbasedswitchstate;
 export type Timeouts =
@@ -1543,7 +1510,6 @@ export type Transition =
        */
       compensate?: boolean;
     };
-
 /**
  * Switch state data based condition
  */
@@ -1562,7 +1528,6 @@ export interface Transitiondatacondition {
   transition: Transition;
   metadata?: /* Metadata information */ Metadata;
 }
-
 /**
  * Switch state data event condition
  */
@@ -1585,7 +1550,6 @@ export interface Transitioneventcondition {
   eventDataFilter?: Eventdatafilter;
   metadata?: /* Metadata information */ Metadata;
 }
-
 export type WorkflowExecTimeout =
   | string
   | {

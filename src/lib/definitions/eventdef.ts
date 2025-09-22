@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Metadata } from './metadata';
+import { IMetadata, Metadata } from './metadata';
 import {
   cleanSourceModelProperty,
   normalizeDataOnly,
@@ -22,8 +22,22 @@ import {
   overwriteMetadata,
 } from './utils';
 import { CorrelationDefs } from './types';
+import { toPlainObject } from 'lodash';
 
-export class Eventdef {
+export interface IEventdef {
+  sourceModel?: IEventdef;
+  name?: string;
+  source?: string;
+  type?: string;
+  kind?: 'consumed' | 'produced';
+  correlation?: CorrelationDefs;
+  dataOnly?: boolean;
+  metadata?: IMetadata;
+
+  normalize(): IEventdef;
+}
+
+export class Eventdef implements IEventdef {
   sourceModel?: Eventdef;
   /**
    * Unique event name
@@ -69,15 +83,16 @@ export class Eventdef {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Eventdef} without deleted properties.
+   * @returns {Specification.IEventdef} without deleted properties.
    */
-  normalize = (): Eventdef => {
+  normalize(): IEventdef {
     const clone = new Eventdef(this);
 
     normalizeKind(clone, this.sourceModel);
     normalizeDataOnly(clone, this.sourceModel);
 
     cleanSourceModelProperty(clone);
-    return clone;
-  };
+
+    return toPlainObject(clone);
+  }
 }

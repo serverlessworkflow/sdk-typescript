@@ -15,6 +15,7 @@
  */
 
 import * as fs from 'fs';
+import { original, produce } from 'immer';
 import {
   actionBuilder,
   actiondatafilterBuilder,
@@ -24,6 +25,7 @@ import {
   functionrefBuilder,
   operationstateBuilder,
   sleepstateBuilder,
+  Specification,
   statedatafilterBuilder,
   transitiondataconditionBuilder,
   workflowBuilder,
@@ -135,5 +137,122 @@ describe('jobmonitoring workflow example', () => {
 
     const expected = JSON.parse(fs.readFileSync('./tests/examples/jobmonitoring.json', 'utf8'));
     expect(JSON.stringify(workflow.normalize())).toEqual(JSON.stringify(expected));
+  });
+
+  it('built workflow should be immerable', function () {
+    const workflow = workflowBuilder()
+      .id('jobmonitoring')
+      .version('1.0')
+      .specVersion('0.8')
+      .name('Job Monitoring')
+      .description('Monitor finished execution of a submitted job')
+      .start('SubmitJob')
+      .functions([
+        functionBuilder().name('submitJob').operation('http://myapis.org/monitorapi.json#doSubmit').build(),
+        functionBuilder().name('checkJobStatus').operation('http://myapis.org/monitorapi.json#checkStatus').build(),
+        functionBuilder()
+          .name('reportJobSuceeded')
+          .operation('http://myapis.org/monitorapi.json#reportSucceeded')
+          .build(),
+        functionBuilder().name('reportJobFailed').operation('http://myapis.org/monitorapi.json#reportFailure').build(),
+      ])
+      .states([
+        operationstateBuilder()
+          .name('SubmitJob')
+          .actionMode('sequential')
+          .actions([
+            actionBuilder()
+              .functionRef(
+                functionrefBuilder()
+                  .refName('submitJob')
+                  .arguments({
+                    name: '${ .job.name }',
+                  })
+                  .build()
+              )
+              .actionDataFilter(actiondatafilterBuilder().results('${ .jobuid }').build())
+              .build(),
+          ])
+          .stateDataFilter(statedatafilterBuilder().output('${ .jobuid }').build())
+          .transition('WaitForCompletion')
+          .build(),
+        sleepstateBuilder().name('WaitForCompletion').duration('PT5S').transition('GetJobStatus').build(),
+        operationstateBuilder()
+          .name('GetJobStatus')
+          .actionMode('sequential')
+          .actions([
+            actionBuilder()
+              .functionRef(
+                functionrefBuilder()
+                  .refName('checkJobStatus')
+                  .arguments({
+                    name: '${ .jobuid }',
+                  })
+                  .build()
+              )
+              .actionDataFilter(actiondatafilterBuilder().results('${ .jobstatus }').build())
+              .build(),
+          ])
+          .stateDataFilter(statedatafilterBuilder().output('${ .jobstatus }').build())
+          .transition('DetermineCompletion')
+          .build(),
+        databasedswitchstateBuilder()
+          .name('DetermineCompletion')
+          .dataConditions([
+            transitiondataconditionBuilder()
+              .condition('${ .jobStatus == "SUCCEEDED" }')
+              .transition('JobSucceeded')
+              .build(),
+            transitiondataconditionBuilder().condition('${ .jobStatus == "FAILED" }').transition('JobFailed').build(),
+          ])
+          .defaultCondition(defaultconditiondefBuilder().transition('WaitForCompletion').build())
+          .build(),
+        operationstateBuilder()
+          .name('JobSucceeded')
+          .actionMode('sequential')
+          .actions([
+            actionBuilder()
+              .functionRef(
+                functionrefBuilder()
+                  .refName('reportJobSuceeded')
+                  .arguments({
+                    name: '${ .jobuid }',
+                  })
+                  .build()
+              )
+              .build(),
+          ])
+          .build(),
+        operationstateBuilder()
+          .name('JobFailed')
+          .actionMode('sequential')
+          .actions([
+            actionBuilder()
+              .functionRef(
+                functionrefBuilder()
+                  .refName('reportJobFailed')
+                  .arguments({
+                    name: '${ .jobuid }',
+                  })
+                  .build()
+              )
+              .build(),
+          ])
+          .build(),
+      ])
+      .build();
+
+    // Use immer to create a draft and compare with original model ensuring it is immerable
+    produce(workflow, (draft) => {
+      expect(workflow === original(draft)).toBe(true);
+    });
+  });
+
+  it('deserialized workflow should be immerable', function () {
+    const model = Specification.Workflow.fromSource(fs.readFileSync('./tests/examples/jobmonitoring.json', 'utf8'));
+
+    produce(model, (draft: any) => {
+      expect(model === original(draft)).toBe(true);
+    });
   });
 });

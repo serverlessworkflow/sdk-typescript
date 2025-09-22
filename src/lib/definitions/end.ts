@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Produceeventdef } from './produceeventdef';
+import { IProduceeventdef, Produceeventdef } from './produceeventdef';
 import {
   cleanSourceModelProperty,
   normalizeCompensate,
@@ -22,7 +22,18 @@ import {
   overwriteContinueAs,
   overwriteProduceEvents,
 } from './utils';
-import { Continueasdef } from './continueasdef';
+import { IContinueasdef, Continueasdef } from './continueasdef';
+import { toPlainObject } from 'lodash';
+
+export interface IEnd {
+  sourceModel?: IEnd;
+  terminate?: boolean;
+  produceEvents?: IProduceeventdef[];
+  compensate?: boolean;
+  continueAs?: string | IContinueasdef;
+
+  normalize(): IEnd;
+}
 
 export class End {
   sourceModel?: End;
@@ -55,9 +66,9 @@ export class End {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.End} without deleted properties.
+   * @returns {Specification.IEnd} without deleted properties.
    */
-  normalize = (): End => {
+  normalize(): IEnd {
     const clone = new End(this);
 
     normalizeCompensate(clone, this.sourceModel);
@@ -65,6 +76,7 @@ export class End {
     normalizeContinueAs(clone);
 
     cleanSourceModelProperty(clone);
-    return clone;
-  };
+    
+    return toPlainObject(clone);
+  }
 }

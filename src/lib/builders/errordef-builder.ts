@@ -16,26 +16,33 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
+import { toPlainObject } from 'lodash';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Errordef} data The underlying object
- * @returns {Specification.Errordef} The validated underlying object
+ * @param {Specification.IErrordef} data The underlying object
+ * @returns {Specification.IErrordef} The validated underlying object
  */
-function errordefBuildingFn(data: Specification.Errordef): () => Specification.Errordef {
+function errordefBuildingFn(data: Specification.IErrordef): () => Specification.IErrordef {
   return () => {
     const model = new Specification.Errordef(data);
 
-    validate('Errordef', model);
-    return model;
+    if (hasProperty(model, 'normalize')) {
+      validate('Errordef', (model as any).normalize());
+    } else {
+      validate('Errordef', model);
+    }
+
+    return toPlainObject(model);
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Errordef`
- * @returns {Specification.Errordef} A builder for `Specification.Errordef`
+ * @returns {Specification.IErrordef} A builder for `Specification.Errordef`
  */
-export function errordefBuilder(): Builder<Specification.Errordef> {
-  return builder<Specification.Errordef>(errordefBuildingFn);
+export function errordefBuilder(): Builder<Specification.IErrordef> {
+  return builder<Specification.IErrordef>(errordefBuildingFn);
 }

@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Eventdatafilter } from './eventdatafilter';
-import { Metadata } from './metadata';
-import { Transition } from './transition';
+import { toPlainObject } from 'lodash';
+import { IEventdatafilter, Eventdatafilter } from './eventdatafilter';
+import { IMetadata, Metadata } from './metadata';
+import { ITransition, Transition } from './transition';
 import {
   cleanSourceModelProperty,
   normalizeTransition,
@@ -24,7 +25,18 @@ import {
   overwriteTransition,
 } from './utils';
 
-export class Transitioneventcondition {
+export interface ITransitioneventcondition {
+  sourceModel?: ITransitioneventcondition;
+  name?: string;
+  eventRef: string;
+  transition: string | ITransition;
+  eventDataFilter?: IEventdatafilter;
+  metadata?: IMetadata;
+
+  normalize(): ITransitioneventcondition;
+}
+
+export class Transitioneventcondition implements ITransitioneventcondition {
   sourceModel?: Transitioneventcondition;
   /**
    * Event condition name
@@ -56,14 +68,15 @@ export class Transitioneventcondition {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Transitioneventcondition} without deleted properties.
+   * @returns {Specification.ITransitioneventcondition} without deleted properties.
    */
-  normalize = (): Transitioneventcondition => {
+  normalize(): ITransitioneventcondition {
     const clone = new Transitioneventcondition(this);
 
     normalizeTransition(clone);
 
     cleanSourceModelProperty(clone);
-    return clone;
-  };
+
+    return toPlainObject(clone);
+  }
 }

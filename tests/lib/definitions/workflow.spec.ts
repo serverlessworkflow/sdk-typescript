@@ -35,7 +35,7 @@ describe('workflow fromSource', () => {
   ];
   testCases.forEach((test) => {
     it(test.description, function () {
-      const workflow: Specification.Workflow = Workflow.fromSource(readFileSync(test.file, 'utf-8'));
+      const workflow: Specification.IWorkflow = Workflow.fromSource(readFileSync(test.file, 'utf-8'));
       expect(workflow.id).toBe('helloworld');
       expect(workflow.version).toBe('1.0');
       expect(workflow.name).toBe('Hello World Workflow');

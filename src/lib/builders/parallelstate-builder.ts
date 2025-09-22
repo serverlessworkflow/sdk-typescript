@@ -16,29 +16,36 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
+import { toPlainObject } from 'lodash';
 import { setEndValueIfNoTransition } from '../definitions/utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Parallelstate} data The underlying object
- * @returns {Specification.Parallelstate} The validated underlying object
+ * @param {Specification.IParallelstate} data The underlying object
+ * @returns {Specification.IParallelstate} The validated underlying object
  */
-function parallelstateBuildingFn(data: Specification.Parallelstate): () => Specification.Parallelstate {
+function parallelstateBuildingFn(data: Specification.IParallelstate): () => Specification.IParallelstate {
   return () => {
     const model = new Specification.Parallelstate(data);
 
     setEndValueIfNoTransition(model);
 
-    validate('Parallelstate', model.normalize());
-    return model;
+    if (hasProperty(model, 'normalize')) {
+      validate('Parallelstate', (model as any).normalize());
+    } else {
+      validate('Parallelstate', model);
+    }
+
+    return toPlainObject(model);
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Parallelstate`
- * @returns {Specification.Parallelstate} A builder for `Specification.Parallelstate`
+ * @returns {Specification.IParallelstate} A builder for `Specification.Parallelstate`
  */
-export function parallelstateBuilder(): Builder<Specification.Parallelstate> {
-  return builder<Specification.Parallelstate>(parallelstateBuildingFn);
+export function parallelstateBuilder(): Builder<Specification.IParallelstate> {
+  return builder<Specification.IParallelstate>(parallelstateBuildingFn);
 }

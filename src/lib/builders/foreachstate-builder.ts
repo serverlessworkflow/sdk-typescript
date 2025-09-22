@@ -16,29 +16,36 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
+import { toPlainObject } from 'lodash';
 import { setEndValueIfNoTransition } from '../definitions/utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Foreachstate} data The underlying object
- * @returns {Specification.Foreachstate} The validated underlying object
+ * @param {Specification.IForeachstate} data The underlying object
+ * @returns {Specification.IForeachstate} The validated underlying object
  */
-function foreachstateBuildingFn(data: Specification.Foreachstate): () => Specification.Foreachstate {
+function foreachstateBuildingFn(data: Specification.IForeachstate): () => Specification.IForeachstate {
   return () => {
     const model = new Specification.Foreachstate(data);
 
     setEndValueIfNoTransition(model);
 
-    validate('Foreachstate', model.normalize());
-    return model;
+    if (hasProperty(model, 'normalize')) {
+      validate('Foreachstate', (model as any).normalize());
+    } else {
+      validate('Foreachstate', model);
+    }
+
+    return toPlainObject(model);
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Foreachstate`
- * @returns {Specification.Foreachstate} A builder for `Specification.Foreachstate`
+ * @returns {Specification.IForeachstate} A builder for `Specification.Foreachstate`
  */
-export function foreachstateBuilder(): Builder<Specification.Foreachstate> {
-  return builder<Specification.Foreachstate>(foreachstateBuildingFn);
+export function foreachstateBuilder(): Builder<Specification.IForeachstate> {
+  return builder<Specification.IForeachstate>(foreachstateBuildingFn);
 }

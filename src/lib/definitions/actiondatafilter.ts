@@ -14,7 +14,14 @@
  * limitations under the License.
  */
 
-export class Actiondatafilter {
+export interface IActiondatafilter {
+  fromStateData?: string;
+  useResults?: boolean;
+  results?: string;
+  toStateData?: string;
+}
+
+export class Actiondatafilter implements IActiondatafilter {
   /**
    * Workflow expression that selects state data that the state action can use
    */

@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-export class Sleep {
+export interface ISleep {
+  before: string;
+  after?: string;
+}
+
+export class Sleep implements ISleep {
   /**
    * Amount of time (ISO 8601 duration format) to sleep before function/subflow invocation. Does not apply if 'eventRef' is defined.
    */

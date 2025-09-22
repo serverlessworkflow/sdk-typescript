@@ -16,26 +16,33 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
+import { toPlainObject } from 'lodash';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Function} data The underlying object
- * @returns {Specification.Function} The validated underlying object
+ * @param {Specification.IFunction} data The underlying object
+ * @returns {Specification.IFunction} The validated underlying object
  */
-function functionBuildingFn(data: Specification.Function): () => Specification.Function {
+function functionBuildingFn(data: Specification.IFunction): () => Specification.IFunction {
   return () => {
     const model = new Specification.Function(data);
 
-    validate('Function', model.normalize());
-    return model;
+    if (hasProperty(model, 'normalize')) {
+      validate('Function', (model as any).normalize());
+    } else {
+      validate('Function', model);
+    }
+
+    return toPlainObject(model);
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Function`
- * @returns {Specification.Function} A builder for `Specification.Function`
+ * @returns {Specification.IFunction} A builder for `Specification.Function`
  */
-export function functionBuilder(): Builder<Specification.Function> {
-  return builder<Specification.Function>(functionBuildingFn);
+export function functionBuilder(): Builder<Specification.IFunction> {
+  return builder<Specification.IFunction>(functionBuildingFn);
 }

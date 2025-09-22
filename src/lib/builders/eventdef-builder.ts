@@ -16,26 +16,33 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
+import { toPlainObject } from 'lodash';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Eventdef} data The underlying object
- * @returns {Specification.Eventdef} The validated underlying object
+ * @param {Specification.IEventdef} data The underlying object
+ * @returns {Specification.IEventdef} The validated underlying object
  */
-function eventdefBuildingFn(data: Specification.Eventdef): () => Specification.Eventdef {
+function eventdefBuildingFn(data: Specification.IEventdef): () => Specification.IEventdef {
   return () => {
     const model = new Specification.Eventdef(data);
 
-    validate('Eventdef', model.normalize());
-    return model;
+    if (hasProperty(model, 'normalize')) {
+      validate('Eventdef', (model as any).normalize());
+    } else {
+      validate('Eventdef', model);
+    }
+
+    return toPlainObject(model);
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Eventdef`
- * @returns {Specification.Eventdef} A builder for `Specification.Eventdef`
+ * @returns {Specification.IEventdef} A builder for `Specification.Eventdef`
  */
-export function eventdefBuilder(): Builder<Specification.Eventdef> {
-  return builder<Specification.Eventdef>(eventdefBuildingFn);
+export function eventdefBuilder(): Builder<Specification.IEventdef> {
+  return builder<Specification.IEventdef>(eventdefBuildingFn);
 }

@@ -15,9 +15,21 @@
  */
 import { cleanSourceModelProperty, normalizeType, overwriteMetadata } from './utils';
 
-import { Metadata } from './metadata';
+import { IMetadata, Metadata } from './metadata';
+import { toPlainObject } from 'lodash';
 
-export class Function {
+export interface IFunction {
+  sourceModel?: IFunction;
+  name: string;
+  operation: string;
+  type?: 'rest' | 'asyncapi' | 'rpc' | 'graphql' | 'odata' | 'expression' | 'custom';
+  authRef?: string;
+  metadata?: IMetadata;
+
+  normalize(): IFunction;
+}
+
+export class Function implements IFunction {
   sourceModel?: Function;
   /**
    * Unique function name
@@ -47,16 +59,15 @@ export class Function {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Function} without deleted properties.
+   * @returns {Specification.IFunction} without deleted properties.
    */
-
-  normalize = (): Function => {
+  normalize(): IFunction {
     const clone = new Function(this);
 
     normalizeType(clone, this.sourceModel);
 
     cleanSourceModelProperty(clone);
 
-    return clone;
-  };
+    return toPlainObject(clone);
+  }
 }

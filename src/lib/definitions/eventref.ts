@@ -14,9 +14,28 @@
  * limitations under the License.
  */
 
+import { toPlainObject } from 'lodash';
 import { cleanSourceModelProperty, normalizeInvoke, overwritePropertyAsPlainType } from './utils';
 
-export class Eventref {
+export interface IEventref {
+  sourceModel?: IEventref;
+  triggerEventRef: string;
+  resultEventRef: string;
+  resultEventTimeout?: string;
+  data?:
+    | string
+    | {
+        [key: string]: any;
+      };
+  contextAttributes?: {
+    [name: string]: string;
+  };
+  invoke?: 'sync' | 'async';
+
+  normalize(): IEventref;
+}
+
+export class Eventref implements IEventref {
   sourceModel?: Eventref;
   /**
    * Reference to the unique name of a 'produced' event definition
@@ -59,15 +78,15 @@ export class Eventref {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Eventref} without deleted properties.
+   * @returns {Specification.IEventref} without deleted properties.
    */
-  normalize = (): Eventref => {
+  normalize(): IEventref {
     const clone = new Eventref(this);
 
     normalizeInvoke(clone, this.sourceModel);
 
     cleanSourceModelProperty(clone);
 
-    return clone;
-  };
+    return toPlainObject(clone);
+  }
 }

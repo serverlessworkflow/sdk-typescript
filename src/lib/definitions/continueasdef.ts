@@ -15,13 +15,28 @@
  *
  */
 
-import { WorkflowExecTimeout } from './workflowExecTimeout';
+import { IWorkflowExecTimeout, WorkflowExecTimeout } from './workflowExecTimeout';
 import {
   cleanSourceModelProperty,
   normalizeWorkflowExecTimeout,
   overwritePropertyAsPlainType,
   overwriteWorkflowExecTimeout,
 } from './utils';
+import { toPlainObject } from 'lodash';
+
+export interface IContinueasdef {
+  sourceModel?: IContinueasdef;
+  workflowId: string;
+  version?: string;
+  data?:
+    | string
+    | {
+        [key: string]: any;
+      };
+  workflowExecTimeout?: IWorkflowExecTimeout;
+
+  normalize(): IContinueasdef;
+}
 
 export class Continueasdef {
   sourceModel?: Continueasdef;
@@ -56,14 +71,14 @@ export class Continueasdef {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Exectimeout} without deleted properties.
+   * @returns {Specification.IContinueasdef} without deleted properties.
    */
-  normalize = (): Continueasdef => {
+  normalize(): IContinueasdef {
     const clone = new Continueasdef(this);
     normalizeWorkflowExecTimeout(clone);
 
     cleanSourceModelProperty(clone);
 
-    return clone;
-  };
+    return toPlainObject(clone);
+  }
 }

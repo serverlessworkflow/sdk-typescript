@@ -13,10 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Crondef } from './crondef';
+import { ICrondef, Crondef } from './crondef';
 import { overwriteCron } from './utils';
 
-export class Schedule {
+export interface ISchedule {
+  interval?: string;
+  cron?: string | ICrondef;
+  timezone?: string;
+}
+
+export class Schedule implements ISchedule {
   /**
    * Time interval (must be repeating interval) described with ISO 8601 format. Declares when workflow instances will be automatically created.
    */

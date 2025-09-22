@@ -44,6 +44,8 @@ describe('workflow-validator, invalid state', () => {
     // @ts-ignore
     workflowWithEmptyStates.states = [];
 
+    console.log('--> handrey: ' + workflowWithEmptyStates.states.length);
+
     const workflowValidator = new WorkflowValidator(workflowWithEmptyStates);
 
     const numErrors = 1;

@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { End } from './end';
-import { Eventdatafilter } from './eventdatafilter';
-import { Metadata } from './metadata';
+import { toPlainObject } from 'lodash';
+import { IEnd, End } from './end';
+import { IEventdatafilter, Eventdatafilter } from './eventdatafilter';
+import { IMetadata, Metadata } from './metadata';
 import {
   cleanSourceModelProperty,
   normalizeEnd,
@@ -24,7 +25,18 @@ import {
   overwriteMetadata,
 } from './utils';
 
-export class Enddeventcondition {
+export interface IEnddeventcondition {
+  sourceModel?: IEnddeventcondition;
+  name?: string;
+  eventRef: string;
+  end: boolean | IEnd;
+  eventDataFilter?: IEventdatafilter;
+  metadata?: IMetadata;
+
+  normalize(): IEnddeventcondition;
+}
+
+export class Enddeventcondition implements IEnddeventcondition {
   sourceModel?: Enddeventcondition;
   /**
    * Event condition name
@@ -56,15 +68,15 @@ export class Enddeventcondition {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Enddeventcondition} without deleted properties.
+   * @returns {Specification.IEnddeventcondition} without deleted properties.
    */
-  normalize = (): Enddeventcondition => {
+  normalize(): IEnddeventcondition {
     const clone = new Enddeventcondition(this);
 
     normalizeEnd(clone);
 
     cleanSourceModelProperty(clone);
 
-    return clone;
-  };
+    return toPlainObject(clone);
+  }
 }

@@ -14,9 +14,20 @@
  * limitations under the License.
  */
 
+import { toPlainObject } from 'lodash';
 import { cleanSourceModelProperty, normalizeInvoke, normalizeOnParentComplete } from './utils';
 
-export class Subflowref {
+export interface ISubflowref {
+  sourceModel?: ISubflowref;
+  workflowId: string;
+  version?: string;
+  onParentComplete?: 'continue' | 'terminate';
+  invoke?: 'sync' | 'async';
+
+  normalize(): ISubflowref;
+}
+
+export class Subflowref implements ISubflowref {
   sourceModel?: Subflowref;
   /**
    * Unique id of the sub-workflow to be invoked
@@ -43,15 +54,16 @@ export class Subflowref {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Subflowref} without deleted properties.
+   * @returns {Specification.ISubflowref} without deleted properties.
    */
-  normalize = (): Subflowref => {
+  normalize(): ISubflowref {
     const clone = new Subflowref(this);
 
     normalizeInvoke(clone, this.sourceModel);
     normalizeOnParentComplete(clone, this.sourceModel);
 
     cleanSourceModelProperty(clone);
-    return clone;
-  };
+
+    return toPlainObject(clone);
+  }
 }

@@ -16,26 +16,33 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
+import { toPlainObject } from 'lodash';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Eventdatafilter} data The underlying object
- * @returns {Specification.Eventdatafilter} The validated underlying object
+ * @param {Specification.IEventdatafilter} data The underlying object
+ * @returns {Specification.IEventdatafilter} The validated underlying object
  */
-function eventdatafilterBuildingFn(data: Specification.Eventdatafilter): () => Specification.Eventdatafilter {
+function eventdatafilterBuildingFn(data: Specification.IEventdatafilter): () => Specification.IEventdatafilter {
   return () => {
     const model = new Specification.Eventdatafilter(data);
 
-    validate('Eventdatafilter', model);
-    return model;
+    if (hasProperty(model, 'normalize')) {
+      validate('Eventdatafilter', (model as any).normalize());
+    } else {
+      validate('Eventdatafilter', model);
+    }
+
+    return toPlainObject(model);
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Eventdatafilter`
- * @returns {Specification.Eventdatafilter} A builder for `Specification.Eventdatafilter`
+ * @returns {Specification.IEventdatafilter} A builder for `Specification.Eventdatafilter`
  */
-export function eventdatafilterBuilder(): Builder<Specification.Eventdatafilter> {
-  return builder<Specification.Eventdatafilter>(eventdatafilterBuildingFn);
+export function eventdatafilterBuilder(): Builder<Specification.IEventdatafilter> {
+  return builder<Specification.IEventdatafilter>(eventdatafilterBuildingFn);
 }

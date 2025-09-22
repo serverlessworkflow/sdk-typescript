@@ -16,28 +16,35 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
+import { toPlainObject } from 'lodash';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.WorkflowExecTimeout} data The underlying object
- * @returns {Specification.WorkflowExecTimeout} The validated underlying object
+ * @param {Specification.IWorkflowExecTimeout} data The underlying object
+ * @returns {Specification.IWorkflowExecTimeout} The validated underlying object
  */
 function workflowExecTimeoutBuildingFn(
-  data: Specification.WorkflowExecTimeout
-): () => Specification.WorkflowExecTimeout {
+  data: Specification.IWorkflowExecTimeout
+): () => Specification.IWorkflowExecTimeout {
   return () => {
     const model = new Specification.WorkflowExecTimeout(data);
 
-    validate('WorkflowExecTimeout', model.normalize());
-    return model;
+    if (hasProperty(model, 'normalize')) {
+      validate('WorkflowExecTimeout', (model as any).normalize());
+    } else {
+      validate('WorkflowExecTimeout', model);
+    }
+
+    return toPlainObject(model);
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.WorkflowExecTimeout`
- * @returns {Specification.WorkflowExecTimeout} A builder for `Specification.WorkflowExecTimeout`
+ * @returns {Specification.IWorkflowExecTimeout} A builder for `Specification.WorkflowExecTimeout`
  */
-export function workflowExecTimeoutBuilder(): Builder<Specification.WorkflowExecTimeout> {
-  return builder<Specification.WorkflowExecTimeout>(workflowExecTimeoutBuildingFn);
+export function workflowExecTimeoutBuilder(): Builder<Specification.IWorkflowExecTimeout> {
+  return builder<Specification.IWorkflowExecTimeout>(workflowExecTimeoutBuildingFn);
 }

@@ -16,26 +16,33 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
+import { toPlainObject } from 'lodash';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.CorrelationDef} data The underlying object
- * @returns {Specification.CorrelationDef} The validated underlying object
+ * @param {Specification.ICorrelationDef} data The underlying object
+ * @returns {Specification.ICorrelationDef} The validated underlying object
  */
-function correlationDefBuildingFn(data: Specification.CorrelationDef): () => Specification.CorrelationDef {
+function correlationDefBuildingFn(data: Specification.ICorrelationDef): () => Specification.ICorrelationDef {
   return () => {
     const model = new Specification.CorrelationDef(data);
 
-    validate('CorrelationDef', model);
-    return model;
+    if (hasProperty(model, 'normalize')) {
+      validate('CorrelationDef', (model as any).normalize());
+    } else {
+      validate('CorrelationDef', model);
+    }
+
+    return toPlainObject(model);
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.CorrelationDef`
- * @returns {Specification.CorrelationDef} A builder for `Specification.CorrelationDef`
+ * @returns {Specification.ICorrelationDef} A builder for `Specification.CorrelationDef`
  */
-export function correlationDefBuilder(): Builder<Specification.CorrelationDef> {
-  return builder<Specification.CorrelationDef>(correlationDefBuildingFn);
+export function correlationDefBuilder(): Builder<Specification.ICorrelationDef> {
+  return builder<Specification.ICorrelationDef>(correlationDefBuildingFn);
 }

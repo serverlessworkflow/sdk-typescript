@@ -120,31 +120,38 @@ const createBuilder = async (destDir: string, dataType: string): Promise<void> =
       fileHeader +
       `import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
+import { toPlainObject } from 'lodash';
 ${extension?.import ? extension.import : ''}
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.${dataType}} data The underlying object
- * @returns {Specification.${dataType}} The validated underlying object
+ * @param {Specification.I${dataType}} data The underlying object
+ * @returns {Specification.I${dataType}} The validated underlying object
  */
-function ${camelType}BuildingFn(data: Specification.${dataType}): (() => Specification.${dataType}) {
+function ${camelType}BuildingFn(data: Specification.I${dataType}): (() => Specification.I${dataType}) {
   return () => {
     const model = new Specification.${dataType}(data);
 
     ${extension?.preValidate ? extension.preValidate : ''}
     
-    validate('${dataType}', model.normalize());
-    return model;
+    if (hasProperty(model, "normalize")) {
+      validate('${dataType}', (model as any).normalize());
+    } else {
+      validate('${dataType}', model);
+    }
+
+    return toPlainObject(model);
   };
 }
 
 /**
  * A factory to create a builder proxy for the type \`Specification.${dataType}\`
- * @returns {Specification.${dataType}} A builder for \`Specification.${dataType}\`
+ * @returns {Specification.I${dataType}} A builder for \`Specification.${dataType}\`
  */
-export function ${camelType}Builder(): Builder<Specification.${dataType}> {
-  return builder<Specification.${dataType}>(${camelType}BuildingFn);
+export function ${camelType}Builder(): Builder<Specification.I${dataType}> {
+  return builder<Specification.I${dataType}>(${camelType}BuildingFn);
 }`;
     const destFile = path.resolve(destDir, toKebabCase(camelType) + '-builder.ts');
     await writeFile(destFile, builderCode);

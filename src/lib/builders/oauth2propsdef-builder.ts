@@ -16,26 +16,33 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
+import { toPlainObject } from 'lodash';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Oauth2propsdef} data The underlying object
- * @returns {Specification.Oauth2propsdef} The validated underlying object
+ * @param {Specification.IOauth2propsdef} data The underlying object
+ * @returns {Specification.IOauth2propsdef} The validated underlying object
  */
-function oauth2propsdefBuildingFn(data: Specification.Oauth2propsdef): () => Specification.Oauth2propsdef {
+function oauth2propsdefBuildingFn(data: Specification.IOauth2propsdef): () => Specification.IOauth2propsdef {
   return () => {
     const model = new Specification.Oauth2propsdef(data);
 
-    validate('Oauth2propsdef', model);
-    return model;
+    if (hasProperty(model, 'normalize')) {
+      validate('Oauth2propsdef', (model as any).normalize());
+    } else {
+      validate('Oauth2propsdef', model);
+    }
+
+    return toPlainObject(model);
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Oauth2propsdef`
- * @returns {Specification.Oauth2propsdef} A builder for `Specification.Oauth2propsdef`
+ * @returns {Specification.IOauth2propsdef} A builder for `Specification.Oauth2propsdef`
  */
-export function oauth2propsdefBuilder(): Builder<Specification.Oauth2propsdef> {
-  return builder<Specification.Oauth2propsdef>(oauth2propsdefBuildingFn);
+export function oauth2propsdefBuilder(): Builder<Specification.IOauth2propsdef> {
+  return builder<Specification.IOauth2propsdef>(oauth2propsdefBuildingFn);
 }

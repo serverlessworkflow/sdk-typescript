@@ -16,26 +16,35 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
+import { toPlainObject } from 'lodash';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Enddeventcondition} data The underlying object
- * @returns {Specification.Enddeventcondition} The validated underlying object
+ * @param {Specification.IEnddeventcondition} data The underlying object
+ * @returns {Specification.IEnddeventcondition} The validated underlying object
  */
-function enddeventconditionBuildingFn(data: Specification.Enddeventcondition): () => Specification.Enddeventcondition {
+function enddeventconditionBuildingFn(
+  data: Specification.IEnddeventcondition
+): () => Specification.IEnddeventcondition {
   return () => {
     const model = new Specification.Enddeventcondition(data);
 
-    validate('Enddeventcondition', model.normalize());
-    return model;
+    if (hasProperty(model, 'normalize')) {
+      validate('Enddeventcondition', (model as any).normalize());
+    } else {
+      validate('Enddeventcondition', model);
+    }
+
+    return toPlainObject(model);
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Enddeventcondition`
- * @returns {Specification.Enddeventcondition} A builder for `Specification.Enddeventcondition`
+ * @returns {Specification.IEnddeventcondition} A builder for `Specification.Enddeventcondition`
  */
-export function enddeventconditionBuilder(): Builder<Specification.Enddeventcondition> {
-  return builder<Specification.Enddeventcondition>(enddeventconditionBuildingFn);
+export function enddeventconditionBuilder(): Builder<Specification.IEnddeventcondition> {
+  return builder<Specification.IEnddeventcondition>(enddeventconditionBuildingFn);
 }

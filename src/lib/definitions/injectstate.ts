@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { End } from './end';
-import { Metadata } from './metadata';
-import { Statedatafilter } from './statedatafilter';
-import { Transition } from './transition';
+import { IEnd, End } from './end';
+import { IMetadata, Metadata } from './metadata';
+import { IStatedatafilter, Statedatafilter } from './statedatafilter';
+import { ITransition, Transition } from './transition';
 import {
   cleanSourceModelProperty,
   normalizeEnd,
@@ -31,9 +31,31 @@ import {
   overwriteTransition,
   setEndValueIfNoTransition,
 } from './utils';
-import { StateExecTimeout } from './stateExecTimeout';
+import { IStateExecTimeout, StateExecTimeout } from './stateExecTimeout';
+import { toPlainObject } from 'lodash';
 
-export class Injectstate {
+export interface IInjectstate {
+  sourceModel?: IInjectstate;
+  id?: string;
+  name?: string;
+  type?: 'inject';
+  end?: boolean | IEnd;
+  data?: {
+    [key: string]: any;
+  };
+  timeouts?: {
+    stateExecTimeout?: IStateExecTimeout;
+  };
+  stateDataFilter?: IStatedatafilter;
+  transition?: string | ITransition;
+  compensatedBy?: string;
+  usedForCompensation?: boolean;
+  metadata?: IMetadata;
+
+  normalize(): IInjectstate;
+}
+
+export class Injectstate implements IInjectstate {
   sourceModel?: Injectstate;
   /**
    * Unique state id
@@ -102,9 +124,9 @@ export class Injectstate {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Injectstate} without deleted properties.
+   * @returns {Specification.IInjectstate} without deleted properties.
    */
-  normalize = (): Injectstate => {
+  normalize(): IInjectstate {
     const clone = new Injectstate(this);
 
     normalizeEnd(clone);
@@ -114,6 +136,6 @@ export class Injectstate {
 
     cleanSourceModelProperty(clone);
 
-    return clone;
-  };
+    return toPlainObject(clone);
+  }
 }

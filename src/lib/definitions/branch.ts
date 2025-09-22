@@ -14,11 +14,24 @@
  * limitations under the License.
  */
 
-import { Action } from './action';
+import { IAction, Action } from './action';
 import { cleanSourceModelProperty, normalizeActions, overwriteActions, overwritePropertyAsPlainType } from './utils';
 import { ActionExecTimeout, BranchExecTimeout } from './types';
+import { toPlainObject } from 'lodash';
 
-export class Branch /* Branch Definition */ {
+export interface IBranch {
+  sourceModel?: IBranch;
+  name: string;
+  timeouts?: {
+    actionExecTimeout?: ActionExecTimeout;
+    branchExecTimeout?: BranchExecTimeout;
+  };
+  actions: IAction[];
+
+  normalize(): IBranch;
+}
+
+export class Branch implements IBranch /* Branch Definition */ {
   sourceModel?: Branch;
   /**
    * Branch name
@@ -46,13 +59,14 @@ export class Branch /* Branch Definition */ {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Branch} without deleted properties.
+   * @returns {Specification.IBranch} without deleted properties.
    */
-  normalize = (): Branch => {
+  normalize(): IBranch {
     const clone = new Branch(this);
     normalizeActions(clone);
 
     cleanSourceModelProperty(clone);
-    return clone;
-  };
+
+    return toPlainObject(clone);
+  }
 }

@@ -13,12 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Metadata } from './metadata';
-import { Transition } from './transition';
+import { toPlainObject } from 'lodash';
+import { IMetadata, Metadata } from './metadata';
+import { ITransition, Transition } from './transition';
 import { cleanSourceModelProperty, normalizeTransition, overwriteMetadata, overwriteTransition } from './utils';
 
-export class Transitiondatacondition {
-  sourceModel?: Transitiondatacondition;
+export interface ITransitiondatacondition {
+  sourceModel?: ITransitiondatacondition;
+  name?: string;
+  condition: string;
+  transition: string | ITransition;
+  metadata?: IMetadata;
+
+  normalize(): ITransitiondatacondition;
+}
+
+export class Transitiondatacondition implements ITransitiondatacondition {
+  sourceModel?: ITransitiondatacondition;
   /**
    * Data condition name
    */
@@ -44,14 +55,15 @@ export class Transitiondatacondition {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Transitiondatacondition} without deleted properties.
+   * @returns {Specification.ITransitiondatacondition} without deleted properties.
    */
-  normalize = (): Transitiondatacondition => {
+  normalize(): ITransitiondatacondition {
     const clone = new Transitiondatacondition(this);
 
     normalizeTransition(clone);
 
     cleanSourceModelProperty(clone);
-    return clone;
-  };
+
+    return toPlainObject(clone);
+  }
 }

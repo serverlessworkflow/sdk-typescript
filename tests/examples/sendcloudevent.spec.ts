@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import * as fs from 'fs';
+import { original, produce } from 'immer';
 import {
   actionBuilder,
   endBuilder,
@@ -22,6 +23,7 @@ import {
   functionBuilder,
   functionrefBuilder,
   produceeventdefBuilder,
+  Specification,
   workflowBuilder,
 } from '../../src';
 
@@ -73,5 +75,64 @@ describe('sendcloudevent workflow example', () => {
 
     const expected = JSON.parse(fs.readFileSync('./tests/examples/sendcloudevent.json', 'utf8'));
     expect(JSON.stringify(workflow.normalize())).toEqual(JSON.stringify(expected));
+  });
+
+  it('built workflow should be immerable', function () {
+    const workflow = workflowBuilder()
+      .id('sendcloudeventonprovision')
+      .version('1.0')
+      .specVersion('0.8')
+      .name('Send CloudEvent on provision completion')
+      .start('ProvisionOrdersState')
+      .events([
+        eventdefBuilder().name('provisioningCompleteEvent').type('provisionCompleteType').kind('produced').build(),
+      ])
+      .functions([
+        functionBuilder()
+          .name('provisionOrderFunction')
+          .operation('http://myapis.org/provisioning.json#doProvision')
+          .build(),
+      ])
+      .states([
+        foreachstateBuilder()
+          .name('ProvisionOrdersState')
+          .inputCollection('${ .orders }')
+          .iterationParam('singleorder')
+          .outputCollection('${ .provisionedOrders }')
+          .actions([
+            actionBuilder()
+              .functionRef(
+                functionrefBuilder()
+                  .refName('provisionOrderFunction')
+                  .arguments({
+                    order: '${ .singleorder }',
+                  })
+                  .build()
+              )
+              .build(),
+          ])
+          .end(
+            endBuilder()
+              .produceEvents([
+                produceeventdefBuilder().eventRef('provisioningCompleteEvent').data('${ .provisionedOrders }').build(),
+              ])
+              .build()
+          )
+          .build(),
+      ])
+      .build();
+
+    // Use immer to create a draft and compare with original model ensuring it is immerable
+    produce(workflow, (draft) => {
+      expect(workflow === original(draft)).toBe(true);
+    });
+  });
+
+  it('deserialized workflow should be immerable', function () {
+    const model = Specification.Workflow.fromSource(fs.readFileSync('./tests/examples/sendcloudevent.json', 'utf8'));
+
+    produce(model, (draft: any) => {
+      expect(model === original(draft)).toBe(true);
+    });
   });
 });

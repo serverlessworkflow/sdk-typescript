@@ -13,10 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Schedule } from './schedule';
+import { ISchedule, Schedule } from './schedule';
 import { overwriteSchedule } from './utils';
 
-export class Startdef {
+export interface IStartdef {
+  stateName: string;
+  schedule: string | ISchedule;
+}
+
+export class Startdef implements IStartdef {
   /**
    * Name of the starting workflow state
    */

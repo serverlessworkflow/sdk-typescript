@@ -16,26 +16,33 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
+import { toPlainObject } from 'lodash';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Branch} data The underlying object
- * @returns {Specification.Branch} The validated underlying object
+ * @param {Specification.IBranch} data The underlying object
+ * @returns {Specification.IBranch} The validated underlying object
  */
-function branchBuildingFn(data: Specification.Branch): () => Specification.Branch {
+function branchBuildingFn(data: Specification.IBranch): () => Specification.IBranch {
   return () => {
     const model = new Specification.Branch(data);
 
-    validate('Branch', model.normalize());
-    return model;
+    if (hasProperty(model, 'normalize')) {
+      validate('Branch', (model as any).normalize());
+    } else {
+      validate('Branch', model);
+    }
+
+    return toPlainObject(model);
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Branch`
- * @returns {Specification.Branch} A builder for `Specification.Branch`
+ * @returns {Specification.IBranch} A builder for `Specification.Branch`
  */
-export function branchBuilder(): Builder<Specification.Branch> {
-  return builder<Specification.Branch>(branchBuildingFn);
+export function branchBuilder(): Builder<Specification.IBranch> {
+  return builder<Specification.IBranch>(branchBuildingFn);
 }

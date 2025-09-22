@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { WorkflowExecTimeout } from './workflowExecTimeout';
+import { IWorkflowExecTimeout, WorkflowExecTimeout } from './workflowExecTimeout';
 import { ActionExecTimeout, BranchExecTimeout, EventTimeout } from './types';
 import {
   cleanSourceModelProperty,
@@ -21,9 +21,21 @@ import {
   overwriteStateExecTimeout,
   overwriteWorkflowExecTimeout,
 } from './utils';
-import { StateExecTimeout } from './stateExecTimeout';
+import { IStateExecTimeout, StateExecTimeout } from './stateExecTimeout';
+import { toPlainObject } from 'lodash';
 
-export class Timeouts {
+export interface ITimeouts {
+  sourceModel?: ITimeouts;
+  workflowExecTimeout?: IWorkflowExecTimeout;
+  stateExecTimeout?: IStateExecTimeout;
+  actionExecTimeout?: ActionExecTimeout;
+  branchExecTimeout?: BranchExecTimeout;
+  eventTimeout?: EventTimeout;
+
+  normalize(): ITimeouts;
+}
+
+export class Timeouts implements ITimeouts {
   sourceModel?: Timeouts;
   workflowExecTimeout?: WorkflowExecTimeout;
   stateExecTimeout?: StateExecTimeout;
@@ -41,13 +53,14 @@ export class Timeouts {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Exectimeout} without deleted properties.
+   * @returns {Specification.ITimeouts} without deleted properties.
    */
-  normalize = (): Timeouts => {
+  normalize(): ITimeouts {
     const clone = new Timeouts(this);
     normalizeWorkflowExecTimeout(clone);
 
     cleanSourceModelProperty(clone);
-    return clone;
-  };
+
+    return toPlainObject(clone);
+  }
 }

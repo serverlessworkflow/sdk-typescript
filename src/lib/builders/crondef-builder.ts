@@ -16,26 +16,33 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
+import { toPlainObject } from 'lodash';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Crondef} data The underlying object
- * @returns {Specification.Crondef} The validated underlying object
+ * @param {Specification.ICrondef} data The underlying object
+ * @returns {Specification.ICrondef} The validated underlying object
  */
-function crondefBuildingFn(data: Specification.Crondef): () => Specification.Crondef {
+function crondefBuildingFn(data: Specification.ICrondef): () => Specification.ICrondef {
   return () => {
     const model = new Specification.Crondef(data);
 
-    validate('Crondef', model);
-    return model;
+    if (hasProperty(model, 'normalize')) {
+      validate('Crondef', (model as any).normalize());
+    } else {
+      validate('Crondef', model);
+    }
+
+    return toPlainObject(model);
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Crondef`
- * @returns {Specification.Crondef} A builder for `Specification.Crondef`
+ * @returns {Specification.ICrondef} A builder for `Specification.Crondef`
  */
-export function crondefBuilder(): Builder<Specification.Crondef> {
-  return builder<Specification.Crondef>(crondefBuildingFn);
+export function crondefBuilder(): Builder<Specification.ICrondef> {
+  return builder<Specification.ICrondef>(crondefBuildingFn);
 }

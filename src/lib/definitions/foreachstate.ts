@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Action } from './action';
-import { End } from './end';
-import { Error } from './error';
-import { Metadata } from './metadata';
-import { Statedatafilter } from './statedatafilter';
-import { Transition } from './transition';
+import { IAction, Action } from './action';
+import { IEnd, End } from './end';
+import { IError, Error } from './error';
+import { IMetadata, Metadata } from './metadata';
+import { IStatedatafilter, Statedatafilter } from './statedatafilter';
+import { ITransition, Transition } from './transition';
 import {
   cleanSourceModelProperty,
   normalizeActions,
@@ -37,9 +37,36 @@ import {
   setEndValueIfNoTransition,
 } from './utils';
 import { ActionExecTimeout } from './types';
-import { StateExecTimeout } from './stateExecTimeout';
+import { IStateExecTimeout, StateExecTimeout } from './stateExecTimeout';
+import { toPlainObject } from 'lodash';
 
-export class Foreachstate {
+export interface IForeachstate {
+  sourceModel?: IForeachstate;
+  id?: string;
+  name?: string;
+  type?: 'foreach';
+  end?: boolean | IEnd;
+  inputCollection?: string;
+  outputCollection?: string;
+  iterationParam?: string;
+  batchSize?: number | string;
+  actions?: IAction[];
+  timeouts?: {
+    stateExecTimeout?: IStateExecTimeout;
+    actionExecTimeout?: ActionExecTimeout;
+  };
+  stateDataFilter?: IStatedatafilter;
+  onErrors?: IError[];
+  transition?: string | ITransition;
+  compensatedBy?: string;
+  usedForCompensation?: boolean;
+  mode?: 'sequential' | 'parallel';
+  metadata?: IMetadata;
+
+  normalize(): IForeachstate;
+}
+
+export class Foreachstate implements IForeachstate {
   sourceModel?: Foreachstate;
   /**
    * Unique State id
@@ -133,9 +160,9 @@ export class Foreachstate {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Foreachstate} without deleted properties.
+   * @returns {Specification.IForeachstate} without deleted properties.
    */
-  normalize = (): Foreachstate => {
+  normalize(): IForeachstate {
     const clone = new Foreachstate(this);
 
     normalizeEnd(clone);
@@ -148,6 +175,6 @@ export class Foreachstate {
 
     cleanSourceModelProperty(clone);
 
-    return clone;
-  };
+    return toPlainObject(clone);
+  }
 }

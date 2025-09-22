@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 import * as fs from 'fs';
+import { original, produce } from 'immer';
 import {
   actionBuilder,
   foreachstateBuilder,
   functionBuilder,
   functionrefBuilder,
+  Specification,
   statedatafilterBuilder,
   workflowBuilder,
 } from '../../src';
@@ -63,5 +65,56 @@ describe('solvemathproblems workflow example', () => {
 
     const expected = JSON.parse(fs.readFileSync('./tests/examples/solvemathproblems.json', 'utf8'));
     expect(JSON.stringify(workflow.normalize())).toEqual(JSON.stringify(expected));
+  });
+
+  it('built workflow should be immerable', function () {
+    const workflow = workflowBuilder()
+      .id('solvemathproblems')
+      .version('1.0')
+      .specVersion('0.8')
+      .name('Solve Math Problems Workflow')
+      .description('Solve math problems')
+      .start('Solve')
+      .functions([
+        functionBuilder()
+          .name('solveMathExpressionFunction')
+          .operation('http://myapis.org/mapthapis.json#solveExpression')
+          .build(),
+      ])
+      .states([
+        foreachstateBuilder()
+          .name('Solve')
+          .inputCollection('${ .expressions }')
+          .iterationParam('singleexpression')
+          .outputCollection('${ .results }')
+          .actions([
+            actionBuilder()
+              .functionRef(
+                functionrefBuilder()
+                  .refName('solveMathExpressionFunction')
+                  .arguments({
+                    expression: '${ .singleexpression }',
+                  })
+                  .build()
+              )
+              .build(),
+          ])
+          .stateDataFilter(statedatafilterBuilder().output('${ .results }').build())
+          .build(),
+      ])
+      .build();
+
+    // Use immer to create a draft and compare with original model ensuring it is immerable
+    produce(workflow, (draft) => {
+      expect(workflow === original(draft)).toBe(true);
+    });
+  });
+
+  it('deserialized workflow should be immerable', function () {
+    const model = Specification.Workflow.fromSource(fs.readFileSync('./tests/examples/solvemathproblems.json', 'utf8'));
+
+    produce(model, (draft: any) => {
+      expect(model === original(draft)).toBe(true);
+    });
   });
 });

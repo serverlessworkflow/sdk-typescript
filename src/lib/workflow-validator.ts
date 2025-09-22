@@ -30,10 +30,10 @@ export class WorkflowValidator {
 
   /**
    * Creates a new WorkflowValidator for the provided workflow
-   * @param {Workflow} workflow The workflow to validate
+   * @param {IWorkflow} workflow The workflow to validate
    */
-  constructor(private workflow: Specification.Workflow) {
-    const validateFn = validators.get('Workflow') as ValidateFunction<Specification.Workflow>;
+  constructor(private workflow: Specification.IWorkflow) {
+    const validateFn = validators.get('Workflow') as ValidateFunction<Specification.IWorkflow>;
     const normalizedWf = this.workflow.normalize();
     validateFn(JSON.parse(JSON.stringify(normalizedWf)));
     if (validateFn.errors) {

@@ -16,28 +16,35 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
+import { toPlainObject } from 'lodash';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Eventbasedswitchstate} data The underlying object
- * @returns {Specification.Eventbasedswitchstate} The validated underlying object
+ * @param {Specification.IEventbasedswitchstate} data The underlying object
+ * @returns {Specification.IEventbasedswitchstate} The validated underlying object
  */
 function eventbasedswitchstateBuildingFn(
-  data: Specification.Eventbasedswitchstate
-): () => Specification.Eventbasedswitchstate {
+  data: Specification.IEventbasedswitchstate
+): () => Specification.IEventbasedswitchstate {
   return () => {
     const model = new Specification.Eventbasedswitchstate(data);
 
-    validate('Eventbasedswitchstate', model.normalize());
-    return model;
+    if (hasProperty(model, 'normalize')) {
+      validate('Eventbasedswitchstate', (model as any).normalize());
+    } else {
+      validate('Eventbasedswitchstate', model);
+    }
+
+    return toPlainObject(model);
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Eventbasedswitchstate`
- * @returns {Specification.Eventbasedswitchstate} A builder for `Specification.Eventbasedswitchstate`
+ * @returns {Specification.IEventbasedswitchstate} A builder for `Specification.Eventbasedswitchstate`
  */
-export function eventbasedswitchstateBuilder(): Builder<Specification.Eventbasedswitchstate> {
-  return builder<Specification.Eventbasedswitchstate>(eventbasedswitchstateBuildingFn);
+export function eventbasedswitchstateBuilder(): Builder<Specification.IEventbasedswitchstate> {
+  return builder<Specification.IEventbasedswitchstate>(eventbasedswitchstateBuildingFn);
 }

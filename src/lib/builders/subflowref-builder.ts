@@ -16,26 +16,33 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
+import { toPlainObject } from 'lodash';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Subflowref} data The underlying object
- * @returns {Specification.Subflowref} The validated underlying object
+ * @param {Specification.ISubflowref} data The underlying object
+ * @returns {Specification.ISubflowref} The validated underlying object
  */
-function subflowrefBuildingFn(data: Specification.Subflowref): () => Specification.Subflowref {
+function subflowrefBuildingFn(data: Specification.ISubflowref): () => Specification.ISubflowref {
   return () => {
     const model = new Specification.Subflowref(data);
 
-    validate('Subflowref', model.normalize());
-    return model;
+    if (hasProperty(model, 'normalize')) {
+      validate('Subflowref', (model as any).normalize());
+    } else {
+      validate('Subflowref', model);
+    }
+
+    return toPlainObject(model);
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Subflowref`
- * @returns {Specification.Subflowref} A builder for `Specification.Subflowref`
+ * @returns {Specification.ISubflowref} A builder for `Specification.Subflowref`
  */
-export function subflowrefBuilder(): Builder<Specification.Subflowref> {
-  return builder<Specification.Subflowref>(subflowrefBuildingFn);
+export function subflowrefBuilder(): Builder<Specification.ISubflowref> {
+  return builder<Specification.ISubflowref>(subflowrefBuildingFn);
 }
