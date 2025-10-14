@@ -2046,6 +2046,61 @@
         "operation"
       ]
     },
+    "retrydef": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique retry strategy name",
+          "minLength": 1
+        },
+        "delay": {
+          "type": "string",
+          "description": "Time delay between retry attempts (ISO 8601 duration format)"
+        },
+        "maxDelay": {
+          "type": "string",
+          "description": "Maximum time delay between retry attempts (ISO 8601 duration format)"
+        },
+        "increment": {
+          "type": "string",
+          "description": "Static value by which the delay increases during each attempt (ISO 8601 time format)"
+        },
+        "multiplier": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "minimum": 0,
+          "minLength": 1,
+          "multipleOf": 0.01,
+          "description": "Numeric value, if specified the delay between retries is multiplied by this value."
+        },
+        "maxAttempts": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "minimum": 1,
+          "minLength": 0,
+          "description": "Maximum number of retry attempts."
+        },
+        "jitter": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "If float type, maximum amount of random time added or subtracted from the delay between each retry relative to total delay (between 0 and 1). If string type, absolute maximum amount of random time added or subtracted from the delay between each retry (ISO 8601 duration format)"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "maxAttempts"
+      ]
+    },
     "authdef": {
       "type": "object",
       "properties": {
@@ -2220,148 +2275,6 @@
         "type": "string"
       }
     },
-    "retrydef": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Unique retry strategy name",
-          "minLength": 1
-        },
-        "delay": {
-          "type": "string",
-          "description": "Time delay between retry attempts (ISO 8601 duration format)"
-        },
-        "maxDelay": {
-          "type": "string",
-          "description": "Maximum time delay between retry attempts (ISO 8601 duration format)"
-        },
-        "increment": {
-          "type": "string",
-          "description": "Static value by which the delay increases during each attempt (ISO 8601 time format)"
-        },
-        "multiplier": {
-          "type": [
-            "number",
-            "string"
-          ],
-          "minimum": 0,
-          "minLength": 1,
-          "multipleOf": 0.01,
-          "description": "Numeric value, if specified the delay between retries is multiplied by this value."
-        },
-        "maxAttempts": {
-          "type": [
-            "number",
-            "string"
-          ],
-          "minimum": 1,
-          "minLength": 0,
-          "description": "Maximum number of retry attempts."
-        },
-        "jitter": {
-          "type": [
-            "number",
-            "string"
-          ],
-          "minimum": 0,
-          "maximum": 1,
-          "description": "If float type, maximum amount of random time added or subtracted from the delay between each retry relative to total delay (between 0 and 1). If string type, absolute maximum amount of random time added or subtracted from the delay between each retry (ISO 8601 duration format)"
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "name",
-        "maxAttempts"
-      ]
-    },
-    "eventdef": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Unique event name",
-          "minLength": 1
-        },
-        "source": {
-          "type": "string",
-          "description": "CloudEvent source"
-        },
-        "type": {
-          "type": "string",
-          "description": "CloudEvent type"
-        },
-        "kind": {
-          "type": "string",
-          "enum": [
-            "consumed",
-            "produced"
-          ],
-          "description": "Defines the CloudEvent as either 'consumed' or 'produced' by the workflow. Default is 'consumed'",
-          "default": "consumed"
-        },
-        "correlation": {
-          "type": "array",
-          "description": "CloudEvent correlation definitions",
-          "minItems": 1,
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/correlationDef"
-          },
-          "additionalItems": false
-        },
-        "dataOnly": {
-          "type": "boolean",
-          "default": true,
-          "description": "If `true`, only the Event payload is accessible to consuming Workflow states. If `false`, both event payload and context attributes should be accessible "
-        },
-        "metadata": {
-          "$ref": "#/definitions/metadata",
-          "description": "Metadata information"
-        }
-      },
-      "additionalProperties": false,
-      "if": {
-        "properties": {
-          "kind": {
-            "const": "consumed"
-          }
-        }
-      },
-      "then": {
-        "required": [
-          "name",
-          "source",
-          "type"
-        ]
-      },
-      "else": {
-        "required": [
-          "name",
-          "type"
-        ]
-      }
-    },
-    "correlationDef": {
-      "type": "object",
-      "description": "CloudEvent correlation definition",
-      "properties": {
-        "contextAttributeName": {
-          "type": "string",
-          "description": "CloudEvent Extension Context Attribute name",
-          "minLength": 1
-        },
-        "contextAttributeValue": {
-          "type": "string",
-          "description": "CloudEvent Extension Context Attribute value",
-          "minLength": 1
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "contextAttributeName"
-      ]
-    },
     "errordef": {
       "type": "object",
       "properties": {
@@ -2461,6 +2374,93 @@
       "type": "string",
       "description": "Timeout duration to wait for consuming defined events (ISO 8601 duration format)",
       "minLength": 1
+    },
+    "eventdef": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique event name",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string",
+          "description": "CloudEvent source"
+        },
+        "type": {
+          "type": "string",
+          "description": "CloudEvent type"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "consumed",
+            "produced"
+          ],
+          "description": "Defines the CloudEvent as either 'consumed' or 'produced' by the workflow. Default is 'consumed'",
+          "default": "consumed"
+        },
+        "correlation": {
+          "type": "array",
+          "description": "CloudEvent correlation definitions",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/correlationDef"
+          },
+          "additionalItems": false
+        },
+        "dataOnly": {
+          "type": "boolean",
+          "default": true,
+          "description": "If `true`, only the Event payload is accessible to consuming Workflow states. If `false`, both event payload and context attributes should be accessible "
+        },
+        "metadata": {
+          "$ref": "#/definitions/metadata",
+          "description": "Metadata information"
+        }
+      },
+      "additionalProperties": false,
+      "if": {
+        "properties": {
+          "kind": {
+            "const": "consumed"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "name",
+          "source",
+          "type"
+        ]
+      },
+      "else": {
+        "required": [
+          "name",
+          "type"
+        ]
+      }
+    },
+    "correlationDef": {
+      "type": "object",
+      "description": "CloudEvent correlation definition",
+      "properties": {
+        "contextAttributeName": {
+          "type": "string",
+          "description": "CloudEvent Extension Context Attribute name",
+          "minLength": 1
+        },
+        "contextAttributeValue": {
+          "type": "string",
+          "description": "CloudEvent Extension Context Attribute value",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "contextAttributeName"
+      ]
     },
     "secrets": {
       "oneOf": [

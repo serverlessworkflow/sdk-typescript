@@ -22,7 +22,7 @@ import {
   overwriteWorkflowExecTimeout,
 } from './utils';
 import { IStateExecTimeout, StateExecTimeout } from './stateExecTimeout';
-import { toPlainObject } from 'lodash';
+import toPlainObject from 'lodash.toplainobject';
 
 export interface ITimeouts {
   sourceModel?: ITimeouts;

@@ -16,7 +16,7 @@
 
 import { cleanSourceModelProperty, normalizeScheme, overwriteProperties } from './utils';
 import { Properties } from './types';
-import { toPlainObject } from 'lodash';
+import toPlainObject from 'lodash.toplainobject';
 
 export interface IAuthdef {
   sourceModel?: IAuthdef;

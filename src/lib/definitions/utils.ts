@@ -15,7 +15,7 @@
  */
 import { Specification } from './index';
 import { isObject } from '../utils';
-import { toPlainObject } from 'lodash';
+import toPlainObject from 'lodash.toplainobject';
 
 /**
  * Modify the provided object, set the value to 'schedule' property as an instance of Specification.Schedule class, if the provided value is an object

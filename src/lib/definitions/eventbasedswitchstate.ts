@@ -33,7 +33,7 @@ import {
 } from './utils';
 import { Eventcondition, EventTimeout } from './types';
 import { IStateExecTimeout, StateExecTimeout } from './stateExecTimeout';
-import { toPlainObject } from 'lodash';
+import toPlainObject from 'lodash.toplainobject';
 
 export interface IEventbasedswitchstate {
   sourceModel?: IEventbasedswitchstate;

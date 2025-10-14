@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { toPlainObject } from 'lodash';
+
 import { IEnd, End } from './end';
 import { IEventdatafilter, Eventdatafilter } from './eventdatafilter';
 import { IMetadata, Metadata } from './metadata';
@@ -24,6 +24,7 @@ import {
   overwriteEventDataFilter,
   overwriteMetadata,
 } from './utils';
+import toPlainObject from 'lodash.toplainobject';
 
 export interface IEnddeventcondition {
   sourceModel?: IEnddeventcondition;

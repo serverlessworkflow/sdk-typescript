@@ -33,7 +33,7 @@ import {
 } from './utils';
 import { Datacondition } from './types';
 import { IStateExecTimeout, StateExecTimeout } from './stateExecTimeout';
-import { toPlainObject } from 'lodash';
+import toPlainObject from 'lodash.toplainobject';
 
 export interface IDatabasedswitchstate {
   sourceModel?: IDatabasedswitchstate;

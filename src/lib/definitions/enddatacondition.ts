@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { toPlainObject } from 'lodash';
+
 import { IEnd, End } from './end';
 import { IMetadata, Metadata } from './metadata';
 import { cleanSourceModelProperty, normalizeEnd, overwriteEnd, overwriteMetadata } from './utils';
+import toPlainObject from 'lodash.toplainobject';
 
 export interface IEnddatacondition {
   sourceModel?: IEnddatacondition;

@@ -23,7 +23,7 @@ import {
   overwriteProduceEvents,
 } from './utils';
 import { IContinueasdef, Continueasdef } from './continueasdef';
-import { toPlainObject } from 'lodash';
+import toPlainObject from 'lodash.toplainobject';
 
 export interface IEnd {
   sourceModel?: IEnd;
@@ -76,7 +76,7 @@ export class End {
     normalizeContinueAs(clone);
 
     cleanSourceModelProperty(clone);
-    
+
     return toPlainObject(clone);
   }
 }

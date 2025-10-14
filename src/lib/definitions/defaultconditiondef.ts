@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { toPlainObject } from 'lodash';
 import { IEnd, End } from './end';
 import { ITransition, Transition } from './transition';
 import {
@@ -25,6 +24,7 @@ import {
   overwriteTransition,
   setEndValueIfNoTransition,
 } from './utils';
+import toPlainObject from 'lodash.toplainobject';
 
 export interface IDefaultconditiondef {
   sourceModel?: IDefaultconditiondef;

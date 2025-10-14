@@ -40,7 +40,7 @@ import {
 } from './utils';
 import { ActionExecTimeout, EventTimeout } from './types';
 import { IStateExecTimeout, StateExecTimeout } from './stateExecTimeout';
-import { toPlainObject } from 'lodash';
+import toPlainObject from 'lodash.toplainobject';
 
 export interface ICallbackstate {
   sourceModel?: ICallbackstate;

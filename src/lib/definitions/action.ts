@@ -29,7 +29,7 @@ import {
 } from './utils';
 import { ISubflowref, Subflowref } from './subflowref';
 import { ISleep, Sleep } from './sleep';
-import { toPlainObject } from 'lodash';
+import toPlainObject from 'lodash.toplainobject';
 
 export interface IAction {
   sourceModel?: IAction;

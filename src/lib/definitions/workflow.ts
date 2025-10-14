@@ -40,7 +40,7 @@ import {
   overwriteTimeouts,
 } from './utils';
 import { Auth, Errors, Events, Functions, Retries, Secrets, States } from './types';
-import { toPlainObject } from 'lodash';
+import toPlainObject from 'lodash.toplainobject';
 
 export interface IWorkflow {
   sourceModel?: IWorkflow;

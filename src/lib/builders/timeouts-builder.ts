@@ -18,7 +18,7 @@ import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
-import { toPlainObject } from 'lodash';
+import toPlainObject from 'lodash.toplainobject';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object

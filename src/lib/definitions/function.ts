@@ -16,7 +16,7 @@
 import { cleanSourceModelProperty, normalizeType, overwriteMetadata } from './utils';
 
 import { IMetadata, Metadata } from './metadata';
-import { toPlainObject } from 'lodash';
+import toPlainObject from 'lodash.toplainobject';
 
 export interface IFunction {
   sourceModel?: IFunction;

@@ -39,7 +39,7 @@ import {
 } from './utils';
 import { BranchExecTimeout } from './types';
 import { IStateExecTimeout, StateExecTimeout } from './stateExecTimeout';
-import { toPlainObject } from 'lodash';
+import toPlainObject from 'lodash.toplainobject';
 
 export interface IParallelstate {
   sourceModel?: IParallelstate;

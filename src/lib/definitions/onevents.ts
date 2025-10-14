@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { toPlainObject } from 'lodash';
+
 import { IAction, Action } from './action';
 import { IEventdatafilter, Eventdatafilter } from './eventdatafilter';
 import {
@@ -23,6 +23,7 @@ import {
   overwriteActions,
   overwriteEventDataFilter,
 } from './utils';
+import toPlainObject from 'lodash.toplainobject';
 
 export interface IOnevents {
   sourceModel?: IOnevents;

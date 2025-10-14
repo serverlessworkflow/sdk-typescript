@@ -34,7 +34,7 @@ import {
   setEndValueIfNoTransition,
 } from './utils';
 import { IStateExecTimeout, StateExecTimeout } from './stateExecTimeout';
-import { toPlainObject } from 'lodash';
+import toPlainObject from 'lodash.toplainobject';
 
 export interface ISleepstate {
   sourceModel?: ISleepstate;

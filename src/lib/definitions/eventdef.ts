@@ -22,7 +22,7 @@ import {
   overwriteMetadata,
 } from './utils';
 import { CorrelationDefs } from './types';
-import { toPlainObject } from 'lodash';
+import toPlainObject from 'lodash.toplainobject';
 
 export interface IEventdef {
   sourceModel?: IEventdef;

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { toPlainObject } from 'lodash';
 import { cleanSourceModelProperty, normalizeInterrupt } from './utils';
+import toPlainObject from 'lodash.toplainobject';
 
 export interface IWorkflowExecTimeout {
   sourceModel?: IWorkflowExecTimeout;

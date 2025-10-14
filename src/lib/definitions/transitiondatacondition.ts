@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { toPlainObject } from 'lodash';
+
 import { IMetadata, Metadata } from './metadata';
 import { ITransition, Transition } from './transition';
 import { cleanSourceModelProperty, normalizeTransition, overwriteMetadata, overwriteTransition } from './utils';
+import toPlainObject from 'lodash.toplainobject';
 
 export interface ITransitiondatacondition {
   sourceModel?: ITransitiondatacondition;

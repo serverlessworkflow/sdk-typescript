@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { toPlainObject } from 'lodash';
 import { cleanSourceModelProperty, normalizeInvoke, normalizeOnParentComplete } from './utils';
+import toPlainObject from 'lodash.toplainobject';
 
 export interface ISubflowref {
   sourceModel?: ISubflowref;

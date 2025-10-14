@@ -122,7 +122,7 @@ const createBuilder = async (destDir: string, dataType: string): Promise<void> =
 import { Specification } from '../definitions';
 import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
-import { toPlainObject } from 'lodash';
+import toPlainObject from 'lodash.toplainobject';
 ${extension?.import ? extension.import : ''}
 
 /**

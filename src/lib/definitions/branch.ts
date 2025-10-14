@@ -17,7 +17,7 @@
 import { IAction, Action } from './action';
 import { cleanSourceModelProperty, normalizeActions, overwriteActions, overwritePropertyAsPlainType } from './utils';
 import { ActionExecTimeout, BranchExecTimeout } from './types';
-import { toPlainObject } from 'lodash';
+import toPlainObject from 'lodash.toplainobject';
 
 export interface IBranch {
   sourceModel?: IBranch;

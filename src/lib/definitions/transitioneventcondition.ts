@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { toPlainObject } from 'lodash';
+
 import { IEventdatafilter, Eventdatafilter } from './eventdatafilter';
 import { IMetadata, Metadata } from './metadata';
 import { ITransition, Transition } from './transition';
@@ -24,6 +24,7 @@ import {
   overwriteMetadata,
   overwriteTransition,
 } from './utils';
+import toPlainObject from 'lodash.toplainobject';
 
 export interface ITransitioneventcondition {
   sourceModel?: ITransitioneventcondition;

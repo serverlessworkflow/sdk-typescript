@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { toPlainObject } from 'lodash';
+
 import { IProduceeventdef, Produceeventdef } from './produceeventdef';
 import { cleanSourceModelProperty, normalizeCompensate, overwriteProduceEvents } from './utils';
+import toPlainObject from 'lodash.toplainobject';
 
 export interface ITransition {
   sourceModel?: ITransition;

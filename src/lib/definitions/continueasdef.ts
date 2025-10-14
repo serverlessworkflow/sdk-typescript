@@ -22,7 +22,7 @@ import {
   overwritePropertyAsPlainType,
   overwriteWorkflowExecTimeout,
 } from './utils';
-import { toPlainObject } from 'lodash';
+import toPlainObject from 'lodash.toplainobject';
 
 export interface IContinueasdef {
   sourceModel?: IContinueasdef;
