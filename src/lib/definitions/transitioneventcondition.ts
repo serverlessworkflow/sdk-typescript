@@ -19,6 +19,7 @@ import { IMetadata, Metadata } from './metadata';
 import { ITransition, Transition } from './transition';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeTransition,
   overwriteEventDataFilter,
   overwriteMetadata,
@@ -35,6 +36,7 @@ export interface ITransitioneventcondition {
   metadata?: IMetadata;
 
   normalize(): ITransitioneventcondition;
+  asPlainObject(): ITransitioneventcondition;
 }
 
 export class Transitioneventcondition implements ITransitioneventcondition {
@@ -78,6 +80,18 @@ export class Transitioneventcondition implements ITransitioneventcondition {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.ITransitioneventcondition} as plain object.
+   */
+  asPlainObject(): ITransitioneventcondition {
+    return toPlainObject(this);
   }
 }

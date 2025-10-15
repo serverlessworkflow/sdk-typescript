@@ -20,6 +20,7 @@ import { IMetadata, Metadata } from './metadata';
 import { IStatedatafilter, Statedatafilter } from './statedatafilter';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeDefaultCondition,
   normalizeEventConditions,
   normalizeOnErrors,
@@ -53,6 +54,7 @@ export interface IEventbasedswitchstate {
   metadata?: IMetadata;
 
   normalize(): IEventbasedswitchstate;
+  asPlainObject(): IEventbasedswitchstate;
 }
 
 export class Eventbasedswitchstate implements IEventbasedswitchstate {
@@ -130,6 +132,18 @@ export class Eventbasedswitchstate implements IEventbasedswitchstate {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IEventbasedswitchstate} as plain object.
+   */
+  asPlainObject(): IEventbasedswitchstate {
+    return toPlainObject(this);
   }
 }

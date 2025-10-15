@@ -18,6 +18,7 @@ import { IAction, Action } from './action';
 import { IEventdatafilter, Eventdatafilter } from './eventdatafilter';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeActionMode,
   normalizeActions,
   overwriteActions,
@@ -33,6 +34,7 @@ export interface IOnevents {
   eventDataFilter?: IEventdatafilter;
 
   normalize(): IOnevents;
+  asPlainObject(): IOnevents;
 }
 
 export class Onevents implements IOnevents {
@@ -76,6 +78,18 @@ export class Onevents implements IOnevents {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IOnevents} as plain object.
+   */
+  asPlainObject(): IOnevents {
+    return toPlainObject(this);
   }
 }

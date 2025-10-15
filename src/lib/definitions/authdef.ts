@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { cleanSourceModelProperty, normalizeScheme, overwriteProperties } from './utils';
+import { cleanSourceModelProperty, isPlainObject, normalizeScheme, overwriteProperties } from './utils';
 import { Properties } from './types';
 import toPlainObject from 'lodash.toplainobject';
 
@@ -25,6 +25,7 @@ export interface IAuthdef {
   properties: string | Properties;
 
   normalize(): IAuthdef;
+  asPlainObject(): IAuthdef;
 }
 
 export class Authdef implements IAuthdef {
@@ -59,6 +60,18 @@ export class Authdef implements IAuthdef {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IAuthdef} as plain object.
+   */
+  asPlainObject(): IAuthdef {
+    return toPlainObject(this);
   }
 }

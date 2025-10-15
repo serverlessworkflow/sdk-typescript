@@ -15,7 +15,7 @@
  */
 
 import { IProduceeventdef, Produceeventdef } from './produceeventdef';
-import { cleanSourceModelProperty, normalizeCompensate, overwriteProduceEvents } from './utils';
+import { cleanSourceModelProperty, isPlainObject, normalizeCompensate, overwriteProduceEvents } from './utils';
 import toPlainObject from 'lodash.toplainobject';
 
 export interface ITransition {
@@ -25,6 +25,7 @@ export interface ITransition {
   compensate?: boolean;
 
   normalize(): ITransition;
+  asPlainObject(): ITransition;
 }
 
 export class Transition {
@@ -64,6 +65,18 @@ export class Transition {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.ITransition} as plain object.
+   */
+  asPlainObject(): ITransition {
+    return toPlainObject(this);
   }
 }

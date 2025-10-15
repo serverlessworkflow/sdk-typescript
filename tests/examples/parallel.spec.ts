@@ -73,7 +73,8 @@ describe('parallel workflow example', () => {
           ])
           .build(),
       ])
-      .build();
+      .build()
+      .asPlainObject();
 
     // Use immer to create a draft and compare with original model ensuring it is immerable
     produce(workflow, (draft) => {
@@ -82,7 +83,7 @@ describe('parallel workflow example', () => {
   });
 
   it('deserialized workflow should be immerable', function () {
-    const model = Specification.Workflow.fromSource(fs.readFileSync('./tests/examples/parallel.json', 'utf8'));
+    const model = Specification.Workflow.fromSource(fs.readFileSync('./tests/examples/parallel.json', 'utf8'), true);
 
     produce(model, (draft: any) => {
       expect(model === original(draft)).toBe(true);

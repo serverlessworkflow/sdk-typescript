@@ -21,6 +21,7 @@ import { IStatedatafilter, Statedatafilter } from './statedatafilter';
 import { ITransition, Transition } from './transition';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeActionMode,
   normalizeActions,
   normalizeEnd,
@@ -60,6 +61,7 @@ export interface IOperationstate {
   metadata?: IMetadata;
 
   normalize(): IOperationstate;
+  asPlainObject(): IOperationstate;
 }
 
 export class Operationstate implements IOperationstate {
@@ -157,6 +159,18 @@ export class Operationstate implements IOperationstate {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IOperationstate} as plain object.
+   */
+  asPlainObject(): IOperationstate {
+    return toPlainObject(this);
   }
 }

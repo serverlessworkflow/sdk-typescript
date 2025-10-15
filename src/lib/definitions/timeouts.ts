@@ -17,6 +17,7 @@ import { IWorkflowExecTimeout, WorkflowExecTimeout } from './workflowExecTimeout
 import { ActionExecTimeout, BranchExecTimeout, EventTimeout } from './types';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeWorkflowExecTimeout,
   overwriteStateExecTimeout,
   overwriteWorkflowExecTimeout,
@@ -33,6 +34,7 @@ export interface ITimeouts {
   eventTimeout?: EventTimeout;
 
   normalize(): ITimeouts;
+  asPlainObject(): ITimeouts;
 }
 
 export class Timeouts implements ITimeouts {
@@ -61,6 +63,18 @@ export class Timeouts implements ITimeouts {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.ITimeouts} as plain object.
+   */
+  asPlainObject(): ITimeouts {
+    return toPlainObject(this);
   }
 }

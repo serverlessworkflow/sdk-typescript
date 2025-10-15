@@ -16,7 +16,13 @@
 
 import { IMetadata, Metadata } from './metadata';
 import { ITransition, Transition } from './transition';
-import { cleanSourceModelProperty, normalizeTransition, overwriteMetadata, overwriteTransition } from './utils';
+import {
+  cleanSourceModelProperty,
+  isPlainObject,
+  normalizeTransition,
+  overwriteMetadata,
+  overwriteTransition,
+} from './utils';
 import toPlainObject from 'lodash.toplainobject';
 
 export interface ITransitiondatacondition {
@@ -27,6 +33,7 @@ export interface ITransitiondatacondition {
   metadata?: IMetadata;
 
   normalize(): ITransitiondatacondition;
+  asPlainObject(): ITransitiondatacondition;
 }
 
 export class Transitiondatacondition implements ITransitiondatacondition {
@@ -65,6 +72,18 @@ export class Transitiondatacondition implements ITransitiondatacondition {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.ITransitiondatacondition} as plain object.
+   */
+  asPlainObject(): ITransitiondatacondition {
+    return toPlainObject(this);
   }
 }

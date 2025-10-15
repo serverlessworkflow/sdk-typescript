@@ -16,7 +16,7 @@
 
 import { IEnd, End } from './end';
 import { IMetadata, Metadata } from './metadata';
-import { cleanSourceModelProperty, normalizeEnd, overwriteEnd, overwriteMetadata } from './utils';
+import { cleanSourceModelProperty, isPlainObject, normalizeEnd, overwriteEnd, overwriteMetadata } from './utils';
 import toPlainObject from 'lodash.toplainobject';
 
 export interface IEnddatacondition {
@@ -27,6 +27,7 @@ export interface IEnddatacondition {
   metadata?: IMetadata;
 
   normalize(): IEnddatacondition;
+  asPlainObject(): IEnddatacondition;
 }
 
 export class Enddatacondition implements IEnddatacondition {
@@ -65,6 +66,18 @@ export class Enddatacondition implements IEnddatacondition {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IEnddatacondition} as plain object.
+   */
+  asPlainObject(): IEnddatacondition {
+    return toPlainObject(this);
   }
 }

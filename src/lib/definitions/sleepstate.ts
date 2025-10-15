@@ -21,6 +21,7 @@ import { IStatedatafilter, Statedatafilter } from './statedatafilter';
 import { ITransition, Transition } from './transition';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeEnd,
   normalizeOnErrors,
   normalizeTransition,
@@ -54,6 +55,7 @@ export interface ISleepstate {
   metadata?: IMetadata;
 
   normalize(): ISleepstate;
+  asPlainObject(): ISleepstate;
 }
 
 export class Sleepstate implements ISleepstate {
@@ -140,6 +142,18 @@ export class Sleepstate implements ISleepstate {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.ISleepstate} as plain object.
+   */
+  asPlainObject(): ISleepstate {
+    return toPlainObject(this);
   }
 }

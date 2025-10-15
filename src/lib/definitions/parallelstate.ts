@@ -22,6 +22,7 @@ import { IStatedatafilter, Statedatafilter } from './statedatafilter';
 import { ITransition, Transition } from './transition';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeBranches,
   normalizeCompletionType,
   normalizeEnd,
@@ -62,6 +63,7 @@ export interface IParallelstate {
   metadata?: IMetadata;
 
   normalize(): IParallelstate;
+  asPlainObject(): IParallelstate;
 }
 
 export class Parallelstate implements IParallelstate {
@@ -161,6 +163,18 @@ export class Parallelstate implements IParallelstate {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IParallelstate} as plain object.
+   */
+  asPlainObject(): IParallelstate {
+    return toPlainObject(this);
   }
 }

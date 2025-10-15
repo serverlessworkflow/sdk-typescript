@@ -155,7 +155,8 @@ describe('provisionorder workflow example', () => {
           .actions([actionBuilder().subFlowRef('applyOrderWorkflowId').build()])
           .build(),
       ])
-      .build();
+      .build()
+      .asPlainObject();
 
     // Use immer to create a draft and compare with original model ensuring it is immerable
     produce(workflow, (draft) => {
@@ -164,7 +165,10 @@ describe('provisionorder workflow example', () => {
   });
 
   it('deserialized workflow should be immerable', function () {
-    const model = Specification.Workflow.fromSource(fs.readFileSync('./tests/examples/provisionorder.json', 'utf8'));
+    const model = Specification.Workflow.fromSource(
+      fs.readFileSync('./tests/examples/provisionorder.json', 'utf8'),
+      true
+    );
 
     produce(model, (draft: any) => {
       expect(model === original(draft)).toBe(true);

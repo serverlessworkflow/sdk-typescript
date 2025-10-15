@@ -18,7 +18,6 @@ import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
-import toPlainObject from 'lodash.toplainobject';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
@@ -35,7 +34,7 @@ function oauth2propsdefBuildingFn(data: Specification.IOauth2propsdef): () => Sp
       validate('Oauth2propsdef', model);
     }
 
-    return toPlainObject(model);
+    return model;
   };
 }
 

@@ -18,6 +18,7 @@ import { IEventref, Eventref } from './eventref';
 import { IFunctionref, Functionref } from './functionref';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeEventRef,
   normalizeFunctionRef,
   normalizeSubFlowRef,
@@ -46,6 +47,7 @@ export interface IAction {
   condition?: string;
 
   normalize(): IAction;
+  asPlainObject(): IAction;
 }
 
 export class Action implements IAction {
@@ -105,6 +107,18 @@ export class Action implements IAction {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IAction} as plain object.
+   */
+  asPlainObject(): IAction {
+    return toPlainObject(this);
   }
 }

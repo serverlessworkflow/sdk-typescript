@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { cleanSourceModelProperty, normalizeInterrupt } from './utils';
+import { cleanSourceModelProperty, isPlainObject, normalizeInterrupt } from './utils';
 import toPlainObject from 'lodash.toplainobject';
 
 export interface IWorkflowExecTimeout {
@@ -24,6 +24,7 @@ export interface IWorkflowExecTimeout {
   runBefore?: string;
 
   normalize(): IWorkflowExecTimeout;
+  asPlainObject(): IWorkflowExecTimeout;
 }
 
 export class WorkflowExecTimeout implements IWorkflowExecTimeout {
@@ -59,6 +60,18 @@ export class WorkflowExecTimeout implements IWorkflowExecTimeout {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IWorkflowExecTimeout} as plain object.
+   */
+  asPlainObject(): IWorkflowExecTimeout {
+    return toPlainObject(this);
   }
 }

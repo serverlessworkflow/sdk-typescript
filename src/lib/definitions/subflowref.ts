@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { cleanSourceModelProperty, normalizeInvoke, normalizeOnParentComplete } from './utils';
+import { cleanSourceModelProperty, isPlainObject, normalizeInvoke, normalizeOnParentComplete } from './utils';
 import toPlainObject from 'lodash.toplainobject';
 
 export interface ISubflowref {
@@ -25,6 +25,7 @@ export interface ISubflowref {
   invoke?: 'sync' | 'async';
 
   normalize(): ISubflowref;
+  asPlainObject(): ISubflowref;
 }
 
 export class Subflowref implements ISubflowref {
@@ -64,6 +65,18 @@ export class Subflowref implements ISubflowref {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.ISubflowref} as plain object.
+   */
+  asPlainObject(): ISubflowref {
+    return toPlainObject(this);
   }
 }

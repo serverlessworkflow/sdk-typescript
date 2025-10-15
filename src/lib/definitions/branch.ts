@@ -15,7 +15,13 @@
  */
 
 import { IAction, Action } from './action';
-import { cleanSourceModelProperty, normalizeActions, overwriteActions, overwritePropertyAsPlainType } from './utils';
+import {
+  cleanSourceModelProperty,
+  isPlainObject,
+  normalizeActions,
+  overwriteActions,
+  overwritePropertyAsPlainType,
+} from './utils';
 import { ActionExecTimeout, BranchExecTimeout } from './types';
 import toPlainObject from 'lodash.toplainobject';
 
@@ -29,6 +35,7 @@ export interface IBranch {
   actions: IAction[];
 
   normalize(): IBranch;
+  asPlainObject(): IBranch;
 }
 
 export class Branch implements IBranch /* Branch Definition */ {
@@ -67,6 +74,18 @@ export class Branch implements IBranch /* Branch Definition */ {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IBranch} as plain object.
+   */
+  asPlainObject(): IBranch {
+    return toPlainObject(this);
   }
 }

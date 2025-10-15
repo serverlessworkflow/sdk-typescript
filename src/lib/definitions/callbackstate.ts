@@ -23,6 +23,7 @@ import { IStatedatafilter, Statedatafilter } from './statedatafilter';
 import { ITransition, Transition } from './transition';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeAction,
   normalizeEnd,
   normalizeOnErrors,
@@ -64,6 +65,7 @@ export interface ICallbackstate {
   metadata?: IMetadata;
 
   normalize(): ICallbackstate;
+  asPlainObject(): ICallbackstate;
 }
 
 export class Callbackstate implements ICallbackstate {
@@ -163,6 +165,18 @@ export class Callbackstate implements ICallbackstate {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.ICallbackstate} as plain object.
+   */
+  asPlainObject(): ICallbackstate {
+    return toPlainObject(this);
   }
 }

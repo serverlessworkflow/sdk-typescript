@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { cleanSourceModelProperty, normalizeInvoke, overwritePropertyAsPlainType } from './utils';
+import { cleanSourceModelProperty, isPlainObject, normalizeInvoke, overwritePropertyAsPlainType } from './utils';
 import toPlainObject from 'lodash.toplainobject';
 
 export interface IEventref {
@@ -33,6 +33,7 @@ export interface IEventref {
   invoke?: 'sync' | 'async';
 
   normalize(): IEventref;
+  asPlainObject(): IEventref;
 }
 
 export class Eventref implements IEventref {
@@ -87,6 +88,18 @@ export class Eventref implements IEventref {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IEventref} as plain object.
+   */
+  asPlainObject(): IEventref {
+    return toPlainObject(this);
   }
 }

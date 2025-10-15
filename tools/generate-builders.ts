@@ -122,7 +122,6 @@ const createBuilder = async (destDir: string, dataType: string): Promise<void> =
 import { Specification } from '../definitions';
 import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
-import toPlainObject from 'lodash.toplainobject';
 ${extension?.import ? extension.import : ''}
 
 /**
@@ -142,7 +141,7 @@ function ${camelType}BuildingFn(data: Specification.I${dataType}): (() => Specif
       validate('${dataType}', model);
     }
 
-    return toPlainObject(model);
+    return model;
   };
 }
 

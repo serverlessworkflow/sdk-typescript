@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { cleanSourceModelProperty, normalizeInvoke, overwritePropertyAsPlainType } from './utils';
+import { cleanSourceModelProperty, isPlainObject, normalizeInvoke, overwritePropertyAsPlainType } from './utils';
 import toPlainObject from 'lodash.toplainobject';
 
 export interface IFunctionref {
@@ -27,6 +27,7 @@ export interface IFunctionref {
   invoke?: 'sync' | 'async';
 
   normalize(): IFunctionref;
+  asPlainObject(): IFunctionref;
 }
 
 export class Functionref implements IFunctionref {
@@ -68,6 +69,18 @@ export class Functionref implements IFunctionref {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IFunctionref} as plain object.
+   */
+  asPlainObject(): IFunctionref {
+    return toPlainObject(this);
   }
 }

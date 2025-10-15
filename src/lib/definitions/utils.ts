@@ -443,6 +443,20 @@ export function overwritePropertyAsPlainType(property: string, object: any): voi
 }
 
 /**
+ * Verify if and object was created with {} or new Object()
+ * @param object to be evaluated
+ */
+export function isPlainObject(object: unknown): object is Record<PropertyKey, any> {
+  if (typeof object !== 'object' || object === null) {
+    return false;
+  }
+
+  const proto = Object.getPrototypeOf(object);
+
+  return proto === null || proto.constructor === Object;
+}
+
+/**
  * Check if an object has a property or method
  * @param object to be evaluated
  * @param key property / function name

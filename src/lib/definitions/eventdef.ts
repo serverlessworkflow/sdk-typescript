@@ -16,6 +16,7 @@
 import { IMetadata, Metadata } from './metadata';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeDataOnly,
   normalizeKind,
   overwriteCorrelation,
@@ -35,6 +36,7 @@ export interface IEventdef {
   metadata?: IMetadata;
 
   normalize(): IEventdef;
+  asPlainObject(): IEventdef;
 }
 
 export class Eventdef implements IEventdef {
@@ -93,6 +95,18 @@ export class Eventdef implements IEventdef {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IEventdef} as plain object.
+   */
+  asPlainObject(): IEventdef {
+    return toPlainObject(this);
   }
 }

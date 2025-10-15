@@ -20,6 +20,7 @@ import { IStatedatafilter, Statedatafilter } from './statedatafilter';
 import { ITransition, Transition } from './transition';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeEnd,
   normalizeTransition,
   normalizeUsedForCompensation,
@@ -53,6 +54,7 @@ export interface IInjectstate {
   metadata?: IMetadata;
 
   normalize(): IInjectstate;
+  asPlainObject(): IInjectstate;
 }
 
 export class Injectstate implements IInjectstate {
@@ -136,6 +138,18 @@ export class Injectstate implements IInjectstate {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IInjectstate} as plain object.
+   */
+  asPlainObject(): IInjectstate {
+    return toPlainObject(this);
   }
 }

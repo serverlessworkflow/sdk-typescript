@@ -18,6 +18,7 @@ import { IEnd, End } from './end';
 import { ITransition, Transition } from './transition';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeEnd,
   normalizeTransition,
   overwriteEnd,
@@ -34,6 +35,7 @@ export interface IError {
   end?: boolean | IEnd;
 
   normalize(): IError;
+  asPlainObject(): IError;
 }
 
 export class Error implements IError {
@@ -72,6 +74,18 @@ export class Error implements IError {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IError} as plain object.
+   */
+  asPlainObject(): IError {
+    return toPlainObject(this);
   }
 }

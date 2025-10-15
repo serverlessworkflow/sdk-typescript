@@ -289,7 +289,8 @@ describe('booklending workflow example', () => {
       ])
       .functions('file://books/lending/functions.json')
       .events('file://books/lending/events.json')
-      .build();
+      .build()
+      .asPlainObject();
 
     // Use immer to create a draft and compare with original model ensuring it is immerable
     produce(workflow, (draft) => {
@@ -298,7 +299,7 @@ describe('booklending workflow example', () => {
   });
 
   it('deserialized workflow should be immerable', function () {
-    const model = Specification.Workflow.fromSource(fs.readFileSync('./tests/examples/booklending.json', 'utf8'));
+    const model = Specification.Workflow.fromSource(fs.readFileSync('./tests/examples/booklending.json', 'utf8'), true);
 
     produce(model, (draft: any) => {
       expect(model === original(draft)).toBe(true);

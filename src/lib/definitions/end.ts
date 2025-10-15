@@ -16,6 +16,7 @@
 import { IProduceeventdef, Produceeventdef } from './produceeventdef';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeCompensate,
   normalizeContinueAs,
   normalizeTerminate,
@@ -33,6 +34,7 @@ export interface IEnd {
   continueAs?: string | IContinueasdef;
 
   normalize(): IEnd;
+  asPlainObject(): IEnd;
 }
 
 export class End {
@@ -77,6 +79,18 @@ export class End {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IEnd} as plain object.
+   */
+  asPlainObject(): IEnd {
+    return toPlainObject(this);
   }
 }

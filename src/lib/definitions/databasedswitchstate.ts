@@ -20,6 +20,7 @@ import { IMetadata, Metadata } from './metadata';
 import { IStatedatafilter, Statedatafilter } from './statedatafilter';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeDataConditions,
   normalizeDefaultCondition,
   normalizeOnErrors,
@@ -52,6 +53,7 @@ export interface IDatabasedswitchstate {
   metadata?: IMetadata;
 
   normalize(): IDatabasedswitchstate;
+  asPlainObject(): IDatabasedswitchstate;
 }
 
 export class Databasedswitchstate implements IDatabasedswitchstate {
@@ -127,6 +129,18 @@ export class Databasedswitchstate implements IDatabasedswitchstate {
     normalizeUsedForCompensation(clone, this.sourceModel);
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IDatabasedswitchstate} as plain object.
+   */
+  asPlainObject(): IDatabasedswitchstate {
+    return toPlainObject(this);
   }
 }

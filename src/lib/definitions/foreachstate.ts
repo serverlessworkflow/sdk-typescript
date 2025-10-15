@@ -21,6 +21,7 @@ import { IStatedatafilter, Statedatafilter } from './statedatafilter';
 import { ITransition, Transition } from './transition';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeActions,
   normalizeEnd,
   normalizeMode,
@@ -64,6 +65,7 @@ export interface IForeachstate {
   metadata?: IMetadata;
 
   normalize(): IForeachstate;
+  asPlainObject(): IForeachstate;
 }
 
 export class Foreachstate implements IForeachstate {
@@ -175,6 +177,18 @@ export class Foreachstate implements IForeachstate {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IForeachstate} as plain object.
+   */
+  asPlainObject(): IForeachstate {
+    return toPlainObject(this);
   }
 }

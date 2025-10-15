@@ -18,6 +18,7 @@
 import { IWorkflowExecTimeout, WorkflowExecTimeout } from './workflowExecTimeout';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeWorkflowExecTimeout,
   overwritePropertyAsPlainType,
   overwriteWorkflowExecTimeout,
@@ -36,6 +37,7 @@ export interface IContinueasdef {
   workflowExecTimeout?: IWorkflowExecTimeout;
 
   normalize(): IContinueasdef;
+  asPlainObject(): IContinueasdef;
 }
 
 export class Continueasdef {
@@ -79,6 +81,18 @@ export class Continueasdef {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IContinueasdef} as plain object.
+   */
+  asPlainObject(): IContinueasdef {
+    return toPlainObject(this);
   }
 }

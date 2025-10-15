@@ -102,7 +102,8 @@ describe('solvemathproblems workflow example', () => {
           .stateDataFilter(statedatafilterBuilder().output('${ .results }').build())
           .build(),
       ])
-      .build();
+      .build()
+      .asPlainObject();
 
     // Use immer to create a draft and compare with original model ensuring it is immerable
     produce(workflow, (draft) => {
@@ -111,7 +112,10 @@ describe('solvemathproblems workflow example', () => {
   });
 
   it('deserialized workflow should be immerable', function () {
-    const model = Specification.Workflow.fromSource(fs.readFileSync('./tests/examples/solvemathproblems.json', 'utf8'));
+    const model = Specification.Workflow.fromSource(
+      fs.readFileSync('./tests/examples/solvemathproblems.json', 'utf8'),
+      true
+    );
 
     produce(model, (draft: any) => {
       expect(model === original(draft)).toBe(true);

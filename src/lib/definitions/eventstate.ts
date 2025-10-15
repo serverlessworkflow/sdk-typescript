@@ -21,6 +21,7 @@ import { IStatedatafilter, Statedatafilter } from './statedatafilter';
 import { ITransition, Transition } from './transition';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeEnd,
   normalizeExclusive,
   normalizeOnErrors,
@@ -59,6 +60,7 @@ export interface IEventstate {
   metadata?: IMetadata;
 
   normalize(): IEventstate;
+  asPlainObject(): IEventstate;
 }
 
 export class Eventstate implements IEventstate {
@@ -141,6 +143,18 @@ export class Eventstate implements IEventstate {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IEventstate} as plain object.
+   */
+  asPlainObject(): IEventstate {
+    return toPlainObject(this);
   }
 }

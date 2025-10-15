@@ -18,7 +18,6 @@ import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
 import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
-import toPlainObject from 'lodash.toplainobject';
 import { setEndValueIfNoTransition } from '../definitions/utils';
 
 /**
@@ -38,7 +37,7 @@ function callbackstateBuildingFn(data: Specification.ICallbackstate): () => Spec
       validate('Callbackstate', model);
     }
 
-    return toPlainObject(model);
+    return model;
   };
 }
 

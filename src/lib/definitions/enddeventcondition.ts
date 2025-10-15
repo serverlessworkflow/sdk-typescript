@@ -19,6 +19,7 @@ import { IEventdatafilter, Eventdatafilter } from './eventdatafilter';
 import { IMetadata, Metadata } from './metadata';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeEnd,
   overwriteEnd,
   overwriteEventDataFilter,
@@ -35,6 +36,7 @@ export interface IEnddeventcondition {
   metadata?: IMetadata;
 
   normalize(): IEnddeventcondition;
+  asPlainObject(): IEnddeventcondition;
 }
 
 export class Enddeventcondition implements IEnddeventcondition {
@@ -78,6 +80,18 @@ export class Enddeventcondition implements IEnddeventcondition {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IEnddeventcondition} as plain object.
+   */
+  asPlainObject(): IEnddeventcondition {
+    return toPlainObject(this);
   }
 }

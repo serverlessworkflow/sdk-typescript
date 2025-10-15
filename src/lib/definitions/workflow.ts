@@ -21,6 +21,7 @@ import * as yaml from 'js-yaml';
 import { validate } from '../utils';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeAuth,
   normalizeEvents,
   normalizeExpressionLang,
@@ -77,6 +78,7 @@ export interface IWorkflow {
   states: States;
 
   normalize(): IWorkflow;
+  asPlainObject(): IWorkflow;
 }
 
 export class Workflow implements IWorkflow {
@@ -189,11 +191,18 @@ export class Workflow implements IWorkflow {
   /**
    * Parses the provided string as Workflow
    * @param {string} data The JSON or YAML workflow to parse
+   * @param {boolean} [optionalParam] create model instance as plain object
    * @returns {IWorkflow} The parse Workflow
    */
-  static fromSource(value: string): IWorkflow {
+  static fromSource(value: string, asPlainObject?: boolean): IWorkflow {
     try {
-      return toPlainObject(new Workflow(yaml.load(value)));
+      const workflow = new Workflow(yaml.load(value));
+
+      if (!asPlainObject) {
+        return workflow;
+      }
+
+      return toPlainObject(workflow);
     } catch (ex) {
       throw new Error('Format not supported');
     }
@@ -236,6 +245,18 @@ export class Workflow implements IWorkflow {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IWorkflow} as plain object.
+   */
+  asPlainObject(): IWorkflow {
+    return toPlainObject(this);
   }
 }

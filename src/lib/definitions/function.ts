@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { cleanSourceModelProperty, normalizeType, overwriteMetadata } from './utils';
+import { cleanSourceModelProperty, isPlainObject, normalizeType, overwriteMetadata } from './utils';
 
 import { IMetadata, Metadata } from './metadata';
 import toPlainObject from 'lodash.toplainobject';
@@ -27,6 +27,7 @@ export interface IFunction {
   metadata?: IMetadata;
 
   normalize(): IFunction;
+  asPlainObject(): IFunction;
 }
 
 export class Function implements IFunction {
@@ -68,6 +69,18 @@ export class Function implements IFunction {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IFunction} as plain object.
+   */
+  asPlainObject(): IFunction {
+    return toPlainObject(this);
   }
 }

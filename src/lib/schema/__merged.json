@@ -2004,102 +2004,12 @@
       "additionalProperties": false,
       "required": []
     },
-    "function": {
+    "metadata": {
       "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Unique function name",
-          "minLength": 1
-        },
-        "operation": {
-          "type": "string",
-          "description": "If type is `rest`, <path_to_openapi_definition>#<operation_id>. If type is `asyncapi`, <path_to_asyncapi_definition>#<operation_id>. If type is `rpc`, <path_to_grpc_proto_file>#<service_name>#<service_method>. If type is `graphql`, <url_to_graphql_endpoint>#<literal \\\"mutation\\\" or \\\"query\\\">#<query_or_mutation_name>. If type is `odata`, <URI_to_odata_service>#<Entity_Set_Name>. If type is `expression`, defines the workflow expression.",
-          "minLength": 1
-        },
-        "type": {
-          "type": "string",
-          "description": "Defines the function type. Is either `rest`, `asyncapi, `rpc`, `graphql`, `odata`, `expression`, or `custom`. Default is `rest`",
-          "enum": [
-            "rest",
-            "asyncapi",
-            "rpc",
-            "graphql",
-            "odata",
-            "expression",
-            "custom"
-          ],
-          "default": "rest"
-        },
-        "authRef": {
-          "type": "string",
-          "description": "References an auth definition name to be used to access to resource defined in the operation parameter",
-          "minLength": 1
-        },
-        "metadata": {
-          "$ref": "#/definitions/metadata"
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "name",
-        "operation"
-      ]
-    },
-    "retrydef": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Unique retry strategy name",
-          "minLength": 1
-        },
-        "delay": {
-          "type": "string",
-          "description": "Time delay between retry attempts (ISO 8601 duration format)"
-        },
-        "maxDelay": {
-          "type": "string",
-          "description": "Maximum time delay between retry attempts (ISO 8601 duration format)"
-        },
-        "increment": {
-          "type": "string",
-          "description": "Static value by which the delay increases during each attempt (ISO 8601 time format)"
-        },
-        "multiplier": {
-          "type": [
-            "number",
-            "string"
-          ],
-          "minimum": 0,
-          "minLength": 1,
-          "multipleOf": 0.01,
-          "description": "Numeric value, if specified the delay between retries is multiplied by this value."
-        },
-        "maxAttempts": {
-          "type": [
-            "number",
-            "string"
-          ],
-          "minimum": 1,
-          "minLength": 0,
-          "description": "Maximum number of retry attempts."
-        },
-        "jitter": {
-          "type": [
-            "number",
-            "string"
-          ],
-          "minimum": 0,
-          "maximum": 1,
-          "description": "If float type, maximum amount of random time added or subtracted from the delay between each retry relative to total delay (between 0 and 1). If string type, absolute maximum amount of random time added or subtracted from the delay between each retry (ISO 8601 duration format)"
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "name",
-        "maxAttempts"
-      ]
+      "description": "Metadata information",
+      "additionalProperties": {
+        "type": "string"
+      }
     },
     "authdef": {
       "type": "object",
@@ -2268,36 +2178,6 @@
         "clientId"
       ]
     },
-    "metadata": {
-      "type": "object",
-      "description": "Metadata information",
-      "additionalProperties": {
-        "type": "string"
-      }
-    },
-    "errordef": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Domain-specific error name",
-          "minLength": 1
-        },
-        "code": {
-          "type": "string",
-          "description": "Error code. Can be used in addition to the name to help runtimes resolve to technical errors/exceptions. Should not be defined if error is set to '*'",
-          "minLength": 1
-        },
-        "description": {
-          "type": "string",
-          "description": "Error description"
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "name"
-      ]
-    },
     "workflowExecTimeout": {
       "oneOf": [
         {
@@ -2374,6 +2254,126 @@
       "type": "string",
       "description": "Timeout duration to wait for consuming defined events (ISO 8601 duration format)",
       "minLength": 1
+    },
+    "errordef": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Domain-specific error name",
+          "minLength": 1
+        },
+        "code": {
+          "type": "string",
+          "description": "Error code. Can be used in addition to the name to help runtimes resolve to technical errors/exceptions. Should not be defined if error is set to '*'",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "Error description"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ]
+    },
+    "retrydef": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique retry strategy name",
+          "minLength": 1
+        },
+        "delay": {
+          "type": "string",
+          "description": "Time delay between retry attempts (ISO 8601 duration format)"
+        },
+        "maxDelay": {
+          "type": "string",
+          "description": "Maximum time delay between retry attempts (ISO 8601 duration format)"
+        },
+        "increment": {
+          "type": "string",
+          "description": "Static value by which the delay increases during each attempt (ISO 8601 time format)"
+        },
+        "multiplier": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "minimum": 0,
+          "minLength": 1,
+          "multipleOf": 0.01,
+          "description": "Numeric value, if specified the delay between retries is multiplied by this value."
+        },
+        "maxAttempts": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "minimum": 1,
+          "minLength": 0,
+          "description": "Maximum number of retry attempts."
+        },
+        "jitter": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "If float type, maximum amount of random time added or subtracted from the delay between each retry relative to total delay (between 0 and 1). If string type, absolute maximum amount of random time added or subtracted from the delay between each retry (ISO 8601 duration format)"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "maxAttempts"
+      ]
+    },
+    "function": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique function name",
+          "minLength": 1
+        },
+        "operation": {
+          "type": "string",
+          "description": "If type is `rest`, <path_to_openapi_definition>#<operation_id>. If type is `asyncapi`, <path_to_asyncapi_definition>#<operation_id>. If type is `rpc`, <path_to_grpc_proto_file>#<service_name>#<service_method>. If type is `graphql`, <url_to_graphql_endpoint>#<literal \\\"mutation\\\" or \\\"query\\\">#<query_or_mutation_name>. If type is `odata`, <URI_to_odata_service>#<Entity_Set_Name>. If type is `expression`, defines the workflow expression.",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "description": "Defines the function type. Is either `rest`, `asyncapi, `rpc`, `graphql`, `odata`, `expression`, or `custom`. Default is `rest`",
+          "enum": [
+            "rest",
+            "asyncapi",
+            "rpc",
+            "graphql",
+            "odata",
+            "expression",
+            "custom"
+          ],
+          "default": "rest"
+        },
+        "authRef": {
+          "type": "string",
+          "description": "References an auth definition name to be used to access to resource defined in the operation parameter",
+          "minLength": 1
+        },
+        "metadata": {
+          "$ref": "#/definitions/metadata"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "operation"
+      ]
     },
     "eventdef": {
       "type": "object",

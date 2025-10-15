@@ -18,6 +18,7 @@ import { IEnd, End } from './end';
 import { ITransition, Transition } from './transition';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeEnd,
   normalizeTransition,
   overwriteEnd,
@@ -32,6 +33,7 @@ export interface IDefaultconditiondef {
   end?: boolean | IEnd;
 
   normalize(): IDefaultconditiondef;
+  asPlainObject(): IDefaultconditiondef;
 }
 
 export class Defaultconditiondef implements IDefaultconditiondef {
@@ -62,6 +64,18 @@ export class Defaultconditiondef implements IDefaultconditiondef {
 
     cleanSourceModelProperty(clone);
 
-    return toPlainObject(clone);
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
+    return clone;
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IDefaultconditiondef} as plain object.
+   */
+  asPlainObject(): IDefaultconditiondef {
+    return toPlainObject(this);
   }
 }
