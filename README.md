@@ -36,6 +36,7 @@ The npm [`@serverlessworkflow/sdk`](https://www.npmjs.com/package/@serverlesswor
 | Latest Releases | Conformance to Spec Version |
 | :---: | :---: |
 | [v1.0.\*](https://github.com/serverlessworkflow/sdk-typescript/releases/) | [v1.0.0](https://github.com/serverlessworkflow/specification) |
+| [v0.8.4](https://github.com/serverlessworkflow/sdk-typescript/releases/) | [v0.8](https://github.com/serverlessworkflow/specification/tree/0.8.x) |
 
 > [!WARNING]
 > Previous versions of the SDK were published with a typo in the scope:
