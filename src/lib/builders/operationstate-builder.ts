@@ -16,29 +16,35 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 import { setEndValueIfNoTransition } from '../definitions/utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Operationstate} data The underlying object
- * @returns {Specification.Operationstate} The validated underlying object
+ * @param {Specification.IOperationstate} data The underlying object
+ * @returns {Specification.IOperationstate} The validated underlying object
  */
-function operationstateBuildingFn(data: Specification.Operationstate): () => Specification.Operationstate {
+function operationstateBuildingFn(data: Specification.IOperationstate): () => Specification.IOperationstate {
   return () => {
     const model = new Specification.Operationstate(data);
 
     setEndValueIfNoTransition(model);
 
-    validate('Operationstate', model.normalize());
+    if (hasProperty(model, 'normalize')) {
+      validate('Operationstate', (model as any).normalize());
+    } else {
+      validate('Operationstate', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Operationstate`
- * @returns {Specification.Operationstate} A builder for `Specification.Operationstate`
+ * @returns {Specification.IOperationstate} A builder for `Specification.Operationstate`
  */
-export function operationstateBuilder(): Builder<Specification.Operationstate> {
-  return builder<Specification.Operationstate>(operationstateBuildingFn);
+export function operationstateBuilder(): Builder<Specification.IOperationstate> {
+  return builder<Specification.IOperationstate>(operationstateBuildingFn);
 }

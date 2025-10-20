@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Action } from './action';
-import { End } from './end';
-import { Error } from './error';
-import { Metadata } from './metadata';
-import { Statedatafilter } from './statedatafilter';
-import { Transition } from './transition';
+import { Action, IAction } from './action';
+import { End, IEnd } from './end';
+import { Error, IError } from './error';
+import { IMetadata, Metadata } from './metadata';
+import { IStatedatafilter, Statedatafilter } from './statedatafilter';
+import { ITransition, Transition } from './transition';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeActionMode,
   normalizeActions,
   normalizeEnd,
@@ -37,9 +38,33 @@ import {
   setEndValueIfNoTransition,
 } from './utils';
 import { ActionExecTimeout } from './types';
-import { StateExecTimeout } from './stateExecTimeout';
+import { IStateExecTimeout, StateExecTimeout } from './stateExecTimeout';
+import toPlainObject from 'lodash.toplainobject';
 
-export class Operationstate {
+export interface IOperationstate {
+  sourceModel?: IOperationstate;
+  id?: string;
+  name?: string;
+  type?: 'operation';
+  end?: boolean | IEnd;
+  stateDataFilter?: IStatedatafilter;
+  actionMode?: 'sequential' | 'parallel';
+  actions?: IAction[];
+  timeouts?: {
+    stateExecTimeout?: IStateExecTimeout;
+    actionExecTimeout?: ActionExecTimeout;
+  };
+  onErrors?: IError[];
+  transition?: string | ITransition;
+  compensatedBy?: string;
+  usedForCompensation?: boolean;
+  metadata?: IMetadata;
+
+  normalize(): IOperationstate;
+  asPlainObject(): IOperationstate;
+}
+
+export class Operationstate implements IOperationstate {
   sourceModel?: Operationstate;
   /**
    * Unique State id
@@ -117,9 +142,9 @@ export class Operationstate {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Operationstate} without deleted properties.
+   * @returns {Specification.IOperationstate} without deleted properties.
    */
-  normalize = (): Operationstate => {
+  normalize(): IOperationstate {
     const clone = new Operationstate(this);
 
     normalizeEnd(clone);
@@ -134,6 +159,18 @@ export class Operationstate {
 
     cleanSourceModelProperty(clone);
 
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
     return clone;
-  };
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IOperationstate} as plain object.
+   */
+  asPlainObject(): IOperationstate {
+    return toPlainObject(this);
+  }
 }

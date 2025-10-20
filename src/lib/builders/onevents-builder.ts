@@ -16,26 +16,32 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Onevents} data The underlying object
- * @returns {Specification.Onevents} The validated underlying object
+ * @param {Specification.IOnevents} data The underlying object
+ * @returns {Specification.IOnevents} The validated underlying object
  */
-function oneventsBuildingFn(data: Specification.Onevents): () => Specification.Onevents {
+function oneventsBuildingFn(data: Specification.IOnevents): () => Specification.IOnevents {
   return () => {
     const model = new Specification.Onevents(data);
 
-    validate('Onevents', model.normalize());
+    if (hasProperty(model, 'normalize')) {
+      validate('Onevents', (model as any).normalize());
+    } else {
+      validate('Onevents', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Onevents`
- * @returns {Specification.Onevents} A builder for `Specification.Onevents`
+ * @returns {Specification.IOnevents} A builder for `Specification.Onevents`
  */
-export function oneventsBuilder(): Builder<Specification.Onevents> {
-  return builder<Specification.Onevents>(oneventsBuildingFn);
+export function oneventsBuilder(): Builder<Specification.IOnevents> {
+  return builder<Specification.IOnevents>(oneventsBuildingFn);
 }

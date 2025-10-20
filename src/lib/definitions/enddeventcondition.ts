@@ -13,18 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { End } from './end';
-import { Eventdatafilter } from './eventdatafilter';
-import { Metadata } from './metadata';
+
+import { IEnd, End } from './end';
+import { IEventdatafilter, Eventdatafilter } from './eventdatafilter';
+import { IMetadata, Metadata } from './metadata';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeEnd,
   overwriteEnd,
   overwriteEventDataFilter,
   overwriteMetadata,
 } from './utils';
+import toPlainObject from 'lodash.toplainobject';
 
-export class Enddeventcondition {
+export interface IEnddeventcondition {
+  sourceModel?: IEnddeventcondition;
+  name?: string;
+  eventRef: string;
+  end: boolean | IEnd;
+  eventDataFilter?: IEventdatafilter;
+  metadata?: IMetadata;
+
+  normalize(): IEnddeventcondition;
+  asPlainObject(): IEnddeventcondition;
+}
+
+export class Enddeventcondition implements IEnddeventcondition {
   sourceModel?: Enddeventcondition;
   /**
    * Event condition name
@@ -56,15 +71,27 @@ export class Enddeventcondition {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Enddeventcondition} without deleted properties.
+   * @returns {Specification.IEnddeventcondition} without deleted properties.
    */
-  normalize = (): Enddeventcondition => {
+  normalize(): IEnddeventcondition {
     const clone = new Enddeventcondition(this);
 
     normalizeEnd(clone);
 
     cleanSourceModelProperty(clone);
 
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
     return clone;
-  };
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IEnddeventcondition} as plain object.
+   */
+  asPlainObject(): IEnddeventcondition {
+    return toPlainObject(this);
+  }
 }

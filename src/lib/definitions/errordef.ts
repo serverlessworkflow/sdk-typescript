@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-export class Errordef {
+export interface IErrordef {
+  name: string;
+  code?: string;
+  description?: string;
+}
+
+export class Errordef implements IErrordef {
   /**
    * Domain-specific error name
    */

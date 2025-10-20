@@ -13,17 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Metadata } from './metadata';
+import { IMetadata, Metadata } from './metadata';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeDataOnly,
   normalizeKind,
   overwriteCorrelation,
   overwriteMetadata,
 } from './utils';
 import { CorrelationDefs } from './types';
+import toPlainObject from 'lodash.toplainobject';
 
-export class Eventdef {
+export interface IEventdef {
+  sourceModel?: IEventdef;
+  name?: string;
+  source?: string;
+  type?: string;
+  kind?: 'consumed' | 'produced';
+  correlation?: CorrelationDefs;
+  dataOnly?: boolean;
+  metadata?: IMetadata;
+
+  normalize(): IEventdef;
+  asPlainObject(): IEventdef;
+}
+
+export class Eventdef implements IEventdef {
   sourceModel?: Eventdef;
   /**
    * Unique event name
@@ -69,15 +85,28 @@ export class Eventdef {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Eventdef} without deleted properties.
+   * @returns {Specification.IEventdef} without deleted properties.
    */
-  normalize = (): Eventdef => {
+  normalize(): IEventdef {
     const clone = new Eventdef(this);
 
     normalizeKind(clone, this.sourceModel);
     normalizeDataOnly(clone, this.sourceModel);
 
     cleanSourceModelProperty(clone);
+
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
     return clone;
-  };
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IEventdef} as plain object.
+   */
+  asPlainObject(): IEventdef {
+    return toPlainObject(this);
+  }
 }

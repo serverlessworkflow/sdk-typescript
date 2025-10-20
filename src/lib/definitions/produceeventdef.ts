@@ -16,7 +16,19 @@
 
 import { overwritePropertyAsPlainType } from './utils';
 
-export class Produceeventdef {
+export interface IProduceeventdef {
+  eventRef: string;
+  data?:
+    | string
+    | {
+        [key: string]: any;
+      };
+  contextAttributes?: {
+    [name: string]: string;
+  };
+}
+
+export class Produceeventdef implements IProduceeventdef {
   /**
    * References a name of a defined event
    */

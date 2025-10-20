@@ -13,11 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { End } from './end';
-import { Metadata } from './metadata';
-import { cleanSourceModelProperty, normalizeEnd, overwriteEnd, overwriteMetadata } from './utils';
 
-export class Enddatacondition {
+import { IEnd, End } from './end';
+import { IMetadata, Metadata } from './metadata';
+import { cleanSourceModelProperty, isPlainObject, normalizeEnd, overwriteEnd, overwriteMetadata } from './utils';
+import toPlainObject from 'lodash.toplainobject';
+
+export interface IEnddatacondition {
+  sourceModel?: IEnddatacondition;
+  name?: string;
+  condition: string;
+  end: boolean | IEnd;
+  metadata?: IMetadata;
+
+  normalize(): IEnddatacondition;
+  asPlainObject(): IEnddatacondition;
+}
+
+export class Enddatacondition implements IEnddatacondition {
   sourceModel?: Enddatacondition;
   /**
    * Data condition name
@@ -44,15 +57,27 @@ export class Enddatacondition {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Enddatacondition} without deleted properties.
+   * @returns {Specification.IEnddatacondition} without deleted properties.
    */
-  normalize = (): Enddatacondition => {
+  normalize(): IEnddatacondition {
     const clone = new Enddatacondition(this);
 
     normalizeEnd(clone);
 
     cleanSourceModelProperty(clone);
 
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
     return clone;
-  };
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IEnddatacondition} as plain object.
+   */
+  asPlainObject(): IEnddatacondition {
+    return toPlainObject(this);
+  }
 }

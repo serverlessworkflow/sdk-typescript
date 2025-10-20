@@ -15,6 +15,7 @@
  */
 
 import * as fs from 'fs';
+import { original, produce } from 'immer';
 import {
   actionBuilder,
   errorBuilder,
@@ -22,6 +23,7 @@ import {
   functionBuilder,
   functionrefBuilder,
   operationstateBuilder,
+  Specification,
   statedatafilterBuilder,
   workflowBuilder,
 } from '../../src';
@@ -91,5 +93,85 @@ describe('provisionorder workflow example', () => {
 
     const expected = JSON.parse(fs.readFileSync('./tests/examples/provisionorder.json', 'utf8'));
     expect(JSON.stringify(workflow.normalize())).toEqual(JSON.stringify(expected));
+  });
+
+  it('built workflow should be immerable', function () {
+    const workflow = workflowBuilder()
+      .id('provisionorders')
+      .version('1.0')
+      .specVersion('0.8')
+      .name('Provision Orders')
+      .description('Provision Orders and handle errors thrown')
+      .start('ProvisionOrder')
+      .functions([
+        functionBuilder()
+          .name('provisionOrderFunction')
+          .operation('http://myapis.org/provisioningapi.json#doProvision')
+          .build(),
+      ])
+      .errors([
+        errordefBuilder().name('Missing order id').build(),
+        errordefBuilder().name('Missing order item').build(),
+        errordefBuilder().name('Missing order quantity').build(),
+      ])
+      .states([
+        operationstateBuilder()
+          .name('ProvisionOrder')
+          .actionMode('sequential')
+          .actions([
+            actionBuilder()
+              .functionRef(
+                functionrefBuilder()
+                  .refName('provisionOrderFunction')
+                  .arguments({
+                    order: '${ .order }',
+                  })
+                  .build()
+              )
+              .build(),
+          ])
+          .stateDataFilter(statedatafilterBuilder().output('${ .exceptions }').build())
+          .transition('ApplyOrder')
+          .onErrors([
+            errorBuilder().errorRef('Missing order id').transition('MissingId').build(),
+            errorBuilder().errorRef('Missing order item').transition('MissingItem').build(),
+            errorBuilder().errorRef('Missing order quantity').transition('MissingQuantity').build(),
+          ])
+          .build(),
+        operationstateBuilder()
+          .name('MissingId')
+          .actions([actionBuilder().subFlowRef('handleMissingIdExceptionWorkflow').build()])
+          .build(),
+        operationstateBuilder()
+          .name('MissingItem')
+          .actions([actionBuilder().subFlowRef('handleMissingItemExceptionWorkflow').build()])
+          .build(),
+        operationstateBuilder()
+          .name('MissingQuantity')
+          .actions([actionBuilder().subFlowRef('handleMissingQuantityExceptionWorkflow').build()])
+          .build(),
+        operationstateBuilder()
+          .name('ApplyOrder')
+          .actions([actionBuilder().subFlowRef('applyOrderWorkflowId').build()])
+          .build(),
+      ])
+      .build()
+      .asPlainObject();
+
+    // Use immer to create a draft and compare with original model ensuring it is immerable
+    produce(workflow, (draft) => {
+      expect(workflow === original(draft)).toBe(true);
+    });
+  });
+
+  it('deserialized workflow should be immerable', function () {
+    const model = Specification.Workflow.fromSource(
+      fs.readFileSync('./tests/examples/provisionorder.json', 'utf8'),
+      true
+    );
+
+    produce(model, (draft: any) => {
+      expect(model === original(draft)).toBe(true);
+    });
   });
 });

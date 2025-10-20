@@ -14,9 +14,23 @@
  * limitations under the License.
  */
 
-import { cleanSourceModelProperty, normalizeInvoke, overwritePropertyAsPlainType } from './utils';
+import { cleanSourceModelProperty, isPlainObject, normalizeInvoke, overwritePropertyAsPlainType } from './utils';
+import toPlainObject from 'lodash.toplainobject';
 
-export class Functionref {
+export interface IFunctionref {
+  sourceModel?: IFunctionref;
+  refName: string;
+  arguments?: {
+    [key: string]: any;
+  };
+  selectionSet?: string;
+  invoke?: 'sync' | 'async';
+
+  normalize(): IFunctionref;
+  asPlainObject(): IFunctionref;
+}
+
+export class Functionref implements IFunctionref {
   sourceModel?: Functionref;
   /**
    * Name of the referenced function
@@ -46,15 +60,27 @@ export class Functionref {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Functionref} without deleted properties.
+   * @returns {Specification.IFunctionref} without deleted properties.
    */
-  normalize = (): Functionref => {
+  normalize(): IFunctionref {
     const clone = new Functionref(this);
 
     normalizeInvoke(clone, this.sourceModel);
 
     cleanSourceModelProperty(clone);
 
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
     return clone;
-  };
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IFunctionref} as plain object.
+   */
+  asPlainObject(): IFunctionref {
+    return toPlainObject(this);
+  }
 }

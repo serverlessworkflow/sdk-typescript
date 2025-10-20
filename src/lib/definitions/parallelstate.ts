@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-import { Branch } from './branch';
-import { End } from './end';
-import { Error } from './error';
-import { Metadata } from './metadata';
-import { Statedatafilter } from './statedatafilter';
-import { Transition } from './transition';
+import { IBranch, Branch } from './branch';
+import { IEnd, End } from './end';
+import { IError, Error } from './error';
+import { IMetadata, Metadata } from './metadata';
+import { IStatedatafilter, Statedatafilter } from './statedatafilter';
+import { ITransition, Transition } from './transition';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeBranches,
   normalizeCompletionType,
   normalizeEnd,
@@ -38,9 +39,34 @@ import {
   setEndValueIfNoTransition,
 } from './utils';
 import { BranchExecTimeout } from './types';
-import { StateExecTimeout } from './stateExecTimeout';
+import { IStateExecTimeout, StateExecTimeout } from './stateExecTimeout';
+import toPlainObject from 'lodash.toplainobject';
 
-export class Parallelstate {
+export interface IParallelstate {
+  sourceModel?: IParallelstate;
+  id?: string;
+  name?: string;
+  type?: 'parallel';
+  end?: boolean | IEnd;
+  stateDataFilter?: IStatedatafilter;
+  timeouts?: {
+    stateExecTimeout?: IStateExecTimeout;
+    branchExecTimeout?: BranchExecTimeout;
+  };
+  branches?: IBranch[];
+  completionType?: 'allOf' | 'atLeast';
+  numCompleted?: number | string;
+  onErrors?: IError[];
+  transition?: string | ITransition;
+  compensatedBy?: string;
+  usedForCompensation?: boolean;
+  metadata?: IMetadata;
+
+  normalize(): IParallelstate;
+  asPlainObject(): IParallelstate;
+}
+
+export class Parallelstate implements IParallelstate {
   sourceModel?: Parallelstate;
   /**
    * Unique State id
@@ -122,9 +148,9 @@ export class Parallelstate {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Parallelstate} without deleted properties.
+   * @returns {Specification.IParallelstate} without deleted properties.
    */
-  normalize = (): Parallelstate => {
+  normalize(): IParallelstate {
     const clone = new Parallelstate(this);
 
     normalizeEnd(clone);
@@ -137,6 +163,18 @@ export class Parallelstate {
 
     cleanSourceModelProperty(clone);
 
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
     return clone;
-  };
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IParallelstate} as plain object.
+   */
+  asPlainObject(): IParallelstate {
+    return toPlainObject(this);
+  }
 }

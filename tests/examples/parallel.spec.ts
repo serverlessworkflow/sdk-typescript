@@ -15,7 +15,8 @@
  *
  */
 import * as fs from 'fs';
-import { actionBuilder, branchBuilder, parallelstateBuilder, workflowBuilder } from '../../src';
+import { original, produce } from 'immer';
+import { actionBuilder, branchBuilder, parallelstateBuilder, Specification, workflowBuilder } from '../../src';
 
 describe('parallel workflow example', () => {
   it('should generate Workflow object', function () {
@@ -46,5 +47,46 @@ describe('parallel workflow example', () => {
 
     const expected = JSON.parse(fs.readFileSync('./tests/examples/parallel.json', 'utf8'));
     expect(JSON.stringify(workflow.normalize())).toEqual(JSON.stringify(expected));
+  });
+
+  it('built workflow should be immerable', function () {
+    const workflow = workflowBuilder()
+      .id('parallelexec')
+      .version('1.0')
+      .specVersion('0.8')
+      .name('Parallel Execution Workflow')
+      .description('Executes two branches in parallel')
+      .start('ParallelExec')
+      .states([
+        parallelstateBuilder()
+          .name('ParallelExec')
+          .completionType('allOf')
+          .branches([
+            branchBuilder()
+              .name('ShortDelayBranch')
+              .actions([actionBuilder().subFlowRef('shortdelayworkflowid').build()])
+              .build(),
+            branchBuilder()
+              .name('LongDelayBranch')
+              .actions([actionBuilder().subFlowRef('longdelayworkflowid').build()])
+              .build(),
+          ])
+          .build(),
+      ])
+      .build()
+      .asPlainObject();
+
+    // Use immer to create a draft and compare with original model ensuring it is immerable
+    produce(workflow, (draft) => {
+      expect(workflow === original(draft)).toBe(true);
+    });
+  });
+
+  it('deserialized workflow should be immerable', function () {
+    const model = Specification.Workflow.fromSource(fs.readFileSync('./tests/examples/parallel.json', 'utf8'), true);
+
+    produce(model, (draft: any) => {
+      expect(model === original(draft)).toBe(true);
+    });
   });
 });

@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-export class Statedatafilter {
+export interface IStatedatafilter {
+  input?: string;
+  output?: string;
+}
+
+export class Statedatafilter implements IStatedatafilter {
   /**
    * Workflow expression to filter the state data input
    */

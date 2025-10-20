@@ -16,26 +16,32 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Transition} data The underlying object
- * @returns {Specification.Transition} The validated underlying object
+ * @param {Specification.ITransition} data The underlying object
+ * @returns {Specification.ITransition} The validated underlying object
  */
-function transitionBuildingFn(data: Specification.Transition): () => Specification.Transition {
+function transitionBuildingFn(data: Specification.ITransition): () => Specification.ITransition {
   return () => {
     const model = new Specification.Transition(data);
 
-    validate('Transition', model.normalize());
+    if (hasProperty(model, 'normalize')) {
+      validate('Transition', (model as any).normalize());
+    } else {
+      validate('Transition', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Transition`
- * @returns {Specification.Transition} A builder for `Specification.Transition`
+ * @returns {Specification.ITransition} A builder for `Specification.Transition`
  */
-export function transitionBuilder(): Builder<Specification.Transition> {
-  return builder<Specification.Transition>(transitionBuildingFn);
+export function transitionBuilder(): Builder<Specification.ITransition> {
+  return builder<Specification.ITransition>(transitionBuildingFn);
 }

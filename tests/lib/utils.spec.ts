@@ -18,7 +18,7 @@ import { validate } from '../../src/lib/utils';
 
 describe('validate', () => {
   it('should throw an error containing the provided data', () => {
-    expect(() => validate('End', 'any text')).toThrowError(/any text/);
+    expect(() => validate('End', 'any text')).toThrow(/any text/);
   });
 
   it('should return true for valid objects', () => {
@@ -46,10 +46,10 @@ describe('validate', () => {
       keyAdditionalProperty: 'anyValue',
     };
 
-    expect(() => validate('Function', functionObj)).toThrowError(/keyAdditionalProperty/);
+    expect(() => validate('Function', functionObj)).toThrow(/keyAdditionalProperty/);
   });
 
   it('should throws an error if validator not found', () => {
-    expect(() => validate('ValidatorNotDefined', {})).toThrowError();
+    expect(() => validate('ValidatorNotDefined', {})).toThrow();
   });
 });

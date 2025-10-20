@@ -13,8 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Produceeventdef } from './produceeventdef';
-import { cleanSourceModelProperty, normalizeCompensate, overwriteProduceEvents } from './utils';
+
+import { IProduceeventdef, Produceeventdef } from './produceeventdef';
+import { cleanSourceModelProperty, isPlainObject, normalizeCompensate, overwriteProduceEvents } from './utils';
+import toPlainObject from 'lodash.toplainobject';
+
+export interface ITransition {
+  sourceModel?: ITransition;
+  nextState: string;
+  produceEvents?: IProduceeventdef[];
+  compensate?: boolean;
+
+  normalize(): ITransition;
+  asPlainObject(): ITransition;
+}
 
 export class Transition {
   sourceModel?: Transition;
@@ -44,14 +56,27 @@ export class Transition {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Transition} without deleted properties.
+   * @returns {Specification.ITransition} without deleted properties.
    */
-  normalize = (): Transition => {
+  normalize(): ITransition {
     const clone = new Transition(this);
 
     normalizeCompensate(clone, this.sourceModel);
 
     cleanSourceModelProperty(clone);
+
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
     return clone;
-  };
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.ITransition} as plain object.
+   */
+  asPlainObject(): ITransition {
+    return toPlainObject(this);
+  }
 }

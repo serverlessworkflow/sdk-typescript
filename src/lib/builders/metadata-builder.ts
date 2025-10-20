@@ -16,26 +16,32 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Metadata} data The underlying object
- * @returns {Specification.Metadata} The validated underlying object
+ * @param {Specification.IMetadata} data The underlying object
+ * @returns {Specification.IMetadata} The validated underlying object
  */
-function metadataBuildingFn(data: Specification.Metadata): () => Specification.Metadata {
+function metadataBuildingFn(data: Specification.IMetadata): () => Specification.IMetadata {
   return () => {
     const model = new Specification.Metadata(data);
 
-    validate('Metadata', model);
+    if (hasProperty(model, 'normalize')) {
+      validate('Metadata', (model as any).normalize());
+    } else {
+      validate('Metadata', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Metadata`
- * @returns {Specification.Metadata} A builder for `Specification.Metadata`
+ * @returns {Specification.IMetadata} A builder for `Specification.Metadata`
  */
-export function metadataBuilder(): Builder<Specification.Metadata> {
-  return builder<Specification.Metadata>(metadataBuildingFn);
+export function metadataBuilder(): Builder<Specification.IMetadata> {
+  return builder<Specification.IMetadata>(metadataBuildingFn);
 }

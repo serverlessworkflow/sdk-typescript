@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-export class Crondef {
+export interface ICrondef {
+  expression: string;
+  validUntil?: string;
+}
+
+export class Crondef implements ICrondef {
   /**
    * Repeating interval (cron expression) describing when the workflow instance should be created
    */

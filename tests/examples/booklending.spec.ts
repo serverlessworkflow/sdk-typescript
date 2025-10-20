@@ -15,6 +15,7 @@
  *
  */
 import * as fs from 'fs';
+import { original, produce } from 'immer';
 import {
   actionBuilder,
   databasedswitchstateBuilder,
@@ -25,6 +26,7 @@ import {
   oneventsBuilder,
   operationstateBuilder,
   sleepstateBuilder,
+  Specification,
   transitiondataconditionBuilder,
   transitioneventconditionBuilder,
   workflowBuilder,
@@ -160,5 +162,147 @@ describe('booklending workflow example', () => {
 
     const expected = JSON.parse(fs.readFileSync('./tests/examples/booklending.json', 'utf8'));
     expect(JSON.stringify(workflow.normalize())).toEqual(JSON.stringify(expected));
+  });
+
+  it('built workflow should be immerable', function () {
+    const workflow = workflowBuilder()
+      .id('booklending')
+      .name('Book Lending Workflow')
+      .version('1.0')
+      .specVersion('0.8')
+      .start('Book Lending Request')
+      .states([
+        eventstateBuilder()
+          .name('Book Lending Request')
+          .onEvents([oneventsBuilder().eventRefs(['Book Lending Request Event']).build()])
+          .transition('Get Book Status')
+          .build(),
+        operationstateBuilder()
+          .name('Get Book Status')
+          .actions([
+            actionBuilder()
+              .functionRef(
+                functionrefBuilder()
+                  .refName('Get status for book')
+                  .arguments({
+                    bookid: '${ .book.id }',
+                  })
+                  .build()
+              )
+              .build(),
+          ])
+          .transition('Book Status Decision')
+          .build(),
+        databasedswitchstateBuilder()
+          .name('Book Status Decision')
+          .dataConditions([
+            transitiondataconditionBuilder()
+              .name('Book is on loan')
+              .condition('${ .book.status == "onloan" }')
+              .transition('Report Status To Lender')
+              .build(),
+            transitiondataconditionBuilder()
+              .name('Check is available')
+              .condition('${ .book.status == "available" }')
+              .transition('Check Out Book')
+              .build(),
+          ])
+          .defaultCondition(defaultconditiondefBuilder().end(true).build())
+          .build(),
+        operationstateBuilder()
+          .name('Report Status To Lender')
+          .actions([
+            actionBuilder()
+              .functionRef(
+                functionrefBuilder()
+                  .refName('Send status to lender')
+                  .arguments({
+                    bookid: '${ .book.id }',
+                    message: 'Book ${ .book.title } is already on loan',
+                  })
+                  .build()
+              )
+              .build(),
+          ])
+          .transition('Wait for Lender response')
+          .build(),
+        eventbasedswitchstateBuilder()
+          .name('Wait for Lender response')
+          .eventConditions([
+            transitioneventconditionBuilder()
+              .name('Hold Book')
+              .eventRef('Hold Book Event')
+              .transition('Request Hold')
+              .build(),
+            transitioneventconditionBuilder()
+              .name('Decline Book Hold')
+              .eventRef('Decline Hold Event')
+              .transition('Cancel Request')
+              .build(),
+          ])
+          .defaultCondition(defaultconditiondefBuilder().end(true).build())
+          .build(),
+        operationstateBuilder()
+          .name('Request Hold')
+          .actions([
+            actionBuilder()
+              .functionRef(
+                functionrefBuilder()
+                  .refName('Request hold for lender')
+                  .arguments({
+                    bookid: '${ .book.id }',
+                    lender: '${ .lender }',
+                  })
+                  .build()
+              )
+              .build(),
+          ])
+          .transition('Sleep two weeks')
+          .build(),
+        sleepstateBuilder().name('Sleep two weeks').duration('PT2W').transition('Get Book Status').build(),
+        operationstateBuilder()
+          .name('Check Out Book')
+          .actions([
+            actionBuilder()
+              .functionRef(
+                functionrefBuilder()
+                  .refName('Check out book with id')
+                  .arguments({
+                    bookid: '${ .book.id }',
+                  })
+                  .build()
+              )
+              .build(),
+            actionBuilder()
+              .functionRef(
+                functionrefBuilder()
+                  .refName('Notify Lender for checkout')
+                  .arguments({
+                    bookid: '${ .book.id }',
+                    lender: '${ .lender }',
+                  })
+                  .build()
+              )
+              .build(),
+          ])
+          .build(),
+      ])
+      .functions('file://books/lending/functions.json')
+      .events('file://books/lending/events.json')
+      .build()
+      .asPlainObject();
+
+    // Use immer to create a draft and compare with original model ensuring it is immerable
+    produce(workflow, (draft) => {
+      expect(workflow === original(draft)).toBe(true);
+    });
+  });
+
+  it('deserialized workflow should be immerable', function () {
+    const model = Specification.Workflow.fromSource(fs.readFileSync('./tests/examples/booklending.json', 'utf8'), true);
+
+    produce(model, (draft: any) => {
+      expect(model === original(draft)).toBe(true);
+    });
   });
 });

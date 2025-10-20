@@ -16,28 +16,34 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Transitiondatacondition} data The underlying object
- * @returns {Specification.Transitiondatacondition} The validated underlying object
+ * @param {Specification.ITransitiondatacondition} data The underlying object
+ * @returns {Specification.ITransitiondatacondition} The validated underlying object
  */
 function transitiondataconditionBuildingFn(
-  data: Specification.Transitiondatacondition
-): () => Specification.Transitiondatacondition {
+  data: Specification.ITransitiondatacondition
+): () => Specification.ITransitiondatacondition {
   return () => {
     const model = new Specification.Transitiondatacondition(data);
 
-    validate('Transitiondatacondition', model.normalize());
+    if (hasProperty(model, 'normalize')) {
+      validate('Transitiondatacondition', (model as any).normalize());
+    } else {
+      validate('Transitiondatacondition', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Transitiondatacondition`
- * @returns {Specification.Transitiondatacondition} A builder for `Specification.Transitiondatacondition`
+ * @returns {Specification.ITransitiondatacondition} A builder for `Specification.Transitiondatacondition`
  */
-export function transitiondataconditionBuilder(): Builder<Specification.Transitiondatacondition> {
-  return builder<Specification.Transitiondatacondition>(transitiondataconditionBuildingFn);
+export function transitiondataconditionBuilder(): Builder<Specification.ITransitiondatacondition> {
+  return builder<Specification.ITransitiondatacondition>(transitiondataconditionBuildingFn);
 }

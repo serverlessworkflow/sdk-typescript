@@ -16,28 +16,34 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Databasedswitchstate} data The underlying object
- * @returns {Specification.Databasedswitchstate} The validated underlying object
+ * @param {Specification.IDatabasedswitchstate} data The underlying object
+ * @returns {Specification.IDatabasedswitchstate} The validated underlying object
  */
 function databasedswitchstateBuildingFn(
-  data: Specification.Databasedswitchstate
-): () => Specification.Databasedswitchstate {
+  data: Specification.IDatabasedswitchstate
+): () => Specification.IDatabasedswitchstate {
   return () => {
     const model = new Specification.Databasedswitchstate(data);
 
-    validate('Databasedswitchstate', model.normalize());
+    if (hasProperty(model, 'normalize')) {
+      validate('Databasedswitchstate', (model as any).normalize());
+    } else {
+      validate('Databasedswitchstate', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Databasedswitchstate`
- * @returns {Specification.Databasedswitchstate} A builder for `Specification.Databasedswitchstate`
+ * @returns {Specification.IDatabasedswitchstate} A builder for `Specification.Databasedswitchstate`
  */
-export function databasedswitchstateBuilder(): Builder<Specification.Databasedswitchstate> {
-  return builder<Specification.Databasedswitchstate>(databasedswitchstateBuildingFn);
+export function databasedswitchstateBuilder(): Builder<Specification.IDatabasedswitchstate> {
+  return builder<Specification.IDatabasedswitchstate>(databasedswitchstateBuildingFn);
 }

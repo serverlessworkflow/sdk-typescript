@@ -16,26 +16,32 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Continueasdef} data The underlying object
- * @returns {Specification.Continueasdef} The validated underlying object
+ * @param {Specification.IContinueasdef} data The underlying object
+ * @returns {Specification.IContinueasdef} The validated underlying object
  */
-function continueasdefBuildingFn(data: Specification.Continueasdef): () => Specification.Continueasdef {
+function continueasdefBuildingFn(data: Specification.IContinueasdef): () => Specification.IContinueasdef {
   return () => {
     const model = new Specification.Continueasdef(data);
 
-    validate('Continueasdef', model.normalize());
+    if (hasProperty(model, 'normalize')) {
+      validate('Continueasdef', (model as any).normalize());
+    } else {
+      validate('Continueasdef', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Continueasdef`
- * @returns {Specification.Continueasdef} A builder for `Specification.Continueasdef`
+ * @returns {Specification.IContinueasdef} A builder for `Specification.Continueasdef`
  */
-export function continueasdefBuilder(): Builder<Specification.Continueasdef> {
-  return builder<Specification.Continueasdef>(continueasdefBuildingFn);
+export function continueasdefBuilder(): Builder<Specification.IContinueasdef> {
+  return builder<Specification.IContinueasdef>(continueasdefBuildingFn);
 }

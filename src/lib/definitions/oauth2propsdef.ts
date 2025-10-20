@@ -14,10 +14,25 @@
  * limitations under the License.
  */
 
-import { Metadata } from './metadata';
+import { IMetadata, Metadata } from './metadata';
 import { overwriteMetadata } from './utils';
 
-export class Oauth2propsdef {
+export interface IOauth2propsdef {
+  authority?: string;
+  grantType: 'password' | 'clientCredentials' | 'tokenExchange';
+  clientId: string;
+  clientSecret?: string;
+  scopes?: [string, ...string[]];
+  username?: string;
+  password?: string;
+  audiences?: [string, ...string[]];
+  subjectToken?: string;
+  requestedSubject?: string;
+  requestedIssuer?: string;
+  metadata?: IMetadata;
+}
+
+export class Oauth2propsdef implements IOauth2propsdef {
   /**
    * String or a workflow expression. Contains the authority information
    */

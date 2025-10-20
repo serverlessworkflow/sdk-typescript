@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
-import { Metadata } from './metadata';
+import { IMetadata, Metadata } from './metadata';
 import { overwriteMetadata } from './utils';
 
-export class Basicpropsdef {
+export interface IBasicpropsdef {
+  username: string;
+  password: string;
+  metadata?: IMetadata;
+}
+
+export class Basicpropsdef implements IBasicpropsdef {
   /**
    * String or a workflow expression. Contains the user name
    */

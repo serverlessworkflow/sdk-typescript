@@ -16,26 +16,32 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Bearerpropsdef} data The underlying object
- * @returns {Specification.Bearerpropsdef} The validated underlying object
+ * @param {Specification.IBearerpropsdef} data The underlying object
+ * @returns {Specification.IBearerpropsdef} The validated underlying object
  */
-function bearerpropsdefBuildingFn(data: Specification.Bearerpropsdef): () => Specification.Bearerpropsdef {
+function bearerpropsdefBuildingFn(data: Specification.IBearerpropsdef): () => Specification.IBearerpropsdef {
   return () => {
     const model = new Specification.Bearerpropsdef(data);
 
-    validate('Bearerpropsdef', model);
+    if (hasProperty(model, 'normalize')) {
+      validate('Bearerpropsdef', (model as any).normalize());
+    } else {
+      validate('Bearerpropsdef', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Bearerpropsdef`
- * @returns {Specification.Bearerpropsdef} A builder for `Specification.Bearerpropsdef`
+ * @returns {Specification.IBearerpropsdef} A builder for `Specification.Bearerpropsdef`
  */
-export function bearerpropsdefBuilder(): Builder<Specification.Bearerpropsdef> {
-  return builder<Specification.Bearerpropsdef>(bearerpropsdefBuildingFn);
+export function bearerpropsdefBuilder(): Builder<Specification.IBearerpropsdef> {
+  return builder<Specification.IBearerpropsdef>(bearerpropsdefBuildingFn);
 }

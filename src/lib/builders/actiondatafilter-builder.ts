@@ -16,26 +16,32 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Actiondatafilter} data The underlying object
- * @returns {Specification.Actiondatafilter} The validated underlying object
+ * @param {Specification.IActiondatafilter} data The underlying object
+ * @returns {Specification.IActiondatafilter} The validated underlying object
  */
-function actiondatafilterBuildingFn(data: Specification.Actiondatafilter): () => Specification.Actiondatafilter {
+function actiondatafilterBuildingFn(data: Specification.IActiondatafilter): () => Specification.IActiondatafilter {
   return () => {
     const model = new Specification.Actiondatafilter(data);
 
-    validate('Actiondatafilter', model);
+    if (hasProperty(model, 'normalize')) {
+      validate('Actiondatafilter', (model as any).normalize());
+    } else {
+      validate('Actiondatafilter', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Actiondatafilter`
- * @returns {Specification.Actiondatafilter} A builder for `Specification.Actiondatafilter`
+ * @returns {Specification.IActiondatafilter} A builder for `Specification.Actiondatafilter`
  */
-export function actiondatafilterBuilder(): Builder<Specification.Actiondatafilter> {
-  return builder<Specification.Actiondatafilter>(actiondatafilterBuildingFn);
+export function actiondatafilterBuilder(): Builder<Specification.IActiondatafilter> {
+  return builder<Specification.IActiondatafilter>(actiondatafilterBuildingFn);
 }

@@ -16,26 +16,32 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Functionref} data The underlying object
- * @returns {Specification.Functionref} The validated underlying object
+ * @param {Specification.IFunctionref} data The underlying object
+ * @returns {Specification.IFunctionref} The validated underlying object
  */
-function functionrefBuildingFn(data: Specification.Functionref): () => Specification.Functionref {
+function functionrefBuildingFn(data: Specification.IFunctionref): () => Specification.IFunctionref {
   return () => {
     const model = new Specification.Functionref(data);
 
-    validate('Functionref', model.normalize());
+    if (hasProperty(model, 'normalize')) {
+      validate('Functionref', (model as any).normalize());
+    } else {
+      validate('Functionref', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Functionref`
- * @returns {Specification.Functionref} A builder for `Specification.Functionref`
+ * @returns {Specification.IFunctionref} A builder for `Specification.Functionref`
  */
-export function functionrefBuilder(): Builder<Specification.Functionref> {
-  return builder<Specification.Functionref>(functionrefBuildingFn);
+export function functionrefBuilder(): Builder<Specification.IFunctionref> {
+  return builder<Specification.IFunctionref>(functionrefBuildingFn);
 }

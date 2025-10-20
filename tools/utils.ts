@@ -17,23 +17,10 @@
 import $RefParser from '@apidevtools/json-schema-ref-parser';
 import { promises as fsPromises } from 'fs';
 import * as path from 'path';
-import rimraf from 'rimraf';
+import { rimraf } from 'rimraf';
 import { readMeDisclaimer } from './consts';
 
 const { writeFile, mkdir } = fsPromises;
-
-/**
- * Wraps rimraf into a Promise
- * @param f {string} The target to be deleted
- * @returns {void}
- */
-export const rimrafP = async (f: string): Promise<void> =>
-  new Promise<void>((resolve, reject) =>
-    rimraf(f, (err) => {
-      if (err) return reject(err);
-      resolve();
-    })
-  );
 
 /**
  * Capitalized the first letter of the provided string
@@ -172,6 +159,6 @@ export const mergeSchemas = (
 
 /** Resets the destination directory, recursively deletes everything and adds the README */
 export const reset = async (destDir: string) =>
-  rimrafP(destDir)
+  rimraf(destDir)
     .then(() => mkdir(destDir, { recursive: true }))
     .then(() => writeFile(path.resolve(destDir, 'README.md'), readMeDisclaimer));

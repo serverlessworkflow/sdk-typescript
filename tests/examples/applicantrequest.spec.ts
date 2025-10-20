@@ -15,6 +15,7 @@
  *
  */
 import * as fs from 'fs';
+import { original, produce } from 'immer';
 import {
   actionBuilder,
   databasedswitchstateBuilder,
@@ -22,6 +23,7 @@ import {
   functionBuilder,
   functionrefBuilder,
   operationstateBuilder,
+  Specification,
   transitiondataconditionBuilder,
   workflowBuilder,
 } from '../../src';
@@ -79,5 +81,73 @@ describe('applicationrequest workflow example', () => {
 
     const expected = JSON.parse(fs.readFileSync('./tests/examples/applicantrequest.json', 'utf8'));
     expect(JSON.stringify(workflow.normalize())).toEqual(JSON.stringify(expected));
+  });
+
+  it('built workflow should be immerable', function () {
+    const workflow = workflowBuilder()
+      .id('applicantrequest')
+      .version('1.0')
+      .specVersion('0.8')
+      .name('Applicant Request Decision Workflow')
+      .description('Determine if applicant request is valid')
+      .start('CheckApplication')
+      .functions([
+        functionBuilder()
+          .name('sendRejectionEmailFunction')
+          .operation('http://myapis.org/applicationapi.json#emailRejection')
+          .build(),
+      ])
+      .states([
+        databasedswitchstateBuilder()
+          .name('CheckApplication')
+          .dataConditions([
+            transitiondataconditionBuilder()
+              .condition('${ .applicants | .age >= 18 }')
+              .transition('StartApplication')
+              .build(),
+            transitiondataconditionBuilder()
+              .condition('${ .applicants | .age < 18 }')
+              .transition('RejectApplication')
+              .build(),
+          ])
+          .defaultCondition(defaultconditiondefBuilder().transition('RejectApplication').build())
+          .build(),
+        operationstateBuilder()
+          .name('StartApplication')
+          .actions([actionBuilder().subFlowRef('startApplicationWorkflowId').build()])
+          .build(),
+        operationstateBuilder()
+          .name('RejectApplication')
+          .actionMode('sequential')
+          .actions([
+            actionBuilder()
+              .functionRef(
+                functionrefBuilder()
+                  .refName('sendRejectionEmailFunction')
+                  .arguments({ applicant: '${ .applicant }' })
+                  .build()
+              )
+              .build(),
+          ])
+          .build(),
+      ])
+      .build()
+      .asPlainObject();
+
+    // Use immer to create a draft and compare with original model ensuring it is immerable
+    produce(workflow, (draft) => {
+      expect(workflow === original(draft)).toBe(true);
+    });
+  });
+
+  it('deserialized workflow should be immerable', function () {
+    const model = Specification.Workflow.fromSource(
+      fs.readFileSync('./tests/examples/applicantrequest.json', 'utf8'),
+      true
+    );
+
+    produce(model, (draft: any) => {
+      expect(model === original(draft)).toBe(true);
+    });
   });
 });

@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-export class StateExecTimeout {
+export interface IStateExecTimeout {
+  single?: string;
+  total: string;
+}
+
+export class StateExecTimeout implements IStateExecTimeout {
   /**
    * Single state execution timeout, not including retries (ISO 8601 duration format)
    */

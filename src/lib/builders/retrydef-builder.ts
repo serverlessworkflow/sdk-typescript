@@ -16,26 +16,32 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Retrydef} data The underlying object
- * @returns {Specification.Retrydef} The validated underlying object
+ * @param {Specification.IRetrydef} data The underlying object
+ * @returns {Specification.IRetrydef} The validated underlying object
  */
-function retrydefBuildingFn(data: Specification.Retrydef): () => Specification.Retrydef {
+function retrydefBuildingFn(data: Specification.IRetrydef): () => Specification.IRetrydef {
   return () => {
     const model = new Specification.Retrydef(data);
 
-    validate('Retrydef', model);
+    if (hasProperty(model, 'normalize')) {
+      validate('Retrydef', (model as any).normalize());
+    } else {
+      validate('Retrydef', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Retrydef`
- * @returns {Specification.Retrydef} A builder for `Specification.Retrydef`
+ * @returns {Specification.IRetrydef} A builder for `Specification.Retrydef`
  */
-export function retrydefBuilder(): Builder<Specification.Retrydef> {
-  return builder<Specification.Retrydef>(retrydefBuildingFn);
+export function retrydefBuilder(): Builder<Specification.IRetrydef> {
+  return builder<Specification.IRetrydef>(retrydefBuildingFn);
 }

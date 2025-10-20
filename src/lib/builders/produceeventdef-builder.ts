@@ -16,26 +16,32 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Produceeventdef} data The underlying object
- * @returns {Specification.Produceeventdef} The validated underlying object
+ * @param {Specification.IProduceeventdef} data The underlying object
+ * @returns {Specification.IProduceeventdef} The validated underlying object
  */
-function produceeventdefBuildingFn(data: Specification.Produceeventdef): () => Specification.Produceeventdef {
+function produceeventdefBuildingFn(data: Specification.IProduceeventdef): () => Specification.IProduceeventdef {
   return () => {
     const model = new Specification.Produceeventdef(data);
 
-    validate('Produceeventdef', model);
+    if (hasProperty(model, 'normalize')) {
+      validate('Produceeventdef', (model as any).normalize());
+    } else {
+      validate('Produceeventdef', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Produceeventdef`
- * @returns {Specification.Produceeventdef} A builder for `Specification.Produceeventdef`
+ * @returns {Specification.IProduceeventdef} A builder for `Specification.Produceeventdef`
  */
-export function produceeventdefBuilder(): Builder<Specification.Produceeventdef> {
-  return builder<Specification.Produceeventdef>(produceeventdefBuildingFn);
+export function produceeventdefBuilder(): Builder<Specification.IProduceeventdef> {
+  return builder<Specification.IProduceeventdef>(produceeventdefBuildingFn);
 }

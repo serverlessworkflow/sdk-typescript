@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import { Defaultconditiondef } from './defaultconditiondef';
-import { Error } from './error';
-import { Metadata } from './metadata';
-import { Statedatafilter } from './statedatafilter';
+import { IDefaultconditiondef, Defaultconditiondef } from './defaultconditiondef';
+import { IError, Error } from './error';
+import { IMetadata, Metadata } from './metadata';
+import { IStatedatafilter, Statedatafilter } from './statedatafilter';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeDataConditions,
   normalizeDefaultCondition,
   normalizeOnErrors,
@@ -32,9 +33,30 @@ import {
   overwriteTimeoutWithStateExecTimeout,
 } from './utils';
 import { Datacondition } from './types';
-import { StateExecTimeout } from './stateExecTimeout';
+import { IStateExecTimeout, StateExecTimeout } from './stateExecTimeout';
+import toPlainObject from 'lodash.toplainobject';
 
-export class Databasedswitchstate {
+export interface IDatabasedswitchstate {
+  sourceModel?: IDatabasedswitchstate;
+  id?: string;
+  name: string;
+  type: 'switch';
+  stateDataFilter?: IStatedatafilter;
+  timeouts?: {
+    stateExecTimeout?: IStateExecTimeout;
+  };
+  dataConditions: Datacondition[];
+  onErrors?: IError[];
+  defaultCondition: IDefaultconditiondef;
+  compensatedBy?: string;
+  usedForCompensation?: boolean;
+  metadata?: IMetadata;
+
+  normalize(): IDatabasedswitchstate;
+  asPlainObject(): IDatabasedswitchstate;
+}
+
+export class Databasedswitchstate implements IDatabasedswitchstate {
   sourceModel?: Databasedswitchstate;
   /**
    * Unique State id
@@ -96,9 +118,9 @@ export class Databasedswitchstate {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Databasedswitch} without deleted properties.
+   * @returns {Specification.IDatabasedswitchstate} without deleted properties.
    */
-  normalize = (): Databasedswitchstate => {
+  normalize(): IDatabasedswitchstate {
     const clone = new Databasedswitchstate(this);
 
     normalizeDataConditions(clone);
@@ -107,6 +129,18 @@ export class Databasedswitchstate {
     normalizeUsedForCompensation(clone, this.sourceModel);
     cleanSourceModelProperty(clone);
 
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
     return clone;
-  };
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IDatabasedswitchstate} as plain object.
+   */
+  asPlainObject(): IDatabasedswitchstate {
+    return toPlainObject(this);
+  }
 }

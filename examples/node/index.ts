@@ -15,7 +15,7 @@
  */
 import { injectstateBuilder, Specification, workflowBuilder } from '../../dist';
 
-const workflow: Specification.Workflow = workflowBuilder()
+const workflow: Specification.IWorkflow = workflowBuilder()
   .id('helloworld')
   .version('1.0')
   .name('Hello World Workflow')

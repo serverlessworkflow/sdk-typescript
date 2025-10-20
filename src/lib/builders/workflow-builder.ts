@@ -16,26 +16,32 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Workflow} data The underlying object
- * @returns {Specification.Workflow} The validated underlying object
+ * @param {Specification.IWorkflow} data The underlying object
+ * @returns {Specification.IWorkflow} The validated underlying object
  */
-function workflowBuildingFn(data: Specification.Workflow): () => Specification.Workflow {
+function workflowBuildingFn(data: Specification.IWorkflow): () => Specification.IWorkflow {
   return () => {
     const model = new Specification.Workflow(data);
 
-    validate('Workflow', model.normalize());
+    if (hasProperty(model, 'normalize')) {
+      validate('Workflow', (model as any).normalize());
+    } else {
+      validate('Workflow', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Workflow`
- * @returns {Specification.Workflow} A builder for `Specification.Workflow`
+ * @returns {Specification.IWorkflow} A builder for `Specification.Workflow`
  */
-export function workflowBuilder(): Builder<Specification.Workflow> {
-  return builder<Specification.Workflow>(workflowBuildingFn);
+export function workflowBuilder(): Builder<Specification.IWorkflow> {
+  return builder<Specification.IWorkflow>(workflowBuildingFn);
 }

@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-import { Action } from './action';
-import { End } from './end';
-import { Error } from './error';
-import { Eventdatafilter } from './eventdatafilter';
-import { Metadata } from './metadata';
-import { Statedatafilter } from './statedatafilter';
-import { Transition } from './transition';
+import { IAction, Action } from './action';
+import { IEnd, End } from './end';
+import { IError, Error } from './error';
+import { IEventdatafilter, Eventdatafilter } from './eventdatafilter';
+import { IMetadata, Metadata } from './metadata';
+import { IStatedatafilter, Statedatafilter } from './statedatafilter';
+import { ITransition, Transition } from './transition';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeAction,
   normalizeEnd,
   normalizeOnErrors,
@@ -39,9 +40,35 @@ import {
   setEndValueIfNoTransition,
 } from './utils';
 import { ActionExecTimeout, EventTimeout } from './types';
-import { StateExecTimeout } from './stateExecTimeout';
+import { IStateExecTimeout, StateExecTimeout } from './stateExecTimeout';
+import toPlainObject from 'lodash.toplainobject';
 
-export class Callbackstate {
+export interface ICallbackstate {
+  sourceModel?: ICallbackstate;
+  id?: string;
+  name?: string;
+  type?: 'callback';
+  action?: IAction;
+  eventRef?: string;
+  timeouts?: {
+    stateExecTimeout?: IStateExecTimeout;
+    actionExecTimeout?: ActionExecTimeout;
+    eventTimeout?: EventTimeout;
+  };
+  eventDataFilter?: IEventdatafilter;
+  stateDataFilter?: IStatedatafilter;
+  onErrors?: IError[];
+  transition?: string | ITransition;
+  end?: boolean | IEnd;
+  compensatedBy?: string;
+  usedForCompensation?: boolean;
+  metadata?: IMetadata;
+
+  normalize(): ICallbackstate;
+  asPlainObject(): ICallbackstate;
+}
+
+export class Callbackstate implements ICallbackstate {
   sourceModel?: Callbackstate;
   /**
    * Unique state id
@@ -124,9 +151,9 @@ export class Callbackstate {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Callbackstate} without deleted properties.
+   * @returns {Specification.ICallbackstate} without deleted properties.
    */
-  normalize = (): Callbackstate => {
+  normalize(): ICallbackstate {
     const clone = new Callbackstate(this);
 
     normalizeAction(clone);
@@ -138,6 +165,18 @@ export class Callbackstate {
 
     cleanSourceModelProperty(clone);
 
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
     return clone;
-  };
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.ICallbackstate} as plain object.
+   */
+  asPlainObject(): ICallbackstate {
+    return toPlainObject(this);
+  }
 }

@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { End } from './end';
-import { Error } from './error';
-import { Metadata } from './metadata';
-import { Onevents } from './onevents';
-import { Statedatafilter } from './statedatafilter';
-import { Transition } from './transition';
+import { IEnd, End } from './end';
+import { IError, Error } from './error';
+import { IMetadata, Metadata } from './metadata';
+import { IOnevents, Onevents } from './onevents';
+import { IStatedatafilter, Statedatafilter } from './statedatafilter';
+import { ITransition, Transition } from './transition';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeEnd,
   normalizeExclusive,
   normalizeOnErrors,
@@ -36,9 +37,34 @@ import {
   setEndValueIfNoTransition,
 } from './utils';
 import { ActionExecTimeout, EventTimeout } from './types';
-import { StateExecTimeout } from './stateExecTimeout';
+import { IStateExecTimeout, StateExecTimeout } from './stateExecTimeout';
+import toPlainObject from 'lodash.toplainobject';
 
-export class Eventstate /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */ {
+export interface IEventstate {
+  sourceModel?: IEventstate;
+  id?: string;
+  name: string;
+  type: 'event';
+  exclusive?: boolean;
+  onEvents: IOnevents[];
+  timeouts?: {
+    stateExecTimeout?: IStateExecTimeout;
+    actionExecTimeout?: ActionExecTimeout;
+    eventTimeout?: EventTimeout;
+  };
+  stateDataFilter?: IStatedatafilter;
+  onErrors?: IError[];
+  transition?: string | ITransition;
+  end: boolean | IEnd;
+  compensatedBy?: string;
+  metadata?: IMetadata;
+
+  normalize(): IEventstate;
+  asPlainObject(): IEventstate;
+}
+
+export class Eventstate implements IEventstate {
+  /* This state is used to wait for events from event sources, then consumes them and invoke one or more actions to run in sequence or parallel */
   sourceModel?: Eventstate;
   /**
    * Unique State id
@@ -103,9 +129,9 @@ export class Eventstate /* This state is used to wait for events from event sour
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Eventstate} without deleted properties.
+   * @returns {Specification.IEventstate} without deleted properties.
    */
-  normalize = (): Eventstate => {
+  normalize(): IEventstate {
     const clone = new Eventstate(this);
 
     normalizeExclusive(clone, this.sourceModel);
@@ -117,6 +143,18 @@ export class Eventstate /* This state is used to wait for events from event sour
 
     cleanSourceModelProperty(clone);
 
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
     return clone;
-  };
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IEventstate} as plain object.
+   */
+  asPlainObject(): IEventstate {
+    return toPlainObject(this);
+  }
 }

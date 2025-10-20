@@ -16,29 +16,35 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 import { setEndValueIfNoTransition } from '../definitions/utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Error} data The underlying object
- * @returns {Specification.Error} The validated underlying object
+ * @param {Specification.IError} data The underlying object
+ * @returns {Specification.IError} The validated underlying object
  */
-function errorBuildingFn(data: Specification.Error): () => Specification.Error {
+function errorBuildingFn(data: Specification.IError): () => Specification.IError {
   return () => {
     const model = new Specification.Error(data);
 
     setEndValueIfNoTransition(model);
 
-    validate('Error', model.normalize());
+    if (hasProperty(model, 'normalize')) {
+      validate('Error', (model as any).normalize());
+    } else {
+      validate('Error', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Error`
- * @returns {Specification.Error} A builder for `Specification.Error`
+ * @returns {Specification.IError} A builder for `Specification.Error`
  */
-export function errorBuilder(): Builder<Specification.Error> {
-  return builder<Specification.Error>(errorBuildingFn);
+export function errorBuilder(): Builder<Specification.IError> {
+  return builder<Specification.IError>(errorBuildingFn);
 }

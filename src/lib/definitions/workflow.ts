@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-import { Metadata } from './metadata';
-import { Startdef } from './startdef';
-import { Timeouts } from './timeouts';
+import { IMetadata, Metadata } from './metadata';
+import { IStartdef, Startdef } from './startdef';
+import { ITimeouts, Timeouts } from './timeouts';
 import * as yaml from 'js-yaml';
-
-import { Specification } from '.';
-
 import { validate } from '../utils';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeAuth,
   normalizeEvents,
   normalizeExpressionLang,
@@ -43,8 +41,47 @@ import {
   overwriteTimeouts,
 } from './utils';
 import { Auth, Errors, Events, Functions, Retries, Secrets, States } from './types';
+import toPlainObject from 'lodash.toplainobject';
 
-export class Workflow {
+export interface IWorkflow {
+  sourceModel?: IWorkflow;
+  id: string;
+  key?: string;
+  name?: string;
+  description?: string;
+  version?: string;
+  annotations?: [string, ...string[]];
+  dataInputSchema?:
+    | string
+    | {
+        schema: string;
+        failOnValidationErrors: boolean;
+      };
+  secrets?: Secrets;
+  constants?:
+    | string
+    | {
+        [key: string]: any;
+      };
+  start?: string | IStartdef;
+  specVersion: string;
+  expressionLang?: string;
+  timeouts?: string | ITimeouts;
+  errors?: Errors;
+  keepActive?: boolean;
+  metadata?: IMetadata;
+  events?: Events;
+  functions?: Functions;
+  autoRetries?: boolean;
+  retries?: Retries;
+  auth?: Auth;
+  states: States;
+
+  normalize(): IWorkflow;
+  asPlainObject(): IWorkflow;
+}
+
+export class Workflow implements IWorkflow {
   sourceModel?: Workflow;
   /**
    * Workflow unique identifier
@@ -154,12 +191,18 @@ export class Workflow {
   /**
    * Parses the provided string as Workflow
    * @param {string} data The JSON or YAML workflow to parse
-   * @returns {Workflow} The parse Workflow
+   * @param {boolean} [optionalParam] create model instance as plain object
+   * @returns {IWorkflow} The parse Workflow
    */
-  static fromSource(value: string): Specification.Workflow {
+  static fromSource(value: string, asPlainObject?: boolean): IWorkflow {
     try {
-      const model = yaml.load(value);
-      return new Workflow(model);
+      const workflow = new Workflow(yaml.load(value));
+
+      if (!asPlainObject) {
+        return workflow;
+      }
+
+      return toPlainObject(workflow);
     } catch (ex) {
       throw new Error('Format not supported');
     }
@@ -167,29 +210,29 @@ export class Workflow {
 
   /**
    * Stringifies the provided workflow to the JSON format
-   * @param {Workflow} workflow The workflow to strigify
+   * @param {IWorkflow} workflow The workflow to strigify
    * @returns {string} The workflow as JSON
    */
-  static toJson(workflow: Workflow): string {
+  static toJson(workflow: IWorkflow): string {
     validate('Workflow', workflow.normalize());
     return JSON.stringify(workflow.normalize());
   }
 
   /**
    * Stringifies the provided workflow to the YAML format
-   * @param {Workflow} workflow The workflow to strigify
+   * @param {IWorkflow} workflow The workflow to strigify
    * @returns {string} The workflow as YAML
    */
-  static toYaml(workflow: Workflow): string {
+  static toYaml(workflow: IWorkflow): string {
     validate('Workflow', workflow.normalize());
     return yaml.dump(JSON.parse(JSON.stringify(workflow.normalize())));
   }
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Workflow} without deleted properties.
+   * @returns {Specification.IWorkflow} without deleted properties.
    */
-  normalize = (): Workflow => {
+  normalize(): IWorkflow {
     const clone = new Workflow(this);
 
     normalizeExpressionLang(clone, this.sourceModel);
@@ -201,6 +244,19 @@ export class Workflow {
     normalizeStates(clone);
 
     cleanSourceModelProperty(clone);
+
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
     return clone;
-  };
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IWorkflow} as plain object.
+   */
+  asPlainObject(): IWorkflow {
+    return toPlainObject(this);
+  }
 }

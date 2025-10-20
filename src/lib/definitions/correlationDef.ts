@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-export class CorrelationDef {
+export interface ICorrelationDef {
+  contextAttributeName: string;
+  contextAttributeValue?: string;
+}
+
+export class CorrelationDef implements ICorrelationDef {
   /**
    * CloudEvent Extension Context Attribute name
    */

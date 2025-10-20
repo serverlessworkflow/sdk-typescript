@@ -16,26 +16,32 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Basicpropsdef} data The underlying object
- * @returns {Specification.Basicpropsdef} The validated underlying object
+ * @param {Specification.IBasicpropsdef} data The underlying object
+ * @returns {Specification.IBasicpropsdef} The validated underlying object
  */
-function basicpropsdefBuildingFn(data: Specification.Basicpropsdef): () => Specification.Basicpropsdef {
+function basicpropsdefBuildingFn(data: Specification.IBasicpropsdef): () => Specification.IBasicpropsdef {
   return () => {
     const model = new Specification.Basicpropsdef(data);
 
-    validate('Basicpropsdef', model);
+    if (hasProperty(model, 'normalize')) {
+      validate('Basicpropsdef', (model as any).normalize());
+    } else {
+      validate('Basicpropsdef', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Basicpropsdef`
- * @returns {Specification.Basicpropsdef} A builder for `Specification.Basicpropsdef`
+ * @returns {Specification.IBasicpropsdef} A builder for `Specification.Basicpropsdef`
  */
-export function basicpropsdefBuilder(): Builder<Specification.Basicpropsdef> {
-  return builder<Specification.Basicpropsdef>(basicpropsdefBuildingFn);
+export function basicpropsdefBuilder(): Builder<Specification.IBasicpropsdef> {
+  return builder<Specification.IBasicpropsdef>(basicpropsdefBuildingFn);
 }

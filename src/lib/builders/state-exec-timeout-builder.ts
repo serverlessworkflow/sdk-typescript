@@ -16,26 +16,32 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.StateExecTimeout} data The underlying object
- * @returns {Specification.StateExecTimeout} The validated underlying object
+ * @param {Specification.IStateExecTimeout} data The underlying object
+ * @returns {Specification.IStateExecTimeout} The validated underlying object
  */
-function stateExecTimeoutBuildingFn(data: Specification.StateExecTimeout): () => Specification.StateExecTimeout {
+function stateExecTimeoutBuildingFn(data: Specification.IStateExecTimeout): () => Specification.IStateExecTimeout {
   return () => {
     const model = new Specification.StateExecTimeout(data);
 
-    validate('StateExecTimeout', model);
+    if (hasProperty(model, 'normalize')) {
+      validate('StateExecTimeout', (model as any).normalize());
+    } else {
+      validate('StateExecTimeout', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.StateExecTimeout`
- * @returns {Specification.StateExecTimeout} A builder for `Specification.StateExecTimeout`
+ * @returns {Specification.IStateExecTimeout} A builder for `Specification.StateExecTimeout`
  */
-export function stateExecTimeoutBuilder(): Builder<Specification.StateExecTimeout> {
-  return builder<Specification.StateExecTimeout>(stateExecTimeoutBuildingFn);
+export function stateExecTimeoutBuilder(): Builder<Specification.IStateExecTimeout> {
+  return builder<Specification.IStateExecTimeout>(stateExecTimeoutBuildingFn);
 }

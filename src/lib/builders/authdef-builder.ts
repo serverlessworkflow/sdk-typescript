@@ -16,26 +16,32 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Authdef} data The underlying object
- * @returns {Specification.Authdef} The validated underlying object
+ * @param {Specification.IAuthdef} data The underlying object
+ * @returns {Specification.IAuthdef} The validated underlying object
  */
-function authdefBuildingFn(data: Specification.Authdef): () => Specification.Authdef {
+function authdefBuildingFn(data: Specification.IAuthdef): () => Specification.IAuthdef {
   return () => {
     const model = new Specification.Authdef(data);
 
-    validate('Authdef', model.normalize());
+    if (hasProperty(model, 'normalize')) {
+      validate('Authdef', (model as any).normalize());
+    } else {
+      validate('Authdef', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Authdef`
- * @returns {Specification.Authdef} A builder for `Specification.Authdef`
+ * @returns {Specification.IAuthdef} A builder for `Specification.Authdef`
  */
-export function authdefBuilder(): Builder<Specification.Authdef> {
-  return builder<Specification.Authdef>(authdefBuildingFn);
+export function authdefBuilder(): Builder<Specification.IAuthdef> {
+  return builder<Specification.IAuthdef>(authdefBuildingFn);
 }

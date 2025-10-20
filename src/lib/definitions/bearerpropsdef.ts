@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
-import { Metadata } from './metadata';
+import { IMetadata, Metadata } from './metadata';
 import { overwriteMetadata } from './utils';
 
-export class Bearerpropsdef {
+export interface IBearerpropsdef {
+  token: string;
+  metadata?: IMetadata;
+}
+
+export class Bearerpropsdef implements IBearerpropsdef {
   /**
    * String or a workflow expression. Contains the token
    */

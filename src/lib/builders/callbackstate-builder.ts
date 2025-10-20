@@ -16,29 +16,35 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 import { setEndValueIfNoTransition } from '../definitions/utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Callbackstate} data The underlying object
- * @returns {Specification.Callbackstate} The validated underlying object
+ * @param {Specification.ICallbackstate} data The underlying object
+ * @returns {Specification.ICallbackstate} The validated underlying object
  */
-function callbackstateBuildingFn(data: Specification.Callbackstate): () => Specification.Callbackstate {
+function callbackstateBuildingFn(data: Specification.ICallbackstate): () => Specification.ICallbackstate {
   return () => {
     const model = new Specification.Callbackstate(data);
 
     setEndValueIfNoTransition(model);
 
-    validate('Callbackstate', model.normalize());
+    if (hasProperty(model, 'normalize')) {
+      validate('Callbackstate', (model as any).normalize());
+    } else {
+      validate('Callbackstate', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Callbackstate`
- * @returns {Specification.Callbackstate} A builder for `Specification.Callbackstate`
+ * @returns {Specification.ICallbackstate} A builder for `Specification.Callbackstate`
  */
-export function callbackstateBuilder(): Builder<Specification.Callbackstate> {
-  return builder<Specification.Callbackstate>(callbackstateBuildingFn);
+export function callbackstateBuilder(): Builder<Specification.ICallbackstate> {
+  return builder<Specification.ICallbackstate>(callbackstateBuildingFn);
 }

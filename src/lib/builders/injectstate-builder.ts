@@ -16,29 +16,35 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 import { setEndValueIfNoTransition } from '../definitions/utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Injectstate} data The underlying object
- * @returns {Specification.Injectstate} The validated underlying object
+ * @param {Specification.IInjectstate} data The underlying object
+ * @returns {Specification.IInjectstate} The validated underlying object
  */
-function injectstateBuildingFn(data: Specification.Injectstate): () => Specification.Injectstate {
+function injectstateBuildingFn(data: Specification.IInjectstate): () => Specification.IInjectstate {
   return () => {
     const model = new Specification.Injectstate(data);
 
     setEndValueIfNoTransition(model);
 
-    validate('Injectstate', model.normalize());
+    if (hasProperty(model, 'normalize')) {
+      validate('Injectstate', (model as any).normalize());
+    } else {
+      validate('Injectstate', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Injectstate`
- * @returns {Specification.Injectstate} A builder for `Specification.Injectstate`
+ * @returns {Specification.IInjectstate} A builder for `Specification.Injectstate`
  */
-export function injectstateBuilder(): Builder<Specification.Injectstate> {
-  return builder<Specification.Injectstate>(injectstateBuildingFn);
+export function injectstateBuilder(): Builder<Specification.IInjectstate> {
+  return builder<Specification.IInjectstate>(injectstateBuildingFn);
 }

@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-export class Metadata {
+export interface IMetadata {
+  [name: string]: string;
+}
+
+export class Metadata implements IMetadata {
   constructor(model: any) {
     Object.assign(this, model);
   }

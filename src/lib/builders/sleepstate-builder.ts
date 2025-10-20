@@ -16,26 +16,32 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Sleepstate} data The underlying object
- * @returns {Specification.Sleepstate} The validated underlying object
+ * @param {Specification.ISleepstate} data The underlying object
+ * @returns {Specification.ISleepstate} The validated underlying object
  */
-function sleepstateBuildingFn(data: Specification.Sleepstate): () => Specification.Sleepstate {
+function sleepstateBuildingFn(data: Specification.ISleepstate): () => Specification.ISleepstate {
   return () => {
     const model = new Specification.Sleepstate(data);
 
-    validate('Sleepstate', model.normalize());
+    if (hasProperty(model, 'normalize')) {
+      validate('Sleepstate', (model as any).normalize());
+    } else {
+      validate('Sleepstate', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Sleepstate`
- * @returns {Specification.Sleepstate} A builder for `Specification.Sleepstate`
+ * @returns {Specification.ISleepstate} A builder for `Specification.Sleepstate`
  */
-export function sleepstateBuilder(): Builder<Specification.Sleepstate> {
-  return builder<Specification.Sleepstate>(sleepstateBuildingFn);
+export function sleepstateBuilder(): Builder<Specification.ISleepstate> {
+  return builder<Specification.ISleepstate>(sleepstateBuildingFn);
 }

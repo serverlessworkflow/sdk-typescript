@@ -16,26 +16,32 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Startdef} data The underlying object
- * @returns {Specification.Startdef} The validated underlying object
+ * @param {Specification.IStartdef} data The underlying object
+ * @returns {Specification.IStartdef} The validated underlying object
  */
-function startdefBuildingFn(data: Specification.Startdef): () => Specification.Startdef {
+function startdefBuildingFn(data: Specification.IStartdef): () => Specification.IStartdef {
   return () => {
     const model = new Specification.Startdef(data);
 
-    validate('Startdef', model);
+    if (hasProperty(model, 'normalize')) {
+      validate('Startdef', (model as any).normalize());
+    } else {
+      validate('Startdef', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Startdef`
- * @returns {Specification.Startdef} A builder for `Specification.Startdef`
+ * @returns {Specification.IStartdef} A builder for `Specification.Startdef`
  */
-export function startdefBuilder(): Builder<Specification.Startdef> {
-  return builder<Specification.Startdef>(startdefBuildingFn);
+export function startdefBuilder(): Builder<Specification.IStartdef> {
+  return builder<Specification.IStartdef>(startdefBuildingFn);
 }

@@ -14,9 +14,20 @@
  * limitations under the License.
  */
 
-import { cleanSourceModelProperty, normalizeInterrupt } from './utils';
+import { cleanSourceModelProperty, isPlainObject, normalizeInterrupt } from './utils';
+import toPlainObject from 'lodash.toplainobject';
 
-export class WorkflowExecTimeout {
+export interface IWorkflowExecTimeout {
+  sourceModel?: IWorkflowExecTimeout;
+  duration: string;
+  interrupt?: boolean;
+  runBefore?: string;
+
+  normalize(): IWorkflowExecTimeout;
+  asPlainObject(): IWorkflowExecTimeout;
+}
+
+export class WorkflowExecTimeout implements IWorkflowExecTimeout {
   sourceModel?: WorkflowExecTimeout;
   /**
    * Workflow execution timeout duration (ISO 8601 duration format). If not specified should be 'unlimited'
@@ -40,15 +51,27 @@ export class WorkflowExecTimeout {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.WorkflowExecTimeout} without deleted properties.
+   * @returns {Specification.IWorkflowExecTimeout} without deleted properties.
    */
-
-  normalize = (): WorkflowExecTimeout => {
+  normalize(): IWorkflowExecTimeout {
     const clone = new WorkflowExecTimeout(this);
 
     normalizeInterrupt(clone, this.sourceModel);
 
     cleanSourceModelProperty(clone);
+
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
     return clone;
-  };
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IWorkflowExecTimeout} as plain object.
+   */
+  asPlainObject(): IWorkflowExecTimeout {
+    return toPlainObject(this);
+  }
 }

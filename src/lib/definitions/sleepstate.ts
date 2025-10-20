@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-import { End } from './end';
-import { Error } from './error';
-import { Metadata } from './metadata';
-import { Statedatafilter } from './statedatafilter';
-import { Transition } from './transition';
+import { IEnd, End } from './end';
+import { IError, Error } from './error';
+import { IMetadata, Metadata } from './metadata';
+import { IStatedatafilter, Statedatafilter } from './statedatafilter';
+import { ITransition, Transition } from './transition';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeEnd,
   normalizeOnErrors,
   normalizeTransition,
@@ -33,9 +34,31 @@ import {
   overwriteTransition,
   setEndValueIfNoTransition,
 } from './utils';
-import { StateExecTimeout } from './stateExecTimeout';
+import { IStateExecTimeout, StateExecTimeout } from './stateExecTimeout';
+import toPlainObject from 'lodash.toplainobject';
 
-export class Sleepstate {
+export interface ISleepstate {
+  sourceModel?: ISleepstate;
+  id?: string;
+  name?: string;
+  type?: 'sleep';
+  end?: boolean | IEnd;
+  stateDataFilter?: IStatedatafilter;
+  duration?: string;
+  timeouts?: {
+    stateExecTimeout?: IStateExecTimeout;
+  };
+  onErrors?: IError[];
+  transition?: string | ITransition;
+  compensatedBy?: string;
+  usedForCompensation?: boolean;
+  metadata?: IMetadata;
+
+  normalize(): ISleepstate;
+  asPlainObject(): ISleepstate;
+}
+
+export class Sleepstate implements ISleepstate {
   sourceModel?: Sleepstate;
   /**
    * Unique State id
@@ -106,9 +129,9 @@ export class Sleepstate {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Delaystate} without deleted properties.
+   * @returns {Specification.ISleepstate} without deleted properties.
    */
-  normalize = (): Sleepstate => {
+  normalize(): ISleepstate {
     const clone = new Sleepstate(this);
 
     normalizeEnd(clone);
@@ -119,6 +142,18 @@ export class Sleepstate {
 
     cleanSourceModelProperty(clone);
 
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
     return clone;
-  };
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.ISleepstate} as plain object.
+   */
+  asPlainObject(): ISleepstate {
+    return toPlainObject(this);
+  }
 }

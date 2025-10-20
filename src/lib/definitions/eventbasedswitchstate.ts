@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import { Defaultconditiondef } from './defaultconditiondef';
-import { Error } from './error';
-import { Metadata } from './metadata';
-import { Statedatafilter } from './statedatafilter';
+import { IDefaultconditiondef, Defaultconditiondef } from './defaultconditiondef';
+import { IError, Error } from './error';
+import { IMetadata, Metadata } from './metadata';
+import { IStatedatafilter, Statedatafilter } from './statedatafilter';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeDefaultCondition,
   normalizeEventConditions,
   normalizeOnErrors,
@@ -32,9 +33,31 @@ import {
   overwriteTimeoutWithStateExecTimeout,
 } from './utils';
 import { Eventcondition, EventTimeout } from './types';
-import { StateExecTimeout } from './stateExecTimeout';
+import { IStateExecTimeout, StateExecTimeout } from './stateExecTimeout';
+import toPlainObject from 'lodash.toplainobject';
 
-export class Eventbasedswitchstate {
+export interface IEventbasedswitchstate {
+  sourceModel?: IEventbasedswitchstate;
+  id?: string;
+  name: string;
+  type: 'switch';
+  stateDataFilter?: IStatedatafilter;
+  timeouts?: {
+    stateExecTimeout?: IStateExecTimeout;
+    eventTimeout?: EventTimeout;
+  };
+  eventConditions: Eventcondition[];
+  onErrors?: IError[];
+  defaultCondition: IDefaultconditiondef;
+  compensatedBy?: string;
+  usedForCompensation?: boolean;
+  metadata?: IMetadata;
+
+  normalize(): IEventbasedswitchstate;
+  asPlainObject(): IEventbasedswitchstate;
+}
+
+export class Eventbasedswitchstate implements IEventbasedswitchstate {
   sourceModel?: Eventbasedswitchstate;
   /**
    * Unique State id
@@ -97,9 +120,9 @@ export class Eventbasedswitchstate {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Eventbasedswitch} without deleted properties.
+   * @returns {Specification.IEventbasedswitchstate} without deleted properties.
    */
-  normalize = (): Eventbasedswitchstate => {
+  normalize(): IEventbasedswitchstate {
     const clone = new Eventbasedswitchstate(this);
 
     normalizeEventConditions(clone);
@@ -108,6 +131,19 @@ export class Eventbasedswitchstate {
     normalizeUsedForCompensation(clone, this.sourceModel);
 
     cleanSourceModelProperty(clone);
+
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
     return clone;
-  };
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IEventbasedswitchstate} as plain object.
+   */
+  asPlainObject(): IEventbasedswitchstate {
+    return toPlainObject(this);
+  }
 }

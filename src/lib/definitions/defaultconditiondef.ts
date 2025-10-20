@@ -14,18 +14,30 @@
  * limitations under the License.
  */
 
-import { End } from './end';
-import { Transition } from './transition';
+import { IEnd, End } from './end';
+import { ITransition, Transition } from './transition';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeEnd,
   normalizeTransition,
   overwriteEnd,
   overwriteTransition,
   setEndValueIfNoTransition,
 } from './utils';
+import toPlainObject from 'lodash.toplainobject';
 
-export class Defaultconditiondef /* DefaultCondition definition. Can be either a transition or end definition */ {
+export interface IDefaultconditiondef {
+  sourceModel?: IDefaultconditiondef;
+  transition: string | ITransition;
+  end?: boolean | IEnd;
+
+  normalize(): IDefaultconditiondef;
+  asPlainObject(): IDefaultconditiondef;
+}
+
+export class Defaultconditiondef implements IDefaultconditiondef {
+  /* DefaultCondition definition. Can be either a transition or end definition */
   sourceModel?: Defaultconditiondef;
   transition: string | Transition;
   end?: boolean | End;
@@ -41,9 +53,9 @@ export class Defaultconditiondef /* DefaultCondition definition. Can be either a
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Defaultdef} without deleted properties.
+   * @returns {Specification.IDefaultconditiondef} without deleted properties.
    */
-  normalize = (): Defaultconditiondef => {
+  normalize(): IDefaultconditiondef {
     const clone = new Defaultconditiondef(this);
 
     normalizeEnd(clone);
@@ -52,6 +64,18 @@ export class Defaultconditiondef /* DefaultCondition definition. Can be either a
 
     cleanSourceModelProperty(clone);
 
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
     return clone;
-  };
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IDefaultconditiondef} as plain object.
+   */
+  asPlainObject(): IDefaultconditiondef {
+    return toPlainObject(this);
+  }
 }

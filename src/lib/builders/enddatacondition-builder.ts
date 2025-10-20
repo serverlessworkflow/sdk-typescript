@@ -16,26 +16,32 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Enddatacondition} data The underlying object
- * @returns {Specification.Enddatacondition} The validated underlying object
+ * @param {Specification.IEnddatacondition} data The underlying object
+ * @returns {Specification.IEnddatacondition} The validated underlying object
  */
-function enddataconditionBuildingFn(data: Specification.Enddatacondition): () => Specification.Enddatacondition {
+function enddataconditionBuildingFn(data: Specification.IEnddatacondition): () => Specification.IEnddatacondition {
   return () => {
     const model = new Specification.Enddatacondition(data);
 
-    validate('Enddatacondition', model.normalize());
+    if (hasProperty(model, 'normalize')) {
+      validate('Enddatacondition', (model as any).normalize());
+    } else {
+      validate('Enddatacondition', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Enddatacondition`
- * @returns {Specification.Enddatacondition} A builder for `Specification.Enddatacondition`
+ * @returns {Specification.IEnddatacondition} A builder for `Specification.Enddatacondition`
  */
-export function enddataconditionBuilder(): Builder<Specification.Enddatacondition> {
-  return builder<Specification.Enddatacondition>(enddataconditionBuildingFn);
+export function enddataconditionBuilder(): Builder<Specification.IEnddatacondition> {
+  return builder<Specification.IEnddatacondition>(enddataconditionBuildingFn);
 }

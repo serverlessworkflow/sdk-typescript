@@ -16,26 +16,32 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Statedatafilter} data The underlying object
- * @returns {Specification.Statedatafilter} The validated underlying object
+ * @param {Specification.IStatedatafilter} data The underlying object
+ * @returns {Specification.IStatedatafilter} The validated underlying object
  */
-function statedatafilterBuildingFn(data: Specification.Statedatafilter): () => Specification.Statedatafilter {
+function statedatafilterBuildingFn(data: Specification.IStatedatafilter): () => Specification.IStatedatafilter {
   return () => {
     const model = new Specification.Statedatafilter(data);
 
-    validate('Statedatafilter', model);
+    if (hasProperty(model, 'normalize')) {
+      validate('Statedatafilter', (model as any).normalize());
+    } else {
+      validate('Statedatafilter', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Statedatafilter`
- * @returns {Specification.Statedatafilter} A builder for `Specification.Statedatafilter`
+ * @returns {Specification.IStatedatafilter} A builder for `Specification.Statedatafilter`
  */
-export function statedatafilterBuilder(): Builder<Specification.Statedatafilter> {
-  return builder<Specification.Statedatafilter>(statedatafilterBuildingFn);
+export function statedatafilterBuilder(): Builder<Specification.IStatedatafilter> {
+  return builder<Specification.IStatedatafilter>(statedatafilterBuildingFn);
 }

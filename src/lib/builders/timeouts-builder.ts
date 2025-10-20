@@ -16,26 +16,32 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Timeouts} data The underlying object
- * @returns {Specification.Timeouts} The validated underlying object
+ * @param {Specification.ITimeouts} data The underlying object
+ * @returns {Specification.ITimeouts} The validated underlying object
  */
-function timeoutsBuildingFn(data: Specification.Timeouts): () => Specification.Timeouts {
+function timeoutsBuildingFn(data: Specification.ITimeouts): () => Specification.ITimeouts {
   return () => {
     const model = new Specification.Timeouts(data);
 
-    validate('Timeouts', model.normalize());
+    if (hasProperty(model, 'normalize')) {
+      validate('Timeouts', (model as any).normalize());
+    } else {
+      validate('Timeouts', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Timeouts`
- * @returns {Specification.Timeouts} A builder for `Specification.Timeouts`
+ * @returns {Specification.ITimeouts} A builder for `Specification.Timeouts`
  */
-export function timeoutsBuilder(): Builder<Specification.Timeouts> {
-  return builder<Specification.Timeouts>(timeoutsBuildingFn);
+export function timeoutsBuilder(): Builder<Specification.ITimeouts> {
+  return builder<Specification.ITimeouts>(timeoutsBuildingFn);
 }

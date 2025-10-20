@@ -14,7 +14,17 @@
  * limitations under the License.
  */
 
-export class Retrydef {
+export interface IRetrydef {
+  name: string;
+  delay?: string;
+  maxDelay?: string;
+  increment?: string;
+  multiplier?: number | string;
+  maxAttempts: number | string;
+  jitter?: number | string;
+}
+
+export class Retrydef implements IRetrydef {
   /**
    * Unique retry strategy name
    */

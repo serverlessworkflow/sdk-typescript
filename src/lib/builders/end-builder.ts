@@ -16,26 +16,32 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.End} data The underlying object
- * @returns {Specification.End} The validated underlying object
+ * @param {Specification.IEnd} data The underlying object
+ * @returns {Specification.IEnd} The validated underlying object
  */
-function endBuildingFn(data: Specification.End): () => Specification.End {
+function endBuildingFn(data: Specification.IEnd): () => Specification.IEnd {
   return () => {
     const model = new Specification.End(data);
 
-    validate('End', model.normalize());
+    if (hasProperty(model, 'normalize')) {
+      validate('End', (model as any).normalize());
+    } else {
+      validate('End', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.End`
- * @returns {Specification.End} A builder for `Specification.End`
+ * @returns {Specification.IEnd} A builder for `Specification.End`
  */
-export function endBuilder(): Builder<Specification.End> {
-  return builder<Specification.End>(endBuildingFn);
+export function endBuilder(): Builder<Specification.IEnd> {
+  return builder<Specification.IEnd>(endBuildingFn);
 }

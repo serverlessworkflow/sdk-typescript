@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import * as fs from 'fs';
+import { original, produce } from 'immer';
 import {
   actionBuilder,
   eventdefBuilder,
@@ -21,6 +22,7 @@ import {
   functionBuilder,
   functionrefBuilder,
   oneventsBuilder,
+  Specification,
   workflowBuilder,
 } from '../../src';
 
@@ -67,5 +69,63 @@ describe('carauctionbids workflow example', () => {
 
     const expected = JSON.parse(fs.readFileSync('./tests/examples/carauctionbids.json', 'utf8'));
     expect(JSON.stringify(workflow.normalize())).toEqual(JSON.stringify(expected));
+  });
+
+  it('built workflow should be immerable', function () {
+    const workflow = workflowBuilder()
+      .id('handleCarAuctionBid')
+      .version('1.0')
+      .specVersion('0.8')
+      .name('Car Auction Bidding Workflow')
+      .description('Store a single bid whole the car auction is active')
+      .start({
+        stateName: 'StoreCarAuctionBid',
+        schedule: 'R/PT2H',
+      })
+      .functions([
+        functionBuilder().name('StoreBidFunction').operation('http://myapis.org/carauctionapi.json#storeBid').build(),
+      ])
+      .events([eventdefBuilder().name('CarBidEvent').type('carBidMadeType').source('carBidEventSource').build()])
+      .states([
+        eventstateBuilder()
+          .name('StoreCarAuctionBid')
+          .exclusive(true)
+          .onEvents([
+            oneventsBuilder()
+              .eventRefs(['CarBidEvent'])
+              .actions([
+                actionBuilder()
+                  .functionRef(
+                    functionrefBuilder()
+                      .refName('StoreBidFunction')
+                      .arguments({
+                        bid: '${ .bid }',
+                      })
+                      .build()
+                  )
+                  .build(),
+              ])
+              .build(),
+          ])
+          .build(),
+      ])
+      .build()
+      .asPlainObject();
+
+    // Use immer to create a draft and compare with original model ensuring it is immerable
+    produce(workflow, (draft) => {
+      expect(workflow === original(draft)).toBe(true);
+    });
+  });
+
+  it('deserialized workflow should be immerable', function () {
+    const model = Specification.Workflow.fromSource(
+      fs.readFileSync('./tests/examples/carauctionbids.json', 'utf8'),
+      true
+    );
+
+    produce(model, (draft: any) => {
+      expect(model === original(draft)).toBe(true);
+    });
   });
 });

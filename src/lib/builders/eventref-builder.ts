@@ -16,26 +16,32 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Eventref} data The underlying object
- * @returns {Specification.Eventref} The validated underlying object
+ * @param {Specification.IEventref} data The underlying object
+ * @returns {Specification.IEventref} The validated underlying object
  */
-function eventrefBuildingFn(data: Specification.Eventref): () => Specification.Eventref {
+function eventrefBuildingFn(data: Specification.IEventref): () => Specification.IEventref {
   return () => {
     const model = new Specification.Eventref(data);
 
-    validate('Eventref', model.normalize());
+    if (hasProperty(model, 'normalize')) {
+      validate('Eventref', (model as any).normalize());
+    } else {
+      validate('Eventref', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Eventref`
- * @returns {Specification.Eventref} A builder for `Specification.Eventref`
+ * @returns {Specification.IEventref} A builder for `Specification.Eventref`
  */
-export function eventrefBuilder(): Builder<Specification.Eventref> {
-  return builder<Specification.Eventref>(eventrefBuildingFn);
+export function eventrefBuilder(): Builder<Specification.IEventref> {
+  return builder<Specification.IEventref>(eventrefBuildingFn);
 }

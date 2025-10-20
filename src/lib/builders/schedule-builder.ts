@@ -16,26 +16,32 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Schedule} data The underlying object
- * @returns {Specification.Schedule} The validated underlying object
+ * @param {Specification.ISchedule} data The underlying object
+ * @returns {Specification.ISchedule} The validated underlying object
  */
-function scheduleBuildingFn(data: Specification.Schedule): () => Specification.Schedule {
+function scheduleBuildingFn(data: Specification.ISchedule): () => Specification.ISchedule {
   return () => {
     const model = new Specification.Schedule(data);
 
-    validate('Schedule', model);
+    if (hasProperty(model, 'normalize')) {
+      validate('Schedule', (model as any).normalize());
+    } else {
+      validate('Schedule', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Schedule`
- * @returns {Specification.Schedule} A builder for `Specification.Schedule`
+ * @returns {Specification.ISchedule} A builder for `Specification.Schedule`
  */
-export function scheduleBuilder(): Builder<Specification.Schedule> {
-  return builder<Specification.Schedule>(scheduleBuildingFn);
+export function scheduleBuilder(): Builder<Specification.ISchedule> {
+  return builder<Specification.ISchedule>(scheduleBuildingFn);
 }

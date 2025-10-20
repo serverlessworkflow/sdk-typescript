@@ -14,10 +14,21 @@
  * limitations under the License.
  */
 
-import { cleanSourceModelProperty, normalizeScheme, overwriteProperties } from './utils';
+import { cleanSourceModelProperty, isPlainObject, normalizeScheme, overwriteProperties } from './utils';
 import { Properties } from './types';
+import toPlainObject from 'lodash.toplainobject';
 
-export class Authdef {
+export interface IAuthdef {
+  sourceModel?: IAuthdef;
+  name: string;
+  scheme?: 'basic' | 'bearer' | 'oauth2';
+  properties: string | Properties;
+
+  normalize(): IAuthdef;
+  asPlainObject(): IAuthdef;
+}
+
+export class Authdef implements IAuthdef {
   sourceModel?: Authdef;
   /**
    * Unique auth definition name
@@ -40,15 +51,27 @@ export class Authdef {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Authdef} without deleted properties.
+   * @returns {Specification.IAuthdef} without deleted properties.
    */
-  normalize = (): Authdef => {
+  normalize(): IAuthdef {
     const clone = new Authdef(this);
 
     normalizeScheme(clone, this.sourceModel);
 
     cleanSourceModelProperty(clone);
 
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
     return clone;
-  };
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IAuthdef} as plain object.
+   */
+  asPlainObject(): IAuthdef {
+    return toPlainObject(this);
+  }
 }

@@ -16,26 +16,32 @@
 
 import { Builder, builder } from '../builder';
 import { Specification } from '../definitions';
+import { hasProperty } from '../definitions/utils';
 import { validate } from '../utils';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.Sleep} data The underlying object
- * @returns {Specification.Sleep} The validated underlying object
+ * @param {Specification.ISleep} data The underlying object
+ * @returns {Specification.ISleep} The validated underlying object
  */
-function sleepBuildingFn(data: Specification.Sleep): () => Specification.Sleep {
+function sleepBuildingFn(data: Specification.ISleep): () => Specification.ISleep {
   return () => {
     const model = new Specification.Sleep(data);
 
-    validate('Sleep', model);
+    if (hasProperty(model, 'normalize')) {
+      validate('Sleep', (model as any).normalize());
+    } else {
+      validate('Sleep', model);
+    }
+
     return model;
   };
 }
 
 /**
  * A factory to create a builder proxy for the type `Specification.Sleep`
- * @returns {Specification.Sleep} A builder for `Specification.Sleep`
+ * @returns {Specification.ISleep} A builder for `Specification.Sleep`
  */
-export function sleepBuilder(): Builder<Specification.Sleep> {
-  return builder<Specification.Sleep>(sleepBuildingFn);
+export function sleepBuilder(): Builder<Specification.ISleep> {
+  return builder<Specification.ISleep>(sleepBuildingFn);
 }

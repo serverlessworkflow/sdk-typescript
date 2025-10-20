@@ -15,6 +15,7 @@
  */
 
 import * as fs from 'fs';
+import { original, produce } from 'immer';
 import {
   actionBuilder,
   defaultconditiondefBuilder,
@@ -25,6 +26,7 @@ import {
   oneventsBuilder,
   operationstateBuilder,
   sleepBuilder,
+  Specification,
   workflowBuilder,
 } from '../../src';
 
@@ -69,5 +71,61 @@ describe('checkcarvitals workflow example', () => {
 
     const expected = JSON.parse(fs.readFileSync('./tests/examples/checkcarvitals.json', 'utf8'));
     expect(JSON.stringify(workflow.normalize())).toEqual(JSON.stringify(expected));
+  });
+
+  it('built workflow should be immerable', function () {
+    const workflow = workflowBuilder()
+      .id('checkcarvitals')
+      .name('Check Car Vitals Workflow')
+      .version('1.0')
+      .specVersion('0.8')
+      .start('WhenCarIsOn')
+      .states([
+        eventstateBuilder()
+          .name('WhenCarIsOn')
+          .onEvents([oneventsBuilder().eventRefs(['CarTurnedOnEvent']).build()])
+          .transition('DoCarVitalChecks')
+          .build(),
+        operationstateBuilder()
+          .name('DoCarVitalChecks')
+          .actions([actionBuilder().subFlowRef('vitalscheck').sleep(sleepBuilder().after('PT1S').build()).build()])
+
+          .transition('CheckContinueVitalChecks')
+          .build(),
+
+        eventbasedswitchstateBuilder()
+          .name('CheckContinueVitalChecks')
+          .eventConditions([
+            enddeventconditionBuilder()
+              .name('Car Turned Off Condition')
+              .eventRef('CarTurnedOffEvent')
+              .end(true)
+              .build(),
+          ])
+          .defaultCondition(defaultconditiondefBuilder().transition('DoCarVitalChecks').build())
+          .build(),
+      ])
+      .events([
+        eventdefBuilder().name('CarTurnedOnEvent').type('car.events').source('my/car').build(),
+        eventdefBuilder().name('CarTurnedOffEvent').type('car.events').source('my/car').build(),
+      ])
+      .build()
+      .asPlainObject();
+
+    // Use immer to create a draft and compare with original model ensuring it is immerable
+    produce(workflow, (draft) => {
+      expect(workflow === original(draft)).toBe(true);
+    });
+  });
+
+  it('deserialized workflow should be immerable', function () {
+    const model = Specification.Workflow.fromSource(
+      fs.readFileSync('./tests/examples/checkcarvitals.json', 'utf8'),
+      true
+    );
+
+    produce(model, (draft: any) => {
+      expect(model === original(draft)).toBe(true);
+    });
   });
 });

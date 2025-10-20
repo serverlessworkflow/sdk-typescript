@@ -17,7 +17,7 @@ import { Specification } from '../definitions';
 import { MermaidState } from './mermaidState';
 
 export class MermaidDiagram {
-  constructor(private workflow: Specification.Workflow) {}
+  constructor(private workflow: Specification.IWorkflow) {}
 
   sourceCode() {
     const mermaidStateDiagramVersion = 'stateDiagram-v2';

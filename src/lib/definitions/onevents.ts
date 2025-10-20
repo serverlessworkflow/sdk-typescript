@@ -13,17 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Action } from './action';
-import { Eventdatafilter } from './eventdatafilter';
+
+import { IAction, Action } from './action';
+import { IEventdatafilter, Eventdatafilter } from './eventdatafilter';
 import {
   cleanSourceModelProperty,
+  isPlainObject,
   normalizeActionMode,
   normalizeActions,
   overwriteActions,
   overwriteEventDataFilter,
 } from './utils';
+import toPlainObject from 'lodash.toplainobject';
 
-export class Onevents {
+export interface IOnevents {
+  sourceModel?: IOnevents;
+  eventRefs: [string, ...string[]];
+  actionMode?: 'sequential' | 'parallel';
+  actions?: IAction[];
+  eventDataFilter?: IEventdatafilter;
+
+  normalize(): IOnevents;
+  asPlainObject(): IOnevents;
+}
+
+export class Onevents implements IOnevents {
   sourceModel?: Onevents;
   /**
    * References one or more unique event names in the defined workflow events
@@ -54,9 +68,9 @@ export class Onevents {
 
   /**
    * Normalize the value of each property by recursively deleting properties whose value is equal to its default value. Does not modify the object state.
-   * @returns {Specification.Onevents} without deleted properties.
+   * @returns {Specification.IOnevents} without deleted properties.
    */
-  normalize = (): Onevents => {
+  normalize(): IOnevents {
     const clone = new Onevents(this);
 
     normalizeActionMode(clone, this.sourceModel);
@@ -64,6 +78,18 @@ export class Onevents {
 
     cleanSourceModelProperty(clone);
 
+    if (isPlainObject(this)) {
+      return toPlainObject(clone);
+    }
+
     return clone;
-  };
+  }
+
+  /**
+   * Create a shallow copy as plain object
+   * @returns {Specification.IOnevents} as plain object.
+   */
+  asPlainObject(): IOnevents {
+    return toPlainObject(this);
+  }
 }
