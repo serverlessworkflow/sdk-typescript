@@ -25,7 +25,7 @@ describe('functionBuilder ', () => {
 
   it('should build an object with type= set value ', () => {
     expect(functionBuilder().name('function').operation('operation').type('expression').build().type).toBe(
-      'expression'
+      'expression',
     );
     expect(functionBuilder().name('function').operation('operation').type('rest').build().type).toBe('rest');
   });

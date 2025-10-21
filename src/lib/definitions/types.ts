@@ -36,7 +36,7 @@ import { Specification } from './index';
 
 export type CorrelationDefs = [
   /* CloudEvent correlation definition */ ICorrelationDef,
-  .../* CloudEvent correlation definition */ ICorrelationDef[]
+  .../* CloudEvent correlation definition */ ICorrelationDef[],
 ];
 
 export type Datacondition /* Switch state data based condition */ =
@@ -75,7 +75,7 @@ export type States = [
     | /* Inject static data into state data. Does not perform any actions */ IInjectstate
     | /* Execute a set of defined actions or workflows for each element of a data array */ IForeachstate
     | /* This state performs an action, then waits for the callback event that denotes completion of the action */ ICallbackstate
-  )[]
+  )[],
 ];
 
 /**

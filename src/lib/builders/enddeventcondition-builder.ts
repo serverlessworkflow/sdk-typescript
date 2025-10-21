@@ -25,7 +25,7 @@ import { validate } from '../utils';
  * @returns {Specification.IEnddeventcondition} The validated underlying object
  */
 function enddeventconditionBuildingFn(
-  data: Specification.IEnddeventcondition
+  data: Specification.IEnddeventcondition,
 ): () => Specification.IEnddeventcondition {
   return () => {
     const model = new Specification.Enddeventcondition(data);

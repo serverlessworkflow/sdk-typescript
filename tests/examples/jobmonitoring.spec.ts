@@ -61,7 +61,7 @@ describe('jobmonitoring workflow example', () => {
                   .arguments({
                     name: '${ .job.name }',
                   })
-                  .build()
+                  .build(),
               )
               .actionDataFilter(actiondatafilterBuilder().results('${ .jobuid }').build())
               .build(),
@@ -81,7 +81,7 @@ describe('jobmonitoring workflow example', () => {
                   .arguments({
                     name: '${ .jobuid }',
                   })
-                  .build()
+                  .build(),
               )
               .actionDataFilter(actiondatafilterBuilder().results('${ .jobstatus }').build())
               .build(),
@@ -111,7 +111,7 @@ describe('jobmonitoring workflow example', () => {
                   .arguments({
                     name: '${ .jobuid }',
                   })
-                  .build()
+                  .build(),
               )
               .build(),
           ])
@@ -127,7 +127,7 @@ describe('jobmonitoring workflow example', () => {
                   .arguments({
                     name: '${ .jobuid }',
                   })
-                  .build()
+                  .build(),
               )
               .build(),
           ])
@@ -168,7 +168,7 @@ describe('jobmonitoring workflow example', () => {
                   .arguments({
                     name: '${ .job.name }',
                   })
-                  .build()
+                  .build(),
               )
               .actionDataFilter(actiondatafilterBuilder().results('${ .jobuid }').build())
               .build(),
@@ -188,7 +188,7 @@ describe('jobmonitoring workflow example', () => {
                   .arguments({
                     name: '${ .jobuid }',
                   })
-                  .build()
+                  .build(),
               )
               .actionDataFilter(actiondatafilterBuilder().results('${ .jobstatus }').build())
               .build(),
@@ -218,7 +218,7 @@ describe('jobmonitoring workflow example', () => {
                   .arguments({
                     name: '${ .jobuid }',
                   })
-                  .build()
+                  .build(),
               )
               .build(),
           ])
@@ -234,7 +234,7 @@ describe('jobmonitoring workflow example', () => {
                   .arguments({
                     name: '${ .jobuid }',
                   })
-                  .build()
+                  .build(),
               )
               .build(),
           ])
@@ -252,7 +252,7 @@ describe('jobmonitoring workflow example', () => {
   it('deserialized workflow should be immerable', function () {
     const model = Specification.Workflow.fromSource(
       fs.readFileSync('./tests/examples/jobmonitoring.json', 'utf8'),
-      true
+      true,
     );
 
     produce(model, (draft: any) => {

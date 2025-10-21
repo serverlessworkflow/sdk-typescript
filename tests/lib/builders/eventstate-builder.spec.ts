@@ -38,7 +38,7 @@ describe('eventstateBuilder ', () => {
           },
         ],
         transition: 'Get Book Status',
-      })
+      }),
     );
   });
 });

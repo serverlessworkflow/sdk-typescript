@@ -25,7 +25,7 @@ import { validate } from '../utils';
  * @returns {Specification.IDefaultconditiondef} The validated underlying object
  */
 function defaultconditiondefBuildingFn(
-  data: Specification.IDefaultconditiondef
+  data: Specification.IDefaultconditiondef,
 ): () => Specification.IDefaultconditiondef {
   return () => {
     const model = new Specification.Defaultconditiondef(data);

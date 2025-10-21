@@ -75,11 +75,11 @@ export const mergeDefinitions = async (
   $refParser: $RefParser,
   paths: string[],
   known$Refs: Map<string, string>,
-  parentPaths: string[] = []
+  parentPaths: string[] = [],
 ): Promise<void> => {
   try {
     if (!parentPaths?.length) {
-      Object.keys($refParser.schema.definitions || {}).forEach((key: string) => {
+      Object.keys($refParser.schema!.definitions || {}).forEach((key: string) => {
         if (!known$Refs.has(key)) {
           known$Refs.set(key, `#/definitions/${key}`);
         }
@@ -99,7 +99,7 @@ export const mergeDefinitions = async (
         const otherPaths = $schemaRefs.paths().filter((p) => !parentPaths.includes(p));
         otherPaths.forEach((p) => parentPaths.push(p));
         await mergeDefinitions($refParser, otherPaths, known$Refs, parentPaths);
-      })
+      }),
     );
   } catch (ex) {
     return Promise.reject(ex);
@@ -117,7 +117,7 @@ export const mergeSchemas = (
   $refParser: $RefParser,
   known$Refs: Map<string, string>,
   target: any,
-  target$Ref: string
+  target$Ref: string,
 ): void => {
   const isRootDocument = target$Ref.startsWith('#');
   // todo ? handle circular refs ?

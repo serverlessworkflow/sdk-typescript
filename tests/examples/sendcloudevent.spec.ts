@@ -58,7 +58,7 @@ describe('sendcloudevent workflow example', () => {
                   .arguments({
                     order: '${ .singleorder }',
                   })
-                  .build()
+                  .build(),
               )
               .build(),
           ])
@@ -67,7 +67,7 @@ describe('sendcloudevent workflow example', () => {
               .produceEvents([
                 produceeventdefBuilder().eventRef('provisioningCompleteEvent').data('${ .provisionedOrders }').build(),
               ])
-              .build()
+              .build(),
           )
           .build(),
       ])
@@ -107,7 +107,7 @@ describe('sendcloudevent workflow example', () => {
                   .arguments({
                     order: '${ .singleorder }',
                   })
-                  .build()
+                  .build(),
               )
               .build(),
           ])
@@ -116,7 +116,7 @@ describe('sendcloudevent workflow example', () => {
               .produceEvents([
                 produceeventdefBuilder().eventRef('provisioningCompleteEvent').data('${ .provisionedOrders }').build(),
               ])
-              .build()
+              .build(),
           )
           .build(),
       ])
@@ -132,7 +132,7 @@ describe('sendcloudevent workflow example', () => {
   it('deserialized workflow should be immerable', function () {
     const model = Specification.Workflow.fromSource(
       fs.readFileSync('./tests/examples/sendcloudevent.json', 'utf8'),
-      true
+      true,
     );
 
     produce(model, (draft: any) => {

@@ -92,7 +92,7 @@ export function overwriteEventConditions(object: { eventConditions: Specificatio
       }
 
       throw new Error(
-        `Provided value is neither Transitioneventcondition nor Enddeventcondition \n data= ${eventCondition} `
+        `Provided value is neither Transitioneventcondition nor Enddeventcondition \n data= ${eventCondition} `,
       );
     });
   }
@@ -115,7 +115,7 @@ export function overwriteDataConditions(object: { dataConditions: Specification.
       }
 
       throw new Error(
-        `Provided value is neither Transitiondatacondition nor Enddatacondition \n data= ${dataCondition} `
+        `Provided value is neither Transitiondatacondition nor Enddatacondition \n data= ${dataCondition} `,
       );
     });
   }
@@ -162,7 +162,7 @@ export function overwriteMetadata(object: { metadata?: Specification.IMetadata }
 export function overwriteRetries(object: { retries?: Specification.Retries }) {
   if (Array.isArray(object.retries)) {
     object.retries = (object.retries as Specification.Retrydef[]).map(
-      (f) => new Specification.Retrydef(f)
+      (f) => new Specification.Retrydef(f),
     ) as Specification.Retries;
   }
 }
@@ -174,7 +174,7 @@ export function overwriteRetries(object: { retries?: Specification.Retries }) {
 export function overwriteEvents(object: { events?: Specification.Events }) {
   if (Array.isArray(object.events)) {
     object.events = (object.events as Specification.Eventdef[]).map(
-      (f) => new Specification.Eventdef(f)
+      (f) => new Specification.Eventdef(f),
     ) as Specification.Events;
   }
 }
@@ -186,7 +186,7 @@ export function overwriteEvents(object: { events?: Specification.Events }) {
 export function overwriteErrors(object: { errors?: Specification.Errors }) {
   if (Array.isArray(object.errors)) {
     object.errors = (object.errors as Specification.Errordef[]).map(
-      (f) => new Specification.Errordef(f)
+      (f) => new Specification.Errordef(f),
     ) as Specification.Errors;
   }
 }
@@ -198,7 +198,7 @@ export function overwriteErrors(object: { errors?: Specification.Errors }) {
 export function overwriteAuth(object: { auth?: Specification.Auth }) {
   if (Array.isArray(object.auth)) {
     object.auth = (object.auth as Specification.Authdef[]).map(
-      (f) => new Specification.Authdef(f)
+      (f) => new Specification.Authdef(f),
     ) as Specification.Auth;
   }
 }
@@ -210,7 +210,7 @@ export function overwriteAuth(object: { auth?: Specification.Auth }) {
 export function overwriteFunctions(object: { functions?: Specification.Functions }) {
   if (Array.isArray(object.functions)) {
     object.functions = (object.functions as Specification.Function[]).map(
-      (f) => new Specification.Function(f)
+      (f) => new Specification.Function(f),
     ) as Specification.Functions;
   }
 }
@@ -284,7 +284,7 @@ export function overwriteProperties(object: { properties: string | Specification
 export function overwriteCorrelation(object: { correlation?: Specification.CorrelationDefs }): void {
   if (Array.isArray(object.correlation)) {
     object.correlation = object.correlation.map(
-      (correlation) => new Specification.CorrelationDef(correlation)
+      (correlation) => new Specification.CorrelationDef(correlation),
     ) as Specification.CorrelationDefs;
   }
 }
@@ -634,7 +634,7 @@ export function normalizeAuth(object: { auth?: Specification.Auth }) {
 export function normalizeFunctions(object: { functions?: Specification.Functions }) {
   if (Array.isArray(object.functions)) {
     object.functions = (object.functions as Specification.Function[]).map((f) =>
-      f.normalize()
+      f.normalize(),
     ) as Specification.Functions;
   }
 }
@@ -646,7 +646,7 @@ export function normalizeFunctions(object: { functions?: Specification.Functions
 export function normalizeEvents(object: { events?: Specification.Events }) {
   if (Array.isArray(object.events)) {
     object.events = (object.events as Specification.Eventdef[]).map((event) =>
-      event.normalize()
+      event.normalize(),
     ) as Specification.Events;
   }
 }
@@ -707,7 +707,7 @@ export function normalizeCompletionType(object: { completionType?: string }, sou
  */
 export function normalizeUsedForCompensation(
   object: { usedForCompensation?: boolean },
-  source?: { usedForCompensation?: boolean }
+  source?: { usedForCompensation?: boolean },
 ) {
   if (source?.usedForCompensation === undefined) {
     delete object.usedForCompensation;
@@ -820,7 +820,7 @@ export function normalizeInvoke(object: { invoke?: string }, source?: { invoke?:
  */
 export function normalizeOnParentComplete(
   object: { onParentComplete?: 'continue' | 'terminate' },
-  source?: { onParentComplete?: 'continue' | 'terminate' }
+  source?: { onParentComplete?: 'continue' | 'terminate' },
 ) {
   if (!source?.onParentComplete) {
     delete object.onParentComplete;

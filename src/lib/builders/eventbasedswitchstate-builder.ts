@@ -25,7 +25,7 @@ import { validate } from '../utils';
  * @returns {Specification.IEventbasedswitchstate} The validated underlying object
  */
 function eventbasedswitchstateBuildingFn(
-  data: Specification.IEventbasedswitchstate
+  data: Specification.IEventbasedswitchstate,
 ): () => Specification.IEventbasedswitchstate {
   return () => {
     const model = new Specification.Eventbasedswitchstate(data);

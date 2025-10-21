@@ -108,7 +108,7 @@ describe('workflow ', () => {
             .end(true)
             .build(),
         ])
-        .build()
+        .build(),
     );
     expect(jsonWorkflow).toBe(
       '{' +
@@ -128,7 +128,7 @@ describe('workflow ', () => {
         '"end":true' +
         '}' +
         ']' +
-        '}'
+        '}',
     );
   });
 
@@ -150,7 +150,7 @@ describe('workflow ', () => {
             .end(true)
             .build(),
         ])
-        .build()
+        .build(),
     );
     expect(yamlWorkflow).toBe(
       'id: helloworld\n' +
@@ -164,7 +164,7 @@ describe('workflow ', () => {
         '    type: inject\n' +
         '    data:\n' +
         '      result: Hello World!\n' +
-        '    end: true\n'
+        '    end: true\n',
     );
   });
 });

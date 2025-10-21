@@ -121,7 +121,7 @@ describe('checkcarvitals workflow example', () => {
   it('deserialized workflow should be immerable', function () {
     const model = Specification.Workflow.fromSource(
       fs.readFileSync('./tests/examples/checkcarvitals.json', 'utf8'),
-      true
+      true,
     );
 
     produce(model, (draft: any) => {

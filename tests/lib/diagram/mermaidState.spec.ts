@@ -40,9 +40,9 @@ describe('mermaidState', () => {
             }
             ],
             "end": true
-            }`)
-        )
-      ).sourceCode()
+            }`),
+        ),
+      ).sourceCode(),
     ).toBe(`ParallelExec : ParallelExec
 ParallelExec : type = Parallel State
 ParallelExec : Completion type = allOf
@@ -69,7 +69,7 @@ ParallelExec --> [*]`);
           "defaultCondition": {
             "transition": "HandleNoVisaDecision"
           }
-        }`)
+        }`),
     );
     const mermaidState = new MermaidState(eventbasedswitch);
     expect(mermaidState.sourceCode()).toBe(`CheckVisaStatus : CheckVisaStatus
@@ -98,7 +98,7 @@ CheckVisaStatus --> HandleNoVisaDecision : default`);
           "defaultCondition": {
             "transition": "RejectApplication"
           }
-        }`)
+        }`),
     );
     const mermaidState = new MermaidState(databasedswitch);
     expect(mermaidState.sourceCode()).toBe(`CheckApplication : CheckApplication
@@ -127,7 +127,7 @@ CheckApplication --> RejectApplication : default`);
       "defaultCondition": {
         "transition": "StartApplication"
       }
-    }`)
+    }`),
     );
     const mermaidState = new MermaidState(databasedswitch);
     expect(mermaidState.sourceCode()).toBe(`CheckApplication : CheckApplication
@@ -157,7 +157,7 @@ CheckApplication --> StartApplication : default`);
       "end": {
         "terminate": true
       }
-    }`)
+    }`),
     );
     const mermaidState = new MermaidState(databasedswitch);
     expect(mermaidState.sourceCode()).toBe(`GreetPerson : GreetPerson
@@ -188,7 +188,7 @@ GreetPerson --> [*]`);
         "output": "\${ .jobuid }"
       },
       "transition": "WaitForCompletion"
-    }`)
+    }`),
     );
     const mermaidState = new MermaidState(states);
     expect(mermaidState.sourceCode()).toBe(`SubmitJob : SubmitJob
@@ -205,7 +205,7 @@ SubmitJob --> WaitForCompletion`);
       "name": "WaitForCompletion",
       "duration": "PT5S",
       "transition": "GetJobStatus"
-    }`)
+    }`),
     );
     const mermaidState = new MermaidState(states);
     expect(mermaidState.sourceCode()).toBe(`WaitForCompletion : WaitForCompletion
@@ -238,7 +238,7 @@ WaitForCompletion --> GetJobStatus`);
           "data": "\${ .provisionedOrders }"
         }]
       }
-    }`)
+    }`),
     );
     const mermaidState = new MermaidState(states, true);
     expect(mermaidState.sourceCode()).toBe(`ProvisionOrdersState : ProvisionOrdersState
@@ -267,7 +267,7 @@ ProvisionOrdersState --> [*] : Produced event = [provisioningCompleteEvent]`);
               "stateExecTimeout": "PT15M"
             },
             "transition": "EvaluateDecision"
-        }`)
+        }`),
     );
     const mermaidState = new MermaidState(states, true);
     expect(mermaidState.sourceCode()).toBe(`CheckCredit : CheckCredit
@@ -284,7 +284,7 @@ CheckCredit --> EvaluateDecision`);
             "name": "CheckCredit",
             "type": "callback",
             "transition": {"nextState": "EvaluateDecision"}
-        }`)
+        }`),
     );
     const mermaidState = new MermaidState(states);
     expect(mermaidState.sourceCode()).toBe(`CheckCredit : CheckCredit
@@ -310,7 +310,7 @@ CheckCredit --> EvaluateDecision`);
       "defaultCondition": {
         "transition": "Start Application"
       }
-    }`)
+    }`),
     );
     const mermaidState = new MermaidState(databasedswitch);
     expect(mermaidState.sourceCode()).toBe(`Check_Application : Check Application
