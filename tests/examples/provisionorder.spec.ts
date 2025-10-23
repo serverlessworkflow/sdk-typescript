@@ -60,7 +60,7 @@ describe('provisionorder workflow example', () => {
                   .arguments({
                     order: '${ .order }',
                   })
-                  .build()
+                  .build(),
               )
               .build(),
           ])
@@ -126,7 +126,7 @@ describe('provisionorder workflow example', () => {
                   .arguments({
                     order: '${ .order }',
                   })
-                  .build()
+                  .build(),
               )
               .build(),
           ])
@@ -167,7 +167,7 @@ describe('provisionorder workflow example', () => {
   it('deserialized workflow should be immerable', function () {
     const model = Specification.Workflow.fromSource(
       fs.readFileSync('./tests/examples/provisionorder.json', 'utf8'),
-      true
+      true,
     );
 
     produce(model, (draft: any) => {

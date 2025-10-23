@@ -48,5 +48,5 @@ export const validators: Map<string, ValidateFunction> = new Map<string, Validat
     const validate = ajv.getSchema(schemaPath);
     if (!validate) throw `Unable to find schema '${schemaPath}' for type '${dataType}'`;
     return [dataType, validate as ValidateFunction];
-  })
+  }),
 );

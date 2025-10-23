@@ -25,7 +25,7 @@ import { validate } from '../utils';
  * @returns {Specification.IWorkflowExecTimeout} The validated underlying object
  */
 function workflowExecTimeoutBuildingFn(
-  data: Specification.IWorkflowExecTimeout
+  data: Specification.IWorkflowExecTimeout,
 ): () => Specification.IWorkflowExecTimeout {
   return () => {
     const model = new Specification.WorkflowExecTimeout(data);

@@ -27,7 +27,7 @@ export class MermaidState {
       onErrors?: Specification.Error[];
       usedForCompensation?: boolean;
     },
-    private isFirstState: boolean = false
+    private isFirstState: boolean = false,
   ) {}
 
   sourceCode() {
@@ -87,7 +87,7 @@ export class MermaidState {
         const transitionDataCondition = dataCondition as Specification.Transitiondatacondition;
 
         transitions.push(
-          ...this.naturalTransition(stateName, transitionDataCondition.transition, transitionDataCondition.condition)
+          ...this.naturalTransition(stateName, transitionDataCondition.transition, transitionDataCondition.condition),
         );
 
         const endDataCondition = dataCondition as Specification.Enddatacondition;
@@ -111,7 +111,7 @@ export class MermaidState {
         const transitionEventCondition = eventCondition as Specification.Transitioneventcondition;
 
         transitions.push(
-          ...this.naturalTransition(stateName, transitionEventCondition.transition, transitionEventCondition.eventRef)
+          ...this.naturalTransition(stateName, transitionEventCondition.transition, transitionEventCondition.eventRef),
         );
 
         const endEventCondition = eventCondition as Specification.Enddeventcondition;
@@ -157,7 +157,7 @@ export class MermaidState {
   private naturalTransition(
     source?: string,
     target?: string | Specification.Transition,
-    label: string | undefined = undefined
+    label: string | undefined = undefined,
   ) {
     const transitions: string[] = [];
 
@@ -179,7 +179,7 @@ export class MermaidState {
     if (this.state.onErrors) {
       this.state.onErrors.forEach((error) => {
         transitions.push(
-          ...this.naturalTransition(this.stateKeyDiagram(this.state.name), error.transition, error.errorRef)
+          ...this.naturalTransition(this.stateKeyDiagram(this.state.name), error.transition, error.errorRef),
         );
       });
     }
@@ -248,7 +248,7 @@ export class MermaidState {
     return this.stateDescription(
       this.stateKeyDiagram(this.state.name),
       'type',
-      type!.charAt(0).toUpperCase() + type!.slice(1) + ' State'
+      type!.charAt(0).toUpperCase() + type!.slice(1) + ' State',
     );
   }
 
@@ -259,7 +259,7 @@ export class MermaidState {
 
     if (parallelState.completionType) {
       descriptions.push(
-        this.stateDescription(this.stateKeyDiagram(this.state.name), 'Completion type', parallelState.completionType)
+        this.stateDescription(this.stateKeyDiagram(this.state.name), 'Completion type', parallelState.completionType),
       );
     }
 
@@ -268,8 +268,8 @@ export class MermaidState {
         this.stateDescription(
           this.stateKeyDiagram(this.state.name),
           'Num. of branches',
-          parallelState.branches?.length + ''
-        )
+          parallelState.branches?.length + '',
+        ),
       );
     }
 
@@ -299,7 +299,7 @@ export class MermaidState {
 
     if (state.actions) {
       descriptions.push(
-        this.stateDescription(this.stateKeyDiagram(this.state.name), 'Num. of actions', state.actions?.length + '')
+        this.stateDescription(this.stateKeyDiagram(this.state.name), 'Num. of actions', state.actions?.length + ''),
       );
     }
 
@@ -326,13 +326,13 @@ export class MermaidState {
 
     if (state.inputCollection) {
       descriptions.push(
-        this.stateDescription(this.stateKeyDiagram(this.state.name), 'Input collection', state.inputCollection)
+        this.stateDescription(this.stateKeyDiagram(this.state.name), 'Input collection', state.inputCollection),
       );
     }
 
     if (state.actions) {
       descriptions.push(
-        this.stateDescription(this.stateKeyDiagram(this.state.name), 'Num. of actions', state.actions?.length + '')
+        this.stateDescription(this.stateKeyDiagram(this.state.name), 'Num. of actions', state.actions?.length + ''),
       );
     }
 
@@ -357,7 +357,7 @@ export class MermaidState {
         functionRefDescription = functionRef as string;
       }
       descriptions.push(
-        this.stateDescription(this.stateKeyDiagram(this.state.name), 'Callback function', functionRefDescription)
+        this.stateDescription(this.stateKeyDiagram(this.state.name), 'Callback function', functionRefDescription),
       );
     }
 
@@ -379,7 +379,7 @@ export class MermaidState {
   private transitionDescription(
     source: string | undefined,
     target: string | undefined,
-    label: string | undefined = undefined
+    label: string | undefined = undefined,
   ) {
     return this.stateKeyDiagram(source) + ' --> ' + this.stateKeyDiagram(target) + (label ? ' : ' + label : '');
   }

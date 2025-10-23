@@ -43,7 +43,7 @@ ${Array.from(known$Refs)
     ([dataType, path]) =>
       `  ['${capitalizeFirstLetter(dataType)}', '${baseUrl}/${
         path.includes('.json') ? path : 'workflow.json' + path
-      }'],`
+      }'],`,
   )
   .join('\r\n')}
 ]`;
@@ -67,7 +67,7 @@ const generate = async (source: string, dest: string, additionnalSchemas: string
     const known$Refs = new Map<string, string>();
     await $refParser.resolve(source);
     const paths = [...$refParser.$refs.paths(), ...additionnalSchemas].filter(
-      (p, index, arr) => arr.indexOf(p) === index && p !== source
+      (p, index, arr) => arr.indexOf(p) === index && p !== source,
     );
     await mergeDefinitions($refParser, paths, known$Refs);
     mergeSchemas($refParser, known$Refs, $refParser.schema, '#/');
@@ -97,7 +97,7 @@ const generate = async (source: string, dest: string, additionnalSchemas: string
     await writeFile(dest, fileHeader + generatedTS);
     await writeFile(path.resolve(destDir, 'index.ts'), fileHeader + "export * as Specification from './workflow';");
     const validatorsDest = path.resolve(path.dirname(dest), '../validation/validators-paths.ts');
-    const $id = $refParser.schema.$id;
+    const $id = $refParser.schema!.$id;
     const baseUrl = path.dirname($id);
     await createValidatorsPaths(validatorsDest, known$Refs, baseUrl);
     return Promise.resolve();

@@ -25,7 +25,7 @@ import { validate } from '../utils';
  * @returns {Specification.ITransitioneventcondition} The validated underlying object
  */
 function transitioneventconditionBuildingFn(
-  data: Specification.ITransitioneventcondition
+  data: Specification.ITransitioneventcondition,
 ): () => Specification.ITransitioneventcondition {
   return () => {
     const model = new Specification.Transitioneventcondition(data);

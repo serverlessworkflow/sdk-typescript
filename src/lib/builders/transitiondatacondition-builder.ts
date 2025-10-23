@@ -25,7 +25,7 @@ import { validate } from '../utils';
  * @returns {Specification.ITransitiondatacondition} The validated underlying object
  */
 function transitiondataconditionBuildingFn(
-  data: Specification.ITransitiondatacondition
+  data: Specification.ITransitiondatacondition,
 ): () => Specification.ITransitiondatacondition {
   return () => {
     const model = new Specification.Transitiondatacondition(data);

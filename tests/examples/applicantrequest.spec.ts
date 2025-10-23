@@ -71,7 +71,7 @@ describe('applicationrequest workflow example', () => {
                 functionrefBuilder()
                   .refName('sendRejectionEmailFunction')
                   .arguments({ applicant: '${ .applicant }' })
-                  .build()
+                  .build(),
               )
               .build(),
           ])
@@ -125,7 +125,7 @@ describe('applicationrequest workflow example', () => {
                 functionrefBuilder()
                   .refName('sendRejectionEmailFunction')
                   .arguments({ applicant: '${ .applicant }' })
-                  .build()
+                  .build(),
               )
               .build(),
           ])
@@ -143,7 +143,7 @@ describe('applicationrequest workflow example', () => {
   it('deserialized workflow should be immerable', function () {
     const model = Specification.Workflow.fromSource(
       fs.readFileSync('./tests/examples/applicantrequest.json', 'utf8'),
-      true
+      true,
     );
 
     produce(model, (draft: any) => {

@@ -25,7 +25,7 @@ import { validate } from '../utils';
  * @returns {Specification.IDatabasedswitchstate} The validated underlying object
  */
 function databasedswitchstateBuildingFn(
-  data: Specification.IDatabasedswitchstate
+  data: Specification.IDatabasedswitchstate,
 ): () => Specification.IDatabasedswitchstate {
   return () => {
     const model = new Specification.Databasedswitchstate(data);

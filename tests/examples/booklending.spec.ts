@@ -56,7 +56,7 @@ describe('booklending workflow example', () => {
                   .arguments({
                     bookid: '${ .book.id }',
                   })
-                  .build()
+                  .build(),
               )
               .build(),
           ])
@@ -89,7 +89,7 @@ describe('booklending workflow example', () => {
                     bookid: '${ .book.id }',
                     message: 'Book ${ .book.title } is already on loan',
                   })
-                  .build()
+                  .build(),
               )
               .build(),
           ])
@@ -122,7 +122,7 @@ describe('booklending workflow example', () => {
                     bookid: '${ .book.id }',
                     lender: '${ .lender }',
                   })
-                  .build()
+                  .build(),
               )
               .build(),
           ])
@@ -139,7 +139,7 @@ describe('booklending workflow example', () => {
                   .arguments({
                     bookid: '${ .book.id }',
                   })
-                  .build()
+                  .build(),
               )
               .build(),
             actionBuilder()
@@ -150,7 +150,7 @@ describe('booklending workflow example', () => {
                     bookid: '${ .book.id }',
                     lender: '${ .lender }',
                   })
-                  .build()
+                  .build(),
               )
               .build(),
           ])
@@ -187,7 +187,7 @@ describe('booklending workflow example', () => {
                   .arguments({
                     bookid: '${ .book.id }',
                   })
-                  .build()
+                  .build(),
               )
               .build(),
           ])
@@ -220,7 +220,7 @@ describe('booklending workflow example', () => {
                     bookid: '${ .book.id }',
                     message: 'Book ${ .book.title } is already on loan',
                   })
-                  .build()
+                  .build(),
               )
               .build(),
           ])
@@ -253,7 +253,7 @@ describe('booklending workflow example', () => {
                     bookid: '${ .book.id }',
                     lender: '${ .lender }',
                   })
-                  .build()
+                  .build(),
               )
               .build(),
           ])
@@ -270,7 +270,7 @@ describe('booklending workflow example', () => {
                   .arguments({
                     bookid: '${ .book.id }',
                   })
-                  .build()
+                  .build(),
               )
               .build(),
             actionBuilder()
@@ -281,7 +281,7 @@ describe('booklending workflow example', () => {
                     bookid: '${ .book.id }',
                     lender: '${ .lender }',
                   })
-                  .build()
+                  .build(),
               )
               .build(),
           ])

@@ -57,7 +57,7 @@ describe('carauctionbids workflow example', () => {
                       .arguments({
                         bid: '${ .bid }',
                       })
-                      .build()
+                      .build(),
                   )
                   .build(),
               ])
@@ -101,7 +101,7 @@ describe('carauctionbids workflow example', () => {
                       .arguments({
                         bid: '${ .bid }',
                       })
-                      .build()
+                      .build(),
                   )
                   .build(),
               ])
@@ -121,7 +121,7 @@ describe('carauctionbids workflow example', () => {
   it('deserialized workflow should be immerable', function () {
     const model = Specification.Workflow.fromSource(
       fs.readFileSync('./tests/examples/carauctionbids.json', 'utf8'),
-      true
+      true,
     );
 
     produce(model, (draft: any) => {

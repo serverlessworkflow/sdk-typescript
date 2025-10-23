@@ -32,7 +32,7 @@ describe('operationstateBuilder ', () => {
         type: 'operation',
         actions: [{ subFlowRef: 'startApplicationWorkflowId' }],
         end: true,
-      })
+      }),
     );
   });
 });
