@@ -2,21 +2,23 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Serverless Workflow ESM Example</title>
+    <title>Serveless Workflow</title>
     <base href="/" />
     <meta content="width=device-width, initial-scale=1" name="viewport" />
   </head>
 
   <body>
     <pre id="output"></pre>
-    <script type="module">
-      import { Classes, validate } from '../../dist/esm/index.js';
-
+    <script src="../../../dist/umd/index.umd.js"></script>
+    <script type="text/javascript">
       (() => {
-        const workflowDefinition = {
+        const {
+          Classes: { Workflow },
+        } = serverWorkflowSdk;
+        const workflow = new Workflow({
           document: {
             dsl: '1.0.0',
-            name: 'using-plain-object',
+            name: 'using-class',
             version: '1.0.0',
             namespace: 'default',
           },
@@ -29,11 +31,11 @@
               },
             },
           ],
-        };
+        });
         try {
-          validate('Workflow', workflowDefinition);
+          workflow.validate();
           document.getElementById('output').innerHTML =
-            `--- YAML ---\n${Classes.Workflow.serialize(workflowDefinition)}\n\n--- JSON ---\n${Classes.Workflow.serialize(workflowDefinition, 'json')}`;
+            `--- YAML ---\n${workflow.serialize()}\n\n--- JSON ---\n${workflow.serialize('json')}`;
         } catch (ex) {
           console.error('Invalid workflow', ex);
         }

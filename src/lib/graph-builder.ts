@@ -630,20 +630,23 @@ function buildWaitTaskNode(task: WaitTask, context: TaskContext): GraphNode {
  * @param label The edge label, if any
  */
 function buildEdge(graph: Graph, knownEdges: GraphEdge[], source: GraphNode, target: GraphNode, label: string = '') {
-  let edge = knownEdges.find((e) => e.sourceId === source.id && e.targetId === target.id);
+  const edge = knownEdges.find((e) => e.sourceId === source.id && e.targetId === target.id);
   if (edge) {
     if (label && !edge.label?.includes(label)) {
       edge.label = edge.label + (edge.label ? ' / ' : '') + label;
+      edge.id = `${source.id}-${target.id}-${edge.label}`;
     }
+    return edge;
   }
-  edge = {
+  const newEdge: GraphEdge = {
     label,
     id: `${source.id}-${target.id}${label ? `-${label}` : ''}`,
     sourceId: source.id,
     targetId: target.id,
   };
-  graph.edges.push(edge);
-  knownEdges.push(edge);
+  graph.edges.push(newEdge);
+  knownEdges.push(newEdge);
+  return newEdge;
 }
 
 /**

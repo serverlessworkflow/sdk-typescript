@@ -26,38 +26,46 @@
 This SDK provides a TypeScript API for working with the [Serverless Workflow Specification](https://github.com/serverlessworkflow/specification).
 
 With this SDK, you can:
-* Parse workflow definitions in JSON and YAML formats
-* Programmatically build workflow definitions
-* Validate workflow definitions
+
+- Parse workflow definitions in JSON and YAML formats
+- Programmatically build workflow definitions
+- Validate workflow definitions
+- Consume the SDK from Node.js runtimes and modern browsers, including a standalone browser bundle
 
 ## Status
+
 The npm [`@serverlessworkflow/sdk`](https://www.npmjs.com/package/@serverlessworkflow/sdk) package versioning aligns with the versioning of the [specification](https://github.com/serverlessworkflow/specification):
 
-| Latest Releases | Conformance to Spec Version |
-| :---: | :---: |
-| [v1.0.\*](https://github.com/serverlessworkflow/sdk-typescript/releases/) | [v1.0.0](https://github.com/serverlessworkflow/specification) |
-| [v0.8.4](https://github.com/serverlessworkflow/sdk-typescript/releases/) | [v0.8](https://github.com/serverlessworkflow/specification/tree/0.8.x) |
+|                              Latest Releases                              |                      Conformance to Spec Version                       |
+| :-----------------------------------------------------------------------: | :--------------------------------------------------------------------: |
+| [v1.0.\*](https://github.com/serverlessworkflow/sdk-typescript/releases/) |     [v1.0.0](https://github.com/serverlessworkflow/specification)      |
+| [v0.8.4](https://github.com/serverlessworkflow/sdk-typescript/releases/)  | [v0.8](https://github.com/serverlessworkflow/specification/tree/0.8.x) |
+
+The repository is currently developed and validated on Node.js `22+`.
 
 > [!WARNING]
 > Previous versions of the SDK were published with a typo in the scope:
 > @severlessworkflow/sdk-typescript instead of
 > @se**r**verlessworkflow/sdk-typescript
 
-| Latest Releases | Conformance to Spec Version |
-| :---: | :---: |
+|                             Latest Releases                              |                      Conformance to Spec Version                       |
+| :----------------------------------------------------------------------: | :--------------------------------------------------------------------: |
 | [v1.0.0](https://github.com/serverlessworkflow/sdk-typescript/releases/) | [v0.6](https://github.com/serverlessworkflow/specification/tree/0.6.x) |
 | [v2.0.0](https://github.com/serverlessworkflow/sdk-typescript/releases/) | [v0.7](https://github.com/serverlessworkflow/specification/tree/0.7.x) |
 | [v3.0.0](https://github.com/serverlessworkflow/sdk-typescript/releases/) | [v0.8](https://github.com/serverlessworkflow/specification/tree/0.8.x) |
 
 ## SDK Structure
+
 This SDK includes the following key components:
 
 ### Types and Interfaces
+
 The SDK provides various TypeScript types and interfaces that ensure type safety and enhance the development experience by catching type errors during compile time.
 
 To avoid confusion with classes, these types and interfaces are exported under the **`Specification`** object, e.g., `Specification.Workflow`.
 
 ### Classes
+
 The SDK includes classes that correspond to the aforementioned types and interfaces. These classes offer:
 
 - **Instance Checking**: Easily verify if an object is an instance of a specific class.
@@ -67,6 +75,7 @@ The SDK includes classes that correspond to the aforementioned types and interfa
 To avoid confusion with type definitions, these classes are exported under the **`Classes`** object, e.g., `Classes.Workflow`.
 
 ### Fluent Builders
+
 The fluent builders wrap the core classes and provide a fluent API for constructing objects. This API allows you to chain method calls and configure objects in a more readable and convenient manner.
 
 The fluent builders are directly exported as `*<desired-type>*Builder`, e.g., `workflowBuilder`.
@@ -74,25 +83,27 @@ The fluent builders are directly exported as `*<desired-type>*Builder`, e.g., `w
 By default, built objects are self-validated and self-normalized. `BuildOptions` can be passed to the `build()` method to disable validation or normalization.
 
 ### Validation Function
+
 The SDK includes a validation function to check if objects conform to the expected schema. This function ensures that your workflow objects are correctly structured and meet the required specifications.
 
 The `validate` function is directly exported and can be used as `validate('Workflow', workflowObject)`.
 
 ### Other Tools
+
 The SDK also ships tools to build directed graph and MermaidJS flowcharts from a workflow.
 
 ## Getting Started
 
 ### Installation
-> [!NOTE]
-> Version v1.0.0.\* has not been released yet.
 
 ```sh
 npm install @serverlessworkflow/sdk
 ```
 
 ### Usage
+
 #### Create a Workflow Definition from YAML or JSON
+
 You can deserialize a YAML or JSON representation of the workflow using the static method `Classes.Workflow.deserialize`:
 
 ```typescript
@@ -115,6 +126,7 @@ const workflow = Classes.Workflow.deserialize(text);
 ```
 
 #### Create a Workflow Definition by Casting an Object
+
 You can type-cast an object to match the structure of a workflow definition:
 
 ```typescript
@@ -144,13 +156,13 @@ try {
   validate('Workflow', workflow);
   // Serialize it
   const definitionTxt = Classes.Workflow.serialize(workflow);
-}
-catch (ex) {
+} catch (ex) {
   // Invalid workflow definition
 }
 ```
 
 #### Create a Workflow Definition Using a Class Constructor
+
 You can create a workflow definition by calling a constructor:
 
 ```typescript
@@ -164,7 +176,8 @@ const workflow = new Classes.Workflow({
     version: '1.0.0',
     namespace: 'default',
   },
-  do: [/*
+  do: [
+    /*
     {
       step1: {
         set: {
@@ -172,14 +185,15 @@ const workflow = new Classes.Workflow({
         },
       },
     },
-  */],
+  */
+  ],
 });
 workflow.do.push({
   step1: new Classes.SetTask({
     set: {
       variable: 'my first workflow',
-    }
-  })
+    },
+  }),
 });
 
 // Validate it
@@ -187,37 +201,30 @@ try {
   workflow.validate();
   // Serialize it
   const definitionTxt = workflow.serialize();
-}
-catch (ex) {
+} catch (ex) {
   // Invalid workflow definition
 }
 ```
 
 #### Create a Workflow Definition Using the Builder API
+
 You can use the fluent API to build a validated and normalized workflow definition:
 
 ```typescript
 import { documentBuilder, setTaskBuilder, taskListBuilder, workflowBuilder } from '@serverlessworkflow/sdk';
 
 const workflow = workflowBuilder(/*workflowObject*/)
-  .document(
-    documentBuilder()
-    .dsl('1.0.0')
-    .name('test')
-    .version('1.0.0')
-    .namespace('default')
-    .build()
-  )
+  .document(documentBuilder().dsl('1.0.0').name('test').version('1.0.0').namespace('default').build())
   .do(
     taskListBuilder()
       .push({
         step1: setTaskBuilder()
           .set({
-            variable: 'my first workflow'
+            variable: 'my first workflow',
           })
-          .build()
+          .build(),
       })
-      .build()
+      .build(),
   )
   .build(/*{
     validate: false,
@@ -226,6 +233,7 @@ const workflow = workflowBuilder(/*workflowObject*/)
 ```
 
 #### Serialize a Workflow Definition to YAML or JSON
+
 You can serialize a workflow definition either by using its `serialize` method if it's an instance or the static method with the same name:
 
 ```typescript
@@ -234,15 +242,16 @@ import { Classes } from '@serverlessworkflow/sdk';
 // const workflow = <Your preferred method>;
 if (workflow instanceof Classes.Workflow) {
   const yaml = workflow.serialize(/*'yaml' | 'json' */);
-}
-else {
+} else {
   const json = Classes.Workflow.serialize(workflow, 'json');
 }
 ```
+
 > [!NOTE]
 > The default serialization format is YAML.
 
 #### Validate Workflow Definitions
+
 Validation can be achieved in two ways: via the `validate` function or the instance `validate` method:
 
 ```typescript
@@ -263,7 +272,9 @@ catch (ex) {
 ```
 
 #### Generate a directed graph
+
 A [directed graph](https://en.wikipedia.org/wiki/Directed_graph) of a workflow can be generated using the `buildGraph` function, or alternatives:
+
 - Workflow instance `.toGraph();`
 - Static `Classes.Workflow.toGraph(workflow)`
 
@@ -303,7 +314,9 @@ const graph = buildGraph(workflow);
 ```
 
 #### Generate a MermaidJS flowchart
+
 Generating a [MermaidJS](https://mermaid.js.org/) flowchart can be achieved in two ways: using the `convertToMermaidCode`, the legacy `MermaidDiagram` class, or alternatives:
+
 - Workflow instance `.toMermaidCode();`
 - Static `Classes.Workflow.toMermaidCode(workflow)`
 
@@ -327,7 +340,7 @@ const workflow = {
     },
   ],
 };
-const mermaidCode = convertToMermaidCode(workflow) /* or  */;
+const mermaidCode = convertToMermaidCode(workflow); /* or  */
 // const mermaidCode = new MermaidDiagram(workflow).sourceCode();
 // const workflow = new Classes.Workflow({...}); const mermaidCode = workflow.toMermaidCode();
 // const mermaidCode = Classes.Workflow.toMermaidCode(workflow);
@@ -356,22 +369,33 @@ flowchart TD
 classDef hidden width: 1px, height: 0px, opacity: 0;
 ```
 
-You can refer to the mermaid browser example for a live demo.
+You can refer to the Mermaid browser example for a live demo. The top-level [`examples/browser`](./examples/browser) samples use native ESM imports, while the legacy standalone bundle samples are preserved under [`examples/browser/umd`](./examples/browser/umd).
 
 ### Building Locally
 
-To build the project and run tests locally, use the following commands:
+To build the project and run the full validation pipeline locally, use the following commands:
 
 ```sh
 git clone https://github.com/serverlessworkflow/sdk-typescript.git
 cd sdk-typescript
-npm install && npm run build && npm run test
+npm install
+npm run lint
+npm run test
+npm run validate:package
 ```
 
-You can also run the browser examples by executing:
+You can also build the standalone browser bundle and run the browser examples by executing:
 
 ```sh
 npm run serve
 ```
 
-If you're interested in contributing, reading the [Tooling Architecture](/tools/README.md) is a good place to start.
+This serves the ESM-first examples in [`examples/browser`](./examples/browser). If you want to compare them with the legacy standalone bundle usage, open the matching files under [`examples/browser/umd`](./examples/browser/umd).
+
+Generated files live under `src/lib/generated/` and should be refreshed with:
+
+```sh
+npm run codegen
+```
+
+If you're interested in contributing, the [contributing guide](/CONTRIBUTING.md) and [tooling architecture](/tools/README.md) are the best places to start.

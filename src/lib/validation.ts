@@ -34,9 +34,9 @@ addFormats(ajv);
  */
 const validators: Map<string, ValidateFunction> = new Map<string, ValidateFunction>(
   Object.entries(validationPointers).map(([typeName, jsonPointer]) => {
-    if (!jsonPointer) throw `No JSON pointer provided for type '${typeName}'`;
+    if (!jsonPointer) throw new Error(`No JSON pointer provided for type '${typeName}'`);
     const validate = ajv.getSchema(jsonPointer);
-    if (!validate) throw `Unable to find schema '${jsonPointer}' for type '${typeName}'`;
+    if (!validate) throw new Error(`Unable to find schema '${jsonPointer}' for type '${typeName}'`);
     return [typeName, validate as ValidateFunction];
   }),
 );
@@ -52,7 +52,7 @@ export const validate = <T>(typeName: string, data: T, workflow?: Partial<Specif
   getLifecycleHooks(typeName)?.preValidation?.(data, workflow);
   const validateFn: ValidateFunction | undefined = validators.get(typeName);
   if (!validateFn) {
-    throw Error(`Unable to find a validation function for '${typeName}'`);
+    throw new Error(`Unable to find a validation function for '${typeName}'`);
   }
   // prevents possible data mutation and invalid "additional properties" from the classes like constructor/validate/normalize
   if (!validateFn(deepCopy(data))) {

@@ -1,6 +1,7 @@
 # Dependency directory
 node_modules
 bower_components
+.npm-cache
 
 # Editors
 .idea
@@ -14,6 +15,8 @@ Thumbs.db
 # Ignore built ts files
 dist/**/*
 out-tsc
+coverage
+*.tgz
 
 # ignore yarn.lock
 yarn.lock

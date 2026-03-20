@@ -97,7 +97,7 @@ export function builder<TSpec, TBuilt = TSpec>(
         };
       }
       return (value: unknown): Builder<TSpec, TBuilt> => {
-        (model as any)[prop.toString()] = value;
+        (model as Record<string, unknown>)[prop.toString()] = value;
         return proxy;
       };
     },

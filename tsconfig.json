@@ -3,10 +3,8 @@
   "compilerOptions": {
     "declarationDir": "./dist",
     "declarationMap": true,
-    "target": "ES5",
-    "module": "ES2015"
+    "target": "ES2022",
+    "module": "ESNext"
   },
-  "include": [
-    "./src/**/*.ts",
-  ]
+  "include": ["./src/**/*.ts"]
 }

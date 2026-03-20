@@ -50,6 +50,8 @@ export type LifecycleHooks<T> = {
 /**
  * A mapping of type names and their lifecycle hooks
  */
+// The generated classes call these hooks without generic arguments, so this registry must stay untyped at runtime.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const registeredHooks: Map<string, LifecycleHooks<any>> = new Map<string, LifecycleHooks<any>>();
 
 /**
@@ -57,6 +59,7 @@ const registeredHooks: Map<string, LifecycleHooks<any>> = new Map<string, Lifecy
  * @param typeName The name of the type to register the hooks for
  * @param hooks The hooks to register
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const registerHooks = (typeName: string, hooks: LifecycleHooks<any>): void => {
   registeredHooks.set(typeName, hooks);
 };
@@ -66,6 +69,7 @@ export const registerHooks = (typeName: string, hooks: LifecycleHooks<any>): voi
  * @param typeName The type to get the lifecycle hook for
  * @returns The lifecycle hook, if any
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getLifecycleHooks = (typeName: string): LifecycleHooks<any> | undefined => {
   return registeredHooks.get(typeName);
 };

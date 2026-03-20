@@ -2,17 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Serverless Workflow ESM Example</title>
+    <title>Serveless Workflow</title>
     <base href="/" />
     <meta content="width=device-width, initial-scale=1" name="viewport" />
   </head>
 
   <body>
     <pre id="output"></pre>
-    <script type="module">
-      import { documentBuilder, setTaskBuilder, taskListBuilder, workflowBuilder } from '../../dist/esm/index.js';
-
+    <script src="../../../dist/umd/index.umd.js"></script>
+    <script type="text/javascript">
       (() => {
+        const { workflowBuilder, documentBuilder, taskListBuilder, setTaskBuilder } = serverWorkflowSdk;
         try {
           const workflow = workflowBuilder()
             .document(
@@ -21,11 +21,7 @@
             .do(
               taskListBuilder()
                 .push({
-                  step1: setTaskBuilder()
-                    .set({
-                      variable: 'my first workflow',
-                    })
-                    .build(),
+                  step1: setTaskBuilder().set({ foo: 'bar' }).build(),
                 })
                 .build(),
             )

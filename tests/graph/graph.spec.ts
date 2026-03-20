@@ -143,4 +143,34 @@ do:
     expect(graph.nodes.length).toBe(2); // start --> end
     expect(graph.edges.length).toBe(1);
   });
+
+  it('should merge duplicate switch transitions that resolve to the same target', () => {
+    const workflow = Classes.Workflow.deserialize(`
+document:
+  dsl: '1.0.0'
+  namespace: test
+  name: switch
+  version: '0.1.0'
+do:
+  - decide:
+      switch:
+        - first:
+            when: \${ input.data == 1 }
+            then: done
+        - second:
+            when: \${ input.data == 2 }
+            then: done
+        - otherwise:
+            then: done
+  - done:
+      set:
+        foo: bar`);
+    const graph = buildGraph(workflow);
+    const decideToDoneEdges = graph.edges.filter(
+      (edge) => edge.sourceId === '/do/0/decide' && edge.targetId === '/do/1/done',
+    );
+
+    expect(decideToDoneEdges).toHaveLength(1);
+    expect(decideToDoneEdges[0]?.label).toBe('first / second / otherwise');
+  });
 });

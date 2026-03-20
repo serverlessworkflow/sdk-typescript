@@ -1,4 +1,6 @@
 node_modules
 dist
 out-tsc
+coverage
+*.tgz
 src/lib/validation/validators-paths.ts
