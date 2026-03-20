@@ -1,3 +1,5 @@
 {
-  "*.{js,json,md,mjs,ts,yaml,yml}": "prettier --write"
+  "*.{js,mjs,ts}": ["oxlint -c ./.oxlintrc.json", "oxfmt --config ./.oxfmtrc.json --write"],
+  "vitest.config.mjs": "oxfmt --config ./.oxfmtrc.json --write",
+  "tsdown.config.mjs": "oxfmt --config ./.oxfmtrc.json --write"
 }

@@ -19,10 +19,10 @@ npm run build
 npm run validate:package
 ```
 
-- `npm run lint` checks the ESLint and Prettier baselines.
-- `npm run test` runs the manual-code typecheck, the test TypeScript compile, and Jest.
+- `npm run lint` checks the Oxlint and Oxfmt baselines.
+- `npm run test` runs the manual-code typecheck and Vitest.
 - `npm run build` creates the distributable package under `dist/`.
-- `npm run validate:package` builds the package, validates the packaged manifest, and smoke-tests the packed tarball.
+- `npm run validate:package` builds the package, runs package-shape validation, and smoke-tests the packed tarball.
 
 ### Generated code workflow
 
@@ -44,7 +44,7 @@ The tooling architecture and generator rationale are documented in [tools/README
 
 ### Browser examples
 
-The package still ships a standalone browser bundle for direct script usage. To build the bundle and open the browser examples locally:
+The package ships browser examples for both the native ESM build and the standalone UMD bundle. To build the package and open the browser examples locally:
 
 ```sh
 npm run serve

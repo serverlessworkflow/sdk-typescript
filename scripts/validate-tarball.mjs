@@ -1,6 +1,7 @@
 import { cpSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import vm from 'node:vm';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { gunzipSync as unzip } from 'node:zlib';
 import ts from 'typescript';
@@ -15,11 +16,12 @@ const consumerNodeModulesDir = path.resolve(consumerDir, 'node_modules');
 const consumerPackageDir = path.resolve(consumerNodeModulesDir, '@serverlessworkflow', 'sdk');
 
 const readTarString = (buffer, start, length) =>
-  buffer
-    .subarray(start, start + length)
-    .toString('utf8')
-    .replace(/\0.*$/, '')
-    .trim();
+  trimNulls(buffer.subarray(start, start + length).toString('utf8')).trim();
+
+const trimNulls = (value) => {
+  const nullIndex = value.indexOf('\0');
+  return nullIndex === -1 ? value : value.slice(0, nullIndex);
+};
 
 const parseTarSize = (buffer) => {
   const sizeValue = readTarString(buffer, 124, 12);
@@ -77,7 +79,7 @@ const extractTarball = (archivePath, destinationDir) => {
       const paxHeaders = parsePaxHeader(body);
       nextPathOverride = paxHeaders.path;
     } else if (typeFlag === 'L') {
-      nextPathOverride = body.toString('utf8').replace(/\0.*$/, '');
+      nextPathOverride = trimNulls(body.toString('utf8'));
     } else {
       const entryPath = nextPathOverride ?? defaultPath;
       nextPathOverride = undefined;
@@ -129,6 +131,37 @@ const verifyTypeSmoke = (tsconfigPath) => {
 
   if (diagnostics.length > 0) {
     throw new Error(formatDiagnostics(diagnostics));
+  }
+};
+
+const verifyBrowserGlobalSmoke = (packageDir) => {
+  const packageJson = JSON.parse(readFileSync(path.resolve(packageDir, 'package.json'), 'utf8'));
+  if (typeof packageJson.browser !== 'string' || packageJson.browser.length === 0) {
+    throw new Error('Expected the packed package.json to expose a browser bundle.');
+  }
+
+  const browserEntryPath = path.resolve(packageDir, packageJson.browser);
+  const browserBundle = readFileSync(browserEntryPath, 'utf8');
+  const browserGlobals = {
+    console,
+    setTimeout,
+    clearTimeout,
+  };
+
+  browserGlobals.globalThis = browserGlobals;
+  browserGlobals.self = browserGlobals;
+  browserGlobals.window = browserGlobals;
+
+  vm.runInNewContext(browserBundle, browserGlobals, {
+    filename: browserEntryPath,
+  });
+
+  const sdk = browserGlobals.serverWorkflowSdk;
+  if (typeof sdk?.Classes?.Workflow !== 'function') {
+    throw new Error('Expected Classes.Workflow to be available from the browser UMD bundle.');
+  }
+  if (typeof sdk?.workflowBuilder !== 'function') {
+    throw new Error('Expected workflowBuilder to be available from the browser UMD bundle.');
   }
 };
 
@@ -184,34 +217,6 @@ if (typeof workflowBuilder !== 'function') {
   );
 
   writeFileSync(
-    path.resolve(consumerDir, 'smoke-browser.cjs'),
-    `const fs = require('node:fs');
-const path = require('node:path');
-const vm = require('node:vm');
-
-const context = {
-  console,
-  window: {},
-  self: {},
-  globalThis: {},
-};
-
-context.window = context;
-context.self = context;
-context.globalThis = context;
-
-const bundlePath = path.resolve(__dirname, 'node_modules', '@serverlessworkflow', 'sdk', 'umd', 'index.umd.min.js');
-const source = fs.readFileSync(bundlePath, 'utf8');
-
-vm.runInNewContext(source, context, { filename: bundlePath });
-
-if (typeof context.serverWorkflowSdk?.Classes?.Workflow !== 'function') {
-  throw new Error('Expected the browser bundle to expose serverWorkflowSdk.Classes.Workflow.');
-}
-`,
-  );
-
-  writeFileSync(
     path.resolve(consumerDir, 'smoke-types.ts'),
     `import { Classes, type Specification, workflowBuilder } from '@serverlessworkflow/sdk';
 
@@ -251,9 +256,9 @@ instance.validate();
 
   const consumerRequire = createRequire(path.resolve(consumerDir, 'package.json'));
   consumerRequire(path.resolve(consumerDir, 'smoke-test.cjs'));
-  consumerRequire(path.resolve(consumerDir, 'smoke-browser.cjs'));
   await import(pathToFileURL(path.resolve(consumerDir, 'smoke-test.mjs')).href);
   verifyTypeSmoke(path.resolve(consumerDir, 'tsconfig.json'));
+  verifyBrowserGlobalSmoke(consumerPackageDir);
 } finally {
   rmSync(tarballPath, { force: true });
   rmSync(tempDir, { force: true, recursive: true });

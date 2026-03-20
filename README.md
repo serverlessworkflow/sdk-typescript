@@ -30,7 +30,7 @@ With this SDK, you can:
 - Parse workflow definitions in JSON and YAML formats
 - Programmatically build workflow definitions
 - Validate workflow definitions
-- Consume the SDK from Node.js runtimes and modern browsers, including a standalone browser bundle
+- Consume the SDK from Node.js runtimes and modern browsers through CommonJS, native ESM, and a standalone UMD bundle
 
 ## Status
 
@@ -369,7 +369,7 @@ flowchart TD
 classDef hidden width: 1px, height: 0px, opacity: 0;
 ```
 
-You can refer to the Mermaid browser example for a live demo. The top-level [`examples/browser`](./examples/browser) samples use native ESM imports, while the legacy standalone bundle samples are preserved under [`examples/browser/umd`](./examples/browser/umd).
+You can refer to the Mermaid browser examples for a live demo. The browser samples under [`examples/browser`](./examples/browser) include native ESM examples and legacy UMD-global examples under [`examples/browser/umd`](./examples/browser/umd).
 
 ### Building Locally
 
@@ -384,13 +384,13 @@ npm run test
 npm run validate:package
 ```
 
-You can also build the standalone browser bundle and run the browser examples by executing:
+You can also build the package and run the browser examples by executing:
 
 ```sh
 npm run serve
 ```
 
-This serves the ESM-first examples in [`examples/browser`](./examples/browser). If you want to compare them with the legacy standalone bundle usage, open the matching files under [`examples/browser/umd`](./examples/browser/umd).
+This serves the browser examples in [`examples/browser`](./examples/browser), including both native ESM samples and UMD-global samples in [`examples/browser/umd`](./examples/browser/umd).
 
 Generated files live under `src/lib/generated/` and should be refreshed with:
 

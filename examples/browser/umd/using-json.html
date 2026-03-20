@@ -2,19 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Serveless Workflow</title>
+    <title>Serverless Workflow UMD Example</title>
     <base href="/" />
     <meta content="width=device-width, initial-scale=1" name="viewport" />
   </head>
 
   <body>
     <pre id="output"></pre>
-    <script src="../../../dist/umd/index.umd.js"></script>
-    <script type="text/javascript">
+    <script src="../../../dist/index.umd.js"></script>
+    <script>
       (() => {
-        const {
-          Classes: { Workflow },
-        } = serverWorkflowSdk;
+        const { Classes } = globalThis.serverWorkflowSdk;
+        const { Workflow } = Classes;
         const myJsonWorkflow = `{
         "document": {
           "dsl": "1.0.0",

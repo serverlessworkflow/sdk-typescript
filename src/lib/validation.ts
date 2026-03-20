@@ -15,7 +15,7 @@
  *
  */
 
-import Ajv, { ValidateFunction } from 'ajv/dist/2020';
+import Ajv, { ValidateFunction } from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 import workflowSchema from './generated/schema/workflow.json';
 import { validationPointers } from './generated/validation';

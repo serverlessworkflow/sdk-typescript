@@ -2,17 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Serveless Workflow</title>
+    <title>Serverless Workflow UMD Example</title>
     <base href="/" />
     <meta content="width=device-width, initial-scale=1" name="viewport" />
   </head>
 
   <body>
     <pre id="output"></pre>
-    <script src="../../../dist/umd/index.umd.js"></script>
-    <script type="text/javascript">
+    <script src="../../../dist/index.umd.js"></script>
+    <script>
       (() => {
-        const { Classes, Specification, validate } = serverWorkflowSdk;
+        const { Classes, validate } = globalThis.serverWorkflowSdk;
         const workflowDefinition = {
           document: {
             dsl: '1.0.0',
@@ -29,7 +29,7 @@
               },
             },
           ],
-        }; /* as Specification.Workflow // <-- If you're using TypeScript*/
+        };
         try {
           validate('Workflow', workflowDefinition);
           document.getElementById('output').innerHTML =

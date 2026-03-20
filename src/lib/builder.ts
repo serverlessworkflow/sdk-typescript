@@ -63,7 +63,7 @@ export type ArrayBuilder<TSpec, TBuilt> = {
  * @returns
  */
 function defaultBuildingFn<TSpec, TBuilt = TSpec>(model: Partial<TSpec>, options: BuildOptions): TBuilt {
-  // prevents @typescript-eslint/no-unused-vars ...
+  // Keep defaults explicit so callers can omit both options.
   if (options.validate == null) {
     options.validate = true;
   }
