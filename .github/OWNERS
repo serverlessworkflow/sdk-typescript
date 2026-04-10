@@ -1,12 +1,8 @@
 reviewers:
-  - tsurdilo
-  - manuelstein
   - ricardozanini
-  - antmendoza
+  - JBBianchi
 approvers:
-  - tsurdilo
-  - manuelstein
   - ricardozanini
-  - antmendoza
+  - JBBianchi
 labels:
   - sig/contributor-experience
