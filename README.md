@@ -313,6 +313,15 @@ const graph = buildGraph(workflow);
 }*/
 ```
 
+If you need a flattened graph, with all nested subgraph nodes and edges hoisted into a single collection, use `buildFlatGraph` instead. Pass `true` as the second argument to also strip the entry/exit port nodes:
+
+```typescript
+import { buildFlatGraph } from '@serverlessworkflow/sdk';
+
+const flatGraph = buildFlatGraph(workflow);
+// const flatGraphWithoutPorts = buildFlatGraph(workflow, true);
+```
+
 #### Generate a MermaidJS flowchart
 
 Generating a [MermaidJS](https://mermaid.js.org/) flowchart can be achieved in two ways: using the `convertToMermaidCode`, the legacy `MermaidDiagram` class, or alternatives:

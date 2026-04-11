@@ -274,8 +274,8 @@ function getNextTask(
 function getEndNode(graph: Graph): GraphNode {
   let rootGraph = graph;
   while (rootGraph.id !== rootId) {
-    if (!graph.parent) throw new Error(`Unable to reach root graph from graph id '${graph.id}'`);
-    rootGraph = graph.parent;
+    if (!rootGraph.parent) throw new Error(`Unable to reach root graph from graph id '${graph.id}'`);
+    rootGraph = rootGraph.parent;
   }
   if (!rootGraph.exitNode) throw new Error('The root graph should have an exit node.');
   return rootGraph.exitNode;
@@ -723,36 +723,32 @@ export const flattenNodes = (node: Graph | GraphNode): FlatGraphNode[] => [
 ];
 
 /**
- * Flattens the nodes and edges, removes entry and exit nodes from the provided graph
+ * Flattens the provided graph into a single node and edge collection.
  * @param graph The target graph
- * @returns The modified graph
+ * @param removePorts A boolean indicating whether the port nodes should be removed.
+ * @returns The flattened graph
  */
-export function reshapeGraph(graph: Graph): FlatGraph {
-  const edges = remapEdges(flattenEdges(graph));
-  const nodes = graph.nodes
-    .flatMap((node) => flattenNodes(node))
-    .filter((node) => node.type !== GraphNodeType.Entry && node.type !== GraphNodeType.Exit);
-  const newGraph: FlatGraph = {
+export function flattenGraph(graph: Graph, removePorts: boolean = false): FlatGraph {
+  const flatGraph: FlatGraph = {
     ...graph,
-    nodes,
-    edges,
+    edges: flattenEdges(graph),
+    nodes: graph.nodes.flatMap((node) => flattenNodes(node)),
   };
-  return newGraph;
+  if (!removePorts) return flatGraph;
+  return {
+    ...flatGraph,
+    edges: remapEdges(flatGraph.edges),
+    nodes: flatGraph.nodes.filter((node) => node.type !== GraphNodeType.Entry && node.type !== GraphNodeType.Exit),
+  };
 }
 
 /**
  * Constructs a graph representation based on the given workflow.
  *
  * @param workflow The workflow to be converted into a graph structure.
- * @param flattenGraph A boolean indicating whether the graph nodes & edges should be flattened.
- * @param removePorts A boolean indicationg whether the port nodes should be removed.
  * @returns A graph representation of the workflow.
  */
-export function buildGraph(
-  workflow: Workflow,
-  flattenGraph: boolean = false,
-  removePorts: boolean = false,
-): Graph | FlatGraph {
+export function buildGraph(workflow: Workflow): Graph {
   const graph = initGraph(GraphNodeType.Root);
   if (!graph.entryNode) throw new Error('The root graph should have an entry node.');
   buildTransitions(graph.entryNode, {
@@ -762,17 +758,17 @@ export function buildGraph(
     taskReference: doReference,
     knownEdges: [],
   });
-  if (removePorts && !flattenGraph) throw new Error(`Ports can only be removed if the graph has been flattened.`);
-  if (!flattenGraph) return graph;
-  const flatGraph = {
-    ...graph,
-    edges: flattenEdges(graph),
-    nodes: graph.nodes.flatMap(flattenNodes),
-  };
-  if (!removePorts) return flatGraph;
-  return {
-    ...flatGraph,
-    edges: remapEdges(flatGraph.edges),
-    nodes: flatGraph.nodes.filter((node) => node.type !== GraphNodeType.Entry && node.type !== GraphNodeType.Exit),
-  };
+  return graph;
+}
+
+/**
+ * Constructs a flattened graph representation based on the given workflow.
+ *
+ * @param workflow The workflow to be converted into a flattened graph structure.
+ * @param removePorts A boolean indicating whether the port nodes should be removed.
+ * @returns A flattened graph representation of the workflow.
+ */
+export function buildFlatGraph(workflow: Workflow, removePorts: boolean = false): FlatGraph {
+  const graph = buildGraph(workflow);
+  return flattenGraph(graph, removePorts);
 }

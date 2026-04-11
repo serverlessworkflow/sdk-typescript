@@ -1,5 +1,5 @@
 import { Workflow } from './generated/definitions/specification';
-import { buildGraph, FlatGraph, FlatGraphNode, GraphEdge, GraphNodeType } from './graph-builder';
+import { buildFlatGraph, FlatGraph, FlatGraphNode, GraphEdge, GraphNodeType } from './graph-builder';
 
 /**
  * Adds indentation to each line of the provided code
@@ -77,7 +77,7 @@ function convertEdgeToCode(edge: GraphEdge): string {
  * @returns The Mermaid diagram
  */
 export function convertToMermaidCode(workflow: Workflow): string {
-  const graph = buildGraph(workflow, true, true);
+  const graph = buildFlatGraph(workflow, true);
   return (
     convertGraphToCode(graph) +
     `
