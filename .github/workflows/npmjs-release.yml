@@ -21,11 +21,14 @@ jobs:
           node-version: '22.x'
           cache: npm
           registry-url: 'https://registry.npmjs.org'
+      - run: npm run release:preflight
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
       - run: npm ci
       - run: npm run lint
-      - run: npm run codegen:check
       - run: npm test
-      - run: npm run validate:package
+      - run: npm run build
+      - run: npm run validate:package:dist
       - run: cd dist && npm publish --access=public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}

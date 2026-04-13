@@ -1,3 +1,10 @@
+/**
+ * Runs packaging-oriented static checks against the already-built `dist/`
+ * output and the packed npm tarball.
+ *
+ * `publint` validates the publish directory shape, while `attw` checks the
+ * generated tarball's type/export surface the way consumers will install it.
+ */
 import { readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -6,6 +13,11 @@ import { spawnSync } from 'node:child_process';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, '..');
 
+/**
+ * Executes a child process in the repository root and fails fast if the tool
+ * exits unsuccessfully. The command inherits stdio so CI logs show the
+ * underlying tool output directly.
+ */
 const run = (command, args, cwd = repoRoot) => {
   const result = spawnSync(command, args, {
     cwd,

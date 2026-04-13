@@ -1,3 +1,10 @@
+/**
+ * Smoke-tests the packed npm tarball the same way downstream consumers use it.
+ *
+ * The script extracts the most recent tarball, installs it into a temporary
+ * throwaway consumer layout, and verifies CommonJS, ESM, browser UMD, and
+ * TypeScript type-consumption scenarios before cleaning everything up again.
+ */
 import { cpSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
@@ -15,19 +22,34 @@ const consumerDir = path.resolve(tempDir, 'consumer');
 const consumerNodeModulesDir = path.resolve(consumerDir, 'node_modules');
 const consumerPackageDir = path.resolve(consumerNodeModulesDir, '@serverlessworkflow', 'sdk');
 
+/**
+ * Reads a fixed-width string field from a tar header and trims trailing null
+ * bytes so the header data can be interpreted safely.
+ */
 const readTarString = (buffer, start, length) =>
   trimNulls(buffer.subarray(start, start + length).toString('utf8')).trim();
 
+/**
+ * Tar headers are null-padded; this removes the first null terminator and
+ * anything after it so later parsing sees the original value only.
+ */
 const trimNulls = (value) => {
   const nullIndex = value.indexOf('\0');
   return nullIndex === -1 ? value : value.slice(0, nullIndex);
 };
 
+/**
+ * Parses the octal file-size field stored in a tar header.
+ */
 const parseTarSize = (buffer) => {
   const sizeValue = readTarString(buffer, 124, 12);
   return sizeValue ? Number.parseInt(sizeValue, 8) : 0;
 };
 
+/**
+ * Parses PAX extended headers so long file names and overridden paths are
+ * preserved during manual extraction.
+ */
 const parsePaxHeader = (buffer) => {
   const metadata = {};
   let offset = 0;
@@ -55,6 +77,10 @@ const parsePaxHeader = (buffer) => {
   return metadata;
 };
 
+/**
+ * Extracts the gzipped tarball without relying on external tooling and guards
+ * against path traversal while materializing entries on disk.
+ */
 const extractTarball = (archivePath, destinationDir) => {
   const archive = unzip(readFileSync(archivePath));
   let offset = 0;
@@ -105,6 +131,10 @@ const extractTarball = (archivePath, destinationDir) => {
   }
 };
 
+/**
+ * Formats TypeScript diagnostics using the temporary consumer directory as the
+ * current working context to make smoke-test failures readable.
+ */
 const formatDiagnostics = (diagnostics) =>
   ts.formatDiagnosticsWithColorAndContext(diagnostics, {
     getCanonicalFileName: (fileName) => fileName,
@@ -112,6 +142,10 @@ const formatDiagnostics = (diagnostics) =>
     getNewLine: () => '\n',
   });
 
+/**
+ * Compiles the temporary consumer TypeScript program with `noEmit` to verify
+ * the published declaration files work in a realistic NodeNext setup.
+ */
 const verifyTypeSmoke = (tsconfigPath) => {
   const configFile = ts.readConfigFile(tsconfigPath, ts.sys.readFile);
   if (configFile.error) {
@@ -134,6 +168,10 @@ const verifyTypeSmoke = (tsconfigPath) => {
   }
 };
 
+/**
+ * Executes the published browser bundle in a sandboxed VM and checks the UMD
+ * global exposes the expected runtime surface.
+ */
 const verifyBrowserGlobalSmoke = (packageDir) => {
   const packageJson = JSON.parse(readFileSync(path.resolve(packageDir, 'package.json'), 'utf8'));
   if (typeof packageJson.browser !== 'string' || packageJson.browser.length === 0) {

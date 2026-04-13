@@ -1,3 +1,7 @@
+/**
+ * Removes previously packed npm tarballs from the repository root so each
+ * packaging run validates the tarball produced by the current build only.
+ */
 import { readdirSync, rmSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

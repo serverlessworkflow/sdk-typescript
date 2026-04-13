@@ -1,3 +1,11 @@
+/**
+ * Materializes the publishable package metadata inside `dist/`.
+ *
+ * The build emits compiled assets into `dist/`, but npm publishing happens from
+ * that directory rather than from the repository root. This script writes a
+ * trimmed `dist/package.json` containing only the fields that should ship to
+ * consumers, then copies the top-level README and LICENSE alongside it.
+ */
 import { cpSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
