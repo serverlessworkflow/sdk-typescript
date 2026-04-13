@@ -179,8 +179,8 @@ const getHydratableProperties = (node: Node, type: Type, propertiesMap: Property
     .concat(
       ...getUnderlyingTypes(type)
         .map((t) => t.getStringIndexType())
-        .filter((t) => !!t && !isValueType(t))
-        .reduce((props, t: Type) => {
+        .filter((t): t is Type => !!t && !isValueType(t))
+        .reduce((props, t) => {
           props.push({
             name: '',
             originalType: t,
@@ -279,7 +279,10 @@ export function getObjectHydration(node: Node, type: Type): HydrationResult {
  * @returns The code to hydrate the provided array
  */
 export function getArrayHydration(type: Type): HydrationResult {
-  const arrayType = type.getArrayElementType() || getUnderlyingTypes(type)[0];
+  const arrayType = type.getArrayElementType() ?? getUnderlyingTypes(type)[0];
+  if (!arrayType) {
+    throw new Error(`Unable to determine the array element type for '${type.getText()}'.`);
+  }
   const lines: string[] = ['if (model?.length) {', 'this.splice(0, this.length);'];
   const imports: string[] = [];
   if (isValueType(arrayType)) {

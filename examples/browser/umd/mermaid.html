@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Serverless Workflow ESM Mermaid Example</title>
+    <title>Serverless Workflow UMD Mermaid Example</title>
     <base href="/" />
     <meta content="width=device-width, initial-scale=1" name="viewport" />
   </head>
@@ -12,11 +12,11 @@
     <textarea id="input" rows="50" cols="100"></textarea>
     <div id="diagram-container"></div>
     <pre id="output"></pre>
-    <script type="module">
-      import { Classes, convertToMermaidCode } from '../../dist/index.mjs';
-      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
-
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script src="../../../dist/index.umd.js"></script>
+    <script>
       (async () => {
+        const { Classes, convertToMermaidCode } = globalThis.serverWorkflowSdk;
         const workflowDefinition = {
           document: {
             dsl: '1.0.0',

@@ -3,10 +3,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Serverless Workflow DSL - Workflow Schema.",
   "type": "object",
-  "required": [
-    "document",
-    "do"
-  ],
+  "required": ["document", "do"],
   "properties": {
     "document": {
       "type": "object",
@@ -61,12 +58,7 @@
           "additionalProperties": true
         }
       },
-      "required": [
-        "dsl",
-        "namespace",
-        "name",
-        "version"
-      ]
+      "required": ["dsl", "namespace", "name", "version"]
     },
     "input": {
       "$ref": "#/$defs/input",
@@ -326,10 +318,7 @@
           "description": "Defines the AsyncAPI call to perform.",
           "$ref": "#/$defs/taskBase",
           "type": "object",
-          "required": [
-            "call",
-            "with"
-          ],
+          "required": ["call", "with"],
           "unevaluatedProperties": false,
           "properties": {
             "call": {
@@ -405,32 +394,16 @@
               },
               "oneOf": [
                 {
-                  "required": [
-                    "document",
-                    "operation",
-                    "message"
-                  ]
+                  "required": ["document", "operation", "message"]
                 },
                 {
-                  "required": [
-                    "document",
-                    "operation",
-                    "subscription"
-                  ]
+                  "required": ["document", "operation", "subscription"]
                 },
                 {
-                  "required": [
-                    "document",
-                    "channel",
-                    "message"
-                  ]
+                  "required": ["document", "channel", "message"]
                 },
                 {
-                  "required": [
-                    "document",
-                    "channel",
-                    "subscription"
-                  ]
+                  "required": ["document", "channel", "subscription"]
                 }
               ],
               "unevaluatedProperties": false
@@ -443,10 +416,7 @@
           "$ref": "#/$defs/taskBase",
           "type": "object",
           "unevaluatedProperties": false,
-          "required": [
-            "call",
-            "with"
-          ],
+          "required": ["call", "with"],
           "properties": {
             "call": {
               "type": "string",
@@ -491,10 +461,7 @@
                       "description": "The endpoint's authentication policy, if any."
                     }
                   },
-                  "required": [
-                    "name",
-                    "host"
-                  ]
+                  "required": ["name", "host"]
                 },
                 "method": {
                   "type": "string",
@@ -508,11 +475,7 @@
                   "additionalProperties": true
                 }
               },
-              "required": [
-                "proto",
-                "service",
-                "method"
-              ],
+              "required": ["proto", "service", "method"],
               "unevaluatedProperties": false
             }
           }
@@ -523,10 +486,7 @@
           "$ref": "#/$defs/taskBase",
           "type": "object",
           "unevaluatedProperties": false,
-          "required": [
-            "call",
-            "with"
-          ],
+          "required": ["call", "with"],
           "properties": {
             "call": {
               "type": "string",
@@ -566,11 +526,7 @@
                   "type": "string",
                   "title": "HTTPOutput",
                   "description": "The http call output format. Defaults to 'content'.",
-                  "enum": [
-                    "raw",
-                    "content",
-                    "response"
-                  ]
+                  "enum": ["raw", "content", "response"]
                 },
                 "redirect": {
                   "type": "boolean",
@@ -578,10 +534,7 @@
                   "description": "Specifies whether redirection status codes (`300–399`) should be treated as errors."
                 }
               },
-              "required": [
-                "method",
-                "endpoint"
-              ],
+              "required": ["method", "endpoint"],
               "unevaluatedProperties": false
             }
           }
@@ -592,10 +545,7 @@
           "$ref": "#/$defs/taskBase",
           "type": "object",
           "unevaluatedProperties": false,
-          "required": [
-            "call",
-            "with"
-          ],
+          "required": ["call", "with"],
           "properties": {
             "call": {
               "type": "string",
@@ -629,11 +579,7 @@
                 },
                 "output": {
                   "type": "string",
-                  "enum": [
-                    "raw",
-                    "content",
-                    "response"
-                  ],
+                  "enum": ["raw", "content", "response"],
                   "title": "WithOpenAPIOutput",
                   "description": "The http call output format. Defaults to 'content'."
                 },
@@ -643,10 +589,7 @@
                   "description": "Specifies whether redirection status codes (`300–399`) should be treated as errors."
                 }
               },
-              "required": [
-                "document",
-                "operationId"
-              ],
+              "required": ["document", "operationId"],
               "unevaluatedProperties": false
             }
           }
@@ -657,19 +600,12 @@
           "$ref": "#/$defs/taskBase",
           "type": "object",
           "unevaluatedProperties": false,
-          "required": [
-            "call"
-          ],
+          "required": ["call"],
           "properties": {
             "call": {
               "type": "string",
               "not": {
-                "enum": [
-                  "asyncapi",
-                  "grpc",
-                  "http",
-                  "openapi"
-                ]
+                "enum": ["asyncapi", "grpc", "http", "openapi"]
               },
               "description": "The name of the function to call."
             },
@@ -689,18 +625,14 @@
       "title": "ForkTask",
       "description": "Allows workflows to execute multiple tasks concurrently and optionally race them against each other, with a single possible winner, which sets the task's output.",
       "unevaluatedProperties": false,
-      "required": [
-        "fork"
-      ],
+      "required": ["fork"],
       "properties": {
         "fork": {
           "type": "object",
           "title": "ForkTaskConfiguration",
           "description": "The configuration of the branches to perform concurrently.",
           "unevaluatedProperties": false,
-          "required": [
-            "branches"
-          ],
+          "required": ["branches"],
           "properties": {
             "branches": {
               "$ref": "#/$defs/taskList",
@@ -722,9 +654,7 @@
       "title": "DoTask",
       "description": "Allows to execute a list of tasks in sequence.",
       "unevaluatedProperties": false,
-      "required": [
-        "do"
-      ],
+      "required": ["do"],
       "properties": {
         "do": {
           "$ref": "#/$defs/taskList",
@@ -738,9 +668,7 @@
       "$ref": "#/$defs/taskBase",
       "title": "EmitTask",
       "description": "Allows workflows to publish events to event brokers or messaging systems, facilitating communication and coordination between different components and services.",
-      "required": [
-        "emit"
-      ],
+      "required": ["emit"],
       "unevaluatedProperties": false,
       "properties": {
         "emit": {
@@ -758,18 +686,13 @@
                   "$ref": "#/$defs/eventProperties",
                   "title": "EmitEventWith",
                   "description": "Defines the properties of event to emit.",
-                  "required": [
-                    "source",
-                    "type"
-                  ]
+                  "required": ["source", "type"]
                 }
               },
               "additionalProperties": true
             }
           },
-          "required": [
-            "event"
-          ]
+          "required": ["event"]
         }
       }
     },
@@ -778,10 +701,7 @@
       "$ref": "#/$defs/taskBase",
       "title": "ForTask",
       "description": "Allows workflows to iterate over a collection of items, executing a defined set of subtasks for each item in the collection. This task type is instrumental in handling scenarios such as batch processing, data transformation, and repetitive operations across datasets.",
-      "required": [
-        "for",
-        "do"
-      ],
+      "required": ["for", "do"],
       "unevaluatedProperties": false,
       "properties": {
         "for": {
@@ -808,9 +728,7 @@
               "default": "index"
             }
           },
-          "required": [
-            "in"
-          ]
+          "required": ["in"]
         },
         "while": {
           "type": "string",
@@ -828,9 +746,7 @@
       "$ref": "#/$defs/taskBase",
       "title": "ListenTask",
       "description": "Provides a mechanism for workflows to await and react to external events, enabling event-driven behavior within workflow systems.",
-      "required": [
-        "listen"
-      ],
+      "required": ["listen"],
       "unevaluatedProperties": false,
       "properties": {
         "listen": {
@@ -846,19 +762,13 @@
             },
             "read": {
               "type": "string",
-              "enum": [
-                "data",
-                "envelope",
-                "raw"
-              ],
+              "enum": ["data", "envelope", "raw"],
               "default": "data",
               "title": "ListenAndReadAs",
               "description": "Specifies how events are read during the listen operation."
             }
           },
-          "required": [
-            "to"
-          ]
+          "required": ["to"]
         },
         "foreach": {
           "$ref": "#/$defs/subscriptionIterator",
@@ -872,9 +782,7 @@
       "$ref": "#/$defs/taskBase",
       "title": "RaiseTask",
       "description": "Intentionally triggers and propagates errors.",
-      "required": [
-        "raise"
-      ],
+      "required": ["raise"],
       "unevaluatedProperties": false,
       "properties": {
         "raise": {
@@ -899,9 +807,7 @@
               ]
             }
           },
-          "required": [
-            "error"
-          ]
+          "required": ["error"]
         }
       }
     },
@@ -910,9 +816,7 @@
       "$ref": "#/$defs/taskBase",
       "title": "RunTask",
       "description": "Provides the capability to execute external containers, shell commands, scripts, or workflows.",
-      "required": [
-        "run"
-      ],
+      "required": ["run"],
       "unevaluatedProperties": false,
       "properties": {
         "run": {
@@ -931,13 +835,7 @@
               "type": "string",
               "title": "ProcessReturnType",
               "description": "Configures the output of the process.",
-              "enum": [
-                "stdout",
-                "stderr",
-                "code",
-                "all",
-                "none"
-              ],
+              "enum": ["stdout", "stderr", "code", "all", "none"],
               "default": "stdout"
             }
           },
@@ -988,14 +886,10 @@
                       "description": "An object, if any, used to configure the container's lifetime"
                     }
                   },
-                  "required": [
-                    "image"
-                  ]
+                  "required": ["image"]
                 }
               },
-              "required": [
-                "container"
-              ]
+              "required": ["container"]
             },
             {
               "title": "RunScript",
@@ -1036,9 +930,7 @@
                           "title": "InlineScriptCode"
                         }
                       },
-                      "required": [
-                        "code"
-                      ]
+                      "required": ["code"]
                     },
                     {
                       "title": "ExternalScript",
@@ -1050,19 +942,13 @@
                           "title": "ExternalScriptResource"
                         }
                       },
-                      "required": [
-                        "source"
-                      ]
+                      "required": ["source"]
                     }
                   ],
-                  "required": [
-                    "language"
-                  ]
+                  "required": ["language"]
                 }
               },
-              "required": [
-                "script"
-              ]
+              "required": ["script"]
             },
             {
               "title": "RunShell",
@@ -1092,14 +978,10 @@
                       "additionalProperties": true
                     }
                   },
-                  "required": [
-                    "command"
-                  ]
+                  "required": ["command"]
                 }
               },
-              "required": [
-                "shell"
-              ]
+              "required": ["shell"]
             },
             {
               "title": "RunWorkflow",
@@ -1134,16 +1016,10 @@
                       "additionalProperties": true
                     }
                   },
-                  "required": [
-                    "namespace",
-                    "name",
-                    "version"
-                  ]
+                  "required": ["namespace", "name", "version"]
                 }
               },
-              "required": [
-                "workflow"
-              ]
+              "required": ["workflow"]
             }
           ]
         }
@@ -1154,9 +1030,7 @@
       "$ref": "#/$defs/taskBase",
       "title": "SetTask",
       "description": "A task used to set data.",
-      "required": [
-        "set"
-      ],
+      "required": ["set"],
       "unevaluatedProperties": false,
       "properties": {
         "set": {
@@ -1173,9 +1047,7 @@
       "$ref": "#/$defs/taskBase",
       "title": "SwitchTask",
       "description": "Enables conditional branching within workflows, allowing them to dynamically select different paths based on specified conditions or criteria.",
-      "required": [
-        "switch"
-      ],
+      "required": ["switch"],
       "unevaluatedProperties": false,
       "properties": {
         "switch": {
@@ -1193,9 +1065,7 @@
               "title": "SwitchCase",
               "description": "The definition of a case within a switch task, defining a condition and corresponding tasks to execute if the condition is met.",
               "unevaluatedProperties": false,
-              "required": [
-                "then"
-              ],
+              "required": ["then"],
               "properties": {
                 "when": {
                   "type": "string",
@@ -1218,10 +1088,7 @@
       "$ref": "#/$defs/taskBase",
       "title": "TryTask",
       "description": "Serves as a mechanism within workflows to handle errors gracefully, potentially retrying failed tasks before proceeding with alternate ones.",
-      "required": [
-        "try",
-        "catch"
-      ],
+      "required": ["try", "catch"],
       "unevaluatedProperties": false,
       "properties": {
         "try": {
@@ -1288,9 +1155,7 @@
       "$ref": "#/$defs/taskBase",
       "title": "WaitTask",
       "description": "Allows workflows to pause or delay their execution for a specified period of time.",
-      "required": [
-        "wait"
-      ],
+      "required": ["wait"],
       "unevaluatedProperties": false,
       "properties": {
         "wait": {
@@ -1307,11 +1172,7 @@
         {
           "title": "FlowDirectiveEnum",
           "type": "string",
-          "enum": [
-            "continue",
-            "exit",
-            "end"
-          ],
+          "enum": ["continue", "exit", "end"],
           "default": "continue"
         },
         {
@@ -1336,9 +1197,7 @@
               "description": "The name of the authentication policy to use."
             }
           },
-          "required": [
-            "use"
-          ]
+          "required": ["use"]
         },
         {
           "$ref": "#/$defs/authenticationPolicy"
@@ -1358,9 +1217,7 @@
           "description": "The name of the authentication policy to use."
         }
       },
-      "required": [
-        "use"
-      ]
+      "required": ["use"]
     },
     "authenticationPolicy": {
       "type": "object",
@@ -1390,10 +1247,7 @@
                       "description": "The password to use."
                     }
                   },
-                  "required": [
-                    "username",
-                    "password"
-                  ]
+                  "required": ["username", "password"]
                 },
                 {
                   "$ref": "#/$defs/secretBasedAuthenticationPolicy",
@@ -1403,9 +1257,7 @@
               ]
             }
           },
-          "required": [
-            "basic"
-          ]
+          "required": ["basic"]
         },
         {
           "title": "BearerAuthenticationPolicy",
@@ -1426,9 +1278,7 @@
                       "description": "The bearer token to use."
                     }
                   },
-                  "required": [
-                    "token"
-                  ]
+                  "required": ["token"]
                 },
                 {
                   "$ref": "#/$defs/secretBasedAuthenticationPolicy",
@@ -1438,9 +1288,7 @@
               ]
             }
           },
-          "required": [
-            "bearer"
-          ]
+          "required": ["bearer"]
         },
         {
           "title": "DigestAuthenticationPolicy",
@@ -1465,10 +1313,7 @@
                       "description": "The password to use."
                     }
                   },
-                  "required": [
-                    "username",
-                    "password"
-                  ]
+                  "required": ["username", "password"]
                 },
                 {
                   "$ref": "#/$defs/secretBasedAuthenticationPolicy",
@@ -1478,9 +1323,7 @@
               ]
             }
           },
-          "required": [
-            "digest"
-          ]
+          "required": ["digest"]
         },
         {
           "title": "OAuth2AuthenticationPolicy",
@@ -1544,9 +1387,7 @@
               ]
             }
           },
-          "required": [
-            "oauth2"
-          ]
+          "required": ["oauth2"]
         },
         {
           "title": "OpenIdConnectAuthenticationPolicy",
@@ -1572,9 +1413,7 @@
               ]
             }
           },
-          "required": [
-            "oidc"
-          ]
+          "required": ["oidc"]
         }
       ]
     },
@@ -1623,13 +1462,7 @@
             },
             "authentication": {
               "type": "string",
-              "enum": [
-                "client_secret_basic",
-                "client_secret_post",
-                "client_secret_jwt",
-                "private_key_jwt",
-                "none"
-              ],
+              "enum": ["client_secret_basic", "client_secret_post", "client_secret_jwt", "private_key_jwt", "none"],
               "default": "client_secret_post",
               "title": "ClientAuthentication",
               "description": "The authentication method to use to authenticate the client."
@@ -1643,10 +1476,7 @@
           "properties": {
             "encoding": {
               "type": "string",
-              "enum": [
-                "application/x-www-form-urlencoded",
-                "application/json"
-              ],
+              "enum": ["application/x-www-form-urlencoded", "application/json"],
               "default": "application/x-www-form-urlencoded",
               "title": "Oauth2TokenRequestEncoding"
             }
@@ -1715,10 +1545,7 @@
           "description": "The type of the security token to use."
         }
       },
-      "required": [
-        "token",
-        "type"
-      ]
+      "required": ["token", "type"]
     },
     "duration": {
       "oneOf": [
@@ -1819,10 +1646,7 @@
           "description": "A human-readable explanation specific to this occurrence of the error."
         }
       },
-      "required": [
-        "type",
-        "status"
-      ]
+      "required": ["type", "status"]
     },
     "errorFilter": {
       "type": "object",
@@ -1906,9 +1730,7 @@
               "description": "The authentication policy to use."
             }
           },
-          "required": [
-            "uri"
-          ]
+          "required": ["uri"]
         }
       ]
     },
@@ -2010,9 +1832,7 @@
               }
             }
           },
-          "required": [
-            "all"
-          ]
+          "required": ["all"]
         },
         {
           "title": "AnyEventConsumptionStrategy",
@@ -2049,9 +1869,7 @@
               ]
             }
           },
-          "required": [
-            "any"
-          ]
+          "required": ["any"]
         },
         {
           "title": "OneEventConsumptionStrategy",
@@ -2062,9 +1880,7 @@
               "description": "The single event to consume."
             }
           },
-          "required": [
-            "one"
-          ]
+          "required": ["one"]
         }
       ]
     },
@@ -2098,15 +1914,11 @@
                 "description": "A constant or a runtime expression, if any, used to determine whether or not the extracted correlation value matches expectations. If not set, the first extracted value will be used as the correlation's expectation."
               }
             },
-            "required": [
-              "from"
-            ]
+            "required": ["from"]
           }
         }
       },
-      "required": [
-        "with"
-      ]
+      "required": ["with"]
     },
     "extension": {
       "type": "object",
@@ -2116,20 +1928,7 @@
       "properties": {
         "extend": {
           "type": "string",
-          "enum": [
-            "call",
-            "composite",
-            "emit",
-            "for",
-            "listen",
-            "raise",
-            "run",
-            "set",
-            "switch",
-            "try",
-            "wait",
-            "all"
-          ],
+          "enum": ["call", "composite", "emit", "for", "listen", "raise", "run", "set", "switch", "try", "wait", "all"],
           "title": "ExtensionTarget",
           "description": "The type of task to extend."
         },
@@ -2149,9 +1948,7 @@
           "description": "The task(s) to execute after the extended task, if any."
         }
       },
-      "required": [
-        "extend"
-      ]
+      "required": ["extend"]
     },
     "externalResource": {
       "type": "object",
@@ -2170,9 +1967,7 @@
           "description": "The endpoint of the external resource."
         }
       },
-      "required": [
-        "endpoint"
-      ]
+      "required": ["endpoint"]
     },
     "input": {
       "type": "object",
@@ -2284,9 +2079,7 @@
                   "description": "The definition of the constant backoff to use, if any."
                 }
               },
-              "required": [
-                "constant"
-              ]
+              "required": ["constant"]
             },
             {
               "title": "ExponentialBackOff",
@@ -2296,9 +2089,7 @@
                   "description": "The definition of the exponential backoff to use, if any."
                 }
               },
-              "required": [
-                "exponential"
-              ]
+              "required": ["exponential"]
             },
             {
               "title": "LinearBackoff",
@@ -2308,9 +2099,7 @@
                   "description": "The definition of the linear backoff to use, if any."
                 }
               },
-              "required": [
-                "linear"
-              ]
+              "required": ["linear"]
             }
           ]
         },
@@ -2361,10 +2150,7 @@
               "description": "The maximum duration of the jitter range."
             }
           },
-          "required": [
-            "from",
-            "to"
-          ]
+          "required": ["from", "to"]
         }
       }
     },
@@ -2389,9 +2175,7 @@
               "description": "The schema's inline definition."
             }
           },
-          "required": [
-            "document"
-          ]
+          "required": ["document"]
         },
         {
           "title": "SchemaExternal",
@@ -2402,9 +2186,7 @@
               "description": "The schema's external resource."
             }
           },
-          "required": [
-            "resource"
-          ]
+          "required": ["resource"]
         }
       ]
     },
@@ -2420,9 +2202,7 @@
           "description": "The duration after which to timeout."
         }
       },
-      "required": [
-        "after"
-      ]
+      "required": ["after"]
     },
     "catalog": {
       "type": "object",
@@ -2436,9 +2216,7 @@
           "description": "The root URL where the catalog is hosted."
         }
       },
-      "required": [
-        "endpoint"
-      ]
+      "required": ["endpoint"]
     },
     "runtimeExpression": {
       "type": "string",
@@ -2456,11 +2234,7 @@
           "type": "string",
           "title": "ContainerCleanupPolicy",
           "description": "The container cleanup policy to use",
-          "enum": [
-            "always",
-            "never",
-            "eventually"
-          ],
+          "enum": ["always", "never", "eventually"],
           "default": "never"
         },
         "after": {
@@ -2469,9 +2243,7 @@
           "description": "The duration after which to cleanup the container, in case the cleanup policy has been set to 'eventually'"
         }
       },
-      "required": [
-        "cleanup"
-      ],
+      "required": ["cleanup"],
       "if": {
         "properties": {
           "cleanup": {
@@ -2480,15 +2252,11 @@
         }
       },
       "then": {
-        "required": [
-          "after"
-        ]
+        "required": ["after"]
       },
       "else": {
         "not": {
-          "required": [
-            "after"
-          ]
+          "required": ["after"]
         }
       }
     },
@@ -2514,11 +2282,7 @@
           "description": "The content of the process's STDERR."
         }
       },
-      "required": [
-        "code",
-        "stdout",
-        "stderr"
-      ]
+      "required": ["code", "stdout", "stderr"]
     },
     "asyncApiServer": {
       "type": "object",
@@ -2537,9 +2301,7 @@
           "description": "The target server's variables, if any."
         }
       },
-      "required": [
-        "name"
-      ]
+      "required": ["name"]
     },
     "asyncApiOutboundMessage": {
       "type": "object",
@@ -2600,9 +2362,7 @@
           "description": "Configures the iterator, if any, for processing consumed messages(s)."
         }
       },
-      "required": [
-        "consume"
-      ]
+      "required": ["consume"]
     },
     "asyncApiMessageConsumptionPolicy": {
       "type": "object",
@@ -2625,9 +2385,7 @@
             }
           },
           "title": "AsyncApiMessageConsumptionPolicyAmount",
-          "required": [
-            "amount"
-          ]
+          "required": ["amount"]
         },
         {
           "properties": {
@@ -2637,9 +2395,7 @@
             }
           },
           "title": "AsyncApiMessageConsumptionPolicyWhile",
-          "required": [
-            "while"
-          ]
+          "required": ["while"]
         },
         {
           "properties": {
@@ -2649,9 +2405,7 @@
             }
           },
           "title": "AsyncApiMessageConsumptionPolicyUntil",
-          "required": [
-            "until"
-          ]
+          "required": ["until"]
         }
       ]
     },

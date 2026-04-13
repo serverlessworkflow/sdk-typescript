@@ -2,17 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Serverless Workflow ESM Example</title>
+    <title>Serverless Workflow UMD Example</title>
     <base href="/" />
     <meta content="width=device-width, initial-scale=1" name="viewport" />
   </head>
 
   <body>
     <pre id="output"></pre>
-    <script type="module">
-      import { Classes, validate } from '../../dist/index.mjs';
-
+    <script src="../../../dist/index.umd.js"></script>
+    <script>
       (() => {
+        const { Classes, validate } = globalThis.serverWorkflowSdk;
         const workflowDefinition = {
           document: {
             dsl: '1.0.0',

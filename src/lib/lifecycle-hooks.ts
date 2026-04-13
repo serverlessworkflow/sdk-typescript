@@ -50,6 +50,7 @@ export type LifecycleHooks<T> = {
 /**
  * A mapping of type names and their lifecycle hooks
  */
+// The generated classes call these hooks without generic arguments, so this registry must stay untyped at runtime.
 const registeredHooks: Map<string, LifecycleHooks<any>> = new Map<string, LifecycleHooks<any>>();
 
 /**
