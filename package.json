@@ -98,7 +98,7 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "vitest": "^4.1.0",
-    "yargs": "^17.7.2"
+    "yargs": "^18.0.0"
   },
   "repository": {
     "type": "git",
