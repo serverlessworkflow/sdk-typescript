@@ -22,29 +22,26 @@
 
 import { builder, Builder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
-import { OAuth2AutenthicationDataIntersection } from '../classes/oauth2-autenthication-data';
+import { ErrorDetailsIntersection } from '../classes/error-details';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying object
- * @param {Specification.OAuth2AutenthicationData} model The proxied object
+ * @param {Specification.ErrorDetails} model The proxied object
  * @param {BuildOptions} options The build options to use
- * @returns {OAuth2AutenthicationDataIntersection} The built object
+ * @returns {ErrorDetailsIntersection} The built object
  */
-function buildingFn(
-  model: Specification.OAuth2AutenthicationData,
-  options: BuildOptions,
-): OAuth2AutenthicationDataIntersection {
-  const instance = new Classes.OAuth2AutenthicationData(model);
+function buildingFn(model: Specification.ErrorDetails, options: BuildOptions): ErrorDetailsIntersection {
+  const instance = new Classes.ErrorDetails(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as OAuth2AutenthicationDataIntersection;
+  return (options.normalize ? instance.normalize() : instance) as ErrorDetailsIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `OAuth2AutenthicationDataIntersection`
- * @returns {Builder<OAuth2AutenthicationDataIntersection, OAuth2AutenthicationDataIntersection>} A builder for `OAuth2AutenthicationDataIntersection`
+ * A factory to create a builder proxy for the type `ErrorDetailsIntersection`
+ * @returns {Builder<ErrorDetailsIntersection, ErrorDetailsIntersection>} A builder for `ErrorDetailsIntersection`
  */
-export const oAuth2AutenthicationDataBuilder = (
-  model?: Partial<Specification.OAuth2AutenthicationData>,
-): Builder<Partial<Specification.OAuth2AutenthicationData>, OAuth2AutenthicationDataIntersection> =>
-  builder<Specification.OAuth2AutenthicationData, OAuth2AutenthicationDataIntersection>(model, buildingFn);
+export const errorDetailsBuilder = (
+  model?: Partial<Specification.ErrorDetails>,
+): Builder<Partial<Specification.ErrorDetails>, ErrorDetailsIntersection> =>
+  builder<Specification.ErrorDetails, ErrorDetailsIntersection>(model, buildingFn);

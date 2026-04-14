@@ -3,7 +3,7 @@ import { Classes } from /*'@serverlessworkflow/sdk';*/ '../../dist';
 const myJsonWorkflow = `
 {
   "document": {
-    "dsl": "1.0.0",
+    "dsl": "1.0.3",
     "name": "using-json",
     "version": "1.0.0",
     "namespace": "default"

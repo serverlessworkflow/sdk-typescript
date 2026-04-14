@@ -22,7 +22,7 @@ import {
   callHTTPBuilder,
   documentBuilder,
   hTTPArgumentsBuilder,
-  oAuth2AutenthicationDataClientBuilder,
+  oAuth2AuthenticationDataClientBuilder,
   oAuth2AuthenticationPolicyBuilder,
   oAuth2ConnectAuthenticationPropertiesBuilder,
   setTaskBuilder,
@@ -70,7 +70,7 @@ describe('Workflow builder', () => {
                   oAuth2ConnectAuthenticationPropertiesBuilder()
                     .grant('client_credentials')
                     .authority('https://authority.com')
-                    .client(oAuth2AutenthicationDataClientBuilder().id('clientId').secret('clientSecret').build())
+                    .client(oAuth2AuthenticationDataClientBuilder().id('clientId').secret('clientSecret').build())
                     .build(),
                 )
                 .build(),

@@ -22,6 +22,17 @@ import * as yaml from 'js-yaml';
 
 const { writeFile, mkdir } = fsPromises;
 
+const normalizeSchemaId = (schema: unknown, schemaUrl: string): unknown => {
+  if (!schema || Array.isArray(schema) || typeof schema !== 'object') {
+    return schema;
+  }
+
+  return {
+    ...schema,
+    $id: schemaUrl,
+  };
+};
+
 /**
  * Downloads the given schema (and referenced sub-schema) and save them to disk
  * @param schemaUrl {string} The URL to download the schema from
@@ -38,18 +49,20 @@ const download = async (schemaUrl: URL, destDir: string): Promise<void> => {
     const externalSchemas = $refParser.$refs
       .paths()
       .filter((p, index, arr) => arr.indexOf(p) === index && p !== schemaUrl.href);
+    const rootSchema = isJson ? normalizeSchemaId($refParser.schema, schemaUrl.href) : $refParser.schema;
     await writeFile(
       path.resolve(destDir, fileName),
-      isJson ? JSON.stringify($refParser.schema, null, 2) : yaml.dump($refParser.schema),
+      isJson ? JSON.stringify(rootSchema, null, 2) : yaml.dump(rootSchema),
     );
     externalSchemas.forEach(async (externalSchemaUrl: string) => {
       const externalSchema = $refParser.$refs.get(externalSchemaUrl);
       if (externalSchema) {
         const externalSchemaFileName = externalSchemaUrl.replace(urlBase, '');
+        const normalizedExternalSchema = isJson ? normalizeSchemaId(externalSchema, externalSchemaUrl) : externalSchema;
         await mkdir(path.resolve(destDir, path.dirname(externalSchemaFileName)), { recursive: true });
         await writeFile(
           path.resolve(destDir, externalSchemaFileName),
-          isJson ? JSON.stringify(externalSchema, null, 2) : yaml.dump(externalSchema),
+          isJson ? JSON.stringify(normalizedExternalSchema, null, 2) : yaml.dump(normalizedExternalSchema),
         );
       }
     });

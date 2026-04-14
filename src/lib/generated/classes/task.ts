@@ -32,7 +32,6 @@ import { _ListenTaskConfiguration } from './listen-task-configuration';
 import { _SubscriptionIterator } from './subscription-iterator';
 import { _RaiseTaskConfiguration } from './raise-task-configuration';
 import { _RunTaskConfiguration } from './run-task-configuration';
-import { _SetTaskConfiguration } from './set-task-configuration';
 import { _SwitchTaskConfiguration } from './switch-task-configuration';
 import { _TaskList } from './task-list';
 import { _TryTaskCatch } from './try-task-catch';
@@ -90,42 +89,48 @@ export class Task extends ObjectHydrator<Specification.Task> {
         (self as Specification.TaskBase).metadata = new _TaskMetadata(
           (model as Specification.TaskBase).metadata as Specification.TaskMetadata,
         );
-      if (typeof (model as { [k: string]: unknown; fork?: Specification.ForkTaskConfiguration }).fork === 'object')
-        (self as { [k: string]: unknown; fork?: Specification.ForkTaskConfiguration }).fork =
+      if (
+        typeof (model as { [k: string]: unknown; fork?: Specification.ForkTaskConfiguration | undefined }).fork ===
+        'object'
+      )
+        (self as { [k: string]: unknown; fork?: Specification.ForkTaskConfiguration | undefined }).fork =
           new _ForkTaskConfiguration(
-            (model as { [k: string]: unknown; fork?: Specification.ForkTaskConfiguration })
+            (model as { [k: string]: unknown; fork?: Specification.ForkTaskConfiguration | undefined })
               .fork as Specification.ForkTaskConfiguration,
           );
-      if (typeof (model as { [k: string]: unknown; emit?: Specification.EmitTaskConfiguration }).emit === 'object')
-        (self as { [k: string]: unknown; emit?: Specification.EmitTaskConfiguration }).emit =
+      if (
+        typeof (model as { [k: string]: unknown; emit?: Specification.EmitTaskConfiguration | undefined }).emit ===
+        'object'
+      )
+        (self as { [k: string]: unknown; emit?: Specification.EmitTaskConfiguration | undefined }).emit =
           new _EmitTaskConfiguration(
-            (model as { [k: string]: unknown; emit?: Specification.EmitTaskConfiguration })
+            (model as { [k: string]: unknown; emit?: Specification.EmitTaskConfiguration | undefined })
               .emit as Specification.EmitTaskConfiguration,
           );
       if (
         typeof (
           model as {
             [k: string]: unknown;
-            for?: Specification.ForTaskConfiguration;
-            while?: string;
-            do?: Specification.TaskList;
+            for?: Specification.ForTaskConfiguration | undefined;
+            while?: string | undefined;
+            do?: Specification.TaskList | undefined;
           }
         ).for === 'object'
       )
         (
           self as {
             [k: string]: unknown;
-            for?: Specification.ForTaskConfiguration;
-            while?: string;
-            do?: Specification.TaskList;
+            for?: Specification.ForTaskConfiguration | undefined;
+            while?: string | undefined;
+            do?: Specification.TaskList | undefined;
           }
         ).for = new _ForTaskConfiguration(
           (
             model as {
               [k: string]: unknown;
-              for?: Specification.ForTaskConfiguration;
-              while?: string;
-              do?: Specification.TaskList;
+              for?: Specification.ForTaskConfiguration | undefined;
+              while?: string | undefined;
+              do?: Specification.TaskList | undefined;
             }
           ).for as Specification.ForTaskConfiguration,
         );
@@ -133,23 +138,23 @@ export class Task extends ObjectHydrator<Specification.Task> {
         typeof (
           model as {
             [k: string]: unknown;
-            listen?: Specification.ListenTaskConfiguration;
-            foreach?: Specification.SubscriptionIterator;
+            listen?: Specification.ListenTaskConfiguration | undefined;
+            foreach?: Specification.SubscriptionIterator | undefined;
           }
         ).listen === 'object'
       )
         (
           self as {
             [k: string]: unknown;
-            listen?: Specification.ListenTaskConfiguration;
-            foreach?: Specification.SubscriptionIterator;
+            listen?: Specification.ListenTaskConfiguration | undefined;
+            foreach?: Specification.SubscriptionIterator | undefined;
           }
         ).listen = new _ListenTaskConfiguration(
           (
             model as {
               [k: string]: unknown;
-              listen?: Specification.ListenTaskConfiguration;
-              foreach?: Specification.SubscriptionIterator;
+              listen?: Specification.ListenTaskConfiguration | undefined;
+              foreach?: Specification.SubscriptionIterator | undefined;
             }
           ).listen as Specification.ListenTaskConfiguration,
         );
@@ -157,71 +162,104 @@ export class Task extends ObjectHydrator<Specification.Task> {
         typeof (
           model as {
             [k: string]: unknown;
-            listen?: Specification.ListenTaskConfiguration;
-            foreach?: Specification.SubscriptionIterator;
+            listen?: Specification.ListenTaskConfiguration | undefined;
+            foreach?: Specification.SubscriptionIterator | undefined;
           }
         ).foreach === 'object'
       )
         (
           self as {
             [k: string]: unknown;
-            listen?: Specification.ListenTaskConfiguration;
-            foreach?: Specification.SubscriptionIterator;
+            listen?: Specification.ListenTaskConfiguration | undefined;
+            foreach?: Specification.SubscriptionIterator | undefined;
           }
         ).foreach = new _SubscriptionIterator(
           (
             model as {
               [k: string]: unknown;
-              listen?: Specification.ListenTaskConfiguration;
-              foreach?: Specification.SubscriptionIterator;
+              listen?: Specification.ListenTaskConfiguration | undefined;
+              foreach?: Specification.SubscriptionIterator | undefined;
             }
           ).foreach as Specification.SubscriptionIterator,
         );
-      if (typeof (model as { [k: string]: unknown; raise?: Specification.RaiseTaskConfiguration }).raise === 'object')
-        (self as { [k: string]: unknown; raise?: Specification.RaiseTaskConfiguration }).raise =
+      if (
+        typeof (model as { [k: string]: unknown; raise?: Specification.RaiseTaskConfiguration | undefined }).raise ===
+        'object'
+      )
+        (self as { [k: string]: unknown; raise?: Specification.RaiseTaskConfiguration | undefined }).raise =
           new _RaiseTaskConfiguration(
-            (model as { [k: string]: unknown; raise?: Specification.RaiseTaskConfiguration })
+            (model as { [k: string]: unknown; raise?: Specification.RaiseTaskConfiguration | undefined })
               .raise as Specification.RaiseTaskConfiguration,
           );
-      if (typeof (model as { [k: string]: unknown; run?: Specification.RunTaskConfiguration }).run === 'object')
-        (self as { [k: string]: unknown; run?: Specification.RunTaskConfiguration }).run = new _RunTaskConfiguration(
-          (model as { [k: string]: unknown; run?: Specification.RunTaskConfiguration })
-            .run as Specification.RunTaskConfiguration,
-        );
-      if (typeof (model as { [k: string]: unknown; set?: Specification.SetTaskConfiguration }).set === 'object')
-        (self as { [k: string]: unknown; set?: Specification.SetTaskConfiguration }).set = new _SetTaskConfiguration(
-          (model as { [k: string]: unknown; set?: Specification.SetTaskConfiguration })
-            .set as Specification.SetTaskConfiguration,
-        );
       if (
-        typeof (model as { [k: string]: unknown; switch?: Specification.SwitchTaskConfiguration }).switch === 'object'
+        typeof (model as { [k: string]: unknown; run?: Specification.RunTaskConfiguration | undefined }).run ===
+        'object'
       )
-        (self as { [k: string]: unknown; switch?: Specification.SwitchTaskConfiguration }).switch =
+        (self as { [k: string]: unknown; run?: Specification.RunTaskConfiguration | undefined }).run =
+          new _RunTaskConfiguration(
+            (model as { [k: string]: unknown; run?: Specification.RunTaskConfiguration | undefined })
+              .run as Specification.RunTaskConfiguration,
+          );
+      if (
+        typeof (model as { [k: string]: unknown; switch?: Specification.SwitchTaskConfiguration | undefined })
+          .switch === 'object'
+      )
+        (self as { [k: string]: unknown; switch?: Specification.SwitchTaskConfiguration | undefined }).switch =
           new _SwitchTaskConfiguration(
-            (model as { [k: string]: unknown; switch?: Specification.SwitchTaskConfiguration })
+            (model as { [k: string]: unknown; switch?: Specification.SwitchTaskConfiguration | undefined })
               .switch as Specification.SwitchTaskConfiguration,
           ) as unknown as Specification.SwitchTaskConfiguration;
       if (
-        typeof (model as { [k: string]: unknown; try?: Specification.TaskList; catch?: Specification.TryTaskCatch })
-          .try === 'object'
+        typeof (
+          model as {
+            [k: string]: unknown;
+            try?: Specification.TaskList | undefined;
+            catch?: Specification.TryTaskCatch | undefined;
+          }
+        ).try === 'object'
       )
-        (self as { [k: string]: unknown; try?: Specification.TaskList; catch?: Specification.TryTaskCatch }).try =
-          new _TaskList(
-            (model as { [k: string]: unknown; try?: Specification.TaskList; catch?: Specification.TryTaskCatch })
-              .try as Specification.TaskList,
-          );
+        (
+          self as {
+            [k: string]: unknown;
+            try?: Specification.TaskList | undefined;
+            catch?: Specification.TryTaskCatch | undefined;
+          }
+        ).try = new _TaskList(
+          (
+            model as {
+              [k: string]: unknown;
+              try?: Specification.TaskList | undefined;
+              catch?: Specification.TryTaskCatch | undefined;
+            }
+          ).try as Specification.TaskList,
+        );
       if (
-        typeof (model as { [k: string]: unknown; try?: Specification.TaskList; catch?: Specification.TryTaskCatch })
-          .catch === 'object'
+        typeof (
+          model as {
+            [k: string]: unknown;
+            try?: Specification.TaskList | undefined;
+            catch?: Specification.TryTaskCatch | undefined;
+          }
+        ).catch === 'object'
       )
-        (self as { [k: string]: unknown; try?: Specification.TaskList; catch?: Specification.TryTaskCatch }).catch =
-          new _TryTaskCatch(
-            (model as { [k: string]: unknown; try?: Specification.TaskList; catch?: Specification.TryTaskCatch })
-              .catch as Specification.TryTaskCatch,
-          );
-      if (typeof (model as { [k: string]: unknown; wait?: Specification.Duration }).wait === 'object')
-        (self as { [k: string]: unknown; wait?: Specification.Duration }).wait = new _Duration(
-          (model as { [k: string]: unknown; wait?: Specification.Duration }).wait as Specification.Duration,
+        (
+          self as {
+            [k: string]: unknown;
+            try?: Specification.TaskList | undefined;
+            catch?: Specification.TryTaskCatch | undefined;
+          }
+        ).catch = new _TryTaskCatch(
+          (
+            model as {
+              [k: string]: unknown;
+              try?: Specification.TaskList | undefined;
+              catch?: Specification.TryTaskCatch | undefined;
+            }
+          ).catch as Specification.TryTaskCatch,
+        );
+      if (typeof (model as { [k: string]: unknown; wait?: Specification.Duration | undefined }).wait === 'object')
+        (self as { [k: string]: unknown; wait?: Specification.Duration | undefined }).wait = new _Duration(
+          (model as { [k: string]: unknown; wait?: Specification.Duration | undefined }).wait as Specification.Duration,
         );
     }
     getLifecycleHooks('Task')?.constructor?.(this);

@@ -20,7 +20,7 @@
  *
  *****************************************************************************************/
 
-import { _OAuth2AutenthicationDataClient } from './oauth2-autenthication-data-client';
+import { _OAuth2AuthenticationDataClient } from './oauth2-authentication-data-client';
 import { _OAuth2TokenRequest } from './oauth2-token-request';
 import { _OAuth2TokenDefinition } from './oauth2-token-definition';
 import { _OAuth2AuthenticationPropertiesEndpoints } from './oauth2-authentication-properties-endpoints';
@@ -60,31 +60,42 @@ export class OAuth2AuthenticationPolicyConfiguration extends ObjectHydrator<Spec
     super(model);
     const self = this as unknown as Specification.OAuth2AuthenticationPolicyConfiguration & object;
     if (isObject(model)) {
-      if (typeof (model as Specification.OAuth2AutenthicationData).client === 'object')
-        (self as Specification.OAuth2AutenthicationData).client = new _OAuth2AutenthicationDataClient(
-          (model as Specification.OAuth2AutenthicationData).client as Specification.OAuth2AutenthicationDataClient,
+      if (typeof (model as Specification.OAuth2AuthenticationData).client === 'object')
+        (self as Specification.OAuth2AuthenticationData).client = new _OAuth2AuthenticationDataClient(
+          (model as Specification.OAuth2AuthenticationData).client as Specification.OAuth2AuthenticationDataClient,
         );
-      if (typeof (model as Specification.OAuth2AutenthicationData).request === 'object')
-        (self as Specification.OAuth2AutenthicationData).request = new _OAuth2TokenRequest(
-          (model as Specification.OAuth2AutenthicationData).request as Specification.OAuth2TokenRequest,
+      if (typeof (model as Specification.OAuth2AuthenticationData).request === 'object')
+        (self as Specification.OAuth2AuthenticationData).request = new _OAuth2TokenRequest(
+          (model as Specification.OAuth2AuthenticationData).request as Specification.OAuth2TokenRequest,
         );
-      if (typeof (model as Specification.OAuth2AutenthicationData).subject === 'object')
-        (self as Specification.OAuth2AutenthicationData).subject = new _OAuth2TokenDefinition(
-          (model as Specification.OAuth2AutenthicationData).subject as Specification.OAuth2TokenDefinition,
+      if (typeof (model as Specification.OAuth2AuthenticationData).subject === 'object')
+        (self as Specification.OAuth2AuthenticationData).subject = new _OAuth2TokenDefinition(
+          (model as Specification.OAuth2AuthenticationData).subject as Specification.OAuth2TokenDefinition,
         );
-      if (typeof (model as Specification.OAuth2AutenthicationData).actor === 'object')
-        (self as Specification.OAuth2AutenthicationData).actor = new _OAuth2TokenDefinition(
-          (model as Specification.OAuth2AutenthicationData).actor as Specification.OAuth2TokenDefinition,
+      if (typeof (model as Specification.OAuth2AuthenticationData).actor === 'object')
+        (self as Specification.OAuth2AuthenticationData).actor = new _OAuth2TokenDefinition(
+          (model as Specification.OAuth2AuthenticationData).actor as Specification.OAuth2TokenDefinition,
         );
       if (
-        typeof (model as { [k: string]: unknown; endpoints?: Specification.OAuth2AuthenticationPropertiesEndpoints })
-          .endpoints === 'object'
+        typeof (
+          model as {
+            [k: string]: unknown;
+            endpoints?: Specification.OAuth2AuthenticationPropertiesEndpoints | undefined;
+          }
+        ).endpoints === 'object'
       )
         (
-          self as { [k: string]: unknown; endpoints?: Specification.OAuth2AuthenticationPropertiesEndpoints }
+          self as {
+            [k: string]: unknown;
+            endpoints?: Specification.OAuth2AuthenticationPropertiesEndpoints | undefined;
+          }
         ).endpoints = new _OAuth2AuthenticationPropertiesEndpoints(
-          (model as { [k: string]: unknown; endpoints?: Specification.OAuth2AuthenticationPropertiesEndpoints })
-            .endpoints as Specification.OAuth2AuthenticationPropertiesEndpoints,
+          (
+            model as {
+              [k: string]: unknown;
+              endpoints?: Specification.OAuth2AuthenticationPropertiesEndpoints | undefined;
+            }
+          ).endpoints as Specification.OAuth2AuthenticationPropertiesEndpoints,
         );
     }
     getLifecycleHooks('OAuth2AuthenticationPolicyConfiguration')?.constructor?.(this);

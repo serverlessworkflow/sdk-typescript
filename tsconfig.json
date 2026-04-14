@@ -4,7 +4,9 @@
     "declarationDir": "./dist",
     "declarationMap": true,
     "target": "ES2022",
-    "module": "ESNext"
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "rootDir": "./src"
   },
   "include": ["./src/**/*.ts"]
 }

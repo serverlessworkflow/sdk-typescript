@@ -20,8 +20,8 @@
  *
  *****************************************************************************************/
 
-import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
+import { ArrayHydrator } from '../../hydrator';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
 
@@ -34,23 +34,28 @@ export type ShellArgumentsIntersection = ShellArguments & Specification.ShellArg
  * Represents a constructor for the intersection of the ShellArguments class and type
  */
 export interface ShellArgumentsConstructor {
-  new (model?: Partial<Specification.ShellArguments>): ShellArgumentsIntersection;
+  new (model?: Array<string> | number): ShellArgumentsIntersection;
 }
 
 /**
- * Represents a ShellArguments with methods for validation and normalization.
- * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
+ * Represents a collection of string.
+ * Inherits from ArrayHydrator to handle array-specific hydration.
  */
-export class ShellArguments extends ObjectHydrator<Specification.ShellArguments> {
+export class ShellArguments extends ArrayHydrator<string> {
   /**
-   * Instanciates a new instance of the ShellArguments class.
-   * Initializes properties based on the provided model if it is an object.
+   * Constructs a new instance of the ShellArguments class.
    *
-   * @param model - Optional partial model object to initialize the ShellArguments.
+   * @param model - Optional parameter which can be an array of objects or a number representing the array length.
    */
-  constructor(model?: Partial<Specification.ShellArguments>) {
+  constructor(model?: Array<string> | number) {
     super(model);
-
+    if (Array.isArray(model)) {
+      if (model?.length) {
+        this.splice(0, this.length);
+        model.forEach((item) => this.push(item));
+      }
+    }
+    Object.setPrototypeOf(this, Object.create(ShellArguments.prototype));
     getLifecycleHooks('ShellArguments')?.constructor?.(this);
   }
 
@@ -59,7 +64,7 @@ export class ShellArguments extends ObjectHydrator<Specification.ShellArguments>
    * Throws if invalid.
    */
   validate(workflow?: Partial<Specification.Workflow>) {
-    const copy = new ShellArguments(this as any) as ShellArgumentsIntersection;
+    const copy = new ShellArguments(this);
     validate('ShellArguments', copy, workflow);
   }
 
@@ -69,10 +74,11 @@ export class ShellArguments extends ObjectHydrator<Specification.ShellArguments>
    *
    * @returns A normalized version of the ShellArguments instance.
    */
-  normalize(): ShellArguments & Specification.ShellArguments {
-    const copy = new ShellArguments(this as any) as ShellArgumentsIntersection;
+  normalize(): ShellArguments {
+    const copy = new ShellArguments(this);
     return getLifecycleHooks('ShellArguments')?.normalize?.(copy) || copy;
   }
 }
 
-export const _ShellArguments = ShellArguments as ShellArgumentsConstructor;
+export const _ShellArguments = ShellArguments as unknown as ShellArgumentsConstructor;
+//export const _ShellArguments = ShellArguments; // could be exported directly, but it makes the job of building the index more straightforward as it's consistant with "object" classes

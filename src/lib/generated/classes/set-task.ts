@@ -25,7 +25,6 @@ import { _Output } from './output';
 import { _Export } from './export';
 import { _TaskTimeout } from './task-timeout';
 import { _TaskMetadata } from './task-metadata';
-import { _SetTaskConfiguration } from './set-task-configuration';
 import { _TaskBase } from './task-base';
 import { Specification } from '../definitions';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
@@ -64,7 +63,6 @@ export class SetTask extends _TaskBase {
       if (typeof model.export === 'object') self.export = new _Export(model.export);
       if (typeof model.timeout === 'object') self.timeout = new _TaskTimeout(model.timeout);
       if (typeof model.metadata === 'object') self.metadata = new _TaskMetadata(model.metadata);
-      if (typeof model.set === 'object') self.set = new _SetTaskConfiguration(model.set);
     }
     getLifecycleHooks('SetTask')?.constructor?.(this);
   }

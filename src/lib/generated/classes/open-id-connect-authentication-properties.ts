@@ -20,7 +20,7 @@
  *
  *****************************************************************************************/
 
-import { _OAuth2AutenthicationDataClient } from './oauth2-autenthication-data-client';
+import { _OAuth2AuthenticationDataClient } from './oauth2-authentication-data-client';
 import { _OAuth2TokenRequest } from './oauth2-token-request';
 import { _OAuth2TokenDefinition } from './oauth2-token-definition';
 import { ObjectHydrator } from '../../hydrator';
@@ -59,7 +59,7 @@ export class OpenIdConnectAuthenticationProperties extends ObjectHydrator<Specif
     super(model);
     const self = this as unknown as Specification.OpenIdConnectAuthenticationProperties & object;
     if (isObject(model)) {
-      if (typeof model.client === 'object') self.client = new _OAuth2AutenthicationDataClient(model.client);
+      if (typeof model.client === 'object') self.client = new _OAuth2AuthenticationDataClient(model.client);
       if (typeof model.request === 'object') self.request = new _OAuth2TokenRequest(model.request);
       if (typeof model.subject === 'object') self.subject = new _OAuth2TokenDefinition(model.subject);
       if (typeof model.actor === 'object') self.actor = new _OAuth2TokenDefinition(model.actor);
