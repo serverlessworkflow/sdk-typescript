@@ -32,7 +32,7 @@ export type BuildOptions = {
 /**
  * The type of the underlying function called on `build()` for objects
  */
-export type BuildingFunction<TSpec, TBuilt> = (model: Partial<TSpec>, options: BuildOptions) => TBuilt;
+export type BuildingFunction<TSpec, TBuilt> = (model: TSpec, options: BuildOptions) => TBuilt;
 
 /**
  * The type of the underlying function called on `build()` for arrays
@@ -62,7 +62,7 @@ export type ArrayBuilder<TSpec, TBuilt> = {
  * @param options The build options
  * @returns
  */
-function defaultBuildingFn<TSpec, TBuilt = TSpec>(model: Partial<TSpec>, options: BuildOptions): TBuilt {
+function defaultBuildingFn<TSpec, TBuilt = TSpec>(model: TSpec, options: BuildOptions): TBuilt {
   // Keep defaults explicit so callers can omit both options.
   if (options.validate == null) {
     options.validate = true;
@@ -70,7 +70,7 @@ function defaultBuildingFn<TSpec, TBuilt = TSpec>(model: Partial<TSpec>, options
   if (options.normalize == null) {
     options.normalize = true;
   }
-  return model as TBuilt;
+  return model as unknown as TBuilt;
 }
 
 /**
@@ -81,8 +81,8 @@ function defaultBuildingFn<TSpec, TBuilt = TSpec>(model: Partial<TSpec>, options
 export function builder<TSpec, TBuilt = TSpec>(
   model: Partial<TSpec> = {},
   buildingFn: BuildingFunction<TSpec, TBuilt> = defaultBuildingFn,
-): Builder<TSpec, TBuilt> {
-  const proxy = new Proxy({} as Builder<TSpec, TBuilt>, {
+): Builder<Partial<TSpec>, TBuilt> {
+  const proxy = new Proxy({} as Builder<Partial<TSpec>, TBuilt>, {
     get: (_, prop) => {
       if (prop === 'build') {
         return (options?: BuildOptions) => {
@@ -93,10 +93,10 @@ export function builder<TSpec, TBuilt = TSpec>(
           if (options.normalize == null) {
             options.normalize = true;
           }
-          return buildingFn(model, options);
+          return buildingFn(model as TSpec, options);
         };
       }
-      return (value: unknown): Builder<TSpec, TBuilt> => {
+      return (value: unknown): Builder<Partial<TSpec>, TBuilt> => {
         (model as Record<string, unknown>)[prop.toString()] = value;
         return proxy;
       };

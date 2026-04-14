@@ -77,14 +77,25 @@ export class OAuth2AuthenticationPolicyConfiguration extends ObjectHydrator<Spec
           (model as Specification.OAuth2AuthenticationData).actor as Specification.OAuth2TokenDefinition,
         );
       if (
-        typeof (model as { [k: string]: unknown; endpoints?: Specification.OAuth2AuthenticationPropertiesEndpoints })
-          .endpoints === 'object'
+        typeof (
+          model as {
+            [k: string]: unknown;
+            endpoints?: Specification.OAuth2AuthenticationPropertiesEndpoints | undefined;
+          }
+        ).endpoints === 'object'
       )
         (
-          self as { [k: string]: unknown; endpoints?: Specification.OAuth2AuthenticationPropertiesEndpoints }
+          self as {
+            [k: string]: unknown;
+            endpoints?: Specification.OAuth2AuthenticationPropertiesEndpoints | undefined;
+          }
         ).endpoints = new _OAuth2AuthenticationPropertiesEndpoints(
-          (model as { [k: string]: unknown; endpoints?: Specification.OAuth2AuthenticationPropertiesEndpoints })
-            .endpoints as Specification.OAuth2AuthenticationPropertiesEndpoints,
+          (
+            model as {
+              [k: string]: unknown;
+              endpoints?: Specification.OAuth2AuthenticationPropertiesEndpoints | undefined;
+            }
+          ).endpoints as Specification.OAuth2AuthenticationPropertiesEndpoints,
         );
     }
     getLifecycleHooks('OAuth2AuthenticationPolicyConfiguration')?.constructor?.(this);
