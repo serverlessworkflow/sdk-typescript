@@ -71,7 +71,7 @@ export type OAuth2AuthenticationPolicyConfiguration =
 /**
  * The inline configuration of the OAuth2 authentication policy.
  */
-export type OAuth2ConnectAuthenticationProperties = OAuth2AutenthicationData & {
+export type OAuth2ConnectAuthenticationProperties = OAuth2AuthenticationData & {
   endpoints?: OAuth2AuthenticationPropertiesEndpoints;
   [k: string]: unknown;
 };
@@ -82,11 +82,11 @@ export type OAuth2Issuers = string[];
 /**
  * The scopes, if any, to request the token for.
  */
-export type OAuth2AutenthicationDataScopes = string[];
+export type OAuth2AuthenticationDataScopes = string[];
 /**
  * The audiences, if any, to request the token for.
  */
-export type OAuth2AutenthicationDataAudiences = string[];
+export type OAuth2AuthenticationDataAudiences = string[];
 /**
  * The configuration of the OpenIdConnect authentication policy.
  */
@@ -110,6 +110,14 @@ export type ErrorType = UriTemplate | RuntimeExpression;
  */
 export type ErrorInstance = RuntimeExpression;
 /**
+ * A short, human-readable summary of the error.
+ */
+export type ErrorTitle = RuntimeExpression;
+/**
+ * A human-readable explanation specific to this occurrence of the error.
+ */
+export type ErrorDetails = RuntimeExpression;
+/**
  * A discrete unit of work that contributes to achieving the overall objectives defined by the workflow.
  */
 export type Task =
@@ -128,7 +136,7 @@ export type Task =
 /**
  * Defines the call to perform.
  */
-export type CallTask = CallAsyncAPI | CallGRPC | CallHTTP | CallOpenAPI | CallFunction;
+export type CallTask = CallAsyncAPI | CallGRPC | CallHTTP | CallOpenAPI | CallA2A | CallMCP | CallFunction;
 /**
  * Defines the AsyncAPI call to perform.
  */
@@ -158,7 +166,7 @@ export type ExportAs =
       [k: string]: unknown;
     };
 export type TaskTimeout = Timeout | string;
-export type Duration = DurationInline | string;
+export type Duration = DurationInline | RuntimeExpression | string;
 /**
  * Represents different transition options for a workflow.
  */
@@ -186,11 +194,65 @@ export type CallHTTP = TaskBase & {
   [k: string]: unknown;
 };
 /**
+ * A name/value mapping of the headers, if any, of the HTTP request to perform.
+ */
+export type HTTPHeaders =
+  | {
+      [k: string]: string;
+    }
+  | RuntimeExpression;
+/**
+ * A name/value mapping of the query parameters, if any, of the HTTP request to perform.
+ */
+export type HTTPQuery =
+  | {
+      [k: string]: string;
+    }
+  | RuntimeExpression;
+/**
  * Defines the OpenAPI call to perform.
  */
 export type CallOpenAPI = TaskBase & {
   call?: 'openapi';
   with?: OpenAPIArguments;
+  [k: string]: unknown;
+};
+/**
+ * Defines the A2A call to perform.
+ */
+export type CallA2A = TaskBase & {
+  call?: 'a2a';
+  with?: A2AArguments;
+  [k: string]: unknown;
+};
+/**
+ * The parameters object to send with the A2A method.
+ */
+export type WithA2AParameters =
+  | {
+      [k: string]: unknown;
+    }
+  | string;
+/**
+ * Defines the MCP call to perform.
+ */
+export type CallMCP = TaskBase & {
+  call?: 'mcp';
+  with?: MCPArguments;
+  [k: string]: unknown;
+};
+/**
+ * The MCP method parameters.
+ */
+export type McpMethodParameters =
+  | {
+      [k: string]: unknown;
+    }
+  | string;
+/**
+ * The transport to use to perform the MCP call.
+ */
+export type McpCallTransport = {
   [k: string]: unknown;
 };
 /**
@@ -305,9 +367,17 @@ export type RunTask = TaskBase & {
  */
 export type RunTaskConfiguration = RunContainer | RunScript | RunShell | RunWorkflow;
 /**
+ * A list of the arguments, if any, passed as argv to the command or default container CMD
+ */
+export type ContainerArguments = string[];
+/**
  * The configuration of the script to run.
  */
 export type Script = InlineScript | ExternalScript;
+/**
+ * A list of the arguments, if any, to the shell command as argv
+ */
+export type ShellArguments = string[];
 /**
  * A task used to set data.
  */
@@ -315,6 +385,14 @@ export type SetTask = TaskBase & {
   set?: SetTaskConfiguration;
   [k: string]: unknown;
 };
+/**
+ * The data to set.
+ */
+export type SetTaskConfiguration =
+  | {
+      [k: string]: unknown;
+    }
+  | string;
 /**
  * Enables conditional branching within workflows, allowing them to dynamically select different paths based on specified conditions or criteria.
  */
@@ -540,7 +618,7 @@ export interface OAuth2AuthenticationPolicy {
 /**
  * Inline configuration of the OAuth2 authentication policy.
  */
-export interface OAuth2AutenthicationData {
+export interface OAuth2AuthenticationData {
   authority?: UriTemplate;
   /**
    * The grant type to use.
@@ -551,11 +629,11 @@ export interface OAuth2AutenthicationData {
     | 'password'
     | 'refresh_token'
     | 'urn:ietf:params:oauth:grant-type:token-exchange';
-  client?: OAuth2AutenthicationDataClient;
+  client?: OAuth2AuthenticationDataClient;
   request?: OAuth2TokenRequest;
   issuers?: OAuth2Issuers;
-  scopes?: OAuth2AutenthicationDataScopes;
-  audiences?: OAuth2AutenthicationDataAudiences;
+  scopes?: OAuth2AuthenticationDataScopes;
+  audiences?: OAuth2AuthenticationDataAudiences;
   /**
    * The username to use. Used only if the grant type is Password.
    */
@@ -571,7 +649,7 @@ export interface OAuth2AutenthicationData {
 /**
  * The definition of an OAuth2 client.
  */
-export interface OAuth2AutenthicationDataClient {
+export interface OAuth2AuthenticationDataClient {
   /**
    * The client id to use.
    */
@@ -648,11 +726,11 @@ export interface OpenIdConnectAuthenticationProperties {
     | 'password'
     | 'refresh_token'
     | 'urn:ietf:params:oauth:grant-type:token-exchange';
-  client?: OAuth2AutenthicationDataClient;
+  client?: OAuth2AuthenticationDataClient;
   request?: OAuth2TokenRequest;
   issuers?: OAuth2Issuers;
-  scopes?: OAuth2AutenthicationDataScopes;
-  audiences?: OAuth2AutenthicationDataAudiences;
+  scopes?: OAuth2AuthenticationDataScopes;
+  audiences?: OAuth2AuthenticationDataAudiences;
   /**
    * The username to use. Used only if the grant type is Password.
    */
@@ -699,14 +777,8 @@ export interface Error {
    */
   status: number;
   instance?: ErrorInstance;
-  /**
-   * A short, human-readable summary of the error.
-   */
-  title?: string;
-  /**
-   * A human-readable explanation specific to this occurrence of the error.
-   */
-  detail?: string;
+  title?: ErrorTitle;
+  detail?: ErrorDetails;
 }
 export interface ExtensionItem {
   [k: string]: Extension;
@@ -860,21 +932,9 @@ export interface HTTPArguments {
   redirect?: boolean;
 }
 /**
- * A name/value mapping of the headers, if any, of the HTTP request to perform.
- */
-export interface HTTPHeaders {
-  [k: string]: unknown;
-}
-/**
  * The body, if any, of the HTTP request to perform.
  */
 export interface HTTPBody {
-  [k: string]: unknown;
-}
-/**
- * A name/value mapping of the query parameters, if any, of the HTTP request to perform.
- */
-export interface HTTPQuery {
   [k: string]: unknown;
 }
 /**
@@ -901,6 +961,68 @@ export interface OpenAPIArguments {
  * A name/value mapping of the parameters of the OpenAPI operation to call.
  */
 export interface WithOpenAPIParameters {
+  [k: string]: unknown;
+}
+/**
+ * The A2A call arguments.
+ */
+export interface A2AArguments {
+  agentCard?: ExternalResource;
+  server?: Endpoint;
+  /**
+   * The A2A method to send.
+   */
+  method:
+    | 'message/send'
+    | 'message/stream'
+    | 'tasks/get'
+    | 'tasks/list'
+    | 'tasks/cancel'
+    | 'tasks/resubscribe'
+    | 'tasks/pushNotificationConfig/set'
+    | 'tasks/pushNotificationConfig/get'
+    | 'tasks/pushNotificationConfig/list'
+    | 'tasks/pushNotificationConfig/delete'
+    | 'agent/getAuthenticatedExtendedCard';
+  parameters?: WithA2AParameters;
+}
+/**
+ * The MCP call arguments.
+ */
+export interface MCPArguments {
+  /**
+   * The version of the MCP protocol to use.
+   */
+  protocolVersion?: string;
+  /**
+   * The MCP method to call.
+   */
+  method:
+    | 'tools/list'
+    | 'tools/call'
+    | 'prompts/list'
+    | 'prompts/get'
+    | 'resources/list'
+    | 'resources/read'
+    | 'resources/templates/list';
+  parameters?: McpMethodParameters;
+  timeout?: Duration;
+  transport: McpCallTransport;
+  client?: McpClient;
+  [k: string]: unknown;
+}
+/**
+ * Describes the client used to perform the MCP call.
+ */
+export interface McpClient {
+  /**
+   * The name of the client used to connect to the MCP server.
+   */
+  name: string;
+  /**
+   * The version of the client used to connect to the MCP server.
+   */
+  description?: string;
   [k: string]: unknown;
 }
 /**
@@ -1095,7 +1217,16 @@ export interface Container {
   ports?: ContainerPorts;
   volumes?: ContainerVolumes;
   environment?: ContainerEnvironment;
+  /**
+   * A runtime expression, if any, passed as standard input (stdin) to the command or default container CMD
+   */
+  stdin?: string;
+  arguments?: ContainerArguments;
   lifetime?: ContainerLifetime;
+  /**
+   * Policy that controls how the container's image should be pulled from the registry. Defaults to `ifNotPresent`
+   */
+  pullPolicy?: 'ifNotPresent' | 'always' | 'never';
 }
 /**
  * The container's port mappings, if any.
@@ -1161,14 +1292,12 @@ export interface Shell {
    * The shell command to run.
    */
   command: string;
+  /**
+   * A runtime expression, if any, to the shell command as standard input (stdin).
+   */
+  stdin?: string;
   arguments?: ShellArguments;
   environment?: ShellEnvironment;
-}
-/**
- * A list of the arguments of the shell command to run.
- */
-export interface ShellArguments {
-  [k: string]: unknown;
 }
 /**
  * A key/value mapping of the environment variables, if any, to use when running the configured process.
@@ -1205,12 +1334,6 @@ export interface SubflowConfiguration {
  * The data, if any, to pass as input to the workflow to execute. The value should be validated against the target workflow's input schema, if specified.
  */
 export interface SubflowInput {
-  [k: string]: unknown;
-}
-/**
- * The data to set.
- */
-export interface SetTaskConfiguration {
   [k: string]: unknown;
 }
 export interface SwitchItem {

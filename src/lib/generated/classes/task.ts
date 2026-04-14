@@ -32,7 +32,6 @@ import { _ListenTaskConfiguration } from './listen-task-configuration';
 import { _SubscriptionIterator } from './subscription-iterator';
 import { _RaiseTaskConfiguration } from './raise-task-configuration';
 import { _RunTaskConfiguration } from './run-task-configuration';
-import { _SetTaskConfiguration } from './set-task-configuration';
 import { _SwitchTaskConfiguration } from './switch-task-configuration';
 import { _TaskList } from './task-list';
 import { _TryTaskCatch } from './try-task-catch';
@@ -187,11 +186,6 @@ export class Task extends ObjectHydrator<Specification.Task> {
         (self as { [k: string]: unknown; run?: Specification.RunTaskConfiguration }).run = new _RunTaskConfiguration(
           (model as { [k: string]: unknown; run?: Specification.RunTaskConfiguration })
             .run as Specification.RunTaskConfiguration,
-        );
-      if (typeof (model as { [k: string]: unknown; set?: Specification.SetTaskConfiguration }).set === 'object')
-        (self as { [k: string]: unknown; set?: Specification.SetTaskConfiguration }).set = new _SetTaskConfiguration(
-          (model as { [k: string]: unknown; set?: Specification.SetTaskConfiguration })
-            .set as Specification.SetTaskConfiguration,
         );
       if (
         typeof (model as { [k: string]: unknown; switch?: Specification.SwitchTaskConfiguration }).switch === 'object'

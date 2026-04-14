@@ -1,7 +1,7 @@
 {
   "name": "@serverlessworkflow/sdk",
-  "version": "1.0.2-alpha1",
-  "schemaVersion": "1.0.0",
+  "version": "1.0.3-alpha1",
+  "schemaVersion": "1.0.3",
   "description": "Typescript SDK for Serverless Workflow Specification",
   "type": "commonjs",
   "main": "./index.cjs",

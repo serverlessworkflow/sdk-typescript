@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { _A2AArguments } from './a2a-arguments';
 import { _AllEventConsumptionStrategy } from './all-event-consumption-strategy';
 import { _AllEventConsumptionStrategyConfiguration } from './all-event-consumption-strategy-configuration';
 import { _AnyEventConsumptionStrategy } from './any-event-consumption-strategy';
@@ -29,16 +30,19 @@ import { _BasicAuthenticationProperties } from './basic-authentication-propertie
 import { _BearerAuthenticationPolicy } from './bearer-authentication-policy';
 import { _BearerAuthenticationPolicyConfiguration } from './bearer-authentication-policy-configuration';
 import { _BearerAuthenticationProperties } from './bearer-authentication-properties';
+import { _CallA2A } from './call-a2a';
 import { _CallAsyncAPI } from './call-async-api';
 import { _CallFunction } from './call-function';
 import { _CallGRPC } from './call-grpc';
 import { _CallHTTP } from './call-http';
+import { _CallMCP } from './call-mcp';
 import { _CallOpenAPI } from './call-open-api';
 import { _CallTask } from './call-task';
 import { _Catalog } from './catalog';
 import { _CatchErrors } from './catch-errors';
 import { _ConstantBackoff } from './constant-backoff';
 import { _Container } from './container';
+import { _ContainerArguments } from './container-arguments';
 import { _ContainerEnvironment } from './container-environment';
 import { _ContainerLifetime } from './container-lifetime';
 import { _ContainerPorts } from './container-ports';
@@ -58,8 +62,10 @@ import { _Endpoint } from './endpoint';
 import { _EndpointConfiguration } from './endpoint-configuration';
 import { _EndpointUri } from './endpoint-uri';
 import { _Error } from './error';
+import { _ErrorDetails } from './error-details';
 import { _ErrorFilter } from './error-filter';
 import { _ErrorInstance } from './error-instance';
+import { _ErrorTitle } from './error-title';
 import { _ErrorType } from './error-type';
 import { _EventConsumptionStrategy } from './event-consumption-strategy';
 import { _EventData } from './event-data';
@@ -92,10 +98,14 @@ import { _InputFrom } from './input-from';
 import { _LinearBackoff } from './linear-backoff';
 import { _ListenTask } from './listen-task';
 import { _ListenTaskConfiguration } from './listen-task-configuration';
-import { _OAuth2AutenthicationData } from './oauth2-autenthication-data';
-import { _OAuth2AutenthicationDataAudiences } from './oauth2-autenthication-data-audiences';
-import { _OAuth2AutenthicationDataClient } from './oauth2-autenthication-data-client';
-import { _OAuth2AutenthicationDataScopes } from './oauth2-autenthication-data-scopes';
+import { _MCPArguments } from './mcp-arguments';
+import { _McpCallTransport } from './mcp-call-transport';
+import { _McpClient } from './mcp-client';
+import { _McpMethodParameters } from './mcp-method-parameters';
+import { _OAuth2AuthenticationData } from './oauth2-authentication-data';
+import { _OAuth2AuthenticationDataAudiences } from './oauth2-authentication-data-audiences';
+import { _OAuth2AuthenticationDataClient } from './oauth2-authentication-data-client';
+import { _OAuth2AuthenticationDataScopes } from './oauth2-authentication-data-scopes';
 import { _OAuth2AuthenticationPolicy } from './oauth2-authentication-policy';
 import { _OAuth2AuthenticationPolicyConfiguration } from './oauth2-authentication-policy-configuration';
 import { _OAuth2AuthenticationPropertiesEndpoints } from './oauth2-authentication-properties-endpoints';
@@ -166,6 +176,7 @@ import { _UseRetries } from './use-retries';
 import { _UseSecrets } from './use-secrets';
 import { _UseTimeouts } from './use-timeouts';
 import { _WaitTask } from './wait-task';
+import { _WithA2AParameters } from './with-a2a-parameters';
 import { _WithEvent } from './with-event';
 import { _WithGRPCArguments } from './with-grpc-arguments';
 import { _WithGRPCService } from './with-grpc-service';
@@ -176,6 +187,7 @@ import { _WorkflowTags } from './workflow-tags';
 import { _WorkflowTimeout } from './workflow-timeout';
 
 export const Classes = {
+  A2AArguments: _A2AArguments,
   AllEventConsumptionStrategy: _AllEventConsumptionStrategy,
   AllEventConsumptionStrategyConfiguration: _AllEventConsumptionStrategyConfiguration,
   AnyEventConsumptionStrategy: _AnyEventConsumptionStrategy,
@@ -191,16 +203,19 @@ export const Classes = {
   BearerAuthenticationPolicy: _BearerAuthenticationPolicy,
   BearerAuthenticationPolicyConfiguration: _BearerAuthenticationPolicyConfiguration,
   BearerAuthenticationProperties: _BearerAuthenticationProperties,
+  CallA2A: _CallA2A,
   CallAsyncAPI: _CallAsyncAPI,
   CallFunction: _CallFunction,
   CallGRPC: _CallGRPC,
   CallHTTP: _CallHTTP,
+  CallMCP: _CallMCP,
   CallOpenAPI: _CallOpenAPI,
   CallTask: _CallTask,
   Catalog: _Catalog,
   CatchErrors: _CatchErrors,
   ConstantBackoff: _ConstantBackoff,
   Container: _Container,
+  ContainerArguments: _ContainerArguments,
   ContainerEnvironment: _ContainerEnvironment,
   ContainerLifetime: _ContainerLifetime,
   ContainerPorts: _ContainerPorts,
@@ -220,8 +235,10 @@ export const Classes = {
   EndpointConfiguration: _EndpointConfiguration,
   EndpointUri: _EndpointUri,
   Error: _Error,
+  ErrorDetails: _ErrorDetails,
   ErrorFilter: _ErrorFilter,
   ErrorInstance: _ErrorInstance,
+  ErrorTitle: _ErrorTitle,
   ErrorType: _ErrorType,
   EventConsumptionStrategy: _EventConsumptionStrategy,
   EventData: _EventData,
@@ -254,10 +271,14 @@ export const Classes = {
   LinearBackoff: _LinearBackoff,
   ListenTask: _ListenTask,
   ListenTaskConfiguration: _ListenTaskConfiguration,
-  OAuth2AutenthicationData: _OAuth2AutenthicationData,
-  OAuth2AutenthicationDataAudiences: _OAuth2AutenthicationDataAudiences,
-  OAuth2AutenthicationDataClient: _OAuth2AutenthicationDataClient,
-  OAuth2AutenthicationDataScopes: _OAuth2AutenthicationDataScopes,
+  MCPArguments: _MCPArguments,
+  McpCallTransport: _McpCallTransport,
+  McpClient: _McpClient,
+  McpMethodParameters: _McpMethodParameters,
+  OAuth2AuthenticationData: _OAuth2AuthenticationData,
+  OAuth2AuthenticationDataAudiences: _OAuth2AuthenticationDataAudiences,
+  OAuth2AuthenticationDataClient: _OAuth2AuthenticationDataClient,
+  OAuth2AuthenticationDataScopes: _OAuth2AuthenticationDataScopes,
   OAuth2AuthenticationPolicy: _OAuth2AuthenticationPolicy,
   OAuth2AuthenticationPolicyConfiguration: _OAuth2AuthenticationPolicyConfiguration,
   OAuth2AuthenticationPropertiesEndpoints: _OAuth2AuthenticationPropertiesEndpoints,
@@ -328,6 +349,7 @@ export const Classes = {
   UseSecrets: _UseSecrets,
   UseTimeouts: _UseTimeouts,
   WaitTask: _WaitTask,
+  WithA2AParameters: _WithA2AParameters,
   WithEvent: _WithEvent,
   WithGRPCArguments: _WithGRPCArguments,
   WithGRPCService: _WithGRPCService,

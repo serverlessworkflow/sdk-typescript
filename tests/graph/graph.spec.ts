@@ -6,7 +6,7 @@ describe('Workflow to Graph', () => {
   it('should build a graph for a workflow with a Set task, using the buildGraph function', () => {
     const workflow = Classes.Workflow.deserialize(`
 document:
-  dsl: '1.0.0'
+  dsl: '1.0.3'
   namespace: test
   name: set
   version: '0.1.0'
@@ -34,7 +34,7 @@ do:
   it('should build a graph for a workflow with a Set task, using the instance method', () => {
     const workflow = Classes.Workflow.deserialize(`
 document:
-  dsl: '1.0.0'
+  dsl: '1.0.3'
   namespace: test
   name: set
   version: '0.1.0'
@@ -61,7 +61,7 @@ do:
   it('should build a graph for a workflow with a Set task, using the static method', () => {
     const workflow = {
       document: {
-        dsl: '1.0.0',
+        dsl: '1.0.3',
         name: 'set',
         version: '1.0.0',
         namespace: 'test',
@@ -95,7 +95,7 @@ do:
   it('should build a graph for a workflow with multiple Set tasks', () => {
     const workflow = Classes.Workflow.deserialize(`
 document:
-  dsl: '1.0.0'
+  dsl: '1.0.3'
   namespace: test
   name: set
   version: '0.1.0'
@@ -131,7 +131,7 @@ do:
   it('should build a graph for a workflow with a task containing an If clause, producing an alternative edge', () => {
     const workflow = Classes.Workflow.deserialize(`
 document:
-  dsl: '1.0.0'
+  dsl: '1.0.3'
   namespace: test
   name: set
   version: '0.1.0'
@@ -165,7 +165,7 @@ do:
   it('should build a graph for a workflow with a For task, producing a subgraph', () => {
     const workflow = Classes.Workflow.deserialize(`
 document:
-  dsl: '1.0.0'
+  dsl: '1.0.3'
   namespace: test
   name: for-example
   version: '0.1.0'
@@ -237,7 +237,7 @@ do:
   it('should merge duplicate switch transitions that resolve to the same target', () => {
     const workflow = Classes.Workflow.deserialize(`
 document:
-  dsl: '1.0.0'
+  dsl: '1.0.3'
   namespace: test
   name: switch
   version: '0.1.0'
@@ -267,7 +267,7 @@ do:
   it('should build a graph for a workflow with a cyclic then directive (taskA -> taskB -> taskA)', () => {
     const workflow = Classes.Workflow.deserialize(`
 document:
-  dsl: '1.0.0'
+  dsl: '1.0.3'
   namespace: test
   name: cycle-test
   version: '0.1.0'
@@ -299,7 +299,7 @@ do:
   it('should build a graph for a workflow with a self-referencing then directive', () => {
     const workflow = Classes.Workflow.deserialize(`
 document:
-  dsl: '1.0.0'
+  dsl: '1.0.3'
   namespace: test
   name: self-loop
   version: '0.1.0'
@@ -324,7 +324,7 @@ do:
   it('should build a graph for a recursive workflow with DoTask cycles', () => {
     const workflow = Classes.Workflow.deserialize(`
 document:
-  dsl: '1.0.0'
+  dsl: '1.0.3'
   namespace: test
   name: recursive-workflow
   version: '0.1.0'
@@ -375,7 +375,7 @@ do:
   it('should correctly resolve then:end from a deeply nested task (DoTask inside DoTask)', () => {
     const workflow = Classes.Workflow.deserialize(`
 document:
-  dsl: '1.0.0'
+  dsl: '1.0.3'
   namespace: test
   name: nested-end
   version: '0.1.0'
@@ -395,7 +395,7 @@ do:
   it('should mark the root graph with the Root node type and attach Start/End port nodes', () => {
     const workflow = Classes.Workflow.deserialize(`
 document:
-  dsl: '1.0.0'
+  dsl: '1.0.3'
   namespace: test
   name: root-shape
   version: '0.1.0'
@@ -414,7 +414,7 @@ do:
   it('should build a graph for a workflow with a Call task', () => {
     const workflow = Classes.Workflow.deserialize(`
 document:
-  dsl: '1.0.0'
+  dsl: '1.0.3'
   namespace: test
   name: call-example
   version: '0.1.0'
@@ -443,7 +443,7 @@ do:
   it('should build a graph for a workflow with an Emit task', () => {
     const workflow = Classes.Workflow.deserialize(`
 document:
-  dsl: '1.0.0'
+  dsl: '1.0.3'
   namespace: test
   name: emit-example
   version: '0.1.0'
@@ -470,7 +470,7 @@ do:
   it('should build a graph for a workflow with a Fork task, producing a subgraph with one node per branch', () => {
     const workflow = Classes.Workflow.deserialize(`
 document:
-  dsl: '1.0.0'
+  dsl: '1.0.3'
   namespace: test
   name: fork-example
   version: '0.1.0'
@@ -526,7 +526,7 @@ do:
   it('should build a graph for a workflow with a standalone Listen task', () => {
     const workflow = Classes.Workflow.deserialize(`
 document:
-  dsl: '1.0.0'
+  dsl: '1.0.3'
   namespace: test
   name: listen-example
   version: '0.1.0'
@@ -557,7 +557,7 @@ do:
   it('should build a graph for a workflow with a Raise task', () => {
     const workflow = Classes.Workflow.deserialize(`
 document:
-  dsl: '1.0.0'
+  dsl: '1.0.3'
   namespace: test
   name: raise-example
   version: '0.1.0'
@@ -584,7 +584,7 @@ do:
   it('should build a graph for a workflow with a Run task', () => {
     const workflow = Classes.Workflow.deserialize(`
 document:
-  dsl: '1.0.0'
+  dsl: '1.0.3'
   namespace: test
   name: run-example
   version: '0.1.0'
@@ -609,7 +609,7 @@ do:
   it('should build a graph for a workflow with a Wait task', () => {
     const workflow = Classes.Workflow.deserialize(`
 document:
-  dsl: '1.0.0'
+  dsl: '1.0.3'
   namespace: test
   name: wait-example
   version: '0.1.0'
@@ -633,7 +633,7 @@ do:
   it('should build a graph for a workflow with an explicit Do task, producing a subgraph', () => {
     const workflow = Classes.Workflow.deserialize(`
 document:
-  dsl: '1.0.0'
+  dsl: '1.0.3'
   namespace: test
   name: do-example
   version: '0.1.0'
@@ -679,7 +679,7 @@ do:
   it('should build a graph for a Try task without a catch handler (catch without do)', () => {
     const workflow = Classes.Workflow.deserialize(`
 document:
-  dsl: '1.0.0'
+  dsl: '1.0.3'
   namespace: test
   name: try-nocatch
   version: '0.1.0'
@@ -709,7 +709,7 @@ do:
   it('should build a graph for a Try task with a catch handler containing tasks, producing a catch subgraph', () => {
     const workflow = Classes.Workflow.deserialize(`
 document:
-  dsl: '1.0.0'
+  dsl: '1.0.3'
   namespace: test
   name: try-catch
   version: '0.1.0'
@@ -739,7 +739,7 @@ do:
   it('should build a graph for a Switch task with a default case', () => {
     const workflow = Classes.Workflow.deserialize(`
 document:
-  dsl: '1.0.0'
+  dsl: '1.0.3'
   namespace: test
   name: switch-default
   version: '0.1.0'
@@ -776,7 +776,7 @@ do:
   it('should honor an explicit then:exit flow directive', () => {
     const workflow = Classes.Workflow.deserialize(`
 document:
-  dsl: '1.0.0'
+  dsl: '1.0.3'
   namespace: test
   name: then-exit
   version: '0.1.0'

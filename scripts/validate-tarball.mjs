@@ -260,7 +260,7 @@ if (typeof workflowBuilder !== 'function') {
 
 const workflow: Specification.Workflow = {
   document: {
-    dsl: '1.0.0',
+    dsl: '1.0.3',
     name: 'pack-smoke',
     namespace: 'test',
     version: '1.0.0',

@@ -76,7 +76,13 @@ export const toPascalCase = (source: string): string => {
  * @returns
  */
 export const normalizeKnownAllCaps = (source: string): string =>
-  source.replace('API', 'Api').replace('GRPC', 'Grpc').replace('HTTP', 'Http').replace('OAuth2', 'Oauth2');
+  source
+    .replace('API', 'Api')
+    .replace('GRPC', 'Grpc')
+    .replace('HTTP', 'Http')
+    .replace('OAuth2', 'Oauth2')
+    .replace('A2A', 'A2a')
+    .replace('MCP', 'Mcp');
 
 /** Schemas directory */
 export const schemaDir = path.resolve(process.cwd(), 'src/lib/generated/schema');

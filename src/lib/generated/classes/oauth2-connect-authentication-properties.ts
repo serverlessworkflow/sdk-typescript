@@ -20,11 +20,11 @@
  *
  *****************************************************************************************/
 
-import { _OAuth2AutenthicationDataClient } from './oauth2-autenthication-data-client';
+import { _OAuth2AuthenticationDataClient } from './oauth2-authentication-data-client';
 import { _OAuth2TokenRequest } from './oauth2-token-request';
 import { _OAuth2TokenDefinition } from './oauth2-token-definition';
 import { _OAuth2AuthenticationPropertiesEndpoints } from './oauth2-authentication-properties-endpoints';
-import { _OAuth2AutenthicationData } from './oauth2-autenthication-data';
+import { _OAuth2AuthenticationData } from './oauth2-authentication-data';
 import { Specification } from '../definitions';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
 import { validate } from '../../validation';
@@ -49,7 +49,7 @@ export interface OAuth2ConnectAuthenticationPropertiesConstructor {
  * Represents a OAuth2ConnectAuthenticationProperties with methods for validation and normalization.
  * Inherits from ObjectHydrator which provides functionality for hydrating the state based on a model.
  */
-export class OAuth2ConnectAuthenticationProperties extends _OAuth2AutenthicationData {
+export class OAuth2ConnectAuthenticationProperties extends _OAuth2AuthenticationData {
   /**
    * Instanciates a new instance of the OAuth2ConnectAuthenticationProperties class.
    * Initializes properties based on the provided model if it is an object.
@@ -60,7 +60,7 @@ export class OAuth2ConnectAuthenticationProperties extends _OAuth2Autenthication
     super(model);
     const self = this as unknown as Specification.OAuth2ConnectAuthenticationProperties & object;
     if (isObject(model)) {
-      if (typeof model.client === 'object') self.client = new _OAuth2AutenthicationDataClient(model.client);
+      if (typeof model.client === 'object') self.client = new _OAuth2AuthenticationDataClient(model.client);
       if (typeof model.request === 'object') self.request = new _OAuth2TokenRequest(model.request);
       if (typeof model.subject === 'object') self.subject = new _OAuth2TokenDefinition(model.subject);
       if (typeof model.actor === 'object') self.actor = new _OAuth2TokenDefinition(model.actor);

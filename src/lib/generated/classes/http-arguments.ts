@@ -21,9 +21,7 @@
  *****************************************************************************************/
 
 import { _Endpoint } from './endpoint';
-import { _HTTPHeaders } from './http-headers';
 import { _HTTPBody } from './http-body';
-import { _HTTPQuery } from './http-query';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
 import { getLifecycleHooks } from '../../lifecycle-hooks';
@@ -58,9 +56,7 @@ export class HTTPArguments extends ObjectHydrator<Specification.HTTPArguments> {
     const self = this as unknown as Specification.HTTPArguments & object;
     if (isObject(model)) {
       if (typeof model.endpoint === 'object') self.endpoint = new _Endpoint(model.endpoint);
-      if (typeof model.headers === 'object') self.headers = new _HTTPHeaders(model.headers);
       if (typeof model.body === 'object') self.body = new _HTTPBody(model.body);
-      if (typeof model.query === 'object') self.query = new _HTTPQuery(model.query);
     }
     getLifecycleHooks('HTTPArguments')?.constructor?.(this);
   }

@@ -20,7 +20,6 @@
  *
  *****************************************************************************************/
 
-import { _ShellArguments } from './shell-arguments';
 import { _ShellEnvironment } from './shell-environment';
 import { ObjectHydrator } from '../../hydrator';
 import { Specification } from '../definitions';
@@ -55,7 +54,6 @@ export class Shell extends ObjectHydrator<Specification.Shell> {
     super(model);
     const self = this as unknown as Specification.Shell & object;
     if (isObject(model)) {
-      if (typeof model.arguments === 'object') self.arguments = new _ShellArguments(model.arguments);
       if (typeof model.environment === 'object') self.environment = new _ShellEnvironment(model.environment);
     }
     getLifecycleHooks('Shell')?.constructor?.(this);

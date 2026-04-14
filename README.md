@@ -38,7 +38,7 @@ The npm [`@serverlessworkflow/sdk`](https://www.npmjs.com/package/@serverlesswor
 
 |                              Latest Releases                              |                      Conformance to Spec Version                       |
 | :-----------------------------------------------------------------------: | :--------------------------------------------------------------------: |
-| [v1.0.\*](https://github.com/serverlessworkflow/sdk-typescript/releases/) |     [v1.0.0](https://github.com/serverlessworkflow/specification)      |
+| [v1.0.\*](https://github.com/serverlessworkflow/sdk-typescript/releases/) |     [v1.0.\*](https://github.com/serverlessworkflow/specification)      |
 | [v0.8.4](https://github.com/serverlessworkflow/sdk-typescript/releases/)  | [v0.8](https://github.com/serverlessworkflow/specification/tree/0.8.x) |
 
 The repository is currently developed and validated on Node.js `22+`.
@@ -113,7 +113,7 @@ import { Classes } from '@serverlessworkflow/sdk';
 // const text = await fetch('https://myserver.com/my-workflow-definition.json');
 const text = `
 document:
-  dsl: 1.0.0
+  dsl: 1.0.3
   name: test
   version: 1.0.0
   namespace: default
@@ -135,7 +135,7 @@ import { Classes, Specification, validate } from '@serverlessworkflow/sdk';
 // Simply cast an object:
 const workflow = {
   document: {
-    dsl: '1.0.0',
+    dsl: '1.0.3',
     name: 'test',
     version: '1.0.0',
     namespace: 'default',
@@ -171,7 +171,7 @@ import { Classes, validate } from '@serverlessworkflow/sdk';
 // Simply use the constructor
 const workflow = new Classes.Workflow({
   document: {
-    dsl: '1.0.0',
+    dsl: '1.0.3',
     name: 'test',
     version: '1.0.0',
     namespace: 'default',
@@ -214,7 +214,7 @@ You can use the fluent API to build a validated and normalized workflow definiti
 import { documentBuilder, setTaskBuilder, taskListBuilder, workflowBuilder } from '@serverlessworkflow/sdk';
 
 const workflow = workflowBuilder(/*workflowObject*/)
-  .document(documentBuilder().dsl('1.0.0').name('test').version('1.0.0').namespace('default').build())
+  .document(documentBuilder().dsl('1.0.3').name('test').version('1.0.0').namespace('default').build())
   .do(
     taskListBuilder()
       .push({
@@ -283,7 +283,7 @@ import { buildGraph } from '@serverlessworkflow/sdk';
 
 const workflow = {
   document: {
-    dsl: '1.0.0',
+    dsl: '1.0.3',
     name: 'using-plain-object',
     version: '1.0.0',
     namespace: 'default',
@@ -334,7 +334,7 @@ import { convertToMermaidCode, MermaidDiagram } from '@serverlessworkflow/sdk';
 
 const workflow = {
   document: {
-    dsl: '1.0.0',
+    dsl: '1.0.3',
     name: 'using-plain-object',
     version: '1.0.0',
     namespace: 'default',

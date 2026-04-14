@@ -22,29 +22,31 @@
 
 import { arrayBuilder, ArrayBuilder, BuildOptions } from '../../builder';
 import { Classes } from '../classes';
-import { OAuth2AutenthicationDataScopesIntersection } from '../classes/oauth2-autenthication-data-scopes';
+import { OAuth2AuthenticationDataAudiencesIntersection } from '../classes/oauth2-authentication-data-audiences';
 import { Specification } from '../definitions';
 
 /**
  * The internal function used by the builder proxy to validate and return its underlying array
- * @param {Specification.OAuth2AutenthicationDataScopes} model The proxied array
+ * @param {Specification.OAuth2AuthenticationDataAudiences} model The proxied array
  * @param {BuildOptions} options The build options to use
- * @returns {OAuth2AutenthicationDataScopesIntersection} The built array
+ * @returns {OAuth2AuthenticationDataAudiencesIntersection} The built array
  */
 function buildingFn(
-  model: Specification.OAuth2AutenthicationDataScopes,
+  model: Specification.OAuth2AuthenticationDataAudiences,
   options: BuildOptions,
-): OAuth2AutenthicationDataScopesIntersection {
-  const instance = new Classes.OAuth2AutenthicationDataScopes(model);
+): OAuth2AuthenticationDataAudiencesIntersection {
+  const instance = new Classes.OAuth2AuthenticationDataAudiences(model);
   if (options.validate) instance.validate();
-  return (options.normalize ? instance.normalize() : instance) as unknown as OAuth2AutenthicationDataScopesIntersection;
+  return (options.normalize
+    ? instance.normalize()
+    : instance) as unknown as OAuth2AuthenticationDataAudiencesIntersection;
 }
 
 /**
- * A factory to create a builder proxy for the type `OAuth2AutenthicationDataScopesIntersection`
- * @returns {ArrayBuilder<string, OAuth2AutenthicationDataScopesIntersection>} A builder for `OAuth2AutenthicationDataScopesIntersection`
+ * A factory to create a builder proxy for the type `OAuth2AuthenticationDataAudiencesIntersection`
+ * @returns {ArrayBuilder<string, OAuth2AuthenticationDataAudiencesIntersection>} A builder for `OAuth2AuthenticationDataAudiencesIntersection`
  */
-export const oAuth2AutenthicationDataScopesBuilder = (
-  model?: Specification.OAuth2AutenthicationDataScopes,
-): ArrayBuilder<string, OAuth2AutenthicationDataScopesIntersection> =>
-  arrayBuilder<string, OAuth2AutenthicationDataScopesIntersection>(model, buildingFn);
+export const oAuth2AuthenticationDataAudiencesBuilder = (
+  model?: Specification.OAuth2AuthenticationDataAudiences,
+): ArrayBuilder<string, OAuth2AuthenticationDataAudiencesIntersection> =>
+  arrayBuilder<string, OAuth2AuthenticationDataAudiencesIntersection>(model, buildingFn);
