@@ -18,9 +18,11 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
-          node-version: '22.x'
+          node-version: '22.22.2'
           cache: npm
           registry-url: 'https://registry.npmjs.org'
+      - run: npm install -g npm@11.5.1
+      - run: node -v && npm -v
       - run: npm run release:preflight
         env:
           RELEASE_TAG: ${{ github.event.release.tag_name }}
