@@ -31,4 +31,24 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: npm run validate:package:dist
-      - run: cd dist && npm publish --access=public
+      - name: Publish to npm
+        shell: bash
+        run: |
+          VERSION="$(node -p "require('./dist/package.json').version")"
+
+          if [[ "$VERSION" == *-* ]]; then
+            PRERELEASE_TAG="${VERSION#*-}"
+            PRERELEASE_TAG="${PRERELEASE_TAG%%[0-9]*}"
+
+            if [[ -z "$PRERELEASE_TAG" ]]; then
+              PRERELEASE_TAG="next"
+            fi
+
+            echo "Publishing prerelease $VERSION with tag '$PRERELEASE_TAG'"
+            cd dist
+            npm publish --access public --tag "$PRERELEASE_TAG"
+          else
+            echo "Publishing stable release $VERSION with tag 'latest'"
+            cd dist
+            npm publish --access public
+          fi
