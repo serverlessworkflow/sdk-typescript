@@ -29,6 +29,4 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: npm run validate:package:dist
-      - run: cd dist && npm publish --access=public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+      - run: cd dist && npm publish --access=public
