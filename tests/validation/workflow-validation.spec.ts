@@ -57,7 +57,7 @@ describe('Workflow validation', () => {
     expect(test).toThrow(/'Workflow' is invalid/);
   });
 
-  it('should throw with incompatible DSL version', () => {
+  it('should throw with a DSL version below the minimum supported version', () => {
     const oldVersion = '0.9';
     const workflow = new Classes.Workflow({
       document: {
@@ -70,5 +70,44 @@ describe('Workflow validation', () => {
     expect(() => workflow.validate()).toThrow(
       `The DSL version of the workflow '${oldVersion}' doesn't match the supported version of the SDK '${schemaVersion}'.`,
     );
+  });
+
+  it('should throw with a DSL version newer than the current schemaVersion', () => {
+    const newerVersion = '3.0.0';
+    const workflow = new Classes.Workflow({
+      document: {
+        dsl: newerVersion,
+        name: 'test',
+        version: '1.0.0',
+        namespace: 'default',
+      },
+    });
+    expect(() => workflow.validate()).toThrow(
+      `The DSL version of the workflow '${newerVersion}' doesn't match the supported version of the SDK '${schemaVersion}'.`,
+    );
+  });
+
+  it('should be valid with an older DSL version than the current schema but still supported', () => {
+    const oldVersion = '1.0.0';
+    const workflow = new Classes.Workflow({
+      document: {
+        dsl: oldVersion,
+        name: 'test',
+        version: '1.0.0',
+        namespace: 'default',
+      },
+      do: [
+        {
+          step1: {
+            set: {
+              foo: 'bar',
+            },
+          },
+        },
+      ],
+    });
+
+    const result = () => validate('Workflow', workflow);
+    expect(result).not.toThrow(Error);
   });
 });

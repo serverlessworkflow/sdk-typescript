@@ -19,11 +19,19 @@ import { Specification } from '../generated/definitions';
 
 import { schemaVersion } from '../../../package.json';
 
+const compareVersions = (a: string, b: string) => a.localeCompare(b, undefined, { numeric: true });
+
 export const WorkflowHooks = {
   preValidation(instance) {
-    if (instance?.document?.dsl !== schemaVersion) {
+    /* The SDK supports dsl releases from 1.0.0 up to and including the `schemaVersion` it is built against */
+    const minSupportDsl = '1.0.0';
+    const dsl = instance?.document?.dsl;
+    const isSupportedDsl =
+      typeof dsl === 'string' && compareVersions(dsl, minSupportDsl) >= 0 && compareVersions(dsl, schemaVersion) <= 0;
+
+    if (!isSupportedDsl) {
       throw new Error(
-        `'Workflow' is invalid - The DSL version of the workflow '${instance?.document?.dsl}' doesn't match the supported version of the SDK '${schemaVersion}'.`,
+        `'Workflow' is invalid - The DSL version of the workflow '${dsl}' doesn't match the supported version of the SDK '${schemaVersion}'.`,
       );
     }
     return;
