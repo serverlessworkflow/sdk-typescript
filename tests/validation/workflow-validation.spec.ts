@@ -18,7 +18,7 @@
 import { Classes } from '../../src/lib/generated/classes';
 import { validate } from '../../src/lib/validation';
 
-import { schemaVersion } from '../../package.json';
+import { schemaVersion, supportedDslVersions } from '../../package.json';
 
 describe('Workflow validation', () => {
   it('should be valid', () => {
@@ -57,8 +57,8 @@ describe('Workflow validation', () => {
     expect(test).toThrow(/'Workflow' is invalid/);
   });
 
-  it('should throw with incompatible DSL version', () => {
-    const oldVersion = '0.9';
+  it('should throw with a DSL version below the minimum supported version', () => {
+    const oldVersion = '0.9.0';
     const workflow = new Classes.Workflow({
       document: {
         dsl: oldVersion,
@@ -68,7 +68,100 @@ describe('Workflow validation', () => {
       },
     });
     expect(() => workflow.validate()).toThrow(
-      `The DSL version of the workflow '${oldVersion}' doesn't match the supported version of the SDK '${schemaVersion}'.`,
+      `The DSL version of the workflow '${oldVersion}' does not saisfy the DSL version range supported by this SDK '${supportedDslVersions}'.`,
+    );
+  });
+
+  it('should throw with a DSL version newer than the current schemaVersion', () => {
+    const newerVersion = '3.0.0';
+    const workflow = new Classes.Workflow({
+      document: {
+        dsl: newerVersion,
+        name: 'test',
+        version: '1.0.0',
+        namespace: 'default',
+      },
+    });
+    expect(() => workflow.validate()).toThrow(
+      `The DSL version of the workflow '${newerVersion}' does not saisfy the DSL version range supported by this SDK '${supportedDslVersions}'.`,
+    );
+  });
+
+  it('should be valid with an older DSL version than the current schema but still supported', () => {
+    const oldVersion = '1.0.0';
+    const workflow = new Classes.Workflow({
+      document: {
+        dsl: oldVersion,
+        name: 'test',
+        version: '1.0.0',
+        namespace: 'default',
+      },
+      do: [
+        {
+          step1: {
+            set: {
+              foo: 'bar',
+            },
+          },
+        },
+      ],
+    });
+
+    const result = () => validate('Workflow', workflow);
+    expect(result).not.toThrow(Error);
+  });
+
+  it('should be valid with a pre-release version within the supported range', () => {
+    const preReleaseVersion = `${schemaVersion}-alpha`;
+    const workflow = new Classes.Workflow({
+      document: {
+        dsl: preReleaseVersion,
+        name: 'test',
+        version: '1.0.0',
+        namespace: 'default',
+      },
+      do: [
+        {
+          step1: {
+            set: {
+              foo: 'bar',
+            },
+          },
+        },
+      ],
+    });
+
+    const result = () => validate('Workflow', workflow);
+    expect(result).not.toThrow(Error);
+  });
+
+  it('should throw with a pre-release version below the minimum supported', () => {
+    const preReleaseVersion = '1.0.0-alpha';
+    const workflow = new Classes.Workflow({
+      document: {
+        dsl: preReleaseVersion,
+        name: 'test',
+        version: '1.0.0',
+        namespace: 'default',
+      },
+    });
+    expect(() => workflow.validate()).toThrow(
+      `The DSL version of the workflow '${preReleaseVersion}' does not saisfy the DSL version range supported by this SDK '${supportedDslVersions}'.`,
+    );
+  });
+
+  it('should throw with a pre-release version above the supported range', () => {
+    const preReleaseVersion = '2.0.0-alpha';
+    const workflow = new Classes.Workflow({
+      document: {
+        dsl: preReleaseVersion,
+        name: 'test',
+        version: '1.0.0',
+        namespace: 'default',
+      },
+    });
+    expect(() => workflow.validate()).toThrow(
+      `The DSL version of the workflow '${preReleaseVersion}' does not saisfy the DSL version range supported by this SDK '${supportedDslVersions}'.`,
     );
   });
 });

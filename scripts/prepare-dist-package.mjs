@@ -21,6 +21,7 @@ const distPackageJson = {
   name: packageJson.name,
   version: packageJson.version,
   schemaVersion: packageJson.schemaVersion,
+  supportedDslVersions: packageJson.supportedDslVersions,
   description: packageJson.description,
   type: packageJson.type,
   main: packageJson.main,

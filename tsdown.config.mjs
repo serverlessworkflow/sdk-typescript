@@ -23,7 +23,7 @@ export default defineConfig([
     globalName: 'serverWorkflowSdk',
     dts: false,
     deps: {
-      alwaysBundle: [/^ajv(?:\/.*)?$/, /^ajv-formats$/, /^js-yaml$/],
+      alwaysBundle: [/^ajv(?:\/.*)?$/, /^ajv-formats$/, /^js-yaml$/, /^semver(?:\/.*)?$/],
       onlyBundle: false,
     },
   },
@@ -35,7 +35,7 @@ export default defineConfig([
     dts: false,
     minify: true,
     deps: {
-      alwaysBundle: [/^ajv(?:\/.*)?$/, /^ajv-formats$/, /^js-yaml$/],
+      alwaysBundle: [/^ajv(?:\/.*)?$/, /^ajv-formats$/, /^js-yaml$/, /^semver(?:\/.*)?$/],
       onlyBundle: false,
     },
     outExtensions: () => ({

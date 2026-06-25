@@ -13,17 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import satisfies from 'semver/functions/satisfies';
 
 import { LifecycleHooks } from '../lifecycle-hooks';
 import { Specification } from '../generated/definitions';
 
-import { schemaVersion } from '../../../package.json';
+import { supportedDslVersions } from '../../../package.json';
 
 export const WorkflowHooks = {
   preValidation(instance) {
-    if (instance?.document?.dsl !== schemaVersion) {
+    const dsl = instance?.document?.dsl;
+    const isSupportedDsl = typeof dsl === 'string' && satisfies(dsl, supportedDslVersions, { includePrerelease: true });
+
+    if (!isSupportedDsl) {
       throw new Error(
-        `'Workflow' is invalid - The DSL version of the workflow '${instance?.document?.dsl}' doesn't match the supported version of the SDK '${schemaVersion}'.`,
+        `'Workflow' is invalid - The DSL version of the workflow '${dsl}' does not saisfy the DSL version range supported by this SDK '${supportedDslVersions}'.`,
       );
     }
     return;
