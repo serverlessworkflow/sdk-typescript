@@ -68,7 +68,7 @@ describe('Workflow validation', () => {
       },
     });
     expect(() => workflow.validate()).toThrow(
-      `The DSL version of the workflow '${oldVersion}' does not saisfy the DSL version range supported by this SDK '${supportedDslVersions}'.`,
+      `The DSL version of the workflow '${oldVersion}' does not satisfy the DSL version range supported by this SDK '${supportedDslVersions}'.`,
     );
   });
 
@@ -83,7 +83,7 @@ describe('Workflow validation', () => {
       },
     });
     expect(() => workflow.validate()).toThrow(
-      `The DSL version of the workflow '${newerVersion}' does not saisfy the DSL version range supported by this SDK '${supportedDslVersions}'.`,
+      `The DSL version of the workflow '${newerVersion}' does not satisfy the DSL version range supported by this SDK '${supportedDslVersions}'.`,
     );
   });
 
@@ -146,7 +146,7 @@ describe('Workflow validation', () => {
       },
     });
     expect(() => workflow.validate()).toThrow(
-      `The DSL version of the workflow '${preReleaseVersion}' does not saisfy the DSL version range supported by this SDK '${supportedDslVersions}'.`,
+      `The DSL version of the workflow '${preReleaseVersion}' does not satisfy the DSL version range supported by this SDK '${supportedDslVersions}'.`,
     );
   });
 
@@ -161,7 +161,7 @@ describe('Workflow validation', () => {
       },
     });
     expect(() => workflow.validate()).toThrow(
-      `The DSL version of the workflow '${preReleaseVersion}' does not saisfy the DSL version range supported by this SDK '${supportedDslVersions}'.`,
+      `The DSL version of the workflow '${preReleaseVersion}' does not satisfy the DSL version range supported by this SDK '${supportedDslVersions}'.`,
     );
   });
 });

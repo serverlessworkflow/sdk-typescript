@@ -27,7 +27,7 @@ export const WorkflowHooks = {
 
     if (!isSupportedDsl) {
       throw new Error(
-        `'Workflow' is invalid - The DSL version of the workflow '${dsl}' does not saisfy the DSL version range supported by this SDK '${supportedDslVersions}'.`,
+        `'Workflow' is invalid - The DSL version of the workflow '${dsl}' does not satisfy the DSL version range supported by this SDK '${supportedDslVersions}'.`,
       );
     }
     return;
